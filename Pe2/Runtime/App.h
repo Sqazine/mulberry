@@ -3,37 +3,36 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include <SDL/SDL2.h>
+#include <SDL2/SDL.h>
 #include "Math/Vec2.h"
-struct WindowCreateInfo
+#include "Window.h"
+enum class AppState
 {
-	std::string title;
-	Vec2 extent;
-	bool resizeable = true;
+	INIT,
+	PROCESS_INPUT,
+	UPDATE,
+	DRAW,
+	EXIT
 };
-
-struct ApplicationCreateInfo
+struct AppCreateInfo
 {
 	WindowCreateInfo windowCreateInfo;
 };
-
-class Application
+class App
 {
 public:
-	Application(const ApplicationCreateInfo &info);
-	~Application();
+	App(const AppCreateInfo &info);
+	virtual ~App();
 
 	void Run();
 private:
-	void Init();
-	void ProcessInput();
-	void Update();
-	void Draw();
-	void CleanUp();
+	virtual void Init();
+	virtual void ProcessInput();
+	virtual void Update();
+	virtual void Draw();
+	virtual void CleanUp();
 
-	ApplicationCreateInfo m_CreateInfo;
+	AppCreateInfo m_CreateInfo;
 
-	bool m_IsRunning;
-
-	SDL_Window *m_WindowHandle;
+	AppState m_State;
 };

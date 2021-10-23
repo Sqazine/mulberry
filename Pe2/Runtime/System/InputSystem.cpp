@@ -149,7 +149,7 @@ bool ControllerState::IsConnected() const
 }
 
 InputSystem::InputSystem()
-    : m_KeyboardState(std::make_shared<KeyboardState>()), m_MouseState(std::make_shared<MouseState>())
+    : m_KeyboardState(std::make_unique<KeyboardState>()), m_MouseState(std::make_unique<MouseState>())
 {
     m_KeyboardState->m_CurKeyState = SDL_GetKeyboardState(nullptr);
     m_KeyboardState->m_PreKeyState = new uint8_t[SDL_NUM_SCANCODES];
@@ -172,9 +172,9 @@ void InputSystem::PostUpdate()
 {
     Vec2 p = Vec2::ZERO;
     if (!m_MouseState->m_IsRelative)
-        m_MouseState->m_CurButtons = SDL_GetMouseState(&p.x, &p.y);
+        m_MouseState->m_CurButtons = SDL_GetMouseState((int*)(&p.x), (int*)(&p.y));
     else
-        m_MouseState->m_CurButtons = SDL_GetRelativeMouseState(&p.x, &p.y);
+        m_MouseState->m_CurButtons = SDL_GetRelativeMouseState((int*)(&p.x),(int*)(&p.y));
     m_MouseState->m_CurPos = p;
 }
 
@@ -200,9 +200,9 @@ const MouseState *InputSystem::GetMouse() const
     return m_MouseState.get();
 }
 
-const ControllerState *GetControllerState(uint32_t idx) const
+const ControllerState *InputSystem::GetControllerState(uint32_t idx) const
 {
-    if (m_ControllerStates.emptyidx < 0 || idx >= m_ControllerStates.size())
+    if (m_ControllerStates.empty() || idx < 0 || idx >= m_ControllerStates.size())
         return nullptr;
     return m_ControllerStates[idx].get();
 }

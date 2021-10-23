@@ -2,7 +2,7 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include <memory>
-#include "Math/Vec2.h"
+#include "../Math/Vec2.h"
 
 enum class ButtonState
 {
@@ -96,5 +96,5 @@ public:
 private:
     std::unique_ptr<KeyboardState> m_KeyboardState;
     std::unique_ptr<MouseState> m_MouseState;
-    std::vector<std::unique_ptr<MouseState>> m_ControllerStates; 
+    std::vector<std::unique_ptr<ControllerState>> m_ControllerStates; 
 };
