@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <SDL/SDL2.h>
 #include "Math/Vec2.h"
 struct WindowCreateInfo
 {
