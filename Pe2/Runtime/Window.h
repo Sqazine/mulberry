@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <SDL2/SDL.h>
 #include "Math/Vec2.h"
 struct WindowCreateInfo
 {
@@ -15,6 +16,7 @@ public:
     Window(const WindowCreateInfo &info);
     SDL_Window *GetHandle() const;
 
+        
 private:
     SDL_Window *m_WindowHandle;
 };

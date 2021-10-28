@@ -15,7 +15,7 @@ public:
 	friend Vec2 operator-(const Vec2& right);
 	friend Vec2 operator*(const Vec2& left, float value);
 	friend Vec2 operator*(float value, const Vec2& right);
-	friend float operator*(const Vec2& left, const Vec2& right);
+	friend Vec2 operator*(const Vec2& left, const Vec2& right);
 
 	Vec2& operator+=(float value);
 	Vec2& operator+=(const Vec2& right);
@@ -38,7 +38,9 @@ public:
 	//两个向量之间的夹角
 	static float IncludedAngle(const Vec2& left, const Vec2& right);
 
-	static Vec2 Transform(const Vec2& vec, float radian);
+	static Vec2 Rotate(const Vec2& vec, float radian);
+	static Vec2 Translate(const Vec2& vec,const Vec2& t);
+	static Vec2 Scale(const Vec2& vec,const Vec2& s);
 
 	static const Vec2 ZERO;
 	static const Vec2 UNITX;

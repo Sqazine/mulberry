@@ -7,12 +7,12 @@ KeyboardState::KeyboardState()
 KeyboardState::~KeyboardState()
 {
 }
-bool KeyboardState::GetKeyValue(SDL_Scancode keyCode) const
+bool KeyboardState::GetKeyValue(KeyCode keyCode) const
 {
     return m_CurKeyState[keyCode] == 1 ? true : false;
 }
 
-ButtonState KeyboardState::GetKeyState(SDL_Scancode keyCode) const
+ButtonState KeyboardState::GetKeyState(KeyCode keyCode) const
 {
     if (m_PreKeyState[keyCode] == 0)
     {
@@ -172,9 +172,9 @@ void InputSystem::PostUpdate()
 {
     Vec2 p = Vec2::ZERO;
     if (!m_MouseState->m_IsRelative)
-        m_MouseState->m_CurButtons = SDL_GetMouseState((int*)(&p.x), (int*)(&p.y));
+        m_MouseState->m_CurButtons = SDL_GetMouseState((int *)(&p.x), (int *)(&p.y));
     else
-        m_MouseState->m_CurButtons = SDL_GetRelativeMouseState((int*)(&p.x),(int*)(&p.y));
+        m_MouseState->m_CurButtons = SDL_GetRelativeMouseState((int *)(&p.x), (int *)(&p.y));
     m_MouseState->m_CurPos = p;
 }
 
