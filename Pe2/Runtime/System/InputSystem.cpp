@@ -152,8 +152,8 @@ InputSystem::InputSystem()
     : m_KeyboardState(std::make_unique<KeyboardState>()), m_MouseState(std::make_unique<MouseState>())
 {
     m_KeyboardState->m_CurKeyState = SDL_GetKeyboardState(nullptr);
-    m_KeyboardState->m_PreKeyState = new uint8_t[SDL_NUM_SCANCODES];
-    memset(m_KeyboardState->m_PreKeyState, 0, SDL_NUM_SCANCODES);
+    m_KeyboardState->m_PreKeyState = new uint8_t[KEYCODE_NUM];
+    memset(m_KeyboardState->m_PreKeyState, 0, KEYCODE_NUM);
 }
 
 InputSystem::~InputSystem()
@@ -162,7 +162,7 @@ InputSystem::~InputSystem()
 
 void InputSystem::PreUpdate()
 {
-    memcpy_s(m_KeyboardState->m_PreKeyState, SDL_NUM_SCANCODES, m_KeyboardState->m_CurKeyState, SDL_NUM_SCANCODES);
+    memcpy_s(m_KeyboardState->m_PreKeyState, KEYCODE_NUM, m_KeyboardState->m_CurKeyState, KEYCODE_NUM);
     m_MouseState->m_PreButtons = m_MouseState->m_CurButtons;
     m_MouseState->m_PrePos = m_MouseState->m_CurPos;
     m_MouseState->m_MouseScrollWheel = Vec2::ZERO;
