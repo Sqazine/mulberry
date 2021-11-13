@@ -16,5 +16,5 @@ file(GLOB VULKAN "Graphics/RHI/VK/*.h" "Graphics/RHI/VK/*.cpp")
 
 find_package(SDL2 CONFIG REQUIRED)
 add_library(Pe2 STATIC ${ROOT} ${MATH} ${SYSTEM} ${SCENE} ${VULKAN})
-target_include_directories(Pe2 PRIVATE ${VULKAN_INCLUDE_DIR} ${ROOT} ${MATH} ${SYSTEM} ${SCENE} ${VULKAN})
+target_include_directories(Pe2 PRIVATE ${VULKAN_INCLUDE_DIR} ${ROOT} ${MATH} ${SYSTEM} ${SCENE} ${VULKAN} ${OPENGLES} ${RHI})
 target_link_libraries(Pe2 PRIVATE ${VULKAN_LIB_DIR}/vulkan-1.lib SDL2::SDL2 SDL2::SDL2main)
