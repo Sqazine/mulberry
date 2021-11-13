@@ -12,10 +12,9 @@ file(GLOB MATH "Math/*.h" "Math/*.cpp")
 file(GLOB SYSTEM "System/*.h" "System/*.cpp")
 file(GLOB SCENE "Scene/*.h" "Scene/*.cpp")
 file(GLOB COMPONENT "Scene/Component/*.h" "Scene/Component/*.cpp")
-file(GLOB VULKAN "Graphics/Backend/VK/*.h" "Graphics/Backend/VK/*.cpp")
+file(GLOB VULKAN "Graphics/RHI/VK/*.h" "Graphics/RHI/VK/*.cpp")
 
 find_package(SDL2 CONFIG REQUIRED)
-
 add_library(Pe2 STATIC ${ROOT} ${MATH} ${SYSTEM} ${SCENE} ${VULKAN})
 target_include_directories(Pe2 PRIVATE ${VULKAN_INCLUDE_DIR} ${ROOT} ${MATH} ${SYSTEM} ${SCENE} ${VULKAN})
 target_link_libraries(Pe2 PRIVATE ${VULKAN_LIB_DIR}/vulkan-1.lib SDL2::SDL2 SDL2::SDL2main)
