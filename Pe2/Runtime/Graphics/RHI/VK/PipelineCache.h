@@ -1,15 +1,18 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include <vector>
-class PipelineCache
+namespace VK
 {
-public:
-    PipelineCache(const VkDevice &device, size_t initialDataSize=0, void* initialData = nullptr);
-    ~PipelineCache();
+    class PipelineCache
+    {
+    public:
+        PipelineCache(const class Device *device, size_t initialDataSize = 0, void *initialData = nullptr);
+        ~PipelineCache();
 
-    const VkPipelineCache &GetVKPipelineCacheHandle() const;
+        const VkPipelineCache &GetVKPipelineCacheHandle() const;
 
-private:
-    VkPipelineCache m_PipelineCacheHandle;
-    const VkDevice &m_TmpVKDeviceHandle;
-};
+    private:
+        VkPipelineCache m_PipelineCacheHandle;
+        const Device *m_TmpDevice;
+    };
+}

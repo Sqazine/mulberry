@@ -1,15 +1,18 @@
 #pragma once
 #include <vulkan/vulkan.h>
-class RenderPass
+namespace VK
 {
-public:
-    RenderPass(const class Device *device, const class SwapChain *swapChain);
-    ~RenderPass();
+    class RenderPass
+    {
+    public:
+        RenderPass(const class Device *device, const class SwapChain *swapChain);
+        ~RenderPass();
 
-    const VkRenderPass &GetVKRenderPassHandle() const;
+        const VkRenderPass &GetVKRenderPassHandle() const;
 
-private:
-    VkRenderPass m_RenderPassHandle;
+    private:
+        VkRenderPass m_RenderPassHandle;
 
-    const class Device *m_TmpDevice;
-};
+        const class Device *m_TmpDevice;
+    };
+}

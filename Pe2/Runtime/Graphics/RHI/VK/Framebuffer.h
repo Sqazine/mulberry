@@ -1,15 +1,18 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include <vector>
-class Framebuffer
+namespace VK
 {
-public:
-    Framebuffer(const VkDevice& device,const VkRenderPass& renderPass,const std::vector<VkImageView>& attachments,uint32_t width,uint32_t height);
-    ~Framebuffer();
-    const VkFramebuffer &GetVKFramebufferHandle() const;
+    class Framebuffer
+    {
+    public:
+        Framebuffer(const class Device *device, const VkRenderPass &renderPass, const std::vector<VkImageView> &attachments, uint32_t width, uint32_t height);
+        ~Framebuffer();
+        const VkFramebuffer &GetVKFramebufferHandle() const;
 
-private:
-    VkFramebuffer m_FramebufferHandle;
+    private:
+        VkFramebuffer m_FramebufferHandle;
 
-    const VkDevice& m_TmpVKDeviceHandle;
-};
+        const Device *m_TmpDevice;
+    };
+}

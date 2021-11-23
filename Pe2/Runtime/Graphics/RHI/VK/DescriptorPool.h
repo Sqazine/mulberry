@@ -1,13 +1,17 @@
 #pragma once
 #include <vulkan/vulkan.h>
-class DescriptorPool
+namespace VK
 {
-public:
-    DescriptorPool(const VkDevice& device,uint32_t descriptorCount);
-    ~DescriptorPool();
+    class DescriptorPool
+    {
+    public:
+        DescriptorPool(const class Device* device, uint32_t descriptorCount);
+        ~DescriptorPool();
 
-    const VkDescriptorPool& GetVKDescriptorPoolHandle() const;
-private:
-    VkDescriptorPool m_DescriptorPoolHandle;
-    const VkDevice &m_TmpVKDeviceHandle;
-};
+        const VkDescriptorPool &GetVKDescriptorPoolHandle() const;
+
+    private:
+        VkDescriptorPool m_DescriptorPoolHandle;
+        const class Device *m_TmpDevice;
+    };
+}

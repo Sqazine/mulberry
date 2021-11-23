@@ -1,16 +1,19 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include <vector>
-class DescriptorSetLayout
+namespace VK
 {
-public:
-    DescriptorSetLayout(const VkDevice &device,const std::vector<VkDescriptorSetLayoutBinding>& setLayoutBindings);
-    ~DescriptorSetLayout();
+    class DescriptorSetLayout
+    {
+    public:
+        DescriptorSetLayout(const class Device *device, const std::vector<VkDescriptorSetLayoutBinding> &setLayoutBindings);
+        ~DescriptorSetLayout();
 
-    const VkDescriptorSetLayout &GetVKDescriptorSetLayoutHandle() const;
+        const VkDescriptorSetLayout &GetVKDescriptorSetLayoutHandle() const;
 
-private:
-    VkDescriptorSetLayout m_DescriptorSetLayoutHandle;
+    private:
+        VkDescriptorSetLayout m_DescriptorSetLayoutHandle;
 
-    const VkDevice &m_TmpVKDeviceHandle;
-};
+        const class Device *m_TmpDevice;
+    };
+}

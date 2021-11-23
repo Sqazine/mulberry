@@ -6,34 +6,38 @@
 #include "Utils.h"
 #include "Instance.h"
 #include "Queue.h"
-class Device
+namespace VK
 {
-public:
-    Device(const Instance* instance, std::vector<const char *> neededDeviceExtensions);
-    ~Device();
+    class Device
+    {
+    public:
+        Device(const Instance *instance, std::vector<const char *> neededDeviceExtensions);
+        ~Device();
 
-    void WaitIdle();
+        void WaitIdle();
 
-    const VkDevice& GetLogicalDeviceHandle() const;
-    const VkPhysicalDevice& GetPhysicalDeviceHandle() const;
-    const Queue* GetGraphicsQueue() const;
-    const Queue* GetPresentQueue() const;
-    const Queue* GetComputeQueue() const;
+        const VkDevice &GetLogicalDeviceHandle() const;
+        const VkPhysicalDevice &GetPhysicalDeviceHandle() const;
+        const Queue *GetGraphicsQueue() const;
+        const Queue *GetPresentQueue() const;
+        const Queue *GetComputeQueue() const;
 
-    QueueFamilyIndices GetQueueIndices() const;
+        QueueFamilyIndices GetQueueIndices() const;
 
-    uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
-private:
-    VkPhysicalDevice SelectPhysicalDevice();
+        uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
 
-    VkPhysicalDevice m_PhysicalDeviceHandle;
-    QueueFamilyIndices m_QueueIndices;
-    VkDevice m_LogicalDeviceHandle;
+    private:
+        VkPhysicalDevice SelectPhysicalDevice();
 
-    std::unique_ptr<Queue> m_GraphicsQueue;
-    std::unique_ptr<Queue> m_PresentQueue;
-    std::unique_ptr<Queue> m_ComputeQueue;
+        VkPhysicalDevice m_PhysicalDeviceHandle;
+        QueueFamilyIndices m_QueueIndices;
+        VkDevice m_LogicalDeviceHandle;
 
-    const Instance* m_TmpInstanceHandle;
-    std::vector<const char *> m_NeededDeviceExtensions;
-};
+        std::unique_ptr<Queue> m_GraphicsQueue;
+        std::unique_ptr<Queue> m_PresentQueue;
+        std::unique_ptr<Queue> m_ComputeQueue;
+
+        const Instance *m_TmpInstanceHandle;
+        std::vector<const char *> m_NeededDeviceExtensions;
+    };
+}

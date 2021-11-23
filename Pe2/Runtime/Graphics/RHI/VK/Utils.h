@@ -8,81 +8,87 @@
 #include <array>
 #include <deque>
 #include <functional>
-#define VK_CHECK(x)                                                     \
-	do                                                                  \
-	{                                                                   \
-		VkResult err = x;                                               \
-		if (err)                                                        \
-		{                                                               \
+
+namespace VK
+{
+
+#define VK_CHECK(x)                                               \
+	do                                                            \
+	{                                                             \
+		VkResult err = x;                                         \
+		if (err)                                                  \
+		{                                                         \
 			std::cout << "Detected  error: " << err << std::endl; \
-			abort();                                                    \
-		}                                                               \
+			abort();                                              \
+		}                                                         \
 	} while (0);
 
-struct DeletionQueue
-{
-	std::deque<std::function<void()>> deletors;
-
-	void Add(std::function<void()> &&function)
+	struct DeletionQueue
 	{
-		deletors.emplace_back(function);
-	}
+		std::deque<std::function<void()>> deletors;
 
-	void Flush()
+		void Add(std::function<void()> &&function)
+		{
+			deletors.emplace_back(function);
+		}
+
+		void Flush()
+		{
+			for (auto it = deletors.rbegin(); it != deletors.rend(); ++it)
+				(*it)();
+
+			deletors.clear();
+		}
+	};
+
+	struct QueueFamilyIndices
 	{
-		for (auto it = deletors.rbegin(); it != deletors.rend(); ++it)
-			(*it)();
+		std::optional<uint32_t> graphicsFamily;
+		std::optional<uint32_t> presentFamily;
+		std::optional<uint32_t> computeFamily;
 
-		deletors.clear();
-	}
-};
+		bool IsComplete()
+		{
+			return graphicsFamily.has_value() && presentFamily.has_value() && computeFamily.has_value();
+		}
 
-struct QueueFamilyIndices
-{
-	std::optional<uint32_t> graphicsFamily;
-	std::optional<uint32_t> presentFamily;
-	std::optional<uint32_t> computeFamily;
+		bool IsSameFamily()
+		{
+			return graphicsFamily.value() == presentFamily.value() &&
+				   graphicsFamily.value() == computeFamily.value() &&
+				   presentFamily.value() == computeFamily.value();
+		}
 
-	bool IsComplete()
+		std::array<uint32_t, 3> FamilyIndexArray()
+		{
+			return {graphicsFamily.value(), presentFamily.value(), computeFamily.value()};
+		}
+	};
+
+	struct SwapChainSupportDetails
 	{
-		return graphicsFamily.has_value() && presentFamily.has_value() && computeFamily.has_value();
-	}
+		VkSurfaceCapabilitiesKHR capabilities;
+		std::vector<VkSurfaceFormatKHR> formats;
+		std::vector<VkPresentModeKHR> presentModes;
+	};
 
-	bool IsSameFamily()
-	{
-		return graphicsFamily.value() == presentFamily.value() &&
-			   graphicsFamily.value() == computeFamily.value() &&
-			   presentFamily.value() == computeFamily.value();
-	}
+	std::vector<VkLayerProperties> GetInstanceLayerProps();
+	std::vector<VkExtensionProperties> GetInstanceExtensionProps();
+	bool CheckValidationLayerSupport(std::vector<const char *> validationLayerNames, std::vector<VkLayerProperties> instanceLayerProps);
+	bool CheckExtensionSupport(std::vector<const char *> extensionNames, std::vector<VkExtensionProperties> extensionProps);
 
-	std::array<uint32_t, 3> FamilyIndexArray()
-	{
-		return {graphicsFamily.value(), presentFamily.value(), computeFamily.value()};
-	}
-};
+	std::vector<VkExtensionProperties> GetPhysicalDeviceExtensionProps(VkPhysicalDevice device);
+	VkPhysicalDeviceProperties GetPhysicalDeviceProps(VkPhysicalDevice device);
+	VkPhysicalDeviceMemoryProperties GetPhysicalDeviceMemoryProps(VkPhysicalDevice device);
+	VkPhysicalDeviceFeatures GetPhysicalDeviceFeatures(VkPhysicalDevice device);
 
-struct SwapChainSupportDetails
-{
-	VkSurfaceCapabilitiesKHR capabilities;
-	std::vector<VkSurfaceFormatKHR> formats;
-	std::vector<VkPresentModeKHR> presentModes;
-};
+	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface);
+	SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface);
 
-std::vector<VkLayerProperties> GetInstanceLayerProps();
-std::vector<VkExtensionProperties> GetInstanceExtensionProps();
-bool CheckValidationLayerSupport(std::vector<const char *> validationLayerNames, std::vector<VkLayerProperties> instanceLayerProps);
-bool CheckExtensionSupport(std::vector<const char *> extensionNames, std::vector<VkExtensionProperties> extensionProps);
+	VkSurfaceFormatKHR ChooseSwapChainSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
+	VkPresentModeKHR ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
+	VkExtent2D ChooseSwapChainExtent(SDL_Window *window, const VkSurfaceCapabilitiesKHR &capabilities);
 
-std::vector<VkExtensionProperties> GetPhysicalDeviceExtensionProps(VkPhysicalDevice device);
-VkPhysicalDeviceProperties GetPhysicalDeviceProps(VkPhysicalDevice device);
-VkPhysicalDeviceMemoryProperties GetPhysicalDeviceMemoryProps(VkPhysicalDevice device);
-VkPhysicalDeviceFeatures GetPhysicalDeviceFeatures(VkPhysicalDevice device);
+	VkShaderModule CreateShaderModuleFromSpirvFile(VkDevice device, std::string_view filePath);
 
-QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface);
-SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface);
-
-VkSurfaceFormatKHR ChooseSwapChainSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
-VkPresentModeKHR ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
-VkExtent2D ChooseSwapChainExtent(SDL_Window *window, const VkSurfaceCapabilitiesKHR &capabilities);
-
-VkShaderModule CreateShaderModuleFromSpirvFile(VkDevice device, std::string_view filePath);
+}

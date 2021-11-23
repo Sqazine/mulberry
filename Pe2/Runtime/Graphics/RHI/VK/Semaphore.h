@@ -1,14 +1,17 @@
 #pragma once
 #include <vulkan/vulkan.h>
-class Semaphore
+namespace VK
 {
-public:
-    Semaphore(const VkDevice &device);
-    ~Semaphore();
+    class Semaphore
+    {
+    public:
+        Semaphore(const class Device *device);
+        ~Semaphore();
 
-    const VkSemaphore &GetVKSemaphoreHandle() const;
+        const VkSemaphore &GetVKSemaphoreHandle() const;
 
-private:
-    VkSemaphore m_SemaphoreHandle;
-    const VkDevice &m_TmpVkDevice;
-};
+    private:
+        VkSemaphore m_SemaphoreHandle;
+        const class Device *m_TmpDevice;
+    };
+}
