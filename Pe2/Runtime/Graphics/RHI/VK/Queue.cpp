@@ -1,11 +1,12 @@
 #include "Queue.h"
-#include "Device.h"
+#include "Context.h"
 #include <iostream>
 #include "Utils.h"
-
+#include "Fence.h"
+#include "Device.h"
 namespace VK
 {
-    Queue::Queue(const Device *device, uint32_t queueFamilyIndex, uint32_t queueIndex)
+    Queue::Queue(const Device* device, uint32_t queueFamilyIndex, uint32_t queueIndex)
     {
         vkGetDeviceQueue(device->GetLogicalDeviceHandle(), queueFamilyIndex, queueIndex, &m_QueueHandle);
     }
@@ -13,9 +14,9 @@ namespace VK
     {
     }
 
-    void Queue::Submit(uint32_t submitCount, const VkSubmitInfo *pSubmits, VkFence fence) const
+    void Queue::Submit(uint32_t submitCount, const VkSubmitInfo *pSubmits, Fence* fence) const
     {
-        VK_CHECK(vkQueueSubmit(m_QueueHandle, submitCount, pSubmits, fence));
+        VK_CHECK(vkQueueSubmit(m_QueueHandle, submitCount, pSubmits, fence==nullptr?VK_NULL_HANDLE:fence->GetVKFenceHandle()));
     }
     void Queue::Present(const VkPresentInfoKHR *pPresentInfo) const
     {

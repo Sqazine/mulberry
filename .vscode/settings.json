@@ -1,6 +1,8 @@
 {
     "files.associations": {
+        "*.cpp": "cpp",
         "vector": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "iosfwd": "cpp"
     }
 }

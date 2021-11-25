@@ -18,7 +18,7 @@ namespace GL
 	{
 	}
 
-	void Context::CreateContext(const RenderContextCreateInfo &config)
+	void Context::Init(const RenderContextCreateInfo &config)
 	{
 		m_RenderCreateInfo = config;
 
@@ -56,7 +56,7 @@ namespace GL
 		}
 	}
 
-	void Context::DestroyContext()
+	void Context::Destroy()
 	{
 		SDL_GL_DeleteContext(m_ContextHandle);
 	}
@@ -76,7 +76,7 @@ namespace GL
 		return m_ContextHandle;
 	}
 
-	SDL_Window *Context::GetWindowHandle()
+	SDL_Window *Context::GetWindow()
 	{
 		return m_WindowHandle;
 	}

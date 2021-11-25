@@ -1,15 +1,15 @@
 #include "SwapChain.h"
 #include "Utils.h"
 #include <iostream>
+#include "Context.h"
 namespace VK
 {
-    SwapChain::SwapChain(SDL_Window *window, const Instance *instance, const Device *device)
-        : m_TmpDevice(device)
+    SwapChain::SwapChain()
     {
-        SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(device->GetPhysicalDeviceHandle(), instance->GetVKSurfaceKHRHandle());
+        SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(Context::GetDevice()->GetPhysicalDeviceHandle(), Context::GetInstance()->GetVKSurfaceKHRHandle());
         VkSurfaceFormatKHR surfaceFormat = ChooseSwapChainSurfaceFormat(swapChainSupport.formats);
         VkPresentModeKHR presentMode = ChooseSwapChainPresentMode(swapChainSupport.presentModes);
-        VkExtent2D extent = ChooseSwapChainExtent(window, swapChainSupport.capabilities);
+        VkExtent2D extent = ChooseSwapChainExtent(Context::GetWindow(), swapChainSupport.capabilities);
 
         uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
         if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
@@ -19,7 +19,7 @@ namespace VK
         createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
         createInfo.pNext = nullptr;
         createInfo.flags = 0;
-        createInfo.surface = instance->GetVKSurfaceKHRHandle();
+        createInfo.surface = Context::GetInstance()->GetVKSurfaceKHRHandle();
         createInfo.minImageCount = imageCount;
         createInfo.imageFormat = surfaceFormat.format;
         createInfo.imageColorSpace = surfaceFormat.colorSpace;
@@ -27,11 +27,11 @@ namespace VK
         createInfo.imageArrayLayers = 1;
         createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-        if (!device->GetQueueIndices().IsSameFamily())
+        if (!Context::GetDevice()->GetQueueIndices().IsSameFamily())
         {
             createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-            createInfo.queueFamilyIndexCount = device->GetQueueIndices().FamilyIndexArray().size();
-            createInfo.pQueueFamilyIndices = device->GetQueueIndices().FamilyIndexArray().data();
+            createInfo.queueFamilyIndexCount = Context::GetDevice()->GetQueueIndices().FamilyIndexArray().size();
+            createInfo.pQueueFamilyIndices = Context::GetDevice()->GetQueueIndices().FamilyIndexArray().data();
         }
         else
         {
@@ -46,12 +46,12 @@ namespace VK
         createInfo.clipped = VK_TRUE;
         createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-        VK_CHECK(vkCreateSwapchainKHR(m_TmpDevice->GetLogicalDeviceHandle(), &createInfo, nullptr, &m_SwapChainHandle));
+        VK_CHECK(vkCreateSwapchainKHR(Context::GetDevice()->GetLogicalDeviceHandle(), &createInfo, nullptr, &m_SwapChainHandle));
 
         imageCount = 0;
-        vkGetSwapchainImagesKHR(m_TmpDevice->GetLogicalDeviceHandle(), m_SwapChainHandle, &imageCount, nullptr);
+        vkGetSwapchainImagesKHR(Context::GetDevice()->GetLogicalDeviceHandle(), m_SwapChainHandle, &imageCount, nullptr);
         m_SwapChainImages.resize(imageCount);
-        vkGetSwapchainImagesKHR(m_TmpDevice->GetLogicalDeviceHandle(), m_SwapChainHandle, &imageCount, m_SwapChainImages.data());
+        vkGetSwapchainImagesKHR(Context::GetDevice()->GetLogicalDeviceHandle(), m_SwapChainHandle, &imageCount, m_SwapChainImages.data());
 
         m_SwapChainImageFormat = surfaceFormat.format;
         m_SwapChainExtent = extent;
@@ -76,14 +76,14 @@ namespace VK
             info.subresourceRange.baseArrayLayer = 0;
             info.subresourceRange.layerCount = 1;
 
-            VK_CHECK(vkCreateImageView(m_TmpDevice->GetLogicalDeviceHandle(), &info, nullptr, &m_SwapChainImageViews[i]));
+            VK_CHECK(vkCreateImageView(Context::GetDevice()->GetLogicalDeviceHandle(), &info, nullptr, &m_SwapChainImageViews[i]));
         }
     }
     SwapChain::~SwapChain()
     {
         for (auto imageView : m_SwapChainImageViews)
-            vkDestroyImageView(m_TmpDevice->GetLogicalDeviceHandle(), imageView, nullptr);
-        vkDestroySwapchainKHR(m_TmpDevice->GetLogicalDeviceHandle(), m_SwapChainHandle, nullptr);
+            vkDestroyImageView(Context::GetDevice()->GetLogicalDeviceHandle(), imageView, nullptr);
+        vkDestroySwapchainKHR(Context::GetDevice()->GetLogicalDeviceHandle(), m_SwapChainHandle, nullptr);
     }
 
     const VkSwapchainKHR &SwapChain::GetVKSwapChainHandle() const

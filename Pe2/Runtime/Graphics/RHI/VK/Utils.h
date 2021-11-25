@@ -88,7 +88,4 @@ namespace VK
 	VkSurfaceFormatKHR ChooseSwapChainSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
 	VkPresentModeKHR ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
 	VkExtent2D ChooseSwapChainExtent(SDL_Window *window, const VkSurfaceCapabilitiesKHR &capabilities);
-
-	VkShaderModule CreateShaderModuleFromSpirvFile(VkDevice device, std::string_view filePath);
-
 }

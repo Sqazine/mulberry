@@ -1,11 +1,11 @@
 #include "PipelineCache.h"
 #include <iostream>
 #include "Utils.h"
-#include "Device.h"
+#include "Context.h"
 namespace VK
 {
-    PipelineCache::PipelineCache(const Device *device, size_t initialDataSize, void *initialData)
-        : m_TmpDevice(device)
+    PipelineCache::PipelineCache( size_t initialDataSize, void *initialData)
+        
     {
         VkPipelineCacheCreateInfo info{};
         info.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
@@ -14,11 +14,11 @@ namespace VK
         info.initialDataSize = initialDataSize;
         info.pInitialData = initialData;
 
-        VK_CHECK(vkCreatePipelineCache(m_TmpDevice->GetLogicalDeviceHandle(), &info, nullptr, &m_PipelineCacheHandle));
+        VK_CHECK(vkCreatePipelineCache(Context::GetDevice()->GetLogicalDeviceHandle(), &info, nullptr, &m_PipelineCacheHandle));
     }
     PipelineCache::~PipelineCache()
     {
-        vkDestroyPipelineCache(m_TmpDevice->GetLogicalDeviceHandle(), m_PipelineCacheHandle, nullptr);
+        vkDestroyPipelineCache(Context::GetDevice()->GetLogicalDeviceHandle(), m_PipelineCacheHandle, nullptr);
     }
 
     const VkPipelineCache &PipelineCache::GetVKPipelineCacheHandle() const

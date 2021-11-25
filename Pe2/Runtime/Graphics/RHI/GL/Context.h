@@ -10,8 +10,8 @@ namespace GL
     public:
         ~Context();
 
-        static void CreateContext(const RenderContextCreateInfo &config);
-        static void DestroyContext();
+        static void Init(const RenderContextCreateInfo &config);
+        static void Destroy();
 
         static bool IsSupportExtension(std::string_view extensionName);
 
@@ -19,7 +19,7 @@ namespace GL
 
         static SDL_GLContext GetContextHandle();
 
-        static SDL_Window *GetWindowHandle();
+        static SDL_Window *GetWindow();
 
     private:
         Context();

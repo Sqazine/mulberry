@@ -194,36 +194,4 @@ namespace VK
 			return actualExtent;
 		}
 	}
-
-	VkShaderModule CreateShaderModuleFromSpirvFile(VkDevice device, std::string_view filePath)
-	{
-		std::ifstream file(filePath.data(), std::ios::binary);
-
-		if (!file.is_open())
-		{
-			std::cout << "failed to load shader file:" << filePath << std::endl;
-			exit(1);
-		}
-
-		std::stringstream sstream;
-
-		sstream << file.rdbuf();
-
-		std::string content = sstream.str();
-
-		file.close();
-
-		VkShaderModuleCreateInfo info;
-		info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-		info.flags = 0;
-		info.pNext = nullptr;
-		info.codeSize = content.size();
-		info.pCode = reinterpret_cast<const uint32_t *>(content.data());
-
-		VkShaderModule module;
-
-		VK_CHECK(vkCreateShaderModule(device, &info, nullptr, &module));
-
-		return module;
-	}
 }

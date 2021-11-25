@@ -17,10 +17,10 @@ void RenderContext::CreateRenderContext(const RenderContextCreateInfo &config)
 	switch (m_RenderBackend)
 	{
 	case RenderBackend::VK:
-		VK::Context::CreateContext(config);
+		VK::Context::Init(config);
 		break;
 	default:
-		GL::Context::CreateContext(config);
+		GL::Context::Init(config);
 		break;
 	}
 }
@@ -30,10 +30,10 @@ void RenderContext::DestroyRenderContext()
 	switch (m_RenderBackend)
 	{
 	case RenderBackend::VK:
-		VK::Context::DestroyContext();
+		VK::Context::Destroy();
 		break;
 	default:
-		GL::Context::DestroyContext();
+		GL::Context::Destroy();
 		break;
 	}
 }
@@ -55,15 +55,15 @@ const RenderBackend &RenderContext::GetRenderBackend()
 	return m_RenderBackend;
 }
 
-SDL_Window *RenderContext::GetWindowHandle()
+SDL_Window *RenderContext::GetWindow()
 {
 	switch (m_RenderBackend)
 	{
 	case RenderBackend::VK:
-		VK::Context::GetWindowHandle();
+		VK::Context::GetWindow();
 		break;
 	default:
-		GL::Context::GetWindowHandle();
+		GL::Context::GetWindow();
 		break;
 	}
 }

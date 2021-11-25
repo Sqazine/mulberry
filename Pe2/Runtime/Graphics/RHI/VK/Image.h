@@ -6,5 +6,7 @@ namespace VK
     {
         VkImage image;
         VkImageView imageView;
+        VkDeviceMemory imageMemory;
+        VkSampler imageSampler;
     };
 }

@@ -14,7 +14,7 @@ public:
 
 	static const RenderBackend& GetRenderBackend();
 
-	static SDL_Window* GetWindowHandle();
+	static SDL_Window* GetWindow();
 private:
 	RenderContext();
 	
