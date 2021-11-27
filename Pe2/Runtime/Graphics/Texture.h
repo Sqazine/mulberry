@@ -1,42 +1,18 @@
 #pragma once
-#include <vector>
-#include <cstdint>
+
+#include <memory>
 #include "../Math/Color.h"
+#include "TextureInfo.h"
+#include "GL/Texture.h"
 namespace Pe2
 {
-	enum class WrapMode
+	class Texture
 	{
-		REPEAT,
-		MIRROR_REPEAT,
-		CLAMP_TO_EDGE,
-		CLAMP_TO_BORDER,
-	};
+	public:
+		Texture(const TextureInfo &info);
+		~Texture();
 
-	enum class FilterMode
-	{
-		NEAREST,
-		LINEAR,
-		TRILINEAR,
+	private:
+		std::unique_ptr<GL::Texture> m_GLTexture;
 	};
-
-	enum class ChannelMode
-	{
-		RGB8,
-		RGBA8,
-	};
-
-	struct ImgData
-	{
-		std::vector<uint8_t> pixels{};
-		uint32_t width=0, height=0;
-	};
-
-	struct TextureCreateInfo
-	{
-		WrapMode wrapS = WrapMode::REPEAT, wrapT = WrapMode::REPEAT;
-		FilterMode filterMode;
-		Color borderColor = Color::BLACK;
-		ImgData data;
-	};
-
 }

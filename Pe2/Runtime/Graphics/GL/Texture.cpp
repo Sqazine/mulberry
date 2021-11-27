@@ -1,6 +1,7 @@
 #include "Texture.h"
 #include <vector>
 #include "Context.h"
+
 namespace Pe2::GL
 {
 
@@ -9,7 +10,7 @@ namespace Pe2::GL
 		glGenTextures(1, &m_TextureID);
 	}
 
-	Texture::Texture(const TextureCreateInfo &info)
+	Texture::Texture(const TextureInfo &info)
 		: m_Info(info)
 	{
 		glGenTextures(1, &m_TextureID);
@@ -39,7 +40,7 @@ namespace Pe2::GL
 		return m_TextureID;
 	}
 
-	void Texture::CreateFrom(const TextureCreateInfo &info)
+	void Texture::CreateFrom(const TextureInfo &info)
 	{
 		m_Info = info;
 
@@ -59,7 +60,7 @@ namespace Pe2::GL
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	const TextureCreateInfo &Texture::GetCreateInfo()
+	const TextureInfo &Texture::GetCreateInfo()
 	{
 		return m_Info;
 	}

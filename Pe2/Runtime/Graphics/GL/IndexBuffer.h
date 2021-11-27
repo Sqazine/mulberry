@@ -3,7 +3,6 @@
 #include <vector>
 #include <string>
 #include <glad/glad.h>
-#include "Utils.h"
 
 namespace Pe2::GL
 {
@@ -28,6 +27,8 @@ namespace Pe2::GL
     private:
         IndexBuffer(const IndexBuffer &) = delete;
         IndexBuffer &operator=(const IndexBuffer &) = delete;
+
+        uint32_t DataTypeMap(std::string_view typeStr);
 
         uint32_t m_IndexBufferID;
         uint32_t m_Size;
@@ -76,4 +77,23 @@ namespace Pe2::GL
     {
         return m_IndexBufferID;
     }
+
+     uint32_t IndexBuffer::DataTypeMap(std::string_view typeStr)
+     {
+          if (typeStr.compare("uint32_t") == 0 || typeStr.compare("unsigned int") == 0)
+            return GL_UNSIGNED_INT;
+        else if (typeStr.compare("int32_t") == 0 || typeStr.compare("int") == 0)
+            return GL_INT;
+        else if (typeStr.compare("uint8_t") == 0 || typeStr.compare("unsigned char") == 0)
+            return GL_UNSIGNED_BYTE;
+        else if (typeStr.compare("int8_t") == 0 || typeStr.compare("signed char") == 0 || typeStr.compare("char") == 0)
+            return GL_BYTE;
+        else if (typeStr.compare("int16_t") == 0 || typeStr.compare("short") == 0)
+            return GL_SHORT;
+        else if (typeStr.compare("uint16_t") == 0 || typeStr.compare("unsigned short") == 0)
+            return GL_SHORT;
+        else if (typeStr.compare("float") == 0)
+            return GL_FLOAT;
+        return GL_NONE;
+     }
 }
