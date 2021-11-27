@@ -1,45 +1,45 @@
-#include "Texture2D.h"
+#include "Texture.h"
 #include <vector>
 #include "Context.h"
 namespace GL
 {
 
-	Texture2D::Texture2D()
+	Texture::Texture()
 	{
 		glGenTextures(1, &m_TextureID);
 	}
 
-	Texture2D::Texture2D(const Texture2DCreateInfo &info)
+	Texture::Texture(const TextureCreateInfo &info)
 		: m_Info(info)
 	{
 		glGenTextures(1, &m_TextureID);
 		CreateFrom(info);
 	}
 
-	Texture2D::~Texture2D()
+	Texture::~Texture()
 	{
 		glDeleteTextures(1, &m_TextureID);
 	}
 
-	void Texture2D::BindTo(uint32_t uniform, uint32_t texIndex)
+	void Texture::BindTo(uint32_t uniform, uint32_t texIndex)
 	{
 		glUniform1i(uniform, texIndex);
 		glActiveTexture(GL_TEXTURE0 + texIndex);
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);
 	}
 
-	void Texture2D::UnBindFrom(uint32_t textureIndex)
+	void Texture::UnBindFrom(uint32_t textureIndex)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	uint32_t Texture2D::GetID()
+	uint32_t Texture::GetID()
 	{
 		return m_TextureID;
 	}
 
-	void Texture2D::CreateFrom(const Texture2DCreateInfo &info)
+	void Texture::CreateFrom(const TextureCreateInfo &info)
 	{
 		m_Info = info;
 		uint32_t externalFormat = GL_RED, internalFormat = GL_R8, channelType = GL_UNSIGNED_BYTE;
@@ -75,7 +75,7 @@ namespace GL
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	const Texture2DCreateInfo &Texture2D::GetCreateInfo()
+	const TextureCreateInfo &Texture::GetCreateInfo()
 	{
 		return m_Info;
 	}

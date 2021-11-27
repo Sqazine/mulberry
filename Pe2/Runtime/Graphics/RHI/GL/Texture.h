@@ -27,7 +27,7 @@ namespace GL
 		RGBA8 = GL_RGBA8,
 	};
 
-	struct Texture2DCreateInfo
+	struct TextureCreateInfo
 	{
 		int32_t wrapS = WrapMode::REPEAT, wrapT = WrapMode::REPEAT;
 		int32_t minFilter = FilterMode::LINEAR, magFilter = FilterMode::LINEAR;
@@ -37,23 +37,23 @@ namespace GL
 		void *data = nullptr;
 	};
 
-	class Texture2D
+	class Texture
 	{
 	public:
-		Texture2D();
-		Texture2D(const Texture2DCreateInfo &info);
-		~Texture2D();
+		Texture();
+		Texture(const TextureCreateInfo &info);
+		~Texture();
 
-		void CreateFrom(const Texture2DCreateInfo &info);
+		void CreateFrom(const TextureCreateInfo &info);
 
 		void BindTo(uint32_t uniform, uint32_t texIndex);
 		void UnBindFrom(uint32_t textureIndex);
 
 		uint32_t GetID();
-		const Texture2DCreateInfo &GetCreateInfo();
+		const TextureCreateInfo &GetCreateInfo();
 
 	protected:
 		uint32_t m_TextureID;
-		Texture2DCreateInfo m_Info;
+		TextureCreateInfo m_Info;
 	};
 }
