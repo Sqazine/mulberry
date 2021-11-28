@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
-#include "RenderContextCreateInfo.h"
+#include "RenderContextInfo.h"
 namespace Pe2
 {
 	class RenderContext
@@ -8,7 +8,7 @@ namespace Pe2
 	public:
 		~RenderContext();
 
-		static void CreateRenderContext(const RenderContextCreateInfo &config);
+		static void CreateRenderContext(const RenderContextInfo &config);
 
 		static void DestroyRenderContext();
 

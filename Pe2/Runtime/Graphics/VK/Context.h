@@ -5,13 +5,13 @@
 #include "Device.h"
 #include <glm/glm.hpp>
 #include <SDL2/SDL.h>
-#include "../RenderContextCreateInfo.h"
+#include "../RenderContextInfo.h"
 namespace Pe2::VK
 {
     class Context
     {
     public:
-        static void Init(const RenderContextCreateInfo &config);
+        static void Init(const RenderContextInfo &config);
         static void Destroy();
 
         static Device *GetDevice();

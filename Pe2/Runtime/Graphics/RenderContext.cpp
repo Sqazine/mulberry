@@ -14,7 +14,7 @@ namespace Pe2
 	{
 	}
 
-	void RenderContext::CreateRenderContext(const RenderContextCreateInfo &config)
+	void RenderContext::CreateRenderContext(const RenderContextInfo &config)
 	{
 		m_RenderBackend = config.backend;
 

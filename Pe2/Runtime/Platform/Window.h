@@ -2,7 +2,7 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include "../Math/Vec2.h"
-struct WindowCreateInfo
+struct WindowInfo
 {
     std::string title;
     Vec2 extent;
@@ -13,7 +13,7 @@ struct WindowCreateInfo
 class Window
 {
 public:
-    Window(const WindowCreateInfo &info);
+    Window(const WindowInfo &info);
     SDL_Window *GetHandle() const;
 
         

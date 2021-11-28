@@ -13,15 +13,15 @@ namespace Pe2::VK
 
     SDL_Window *Context::m_WindowHandle = nullptr;
 
-    void Context::Init(const RenderContextCreateInfo &config)
+    void Context::Init(const RenderContextInfo &config)
     {
         uint32_t windowFlag = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_VULKAN | SDL_WINDOW_SHOWN;
 
-        m_WindowHandle = SDL_CreateWindow(config.windowCreateInfo.title.c_str(),
+        m_WindowHandle = SDL_CreateWindow(config.windowInfo.title.c_str(),
                                           SDL_WINDOWPOS_CENTERED,
                                           SDL_WINDOWPOS_CENTERED,
-                                          config.windowCreateInfo.extent.x,
-                                          config.windowCreateInfo.extent.y,
+                                          config.windowInfo.extent.x,
+                                          config.windowInfo.extent.y,
                                           windowFlag);
 
         int flag = SDL_Vulkan_LoadLibrary(nullptr);

@@ -16,9 +16,9 @@ namespace Pe2
 		VSYNC = 2
 	};
 
-	struct RenderContextCreateInfo
+	struct RenderContextInfo
 	{
-		WindowCreateInfo windowCreateInfo;
+		WindowInfo windowInfo;
 		RenderBackend backend = RenderBackend::GL;
 		int flag = DOUBLE_BUFFERING | VSYNC;
 	};

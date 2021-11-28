@@ -4,7 +4,7 @@
 #include "Context.h"
 namespace Pe2::GL
 {
-	RenderContextCreateInfo Context::m_RenderCreateInfo;
+	RenderContextInfo Context::m_RenderCreateInfo;
 
 	SDL_GLContext Context::m_ContextHandle;
 
@@ -18,19 +18,19 @@ namespace Pe2::GL
 	{
 	}
 
-	void Context::Init(const RenderContextCreateInfo &config)
+	void Context::Init(const RenderContextInfo &config)
 	{
 		m_RenderCreateInfo = config;
 
 		uint32_t windowFlag = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL;
-		if (config.windowCreateInfo.resizeable)
+		if (config.windowInfo.resizeable)
 			windowFlag |= SDL_WINDOW_RESIZABLE;
 
-		m_WindowHandle = SDL_CreateWindow(config.windowCreateInfo.title.c_str(),
+		m_WindowHandle = SDL_CreateWindow(config.windowInfo.title.c_str(),
 										  SDL_WINDOWPOS_CENTERED,
 										  SDL_WINDOWPOS_CENTERED,
-										  config.windowCreateInfo.extent.x,
-										  config.windowCreateInfo.extent.y,
+										  config.windowInfo.extent.x,
+										  config.windowInfo.extent.y,
 										  windowFlag);
 
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);

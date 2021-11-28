@@ -16,7 +16,7 @@ enum class AppState
 };
 struct AppCreateInfo
 {
-	WindowCreateInfo windowCreateInfo;
+	WindowInfo windowInfo;
 };
 class App
 {
