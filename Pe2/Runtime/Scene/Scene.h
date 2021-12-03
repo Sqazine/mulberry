@@ -15,8 +15,9 @@ namespace Pe2
         bool RemoveEntity(std::string_view name);
         void ClearEntity();
 
+        
     private:
         std::string m_Name;
         std::vector<std::unique_ptr<Entity>> m_Entities;
-    }
+    };
 }
