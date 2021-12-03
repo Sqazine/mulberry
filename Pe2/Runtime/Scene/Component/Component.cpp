@@ -1,31 +1,46 @@
 #include "Component.h"
 #include "../Entity.h"
-std::string Component::m_ComponentType = "Component";
 
-Component::Component(int updateOrder)
-	:m_UpdateOrder(updateOrder)
+namespace Pe2
 {
-}
 
-Component::~Component()
-{
-}
+	std::string Component::m_ComponentType = "Component";
 
-void Component::Update(float deltaTime)
-{
-}
+	Component::Component(int updateOrder)
+		: m_UpdateOrder(updateOrder)
+	{
+	}
 
-int Component::GetUpdateOrder() const
-{
-	return m_UpdateOrder;
-}
+	Component::~Component()
+	{
+	}
 
-Entity* Component::GetOwner() const
-{
-	return m_Owner;
-}
+	void Component::ProcessInput()
+	{
+	}
+	void Component::Update(float deltaTime)
+	{
+	}
 
-bool Component::IsSameComponentType(const std::string& componentType) const
-{
-	return m_ComponentType==componentType;
+	void Component::LateUpdate(float deltaTime)
+	{
+	}
+	void Component::FixedUpdate()
+	{
+	}
+
+	int Component::GetUpdateOrder() const
+	{
+		return m_UpdateOrder;
+	}
+
+	const Entity *Component::GetOwner() const
+	{
+		return m_Owner;
+	}
+
+	bool Component::IsSameComponentType(const std::string &componentType) const
+	{
+		return m_ComponentType == componentType;
+	}
 }

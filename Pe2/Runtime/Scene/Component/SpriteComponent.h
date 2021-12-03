@@ -1,9 +1,18 @@
 #pragma once
 #include "Component.h"
-class SpriteComponent:public Component
+#include <memory>
+#include "../../Graphics/Texture.h"
+namespace Pe2
 {
-	COMPONENT_DECLARATION()
-public:
-	SpriteComponent();
-	~SpriteComponent();
-};
+	class SpriteComponent : public Component
+	{
+		COMPONENT_DECLARATION()
+	public:
+		SpriteComponent();
+		~SpriteComponent();
+
+	private:
+		std::unique_ptr<Texture> m_Texture;
+	};
+
+}

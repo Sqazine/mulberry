@@ -1,11 +1,16 @@
 #include "SpriteComponent.h"
-COMPONENT_DEFINITION(Component,SpriteComponent)
 
-SpriteComponent::SpriteComponent()
-	:Component()
+namespace Pe2
 {
-}
 
-SpriteComponent::~SpriteComponent()
-{
+	COMPONENT_DEFINITION(Component, SpriteComponent)
+
+	SpriteComponent::SpriteComponent()
+		: Component()
+	{
+	}
+
+	SpriteComponent::~SpriteComponent()
+	{
+	}
 }

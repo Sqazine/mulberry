@@ -1,24 +1,29 @@
 #include "Entity.h"
-Entity::Entity()
-    : m_Visiable(true),m_Name("Entity")
-{
-}
 
-Entity::~Entity()
+namespace Pe2
 {
-    RemoveAllComponents();
-}
 
-void Entity::RemoveAllComponents()
-{
-    std::vector<std::unique_ptr<Component>>().swap(m_Components);
-}
+    Entity::Entity()
+        : m_Visiable(true), m_Name("Entity")
+    {
+    }
 
-void Entity::SetVisiable(bool visiable)
-{
-    m_Visiable = visiable;
-}
-bool Entity::IsVisiable() const
-{
-    return m_Visiable;
+    Entity::~Entity()
+    {
+        RemoveAllComponents();
+    }
+
+    void Entity::RemoveAllComponents()
+    {
+        std::vector<std::unique_ptr<Component>>().swap(m_Components);
+    }
+
+    void Entity::SetVisiable(bool visiable)
+    {
+        m_Visiable = visiable;
+    }
+    bool Entity::IsVisiable() const
+    {
+        return m_Visiable;
+    }
 }

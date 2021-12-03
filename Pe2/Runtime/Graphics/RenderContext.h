@@ -1,26 +1,60 @@
 #pragma once
+#include <memory>
 #include <SDL2/SDL.h>
-#include "RenderContextInfo.h"
+#include <string_view>
 namespace Pe2
 {
-	class RenderContext
-	{
-	public:
-		~RenderContext();
+    enum class RenderBackend
+    {
+        GL,
+        VK,
+    };
 
-		static void CreateRenderContext(const RenderContextInfo &config);
+    enum RenderFlag
+    {
+        DOUBLE_BUFFERING = 1,
+        VSYNC = 2
+    };
 
-		static void DestroyRenderContext();
+    struct WindowInfo
+    {
+        std::string title;
+        float width;
+        float height;
+        bool resizeable = true;
+        bool fullScreen = false;
+    };
 
-		static void SwapWindow();
+    struct RenderContextInfo
+    {
+        WindowInfo windowInfo;
+        RenderBackend backend = RenderBackend::GL;
+        int flag = DOUBLE_BUFFERING | VSYNC;
+    };
 
-		static const RenderBackend &GetRenderBackend();
+    class RenderContext
+    {
+    public:
+        ~RenderContext();
 
-		static SDL_Window *GetWindow();
+        static void Init(const RenderContextInfo &config);
+        static void Destroy();
 
-	private:
-		RenderContext();
+        static bool IsSupportExtension(std::string_view extensionName);
 
-		static RenderBackend m_RenderBackend;
-	};
+        static void SwapWindow();
+
+        static SDL_GLContext GetRenderContextHandle();
+
+        static SDL_Window *GetWindow();
+
+    private:
+        RenderContext();
+
+        static RenderContextInfo m_RenderCreateInfo;
+
+        static SDL_GLContext m_RenderContextHandle;
+
+        static SDL_Window *m_WindowHandle;
+    };
 }

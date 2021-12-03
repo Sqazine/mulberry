@@ -1,74 +1,82 @@
+#include <glad/glad.h>
+#include <spdlog/spdlog.h>
 #include "RenderContext.h"
-#include "GL/Context.h"
-#include "VK/Context.h"
-
 namespace Pe2
 {
+	RenderContextInfo RenderContext::m_RenderCreateInfo;
 
-	RenderBackend RenderContext::m_RenderBackend;
+	SDL_GLContext RenderContext::m_RenderContextHandle;
+
+	SDL_Window *RenderContext::m_WindowHandle = nullptr;
 
 	RenderContext::RenderContext()
 	{
 	}
+
 	RenderContext::~RenderContext()
 	{
 	}
 
-	void RenderContext::CreateRenderContext(const RenderContextInfo &config)
+	void RenderContext::Init(const RenderContextInfo &config)
 	{
-		m_RenderBackend = config.backend;
+		m_RenderCreateInfo = config;
 
-		switch (m_RenderBackend)
+		uint32_t windowFlag = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL;
+		if (config.windowInfo.resizeable)
+			windowFlag |= SDL_WINDOW_RESIZABLE;
+
+		m_WindowHandle = SDL_CreateWindow(config.windowInfo.title.c_str(),
+										  SDL_WINDOWPOS_CENTERED,
+										  SDL_WINDOWPOS_CENTERED,
+										  config.windowInfo.width,
+										  config.windowInfo.height,
+										  windowFlag);
+
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+		m_RenderContextHandle = SDL_GL_CreateContext(m_WindowHandle);
+
+		if (!m_RenderContextHandle)
+			spdlog::error("failed to create SDL opengl context:{}", SDL_GetError());
+
+		if (!gladLoadGL())
+			spdlog::error("failed to load GLAD:{}", glGetError());
+
+		//垂直同步
+		int success = SDL_GL_SetSwapInterval(((m_RenderCreateInfo.flag&DOUBLE_BUFFERING)==DOUBLE_BUFFERING ? 1 : 0));
+		if (success == -1)
+			spdlog::error("failed to open/close opengl VSync:{}", SDL_GetError());
 		{
-		case RenderBackend::VK:
-			VK::Context::Init(config);
-			break;
-		default:
-			GL::Context::Init(config);
-			break;
+			spdlog::info("OpenGL Info:\n");
+			spdlog::info("Vendor:{}", glGetString(GL_VENDOR));
+			spdlog::info("Renderer:{}", glGetString(GL_RENDERER));
+			spdlog::info("Version:{}", glGetString(GL_VERSION));
+			spdlog::info("Extensions:{}", glGetString(GL_EXTENSIONS));
 		}
 	}
 
-	void RenderContext::DestroyRenderContext()
+	void RenderContext::Destroy()
 	{
-		switch (m_RenderBackend)
-		{
-		case RenderBackend::VK:
-			VK::Context::Destroy();
-			break;
-		default:
-			GL::Context::Destroy();
-			break;
-		}
+		SDL_GL_DeleteContext(m_RenderContextHandle);
+	}
+
+	bool RenderContext::IsSupportExtension(std::string_view extensionName)
+	{
+		return SDL_GL_ExtensionSupported(extensionName.data());
 	}
 
 	void RenderContext::SwapWindow()
 	{
-		switch (m_RenderBackend)
-		{
-		case RenderBackend::VK:
-			break;
-		default:
-			GL::Context::SwapWindow();
-			break;
-		}
+		SDL_GL_SwapWindow(m_WindowHandle);
 	}
 
-	const RenderBackend &RenderContext::GetRenderBackend()
+	SDL_GLContext RenderContext::GetRenderContextHandle()
 	{
-		return m_RenderBackend;
+		return m_RenderContextHandle;
 	}
 
 	SDL_Window *RenderContext::GetWindow()
 	{
-		switch (m_RenderBackend)
-		{
-		case RenderBackend::VK:
-			VK::Context::GetWindow();
-			break;
-		default:
-			GL::Context::GetWindow();
-			break;
-		}
+		return m_WindowHandle;
 	}
 }
