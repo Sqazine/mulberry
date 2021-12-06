@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 #include <memory>
-#include "../../Graphics/Texture.h"
+#include "../../Render/Texture.h"
 namespace Pe2
 {
 	class SpriteComponent : public Component

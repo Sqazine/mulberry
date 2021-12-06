@@ -1,6 +1,6 @@
 #pragma once
 #include <cmath>
-namespace Math
+namespace MathUtils
 {
 	constexpr float PI = 3.1415926535f;
 

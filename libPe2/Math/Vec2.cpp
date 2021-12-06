@@ -133,12 +133,12 @@ float Vec2::IncludedAngle(const Vec2 &left, const Vec2 &right)
 	Normalize(left);
 	Normalize(right);
 
-	return Math::ArcCos(Dot(left, right));
+	return MathUtils::ArcCos(Dot(left, right));
 }
 
 Vec2 Vec2::Rotate(const Vec2 &vec, float radian)
 {
-	return Vec2(Math::Cos(radian) * vec.x - Math::Sin(radian) * vec.y, Math::Sin(radian) * vec.x + Math::Cos(radian) * vec.y);
+	return Vec2(MathUtils::Cos(radian) * vec.x - MathUtils::Sin(radian) * vec.y, MathUtils::Sin(radian) * vec.x + MathUtils::Cos(radian) * vec.y);
 }
 
 Vec2 Vec2::Translate(const Vec2 &vec, const Vec2 &t)
@@ -157,5 +157,5 @@ float Vec2::SquareLength() const
 
 float Vec2::Length() const
 {
-	return Math::Sqrt(SquareLength());
+	return MathUtils::Sqrt(SquareLength());
 }

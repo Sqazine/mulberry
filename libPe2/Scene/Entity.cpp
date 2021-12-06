@@ -4,7 +4,7 @@ namespace Pe2
 {
 
     Entity::Entity(std::string_view name)
-        : Object(name), m_Visiable(true)
+        : Object(name), m_Visiable(true),m_IsStatic(false)
     {
     }
 

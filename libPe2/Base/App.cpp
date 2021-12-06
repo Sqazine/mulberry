@@ -25,9 +25,23 @@ namespace Pe2
         return result;
     }
 
-    void App::RemoveScene(std::string_view name)
+    bool App::RemoveScene(std::string_view name)
     {
-        
+        auto iter = std::find_if(m_Scenes.begin(), m_Scenes.end(), [=](auto &scene)
+                                 { return scene->GetName() == name; });
+        bool exists = iter != m_Scenes.end();
+        if (exists)
+            m_Scenes.erase(iter);
+        return exists;
+    }
+
+    void App::RemoveAllScenes()
+    {
+    }
+
+    void App::Quit()
+    {
+        m_State = AppState::EXIT;
     }
 
     void App::Init()

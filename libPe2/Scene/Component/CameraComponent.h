@@ -1,8 +1,8 @@
 #pragma once
 #include "Component.h"
-#include "../../Math/Mat4.h"
-#include "../../Math/Vec2.h"
-#include "../../Math/Color.h"
+#include "Math/Mat4.h"
+#include "Math/Vec2.h"
+#include "Math/Color.h"
 namespace Pe2
 {
     struct Camera

@@ -12,7 +12,7 @@ namespace Pe2
         Scene(std::string_view name);
         ~Scene();
 
-        const Entity *CreateEntity(std::string_view name);
+        Entity *CreateEntity(std::string_view name);
         bool RemoveEntity(std::string_view name);
         void RemoveAllEntities();
 

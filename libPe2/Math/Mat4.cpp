@@ -127,8 +127,8 @@ Mat4 Mat4::Translate(const Vec2& position)
 Mat4 Mat4::Rotate(float radian)
 {
 	Mat4 tmpMat;
-	float radian_cos = Math::Cos(radian);
-	float radian_sin = Math::Sin(radian);
+	float radian_cos = MathUtils::Cos(radian);
+	float radian_sin = MathUtils::Sin(radian);
 
     tmpMat.e00=tmpMat.e11=radian_cos;
     tmpMat.e10=radian_sin;
@@ -167,7 +167,7 @@ Mat4 Mat4::GLOrthoGraphic(float left, float right, float top, float bottom, floa
 Mat4 Mat4::GLPe2rspective(float fov, float aspect, float znear, float zfar)
 {
 	Mat4 tmpMat(0.0f);
-	float cotFov = Math::Cot(fov / 2);
+	float cotFov = MathUtils::Cot(fov / 2);
 	tmpMat.elements[0] = cotFov / aspect;
 	tmpMat.elements[5] = cotFov;
 	tmpMat.elements[10] = (znear + zfar) / (znear - zfar);
@@ -180,7 +180,7 @@ Mat4 Mat4::LookAt(const Vec2& position,float rotRadian)
 {
 	Mat4 tmpMat;
 	Vec2 axisX = Vec2::Rotate(Vec2::UNITX,rotRadian);
-	Vec2 axisY =Vec2::Rotate(Vec2::UNITY,rotRadian+Math::ToRadian(90.0f));
+	Vec2 axisY =Vec2::Rotate(Vec2::UNITY,rotRadian+MathUtils::ToRadian(90.0f));
 
 	Mat4 rotPart;
 	rotPart.elements[0] = axisX.x;

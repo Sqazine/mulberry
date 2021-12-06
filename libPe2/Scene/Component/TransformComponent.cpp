@@ -75,11 +75,11 @@ namespace Pe2
 
     Vec2 TransformComponent::GetLocalAxisY() const
     {
-        return Vec2::Rotate(m_Transform.rotation + Math::ToRadian(90.0f));
+        return Vec2::Rotate(m_Transform.rotation + MathUtils::ToRadian(90.0f));
     }
 
     Mat4 TransformComponent::GetTransformMatrix() const
     {
-        return Mat4::Translate(m_Transform.position) * Mat4::Rotate(Math::ToRadian(m_Transform.rotation)) * Mat4::Scale(m_Transform.scale);
+        return Mat4::Translate(m_Transform.position) * Mat4::Rotate(MathUtils::ToRadian(m_Transform.rotation)) * Mat4::Scale(m_Transform.scale);
     }
 }
