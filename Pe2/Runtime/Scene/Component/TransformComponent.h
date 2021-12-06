@@ -16,7 +16,7 @@ namespace Pe2
     {
         COMPONENT_DECLARATION()
     public:
-        TransformComponent(int updateOrder = 10);
+        TransformComponent(int updateOrder = 0);
         ~TransformComponent();
 
         void SetPosition(const Vec2 &pos);

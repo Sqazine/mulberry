@@ -59,6 +59,17 @@ namespace Pe2
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+	void Texture::CreateFromSurface(SDL_Surface *surface)
+	{
+		TextureInfo info;
+		info.data.width = surface->w;
+		info.data.height = surface->h;
+		info.data.pixels = std::vector<uint8_t>((uint8_t *)surface->pixels, (uint8_t *)surface->pixels + (surface->w * surface->h * 4));
+		info.borderColor = Color::Transparent;
+		info.filterMode = FilterMode::LINEAR;
+		CreateFrom(info);
+	}
+
 	const TextureInfo &Texture::GetCreateInfo()
 	{
 		return m_Info;

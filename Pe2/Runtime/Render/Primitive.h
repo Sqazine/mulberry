@@ -7,13 +7,20 @@
 #include "IndexBuffer.h"
 namespace Pe2
 {
-	class Quad
+	enum class PrimitiveType
+	{
+		QUAD,
+		CIRCLE,
+		LINE,
+		POINT
+	};
+	class Primitive
 	{
 	public:
-		Quad();
-		Quad(const Quad &other);
-		Quad &operator=(const Quad &other);
-		~Quad();
+		Primitive(PrimitiveType type=PrimitiveType::QUAD);
+		Primitive(const Primitive &other);
+		Primitive &operator=(const Primitive &other);
+		~Primitive();
 
 		const std::vector<Vec2> &GetPosition() const;
 		const std::vector<Vec2> &GetTexcoord() const;
@@ -29,6 +36,10 @@ namespace Pe2
 
 	protected:
 		void UpdateBuffers();
+		void CreateQuad();
+		void CreateCircle();
+		void CreateLine();
+		void CreatePoint();
 
 		std::vector<Vec2> m_Position;
 		std::vector<Vec2> m_Texcoord;

@@ -1,3 +1,3 @@
 
-add_executable(Triangle Triangle.cpp)
-target_link_libraries(Triangle Pe2)
+add_executable(Sprite Sprite.cpp)
+target_link_libraries(Sprite Pe2)

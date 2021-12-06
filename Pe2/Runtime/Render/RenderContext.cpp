@@ -33,7 +33,21 @@ namespace Pe2
 										  windowFlag);
 
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
+		SDL_GL_SetSwapInterval(((config.flag & VSYNC) == VSYNC ? 1 : 0));
+		if ((config.flag & DBUFFER) == DBUFFER)
+			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		else
+			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
+
+		
 		m_RenderContextHandle = SDL_GL_CreateContext(m_WindowHandle);
 
 		if (!m_RenderContextHandle)
@@ -42,10 +56,6 @@ namespace Pe2
 		if (!gladLoadGL())
 			spdlog::error("failed to load GLAD:{}", glGetError());
 
-		//垂直同步
-		int success = SDL_GL_SetSwapInterval(((m_RenderCreateInfo.flag&DOUBLE_BUFFERING)==DOUBLE_BUFFERING ? 1 : 0));
-		if (success == -1)
-			spdlog::error("failed to open/close opengl VSync:{}", SDL_GetError());
 		{
 			spdlog::info("OpenGL Info:\n");
 			spdlog::info("Vendor:{}", glGetString(GL_VENDOR));

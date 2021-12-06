@@ -1,7 +1,7 @@
 
 
 #include "ResourceManager.h"
-#include "../Graphics/Texture.h"
+#include "../Render/Texture.h"
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #endif

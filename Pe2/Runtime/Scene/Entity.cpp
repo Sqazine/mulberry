@@ -3,8 +3,8 @@
 namespace Pe2
 {
 
-    Entity::Entity()
-        : m_Visiable(true), m_Name("Entity")
+    Entity::Entity(std::string_view name)
+        : Object(name), m_Visiable(true)
     {
     }
 
@@ -25,5 +25,14 @@ namespace Pe2
     bool Entity::IsVisiable() const
     {
         return m_Visiable;
+    }
+
+    void Entity::SetStatic(bool isStatic)
+    {
+        m_IsStatic = isStatic;
+    }
+    bool Entity::IsStatic() const
+    {
+        return m_IsStatic;
     }
 }

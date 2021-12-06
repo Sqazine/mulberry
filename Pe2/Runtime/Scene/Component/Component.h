@@ -21,8 +21,6 @@ public:                                 \
         return parentCompName::IsSameComponentType(comonentType);                       \
     }
 
-#define REQUIRED_COMPONENT(comp)
-
     class Component
     {
     public:

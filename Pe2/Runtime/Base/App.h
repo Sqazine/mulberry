@@ -24,9 +24,9 @@ namespace Pe2
 	public:
 		static void Run();
 
-		static void CreateEmptyScene(std::string_view name);
-		static void AddScene(Scene *scene);
+		static Scene* CreateScene(std::string_view name);
 		static void RemoveScene(std::string_view name);
+		static void RemoveAllScenes();
 
 	private:
 		static void Init();

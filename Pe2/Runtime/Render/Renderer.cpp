@@ -1,7 +1,7 @@
-#include "SpriteRenderer.h"
+#include "Renderer.h"
 namespace Pe2
 {
-    const std::string SpriteVertShader = "#version 330 core"
+    const std::string SpriteVertShader = "#version 430 core"
                                          "uniform mat4 modelMat;"
                                          "uniform mat4 viewMat;"
                                          "uniform mat4 projMat;"
@@ -14,7 +14,7 @@ namespace Pe2
                                          "	fragTexcoord=inTexcoord;"
                                          "}";
 
-    const std::string SpriteFragShader = "#version 330 core"
+    const std::string SpriteFragShader = "#version 430 core"
                                          "in vec2 fragTexcoord;"
                                          "uniform sampler2D sprite;"
                                          "out vec4 outColor;"
@@ -23,25 +23,19 @@ namespace Pe2
                                          "	outColor=texture(sprite,fragTexcoord);"
                                          "}";
 
-    Quad SpriteRenderer::m_SpriteQuad;
+    Primitive SpriteRenderer::m_SpritePrimitive;
 
-    void SpriteRenderer::ClearColorBuffer(float r, float g, float b, float a)
+    void SpriteRenderer::Render()
     {
-        glClearColor(r, g, b, a);
-        glClear(GL_COLOR_BUFFER_BIT);
-    }
-
-    void SpriteRenderer::Render(SpriteRenderType mode)
-    {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_SpriteQuad.GetIndexBuffer()->GetID());
-        glDrawElements(mode, m_SpriteQuad.GetIndexBuffer()->Size(), m_SpriteQuad.GetIndexBuffer()->GetDataType(), nullptr);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_SpritePrimitive.GetIndexBuffer()->GetID());
+        glDrawElements(GL_TRIANGLES, m_SpritePrimitive.GetIndexBuffer()->Size(), m_SpritePrimitive.GetIndexBuffer()->GetDataType(), nullptr);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    void SpriteRenderer::RenderInstanced(SpriteRenderType mode, uint32_t instanceCount)
+    void SpriteRenderer::RenderInstanced(uint32_t instanceCount)
     {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_SpriteQuad.GetIndexBuffer()->GetID());
-        glDrawElementsInstanced(mode, m_SpriteQuad.GetIndexBuffer()->Size(), m_SpriteQuad.GetIndexBuffer()->GetDataType(), nullptr, instanceCount);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_SpritePrimitive.GetIndexBuffer()->GetID());
+        glDrawElementsInstanced(GL_TRIANGLES, m_SpritePrimitive.GetIndexBuffer()->Size(), m_SpritePrimitive.GetIndexBuffer()->GetDataType(), nullptr, instanceCount);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 }

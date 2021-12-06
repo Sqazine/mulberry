@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <string>
 #include <glad/glad.h>
+#include <SDL2/SDL.h>
 #include <vector>
 #include "../Math/Color.h"
 namespace Pe2
@@ -37,7 +38,7 @@ namespace Pe2
 	{
 		WrapMode wrapS = WrapMode::REPEAT, wrapT = WrapMode::REPEAT;
 		FilterMode filterMode;
-		Color borderColor = Color::BLACK;
+		Color borderColor = Color::Black;
 		ImgData data;
 	};
 	class Texture
@@ -48,6 +49,7 @@ namespace Pe2
 		~Texture();
 
 		void CreateFrom(const TextureInfo &info);
+		void CreateFromSurface(SDL_Surface *surface);
 
 		void BindTo(uint32_t uniform, uint32_t texIndex);
 		void UnBindFrom(uint32_t textureIndex);

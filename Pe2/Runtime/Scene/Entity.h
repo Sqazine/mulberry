@@ -3,19 +3,17 @@
 #include <memory>
 #include <algorithm>
 #include "Component/Component.h"
+#include "Object.h"
 namespace Pe2
 {
-    class Entity
+    class Entity : public Object
     {
     public:
-        Entity();
-        virtual ~Entity();
-
-        virtual void ProcessInput(class InputState *state);
-        virtual void Update(float deltaTime);
+        Entity(std::string_view name);
+        ~Entity();
 
         template <class T, typename... Args>
-        void AddComponent(Args &&...params);
+        T *CreateComponent(Args &&...params);
 
         template <class T>
         bool RemoveComponent();
@@ -27,14 +25,17 @@ namespace Pe2
         void SetVisiable(bool visiable);
         bool IsVisiable() const;
 
+        void SetStatic(bool isStatic);
+        bool IsStatic() const;
+
     private:
         bool m_Visiable;
-        std::string m_Name;
+        bool m_IsStatic;
         std::vector<std::unique_ptr<Component>> m_Components;
     };
 
     template <class T, typename... Args>
-    inline void Entity::AddComponent(Args &&...params)
+    inline T *Entity::CreateComponent(Args &&...params)
     {
         std::unique_ptr<T> component = std::make_unique<T>(std::forward<Args>(params)...);
         component.get()->m_Owner = this;
@@ -50,11 +51,12 @@ namespace Pe2
 
         auto iter = m_Components.begin();
         for (; iter != m_Components.end(); ++iter)
-        {
             if (component.get()->GetUpdateOrder() < (**iter).GetUpdateOrder())
                 break;
-        }
+
+        T *result = component.get();
         m_Components.insert(iter, std::move(component));
+        return result;
     }
 
     template <class T>
