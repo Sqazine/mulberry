@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <string>
-
+#include <vector>
 namespace Pe2
 {
 
@@ -20,6 +20,8 @@ public:                                 \
             return true;                                                                \
         return parentCompName::IsSameComponentType(comonentType);                       \
     }
+    #define REQUIRED_COMPONENT(comp) \
+    m_RequiredComponents.emplace_back(std::string(TO_STRING(comp)));
 
     class Component
     {
@@ -38,6 +40,10 @@ public:                                 \
 
         virtual bool IsSameComponentType(const std::string &comonentType) const;
         static std::string m_ComponentType;
+
+    protected:
+        friend class Entity;
+        std::vector<std::string> m_RequiredComponents;
 
     private:
         friend class Entity;

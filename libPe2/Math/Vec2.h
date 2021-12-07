@@ -43,6 +43,6 @@ public:
 	static Vec2 Scale(const Vec2& vec,const Vec2& s);
 
 	static const Vec2 ZERO;
-	static const Vec2 UNITX;
-	static const Vec2 UNITY;
+	static const Vec2 UNIT_X;
+	static const Vec2 UNIT_Y;
 };

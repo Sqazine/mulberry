@@ -127,7 +127,7 @@ namespace Pe2
 
         for (uint32_t i = 0; i < 360; i += 12)
         {
-            Vec2 pos = Vec2::Rotate(Vec2::UNITX, MathUtils::ToRadian(i));
+            Vec2 pos = Vec2::Rotate(Vec2::UNIT_X, MathUtils::ToRadian(i));
             m_Position.emplace_back(pos);
             Vec2 uv = pos * 0.5f + 0.5f;
             m_Texcoord.emplace_back(uv);

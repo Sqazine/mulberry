@@ -13,7 +13,7 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(sdl2-ttf CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-add_library(libPe2 STATIC ${ROOT} ${MATH} ${GEOMETRY} ${SCENE} ${RENDER} ${UTILS} ${BASE} ${AUDIO} ${INPUT})
+add_library(libPe2 STATIC ${ROOT} ${MATH} ${GEOMETRY} ${SCENE} ${COMPONENT} ${RENDER} ${UTILS} ${BASE} ${AUDIO} ${INPUT})
 target_include_directories(libPe2 PRIVATE ${CMAKE_SOURCE_DIR}/libPe2 
                                           ${CMAKE_SOURCE_DIR}/libPe2/Audio 
                                           ${CMAKE_SOURCE_DIR}/libPe2/Base 

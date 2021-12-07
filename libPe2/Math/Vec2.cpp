@@ -1,7 +1,7 @@
 #include "Vec2.h"
 const Vec2 Vec2::ZERO = Vec2();
-const Vec2 Vec2::UNITX(1.0f, 0.0f);
-const Vec2 Vec2::UNITY(0.0f, 1.0f);
+const Vec2 Vec2::UNIT_X(1.0f, 0.0f);
+const Vec2 Vec2::UNIT_Y(0.0f, 1.0f);
 
 Vec2::Vec2()
 	: x(0.0f), y(0.0f)

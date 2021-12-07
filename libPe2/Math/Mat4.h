@@ -33,11 +33,7 @@ public:
     static Mat4 Scale(float factor);
     static Mat4 Scale(const Vec2 &factor);
 
-    static Mat4 GLOrthoGraphic(float left, float right, float top, float bottom, float znear, float zfar);
-    static Mat4 GLPe2rspective(float fov, float aspect, float znear, float zfar);
-
-    static Mat4 VkOrthoGraphics(float left, float right, float top, float bottom, float near, float far);
-    static Mat4 VkPe2rspective(float fov, float aspect, float near, float far);
+    static Mat4 Ortho(float left, float right, float top, float bottom, float znear, float zfar);
 
     static Mat4 LookAt(const Vec2& position,float rotRadian=0);
 

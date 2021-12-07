@@ -7,9 +7,9 @@ namespace Pe2
 {
     struct Transform
     {
-        Vec2 position;
-        float rotation;
-        Vec2 scale;
+        Vec2 position=Vec2::ZERO;
+        float rotation=0.0f;
+        Vec2 scale=Vec2(1.0f);
     };
 
     class TransformComponent : public Component

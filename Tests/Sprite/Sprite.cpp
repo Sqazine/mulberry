@@ -5,6 +5,8 @@ int main(int argc,char** argv)
 
     Pe2::Entity* rootEntity=scene->CreateEntity("Sprite");
     Pe2::Entity* spriteEntity=scene->CreateEntity("Sprite");
+    Pe2::Component* transComp=rootEntity->CreateComponent<Pe2::TransformComponent>();
+    Pe2::Component* cameraComp= rootEntity->CreateComponent<Pe2::CameraComponent>();
 
     Pe2::App::Run();
 

@@ -152,35 +152,23 @@ Mat4 Mat4::Scale(const Vec2& factor)
 	return tmpMat;
 }
 
-Mat4 Mat4::GLOrthoGraphic(float left, float right, float top, float bottom, float znear, float zfar)
+Mat4 Mat4::Ortho(float left, float right, float top, float bottom, float znear, float zfar)
 {
 	Mat4 tmpMat;
 	tmpMat.elements[0] = 2 / (right - left);
 	tmpMat.elements[5] = 2 / (top - bottom);
-	tmpMat.elements[10] = 2 / (znear - zfar);
-	tmpMat.elements[12] = (left + right) / (left - right);
-	tmpMat.elements[13] = (bottom + top) / (bottom - top);
-	tmpMat.elements[14] = (znear + zfar) / (znear - zfar);
-	return tmpMat;
-}
-
-Mat4 Mat4::GLPe2rspective(float fov, float aspect, float znear, float zfar)
-{
-	Mat4 tmpMat(0.0f);
-	float cotFov = MathUtils::Cot(fov / 2);
-	tmpMat.elements[0] = cotFov / aspect;
-	tmpMat.elements[5] = cotFov;
-	tmpMat.elements[10] = (znear + zfar) / (znear - zfar);
-	tmpMat.elements[11] = -1;
-	tmpMat.elements[14] = 2 * znear * zfar / (znear - zfar);
+	tmpMat.elements[10] = 2 / (zfar - znear);
+	tmpMat.elements[12] = -(left + right) / (right - left);
+	tmpMat.elements[13] = -(bottom + top) / (top - bottom);
+	tmpMat.elements[14] = -(znear + zfar) / (zfar - znear);
 	return tmpMat;
 }
 
 Mat4 Mat4::LookAt(const Vec2& position,float rotRadian)
 {
 	Mat4 tmpMat;
-	Vec2 axisX = Vec2::Rotate(Vec2::UNITX,rotRadian);
-	Vec2 axisY =Vec2::Rotate(Vec2::UNITY,rotRadian+MathUtils::ToRadian(90.0f));
+	Vec2 axisX = Vec2::Rotate(Vec2::UNIT_X,rotRadian);
+	Vec2 axisY =Vec2::Rotate(Vec2::UNIT_Y,rotRadian+MathUtils::ToRadian(90.0f));
 
 	Mat4 rotPart;
 	rotPart.elements[0] = axisX.x;
