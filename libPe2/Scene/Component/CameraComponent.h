@@ -3,6 +3,8 @@
 #include "Math/Mat4.h"
 #include "Math/Vec2.h"
 #include "Math/Color.h"
+#include "../Entity.h"
+#include "TransformComponent.h"
 namespace Pe2
 {
     struct Camera
@@ -14,7 +16,7 @@ namespace Pe2
     {
         COMPONENT_DECLARATION()
     public:
-        CameraComponent(int updateOrder=5);
+        CameraComponent(int updateOrder = 5);
         ~CameraComponent();
 
         Mat4 GetViewMat() const;
@@ -22,6 +24,10 @@ namespace Pe2
 
         const Vec2 &GetCameraExtent() const;
         const Color &GetClearColor() const;
+
+    protected:
+        friend class Entity;
+        void GenRequiredComponents() override;
 
     private:
         struct Camera m_Camera;

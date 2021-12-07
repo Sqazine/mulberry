@@ -1,7 +1,5 @@
 #include "CameraComponent.h"
-#include "TransformComponent.h"
 #include "Math/MathUtils.h"
-#include "../Entity.h"
 namespace Pe2
 {
     COMPONENT_DEFINITION(Component, CameraComponent)
@@ -9,7 +7,6 @@ namespace Pe2
     CameraComponent::CameraComponent(int updateOrder)
         : Component(updateOrder)
     {
-        REQUIRED_COMPONENT(TransformComponent)
     }
     CameraComponent::~CameraComponent()
     {
@@ -36,4 +33,8 @@ namespace Pe2
         return m_Camera.clearColor;
     }
 
+    void CameraComponent::GenRequiredComponents()
+    {
+        REQUIRED_COMPONENT(TransformComponent)
+    }
 }

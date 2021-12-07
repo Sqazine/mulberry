@@ -20,8 +20,9 @@ public:                                 \
             return true;                                                                \
         return parentCompName::IsSameComponentType(comonentType);                       \
     }
-    #define REQUIRED_COMPONENT(comp) \
-    m_RequiredComponents.emplace_back(std::string(TO_STRING(comp)));
+#define REQUIRED_COMPONENT(comp)                     \
+    if (GetOwner()->GetComponent<comp>() == nullptr) \
+        GetOwner()->CreateComponent<comp>();
 
     class Component
     {
@@ -36,18 +37,18 @@ public:                                 \
 
         int GetUpdateOrder() const;
 
-        const class Entity *GetOwner() const;
+        class Entity *GetOwner() const;
 
         virtual bool IsSameComponentType(const std::string &comonentType) const;
         static std::string m_ComponentType;
 
     protected:
         friend class Entity;
-        std::vector<std::string> m_RequiredComponents;
+        virtual void GenRequiredComponents() {}
 
     private:
         friend class Entity;
         int m_UpdateOrder;
-        const class Entity *m_Owner;
+        class Entity *m_Owner;
     };
 }

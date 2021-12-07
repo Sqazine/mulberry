@@ -34,7 +34,7 @@ namespace Pe2
 		return m_UpdateOrder;
 	}
 
-	const Entity *Component::GetOwner() const
+	Entity *Component::GetOwner() const
 	{
 		return m_Owner;
 	}

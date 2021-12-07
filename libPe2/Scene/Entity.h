@@ -2,8 +2,6 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
-#include <spdlog/spdlog.h>
-#include <typeinfo>
 #include "Component/Component.h"
 #include "Object.h"
 namespace Pe2
@@ -41,26 +39,7 @@ namespace Pe2
     {
         std::unique_ptr<T> component = std::make_unique<T>(std::forward<Args>(params)...);
         component->m_Owner = this;
-
-        for (const auto &requiredComp : component->m_RequiredComponents)
-        {
-            bool exists=false;
-            for (int pos = 0; pos < m_Components.size(); ++pos)
-            {
-                if (m_Components[pos].get()->IsSameComponentType(requiredComp))
-                {
-                    exists=true;
-                    break;
-                }
-            }
-            if(!exists)
-            {
-                const type_info &typeInfo = typeid(T);
-                spdlog::error("Component:{} requires a {} in the entity.",typeInfo.name(),requiredComp);
-            }
-
-        }
-
+        component->GenRequiredComponents();
         for (int pos = 0; pos < m_Components.size(); ++pos)
         {
            if (m_Components[pos].get()->IsSameComponentType(T::m_ComponentType))
