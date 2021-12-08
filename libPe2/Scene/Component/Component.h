@@ -27,7 +27,7 @@ public:                                 \
     class Component
     {
     public:
-        Component(int updateOrder = 100);
+        Component(int32_t updateOrder = 100);
         virtual ~Component();
 
         virtual void ProcessInput();
@@ -35,7 +35,7 @@ public:                                 \
         virtual void LateUpdate(float deltaTime);
         virtual void FixedUpdate();
 
-        int GetUpdateOrder() const;
+        int32_t GetUpdateOrder() const;
 
         class Entity *GetOwner() const;
 
@@ -44,11 +44,11 @@ public:                                 \
 
     protected:
         friend class Entity;
-        virtual void GenRequiredComponents() {}
+        virtual void DefineRequiredComponents() {}
 
     private:
         friend class Entity;
-        int m_UpdateOrder;
+        int32_t m_UpdateOrder;
         class Entity *m_Owner;
     };
 }

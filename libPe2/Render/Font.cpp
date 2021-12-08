@@ -38,7 +38,7 @@ namespace Pe2
             TTF_CloseFont(font.second);
     }
 
-    std::unique_ptr<Texture> Font::RenderText(const std::string &text, const Color &color, int pointSize)
+    std::unique_ptr<Texture> Font::RenderText(const std::string &text, const Color &color, int32_t pointSize)
     {
         std::unique_ptr<Texture> texture = nullptr;
         SDL_Color sdlColor;

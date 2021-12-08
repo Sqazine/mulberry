@@ -6,7 +6,7 @@ namespace Pe2
 
 	std::string Component::m_ComponentType = "Component";
 
-	Component::Component(int updateOrder)
+	Component::Component(int32_t updateOrder)
 		: m_UpdateOrder(updateOrder)
 	{
 	}
@@ -29,7 +29,7 @@ namespace Pe2
 	{
 	}
 
-	int Component::GetUpdateOrder() const
+	int32_t Component::GetUpdateOrder() const
 	{
 		return m_UpdateOrder;
 	}

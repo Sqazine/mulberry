@@ -31,8 +31,8 @@ namespace Pe2
 		const VertexBuffer<Vec2>* GetTexcoordBuffer() const;
 		const IndexBuffer* GetIndexBuffer() const;
 
-		void Bind(int position = -1, int texcoord = -1);
-		void UnBind(int position = -1, int texcoord = -1);
+		void Bind(int32_t position = -1, int32_t texcoord = -1);
+		void UnBind(int32_t position = -1, int32_t texcoord = -1);
 
 	protected:
 		void UpdateBuffers();

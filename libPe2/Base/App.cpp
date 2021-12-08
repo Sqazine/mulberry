@@ -1,4 +1,7 @@
 #include "App.h"
+#include "Render/Renderer.h"
+#include "Render/RenderContext.h"
+#include "Input/Input.h"
 namespace Pe2
 {
     AppState App::m_State = AppState::INIT;
@@ -7,12 +10,14 @@ namespace Pe2
 
     void App::Run()
     {
-        Init();
         while (m_State != AppState::EXIT)
         {
             ProcessInput();
             Update();
-            Draw();
+            Render();
+            RenderGizmo();
+            RenderUI();
+            RenderContext::SwapWindow();
         }
         CleanUp();
     }
@@ -23,6 +28,15 @@ namespace Pe2
         Scene *result = scene.get();
         m_Scenes.emplace_back(std::move(scene));
         return result;
+    }
+
+    Scene *App::GetScene(std::string_view name)
+    {
+        auto iter = std::find_if(m_Scenes.begin(), m_Scenes.end(), [=](auto &scene)
+                                 { return scene->GetName() == name; });
+        if (iter == m_Scenes.end())
+            return nullptr;
+        return iter->get();
     }
 
     bool App::RemoveScene(std::string_view name)
@@ -37,6 +51,7 @@ namespace Pe2
 
     void App::RemoveAllScenes()
     {
+        std::vector<std::unique_ptr<Scene>>().swap(m_Scenes);
     }
 
     void App::Quit()
@@ -44,18 +59,41 @@ namespace Pe2
         m_State = AppState::EXIT;
     }
 
-    void App::Init()
+    void App::Init(const RenderContextInfo &info)
     {
+        RenderContext::Init(info);
+        Input::Init();
     }
     void App::ProcessInput()
     {
+        SDL_Event event;
+        if (SDL_PollEvent(&event))
+        {
+            switch (event.type)
+            {
+            case SDL_QUIT:
+                m_State = AppState::EXIT;
+            }
+        }
     }
     void App::Update()
     {
+        Input::PreUpdate();
+
+        Input::PostUpdate();
     }
-    void App::Draw()
+    void App::Render()
     {
     }
+
+    void App::RenderGizmo()
+    {
+    }
+
+    void App::RenderUI()
+    {
+    }
+
     void App::CleanUp()
     {
     }

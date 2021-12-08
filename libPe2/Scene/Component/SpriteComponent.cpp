@@ -1,5 +1,6 @@
 #include "SpriteComponent.h"
-
+#include "Entity.h"
+#include "TransformComponent.h"
 namespace Pe2
 {
 
@@ -13,4 +14,10 @@ namespace Pe2
 	SpriteComponent::~SpriteComponent()
 	{
 	}
+
+	void SpriteComponent::DefineRequiredComponents()
+	{
+		REQUIRED_COMPONENT(TransformComponent)
+	}
+
 }

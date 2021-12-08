@@ -39,8 +39,8 @@ namespace Pe2
     {
         std::unique_ptr<T> component = std::make_unique<T>(std::forward<Args>(params)...);
         component->m_Owner = this;
-        component->GenRequiredComponents();
-        for (int pos = 0; pos < m_Components.size(); ++pos)
+        component->DefineRequiredComponents();
+        for (int32_t pos = 0; pos < m_Components.size(); ++pos)
         {
            if (m_Components[pos].get()->IsSameComponentType(T::m_ComponentType))
             {

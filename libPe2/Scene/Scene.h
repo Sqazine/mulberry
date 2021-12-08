@@ -13,6 +13,7 @@ namespace Pe2
         ~Scene();
 
         Entity *CreateEntity(std::string_view name);
+        Entity* GetEntity(std::string_view name);
         bool RemoveEntity(std::string_view name);
         void RemoveAllEntities();
 

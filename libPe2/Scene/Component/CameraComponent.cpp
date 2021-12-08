@@ -4,7 +4,7 @@ namespace Pe2
 {
     COMPONENT_DEFINITION(Component, CameraComponent)
 
-    CameraComponent::CameraComponent(int updateOrder)
+    CameraComponent::CameraComponent(int32_t updateOrder)
         : Component(updateOrder)
     {
     }
@@ -33,7 +33,7 @@ namespace Pe2
         return m_Camera.clearColor;
     }
 
-    void CameraComponent::GenRequiredComponents()
+    void CameraComponent::DefineRequiredComponents()
     {
         REQUIRED_COMPONENT(TransformComponent)
     }

@@ -52,7 +52,7 @@ namespace Pe2
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-   inline IndexBuffer::IndexBuffer()
+    inline IndexBuffer::IndexBuffer()
         : m_Size(0)
     {
         glGenBuffers(1, &m_IndexBufferID);
@@ -78,9 +78,9 @@ namespace Pe2
         return m_IndexBufferID;
     }
 
-     uint32_t IndexBuffer::DataTypeMap(std::string_view typeStr)
-     {
-          if (typeStr.compare("uint32_t") == 0 || typeStr.compare("unsigned int") == 0)
+    inline uint32_t IndexBuffer::DataTypeMap(std::string_view typeStr)
+    {
+        if (typeStr.compare("uint32_t") == 0 || typeStr.compare("unsigned int") == 0)
             return GL_UNSIGNED_INT;
         else if (typeStr.compare("int32_t") == 0 || typeStr.compare("int") == 0)
             return GL_INT;
@@ -95,5 +95,5 @@ namespace Pe2
         else if (typeStr.compare("float") == 0)
             return GL_FLOAT;
         return GL_NONE;
-     }
+    }
 }

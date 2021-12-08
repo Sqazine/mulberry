@@ -16,7 +16,7 @@ namespace Pe2
     {
         COMPONENT_DECLARATION()
     public:
-        CameraComponent(int updateOrder = 5);
+        CameraComponent(int32_t updateOrder = 5);
         ~CameraComponent();
 
         Mat4 GetViewMat() const;
@@ -27,8 +27,7 @@ namespace Pe2
 
     protected:
         friend class Entity;
-        void GenRequiredComponents() override;
-
+        void DefineRequiredComponents() override;
     private:
         struct Camera m_Camera;
     };

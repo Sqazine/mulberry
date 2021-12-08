@@ -175,7 +175,7 @@ namespace Pe2
         m_IndexBuffer = std::make_unique<IndexBuffer>(m_Indices);
     }
 
-    void Primitive::Bind(int position, int texcoord)
+    void Primitive::Bind(int32_t position, int32_t texcoord)
     {
         m_VertexArray->SetActive(true);
         if (position >= 0)
@@ -183,7 +183,7 @@ namespace Pe2
         if (texcoord >= 0)
             m_TexcoordBuffer->BindTo(texcoord);
     }
-    void Primitive::UnBind(int position, int texcoord)
+    void Primitive::UnBind(int32_t position, int32_t texcoord)
     {
         if (position >= 0)
             m_PositionBuffer->UnBindFrom(position);

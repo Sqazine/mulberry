@@ -185,14 +185,14 @@
 //         //��ȡ�洢����¼�����
 //         m_Banks.emplace(name, bank);
 //         bank->loadSampleData();
-//         int numEventDescriptions = 0;
+//         int32_t numEventDescriptions = 0;
 //         bank->getEventCount(&numEventDescriptions);
 //         if (numEventDescriptions > 0)
 //         {
 //             std::vector<FMOD::Studio::EventDescription *> eventDescriptions(numEventDescriptions);
 //             bank->getEventList(eventDescriptions.data(), numEventDescriptions, &numEventDescriptions);
 //             char eventDescriptionName[512];
-//             for (int i = 0; i < numEventDescriptions; ++i)
+//             for (int32_t i = 0; i < numEventDescriptions; ++i)
 //             {
 //                 FMOD::Studio::EventDescription *eventDescription = eventDescriptions[i];
 //                 eventDescription->getPath(eventDescriptionName, 512, nullptr);
@@ -200,14 +200,14 @@
 //             }
 //         }
 //         //��ȡ�洢�������
-//         int numBuses = 0;
+//         int32_t numBuses = 0;
 //         bank->getBusCount(&numBuses);
 //         if (numBuses > 0)
 //         {
 //             std::vector<FMOD::Studio::Bus *> buses(numBuses);
 //             bank->getBusList(buses.data(), numBuses, &numBuses);
 //             char busName[512];
-//             for (int i = 0; i < numBuses; ++i)
+//             for (int32_t i = 0; i < numBuses; ++i)
 //             {
 //                 FMOD::Studio::Bus *bus = buses[i];
 //                 bus->getPath(busName, 512, nullptr);
@@ -225,7 +225,7 @@
 
 //     FMOD::Studio::Bank *bank = iter->second;
 
-//     int numEvents = 0;
+//     int32_t numEvents = 0;
 //     bank->getEventCount(&numEvents);
 
 //     if (numEvents > 0)
@@ -233,7 +233,7 @@
 //         std::vector<FMOD::Studio::EventDescription *> eventDescriptions(numEvents);
 //         bank->getEventList(eventDescriptions.data(), numEvents, &numEvents);
 //         char eventName[512];
-//         for (int i = 0; i < numEvents; ++i)
+//         for (int32_t i = 0; i < numEvents; ++i)
 //         {
 //             FMOD::Studio::EventDescription *eventDescription = eventDescriptions[i];
 //             eventDescription->getPath(eventName, 512, nullptr);
@@ -243,14 +243,14 @@
 //         }
 //     }
 
-//     int numBuses = 0;
+//     int32_t numBuses = 0;
 //     bank->getBusCount(&numBuses);
 //     if (numBuses > 0)
 //     {
 //         std::vector<FMOD::Studio::Bus *> buses(numBuses);
 //         bank->getBusList(buses.data(), numBuses, &numBuses);
 //         char busName[512];
-//         for (int i = 0; i < numBuses; ++i)
+//         for (int32_t i = 0; i < numBuses; ++i)
 //         {
 //             FMOD::Studio::Bus *bus = buses[i];
 //             bus->getPath(busName, 512, nullptr);

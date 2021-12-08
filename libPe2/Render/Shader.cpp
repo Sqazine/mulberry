@@ -32,7 +32,7 @@ namespace Pe2
 
 	bool ShaderModule::IsCompiled()
 	{
-		int status;
+		int32_t status;
 		glGetShaderiv(m_ShaderID, GL_COMPILE_STATUS, &status);
 		if (status != GL_TRUE)
 		{
@@ -117,7 +117,7 @@ namespace Pe2
 		{
 			memset(attribName, 0, sizeof(char) * 128);
 			glGetActiveAttrib(m_ProgramID, i, 128, &length, &size, &type, attribName);
-			int attribIndex = glGetAttribLocation(m_ProgramID, attribName);
+			int32_t attribIndex = glGetAttribLocation(m_ProgramID, attribName);
 
 			if (attribIndex >= 0)
 				m_ActiveAttributes[attribName] = attribIndex;
@@ -144,7 +144,7 @@ namespace Pe2
 		{
 			memset(uniformName, 0, sizeof(char) * 128);
 			glGetActiveUniform(m_ProgramID, i, 128, &length, &size, &type, uniformName);
-			int uniformIndex = glGetUniformLocation(m_ProgramID, uniformName);
+			int32_t uniformIndex = glGetUniformLocation(m_ProgramID, uniformName);
 			if (uniformIndex >= 0)
 			{
 				std::string name = uniformName;
@@ -175,7 +175,7 @@ namespace Pe2
 
 	bool ShaderProgram::IsValidProgram()
 	{
-		GLint status;
+		int32_t status;
 		glGetProgramiv(m_ProgramID, GL_LINK_STATUS, &status);
 		if (status != GL_TRUE)
 		{

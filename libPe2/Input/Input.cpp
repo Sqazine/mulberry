@@ -38,12 +38,12 @@ namespace Pe2
     Mouse::~Mouse()
     {
     }
-    bool Mouse::GetButtonValue(int button) const
+    bool Mouse::GetButtonValue(int32_t button) const
     {
         return (m_CurButtons & SDL_BUTTON(button)) == 1;
     }
 
-    ButtonState Mouse::GetButtonState(int button) const
+    ButtonState Mouse::GetButtonState(int32_t button) const
     {
         if ((m_PreButtons & SDL_BUTTON(button)) == 0)
         {
@@ -174,9 +174,9 @@ namespace Pe2
     {
         Vec2 p = Vec2::ZERO;
         if (!m_Mouse->m_IsRelative)
-            m_Mouse->m_CurButtons = SDL_GetMouseState((int *)(&p.x), (int *)(&p.y));
+            m_Mouse->m_CurButtons = SDL_GetMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
         else
-            m_Mouse->m_CurButtons = SDL_GetRelativeMouseState((int *)(&p.x), (int *)(&p.y));
+            m_Mouse->m_CurButtons = SDL_GetRelativeMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
         m_Mouse->m_CurPos = p;
     }
 

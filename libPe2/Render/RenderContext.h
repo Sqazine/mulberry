@@ -4,11 +4,12 @@
 #include <string_view>
 namespace Pe2
 {
-    enum RenderFlag
+    enum WindowFlags
     {
-        DBUFFER = 1,
-        VSYNC = 2,
-
+        WINDOW_FULLSCREEN = 0x00000001, 
+        WINDOW_BORDERLESS = 0x00000010, 
+        WINDOW_RESIZABLE = 0x00000020,  
+        WINDOW_FULLSCREEN_DESKTOP = (WINDOW_FULLSCREEN | 0x00001000),
     };
 
     struct WindowInfo
@@ -16,14 +17,19 @@ namespace Pe2
         std::string title;
         float width;
         float height;
-        bool resizeable = true;
-        bool fullScreen = false;
+        int32_t flags=0;
     };
 
+    enum RenderFlags
+    {
+        RENDER_DBUFFER = 0x00000001,
+        RENDER_VSYNC = 0x00000010,
+
+    };
     struct RenderContextInfo
     {
         WindowInfo windowInfo;
-        int flag = DBUFFER | VSYNC;
+        uint32_t flags = RENDER_DBUFFER | RENDER_VSYNC;
     };
 
     class RenderContext

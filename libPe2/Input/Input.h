@@ -353,8 +353,8 @@ namespace Pe2
     public:
         Mouse();
         ~Mouse();
-        bool GetButtonValue(int button) const;
-        ButtonState GetButtonState(int button) const;
+        bool GetButtonValue(int32_t button) const;
+        ButtonState GetButtonState(int32_t button) const;
         Vec2 GetMousePos() const;
         Vec2 GetReleativeMove() const;
         Vec2 GetMouseScrollWheel() const;

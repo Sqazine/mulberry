@@ -21,16 +21,12 @@ namespace Pe2
 	{
 		m_RenderCreateInfo = config;
 
-		uint32_t windowFlag = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL;
-		if (config.windowInfo.resizeable)
-			windowFlag |= SDL_WINDOW_RESIZABLE;
-
 		m_WindowHandle = SDL_CreateWindow(config.windowInfo.title.c_str(),
 										  SDL_WINDOWPOS_CENTERED,
 										  SDL_WINDOWPOS_CENTERED,
 										  config.windowInfo.width,
 										  config.windowInfo.height,
-										  windowFlag);
+										   SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL|config.windowInfo.flags);
 
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
@@ -41,8 +37,8 @@ namespace Pe2
 		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
-		SDL_GL_SetSwapInterval(((config.flag & VSYNC) == VSYNC ? 1 : 0));
-		if ((config.flag & DBUFFER) == DBUFFER)
+		SDL_GL_SetSwapInterval(((config.flags & RENDER_VSYNC) == RENDER_VSYNC ? 1 : 0));
+		if ((config.flags & RENDER_DBUFFER) == RENDER_DBUFFER)
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		else
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);

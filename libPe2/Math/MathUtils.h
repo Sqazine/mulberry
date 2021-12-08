@@ -60,12 +60,12 @@ namespace MathUtils
 		return left > right ? right : left;
 	}
 
-	inline bool IsOddNumber(int value)
+	inline bool IsOddNumber(int32_t value)
 	{
 		return value / 2 == 1 ? true : false;
 	}
 
-	inline bool IsEvenNumber(int value)
+	inline bool IsEvenNumber(int32_t value)
 	{
 		return value / 2 == 0 ? true : false;
 	}

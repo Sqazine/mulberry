@@ -3,7 +3,7 @@ namespace Pe2
 {
     COMPONENT_DEFINITION(Component, TransformComponent)
 
-    TransformComponent::TransformComponent(int updateOrder)
+    TransformComponent::TransformComponent(int32_t updateOrder)
         : Component(updateOrder)
     {
     }
