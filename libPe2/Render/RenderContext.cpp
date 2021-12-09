@@ -7,6 +7,8 @@ namespace Pe2
 
 	SDL_GLContext RenderContext::m_RenderContextHandle;
 
+	std::vector<const char *> RenderContext::m_Extensions;
+
 	SDL_Window *RenderContext::m_WindowHandle = nullptr;
 
 	RenderContext::RenderContext()
@@ -26,9 +28,9 @@ namespace Pe2
 										  SDL_WINDOWPOS_CENTERED,
 										  config.windowInfo.width,
 										  config.windowInfo.height,
-										   SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL|config.windowInfo.flags);
+										  SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL | config.windowInfo.flags);
 
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_EGL);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
@@ -43,22 +45,28 @@ namespace Pe2
 		else
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
 
-		
 		m_RenderContextHandle = SDL_GL_CreateContext(m_WindowHandle);
 
 		if (!m_RenderContextHandle)
-			spdlog::error("failed to create SDL opengl context:{}", SDL_GetError());
+			spdlog::error("Failed to create SDL opengl context:{}", SDL_GetError());
 
 		if (!gladLoadGL())
-			spdlog::error("failed to load GLAD:{}", glGetError());
+			spdlog::error("Failed to load GLAD:{}", glGetError());
 
-		{
-			spdlog::info("OpenGL Info:\n");
-			spdlog::info("Vendor:{}", glGetString(GL_VENDOR));
-			spdlog::info("Renderer:{}", glGetString(GL_RENDERER));
-			spdlog::info("Version:{}", glGetString(GL_VERSION));
-			spdlog::info("Extensions:{}", glGetString(GL_EXTENSIONS));
-		}
+		int num;
+		glGetIntegerv(GL_NUM_EXTENSIONS, &num);
+		for (size_t i = 0; i < num; ++i)
+			m_Extensions.emplace_back((const char *)glGetStringi(GL_EXTENSIONS, i));
+
+		spdlog::info("OpenGL Info:");
+		spdlog::info("Vendor:{}", glGetString(GL_VENDOR));
+		spdlog::info("Renderer:{}", glGetString(GL_RENDERER));
+		spdlog::info("Version:{}", glGetString(GL_VERSION));
+
+		std::string output;
+		for (size_t i = 0; i < m_Extensions.size(); ++i)
+			output += "		" + std::string(m_Extensions[i]) + "\n";
+		spdlog::info("Extensions:\n{}", output.c_str());
 	}
 
 	void RenderContext::Destroy()
@@ -68,7 +76,16 @@ namespace Pe2
 
 	bool RenderContext::IsSupportExtension(std::string_view extensionName)
 	{
-		return SDL_GL_ExtensionSupported(extensionName.data());
+		auto iter = std::find_if(m_Extensions.begin(), m_Extensions.end(), [=](auto &ext)
+								 { return ext == extensionName; });
+		if (iter == m_Extensions.end())
+			return false;
+		return true;
+	}
+
+	bool RenderContext::IsSupportComputeShader()
+	{
+		return IsSupportExtension("GL_ARB_compute_shader");
 	}
 
 	void RenderContext::SwapWindow()
@@ -84,5 +101,19 @@ namespace Pe2
 	SDL_Window *RenderContext::GetWindow()
 	{
 		return m_WindowHandle;
+	}
+
+	Vec2 RenderContext::GetVersion()
+	{
+		GLint major, minor;
+		glGetIntegerv(GL_MAJOR_VERSION, &major);
+		glGetIntegerv(GL_MINOR_VERSION, &minor);
+		return Vec2(major, minor);
+	}
+
+	Vec2 GetGLSLVersion()
+	{
+		std::string v = (const char *)glGetString(GL_SHADING_LANGUAGE_VERSION);
+		return Vec2(v[0], v[2]);
 	}
 }

@@ -1,7 +1,9 @@
 #pragma once
 #include <memory>
+#include <vector>
 #include <SDL2/SDL.h>
 #include <string_view>
+#include "../Math/Vec2.h"
 namespace Pe2
 {
     enum WindowFlags
@@ -41,12 +43,17 @@ namespace Pe2
         static void Destroy();
 
         static bool IsSupportExtension(std::string_view extensionName);
+        static bool IsSupportComputeShader();
 
         static void SwapWindow();
 
         static SDL_GLContext GetRenderContextHandle();
 
         static SDL_Window *GetWindow();
+
+        static Vec2 GetVersion();
+
+        static Vec2 GetGLSLVersion();
 
     private:
         RenderContext();
@@ -55,6 +62,10 @@ namespace Pe2
 
         static SDL_GLContext m_RenderContextHandle;
 
+        static std::vector<const char*> m_Extensions;
+
         static SDL_Window *m_WindowHandle;
+
+
     };
 }

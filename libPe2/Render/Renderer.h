@@ -4,6 +4,7 @@
 #include "IndexBuffer.h"
 #include <glad/glad.h>
 #include "Primitive.h"
+#include "Shader.h"
 #include "../Scene/Entity.h"
 #include "../Scene/Scene.h"
 namespace Pe2
@@ -12,11 +13,13 @@ namespace Pe2
 	class SpriteRenderer
 	{
 	public:
+		static void Init();
 		static void Render(const Entity *entity);
 		static void RenderInstanced(const std::vector<Entity *> entities);
 
 	private:
 		static Primitive m_SpritePrimitive;
+		static ShaderProgram m_SpriteShaderProgram;
 	};
 
 	class GizmoRenderer
@@ -45,6 +48,8 @@ namespace Pe2
 		void RenderGizmo(const Scene *scene);
 		void Render(const Scene *scene);
 		void RenderUI(const Scene *scene);
+	private:
+		
 	};
 
 }

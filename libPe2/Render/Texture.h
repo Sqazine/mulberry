@@ -51,11 +51,11 @@ namespace Pe2
 		void CreateFrom(const TextureInfo &info);
 		void CreateFromSurface(SDL_Surface *surface);
 
-		void BindTo(uint32_t uniform, uint32_t texIndex);
-		void UnBindFrom(uint32_t textureIndex);
+		void BindTo(uint32_t uniform, uint32_t texIndex) const;
+		void UnBindFrom(uint32_t textureIndex) const;
 
-		uint32_t GetID();
-		const TextureInfo &GetCreateInfo();
+		uint32_t GetID() const;
+		const TextureInfo &GetCreateInfo() const;
 
 	private:
 		uint32_t WarpModeMap(WrapMode mode);

@@ -21,20 +21,20 @@ namespace Pe2
 		glDeleteTextures(1, &m_TextureID);
 	}
 
-	void Texture::BindTo(uint32_t uniform, uint32_t texIndex)
+	void Texture::BindTo(uint32_t uniform, uint32_t texIndex) const
 	{
 		glUniform1i(uniform, texIndex);
 		glActiveTexture(GL_TEXTURE0 + texIndex);
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);
 	}
 
-	void Texture::UnBindFrom(uint32_t textureIndex)
+	void Texture::UnBindFrom(uint32_t textureIndex) const
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	uint32_t Texture::GetID()
+	uint32_t Texture::GetID() const
 	{
 		return m_TextureID;
 	}
@@ -70,7 +70,7 @@ namespace Pe2
 		CreateFrom(info);
 	}
 
-	const TextureInfo &Texture::GetCreateInfo()
+	const TextureInfo &Texture::GetCreateInfo() const
 	{
 		return m_Info;
 	}

@@ -11,6 +11,8 @@ namespace Pe2
 		SpriteComponent();
 		~SpriteComponent();
 
+		const Texture* GetTexture() const;
+
 	protected:
 		friend class Entity;
 		void DefineRequiredComponents() override;

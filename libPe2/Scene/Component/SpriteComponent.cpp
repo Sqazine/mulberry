@@ -15,6 +15,11 @@ namespace Pe2
 	{
 	}
 
+	const Texture* SpriteComponent::GetTexture() const
+	{
+		return m_Texture.get();
+	}
+
 	void SpriteComponent::DefineRequiredComponents()
 	{
 		REQUIRED_COMPONENT(TransformComponent)
