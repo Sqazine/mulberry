@@ -4,6 +4,7 @@
 #include <string_view>
 #include "Entity.h"
 #include "Object.h"
+#include "../Base/ResourceManager.h"
 namespace Pe2
 {
     class Scene : public Object
@@ -17,7 +18,11 @@ namespace Pe2
         bool RemoveEntity(std::string_view name);
         void RemoveAllEntities();
 
+        ResourceManager& GetResourceManager();
+
     private:
+        friend class SceneRenderer;
         std::vector<std::unique_ptr<Entity>> m_Entities;
+        ResourceManager m_SceneResourceManager;
     };
 }

@@ -20,6 +20,11 @@ namespace Pe2
 		return m_Texture.get();
 	}
 
+	void SpriteComponent::SetTexture(Texture* texture)
+	{
+		m_Texture.reset(texture);
+	}
+
 	void SpriteComponent::DefineRequiredComponents()
 	{
 		REQUIRED_COMPONENT(TransformComponent)

@@ -7,49 +7,38 @@
 #include "Shader.h"
 #include "../Scene/Entity.h"
 #include "../Scene/Scene.h"
+#include "../Scene/Component/SpriteComponent.h"
+#include "../Scene/Component/CameraComponent.h"
 namespace Pe2
 {
-
-	class SpriteRenderer
-	{
-	public:
-		static void Init();
-		static void Render(const Entity *entity);
-		static void RenderInstanced(const std::vector<Entity *> entities);
-
-	private:
-		static Primitive m_SpritePrimitive;
-		static ShaderProgram m_SpriteShaderProgram;
-	};
-
-	class GizmoRenderer
-	{
-	public:
-		static void RenderLine(const Entity *entity);
-		static void RenderPoint(const Entity *entity);
-		static void RenderQuad(const Entity *entity);
-		static void RenderCircle(const Entity *entity);
-
-		static void RenderLineInstances(const std::vector<Entity *> entities);
-		static void RenderPointInstanced(const std::vector<Entity *> entities);
-		static void RenderQuadInstanced(const std::vector<Entity *> entities);
-		static void RenderCircleInstanced(const std::vector<Entity *> entities);
-
-	private:
-		static Primitive m_LinePrimitive;
-		static Primitive m_PointPrimitive;
-		static Primitive m_QuadPrimitive;
-		static Primitive m_CirclePrimitive;
-	};
 
 	class SceneRenderer
 	{
 	public:
+		void Init();
 		void RenderGizmo(const Scene *scene);
 		void Render(const Scene *scene);
 		void RenderUI(const Scene *scene);
+
 	private:
-		
+		void RenderSprite(const Entity *entity);
+		void RenderLine(const Entity *entity);
+		void RenderPoint(const Entity *entity);
+		void RenderQuad(const Entity *entity);
+		void RenderCircle(const Entity *entity);
+
+		void RenderSpriteInstanced(const std::vector<const Entity *> spriteComps);
+		void RenderLineInstances(const std::vector<const Entity *> entities);
+		void RenderPointInstanced(const std::vector<const Entity *> entities);
+		void RenderQuadInstanced(const std::vector<const Entity *> entities);
+		void RenderCircleInstanced(const std::vector<const Entity *> entities);
+
+		std::unique_ptr<ShaderProgram> m_SpriteShaderProgram;
+
+		std::unique_ptr<Primitive> m_LinePrimitive;
+		std::unique_ptr<Primitive> m_PointPrimitive;
+		std::unique_ptr<Primitive> m_QuadPrimitive;
+		std::unique_ptr<Primitive> m_CirclePrimitive;
 	};
 
 }

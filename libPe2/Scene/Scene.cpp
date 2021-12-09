@@ -40,4 +40,9 @@ namespace Pe2
     {
         std::vector<std::unique_ptr<Entity>>().swap(m_Entities);
     }
+
+    ResourceManager& Scene::GetResourceManager()
+    {
+        return m_SceneResourceManager;
+    }
 }

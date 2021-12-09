@@ -19,16 +19,23 @@ namespace Pe2
         CameraComponent(int32_t updateOrder = 5);
         ~CameraComponent();
 
-        Mat4 GetViewMat() const;
-        Mat4 GetProjMat() const;
+        const Mat4& GetViewMat();
+        const Mat4& GetProjMat() const;
 
-        const Vec2 &GetCameraExtent() const;
+        void SetClearColor(const Color &color);
         const Color &GetClearColor() const;
+
+        void SetExtent(const Vec2& extent);
+        const Vec2 &GetExtent() const;
 
     protected:
         friend class Entity;
         void DefineRequiredComponents() override;
+
     private:
         struct Camera m_Camera;
+        Transform m_PreTransform;
+        Mat4 m_ProjMat;
+        Mat4 m_ViewMat;
     };
 }

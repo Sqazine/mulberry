@@ -78,8 +78,18 @@ namespace Pe2
         return Vec2::Rotate(Vec2::UNIT_Y, m_Transform.rotation + MathUtils::ToRadian(90.0f));
     }
 
-    Mat4 TransformComponent::GetTransformMatrix() const
+    Mat4 TransformComponent::GetModelMat() const
     {
-        return Mat4::Translate(m_Transform.position) * Mat4::Rotate(MathUtils::ToRadian(m_Transform.rotation)) * Mat4::Scale(m_Transform.scale);
+        Mat4 model=Mat4();
+        model*=Mat4::Translate(m_Transform.position);
+        model*=Mat4::Rotate(MathUtils::ToRadian(m_Transform.rotation));
+        model*=Mat4::Scale(m_Transform.scale);
+        return model ;
     }
+
+     const Transform& TransformComponent::GetTransform() const
+     {
+         return m_Transform;
+     }
+
 }

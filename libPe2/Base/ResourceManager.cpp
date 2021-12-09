@@ -25,6 +25,7 @@ namespace Pe2
         if (iter != m_ImgDatas.end())
             return iter->second;
         ImgData tmp;
+        stbi_set_flip_vertically_on_load(true);
         uint8_t *data = stbi_load(filePath.c_str(), (int32_t *)&tmp.width, (int32_t *)&tmp.height, nullptr, STBI_rgb_alpha);
         tmp.pixels = std::vector<uint8_t>(data, data + (tmp.width * tmp.height * 4));
         m_ImgDatas[filePath] = tmp;

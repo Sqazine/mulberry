@@ -17,15 +17,13 @@ namespace Pe2
     class ShaderModule
     {
     public:
-        ShaderModule();
+        ShaderModule(const ShaderModuleType &type, std::string_view content);
         ~ShaderModule();
-
-        bool CompileSource(const ShaderModuleType &type, std::string_view content);
 
         const ShaderModuleType &Type() const;
 
     private:
-        bool IsCompiled();
+        void VerifyCompile();
 
         friend class ShaderProgram;
 

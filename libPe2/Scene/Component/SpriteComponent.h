@@ -12,7 +12,7 @@ namespace Pe2
 		~SpriteComponent();
 
 		const Texture* GetTexture() const;
-
+		void SetTexture(Texture* texture);
 	protected:
 		friend class Entity;
 		void DefineRequiredComponents() override;

@@ -7,6 +7,9 @@ namespace Pe2
     AppState App::m_State = AppState::INIT;
 
     std::vector<std::unique_ptr<Scene>> App::m_Scenes;
+    int32_t App::m_SceneIdx = 0;
+
+    SceneRenderer App::m_SceneRenderer;
 
     void App::Run()
     {
@@ -63,7 +66,11 @@ namespace Pe2
     {
         RenderContext::Init(info);
         Input::Init();
+
+        m_SceneIdx = 0;
+        m_SceneRenderer.Init();
     }
+
     void App::ProcessInput()
     {
         SDL_Event event;
@@ -84,6 +91,7 @@ namespace Pe2
     }
     void App::Render()
     {
+        m_SceneRenderer.Render(m_Scenes[m_SceneIdx].get());
     }
 
     void App::RenderGizmo()

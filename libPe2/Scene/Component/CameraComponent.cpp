@@ -1,5 +1,7 @@
 #include "CameraComponent.h"
 #include "Math/MathUtils.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 namespace Pe2
 {
     COMPONENT_DEFINITION(Component, CameraComponent)
@@ -12,25 +14,43 @@ namespace Pe2
     {
     }
 
-    Mat4 CameraComponent::GetViewMat() const
+    const Mat4& CameraComponent::GetViewMat() 
     {
-        return Mat4::LookAt(GetOwner()->GetComponent<TransformComponent>()->GetPosition(), MathUtils::ToRadian(GetOwner()->GetComponent<TransformComponent>()->GetRotation()));
+        //only update viewmat while transform was updated
+        auto t=GetOwner()->GetComponent<TransformComponent>()->GetTransform();
+        if (m_PreTransform != t)
+        {
+            m_PreTransform = t;
+            m_ViewMat = Mat4::LookAt(m_PreTransform.position,m_PreTransform.rotation);
+        }
+        return m_ViewMat;
     }
-    Mat4 CameraComponent::GetProjMat() const
+    const Mat4& CameraComponent::GetProjMat() const
     {
-        float halfWidth = m_Camera.extent.x / 2.0f;
-        float halfHeight = m_Camera.extent.y / 2.0f;
-        return Mat4::Ortho(-halfWidth, halfWidth, halfHeight, -halfHeight, 0.01f, 100.0f);
+       
+        return m_ProjMat;
     }
 
-    const Vec2 &CameraComponent::GetCameraExtent() const
+    void CameraComponent::SetClearColor(const Color &color)
     {
-        return m_Camera.extent;
+        m_Camera.clearColor = color;
     }
 
     const Color &CameraComponent::GetClearColor() const
     {
         return m_Camera.clearColor;
+    }
+
+    void CameraComponent::SetExtent(const Vec2 &extent)
+    {
+        m_Camera.extent = extent;
+         float halfWidth = m_Camera.extent.x / 2.0f;
+        float halfHeight = m_Camera.extent.y / 2.0f;
+        m_ProjMat=Mat4::Ortho(-halfWidth, halfWidth, halfHeight, -halfHeight, 0.1f, 1000.0f);
+    }
+    const Vec2 &CameraComponent::GetExtent() const
+    {
+        return m_Camera.extent;
     }
 
     void CameraComponent::DefineRequiredComponents()

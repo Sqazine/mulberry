@@ -37,7 +37,7 @@ namespace Pe2
 	struct TextureInfo
 	{
 		WrapMode wrapS = WrapMode::REPEAT, wrapT = WrapMode::REPEAT;
-		FilterMode filterMode;
+		FilterMode filterMode=FilterMode::NEAREST;
 		Color borderColor = Color::Black;
 		ImgData data;
 	};

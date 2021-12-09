@@ -44,5 +44,8 @@ namespace Pe2
 		static AppState m_State;
 
 		static std::vector<std::unique_ptr<Scene>> m_Scenes;
+		static int32_t m_SceneIdx;
+
+		static SceneRenderer m_SceneRenderer;
 	};
 }

@@ -6,23 +6,18 @@
 namespace Pe2
 {
 
-	ShaderModule::ShaderModule()
-		: m_ShaderID(-1), m_Type(VERTEX_SHADER)
+	ShaderModule::ShaderModule(const ShaderModuleType &type, std::string_view content)
+		: m_ShaderID(-1), m_Type(type)
 	{
-	}
-	ShaderModule::~ShaderModule()
-	{
-		glDeleteShader(m_ShaderID);
-	}
-
-	bool ShaderModule::CompileSource(const ShaderModuleType &type, std::string_view content)
-	{
-		m_Type = type;
 		m_ShaderID = glCreateShader(type);
 		const char *vCode = content.data();
 		glShaderSource(m_ShaderID, 1, &vCode, nullptr);
 		glCompileShader(m_ShaderID);
-		return IsCompiled();
+		VerifyCompile();
+	}
+	ShaderModule::~ShaderModule()
+	{
+		glDeleteShader(m_ShaderID);
 	}
 
 	const ShaderModuleType &ShaderModule::Type() const
@@ -30,7 +25,7 @@ namespace Pe2
 		return m_Type;
 	}
 
-	bool ShaderModule::IsCompiled()
+	void ShaderModule::VerifyCompile()
 	{
 		int32_t status;
 		glGetShaderiv(m_ShaderID, GL_COMPILE_STATUS, &status);
@@ -40,9 +35,7 @@ namespace Pe2
 			memset(buffer, 0, 512);
 			glGetShaderInfoLog(m_ShaderID, 511, nullptr, buffer);
 			spdlog::error("GLSL compile failed:{}\n", buffer);
-			return false;
 		}
-		return true;
 	}
 
 	ShaderProgram::ShaderProgram()
