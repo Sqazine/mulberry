@@ -125,7 +125,7 @@ namespace Pe2
         m_VertexArray = std::make_unique<VertexArray>();
         m_VertexArray->SetActive(true);
 
-        for (uint32_t i = 0; i < 360; i += 12)
+        for (float i = 0.0f; i < 360.0f; i += 12.0f)
         {
             Vec2 pos = Vec2::Rotate(Vec2::UNIT_X, MathUtils::ToRadian(i));
             m_Position.emplace_back(pos);
@@ -135,11 +135,6 @@ namespace Pe2
 
         m_PositionBuffer = std::make_unique<VertexBuffer<Vec2>>(m_Position);
         m_TexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(m_Texcoord);
-
-        m_Indices =
-            {
-                0, 1, 2,
-                0, 2, 3};
         m_IndexBuffer = std::make_unique<IndexBuffer>(m_Indices);
     }
     void Primitive::CreateLine()

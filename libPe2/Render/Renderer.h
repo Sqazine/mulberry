@@ -16,10 +16,7 @@ namespace Pe2
 	{
 	public:
 		void Init();
-		void RenderGizmo(const Scene *scene);
 		void Render(const Scene *scene);
-		void RenderUI(const Scene *scene);
-
 	private:
 		void RenderSprite(const Entity *entity);
 		void RenderLine(const Entity *entity);
@@ -34,6 +31,7 @@ namespace Pe2
 		void RenderCircleInstanced(const std::vector<const Entity *> entities);
 
 		std::unique_ptr<ShaderProgram> m_SpriteShaderProgram;
+		std::unique_ptr<ShaderProgram> m_GizmoShaderProgram;
 
 		std::unique_ptr<Primitive> m_LinePrimitive;
 		std::unique_ptr<Primitive> m_PointPrimitive;

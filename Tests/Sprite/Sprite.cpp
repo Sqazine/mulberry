@@ -19,7 +19,7 @@ int32_t main(int32_t argc,char** argv)
     Pe2::Entity* rootEntity=scene->CreateEntity("Sprite");
 
     auto cameraComp= rootEntity->CreateComponent<Pe2::CameraComponent>();
-    cameraComp->SetClearColor(Pe2::Color::LightBlue);
+    cameraComp->SetClearColor(Pe2::Color::LightYellow);
     cameraComp->SetExtent(Pe2::Vec2(winInfo.width,winInfo.height));
 
     Pe2::SpriteComponent* spriteComponent=rootEntity->CreateComponent<Pe2::SpriteComponent>();

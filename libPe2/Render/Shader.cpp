@@ -55,9 +55,9 @@ namespace Pe2
 			glUseProgram(0);
 	}
 
-	bool ShaderProgram::AttachShader(const ShaderModule *shader)
+	bool ShaderProgram::AttachShader(const ShaderModule &shader)
 	{
-		glAttachShader(m_ProgramID, shader->m_ShaderID);
+		glAttachShader(m_ProgramID, shader.m_ShaderID);
 		glLinkProgram(m_ProgramID);
 
 		bool validFlag = IsValidProgram();
@@ -168,13 +168,13 @@ namespace Pe2
 
 	bool ShaderProgram::IsValidProgram()
 	{
-		int32_t status;
+		int32_t status=GL_TRUE;
 		glGetProgramiv(m_ProgramID, GL_LINK_STATUS, &status);
 		if (status != GL_TRUE)
 		{
 			char buffer[512];
 			memset(buffer, 0, 512);
-			glGetProgramInfoLog(m_ProgramID, 511, nullptr, buffer);
+			glGetProgramInfoLog(m_ProgramID, 512, nullptr, buffer);
 			spdlog::error("GLSL link status:{}\n", buffer);
 			return false;
 		}

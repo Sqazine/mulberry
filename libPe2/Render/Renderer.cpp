@@ -25,7 +25,6 @@ namespace Pe2
                                          "}";
 
     const std::string gizmoVertShader = "#version 430 core\n"
-                                        "layout(location=0) out vec2 fragTexcoord;\n"
                                         "layout(location=0) in vec2 inPosition;\n"
                                         "uniform mat4 modelMat;\n"
                                         "uniform mat4 viewMat;\n"
@@ -37,7 +36,6 @@ namespace Pe2
 
     const std::string gizmoFragShader = "#version 430 core\n"
                                         "layout(location=0) out vec4 outColor;\n"
-                                        "layout(location=0) in vec2 fragTexcoord;\n"
                                         "void main()\n"
                                         "{\n"
                                         "	outColor=vec4(0.0,1.0,0.0,1.0);\n"
@@ -53,20 +51,25 @@ namespace Pe2
         auto vertShader = ShaderModule(VERTEX_SHADER, spriteVertShader);
         auto fragShader = ShaderModule(FRAGMENT_SHADER, spriteFragShader);
         m_SpriteShaderProgram = std::make_unique<ShaderProgram>();
-        m_SpriteShaderProgram->AttachShader(&vertShader);
-        m_SpriteShaderProgram->AttachShader(&fragShader);
+        m_SpriteShaderProgram->AttachShader(vertShader);
+        m_SpriteShaderProgram->AttachShader(fragShader);
+
+        auto gVertShader = ShaderModule(VERTEX_SHADER, gizmoVertShader);
+        auto gFragShader = ShaderModule(FRAGMENT_SHADER, gizmoFragShader);
+        m_GizmoShaderProgram = std::make_unique<ShaderProgram>();
+        m_GizmoShaderProgram->AttachShader(gVertShader);
+        m_GizmoShaderProgram->AttachShader(gFragShader);
     }
 
     void SceneRenderer::RenderSprite(const Entity *entity)
     {
-        //always have spritecomponent and transformComponent
-        auto transComp=entity->GetComponent<TransformComponent>();
-        auto spriteComp=entity->GetComponent<SpriteComponent>();
+        auto transComp = entity->GetComponent<TransformComponent>();
+        auto spriteComp = entity->GetComponent<SpriteComponent>();
         const Texture *texture = spriteComp->GetTexture();
         if (texture == nullptr)
             return;
         m_SpriteShaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
-            texture->BindTo(m_SpriteShaderProgram->GetUniform("sprite"), 0);
+        texture->BindTo(m_SpriteShaderProgram->GetUniform("sprite"), 0);
         m_QuadPrimitive->Bind(m_SpriteShaderProgram->GetAttribute("inPosition"), m_SpriteShaderProgram->GetAttribute("inTexcoord"));
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_QuadPrimitive->GetIndexBuffer()->GetID());
         glDrawElements(GL_TRIANGLES, m_QuadPrimitive->GetIndexBuffer()->Size(), m_QuadPrimitive->GetIndexBuffer()->GetDataType(), nullptr);
@@ -84,15 +87,63 @@ namespace Pe2
 
     void SceneRenderer::RenderLine(const Entity *entity)
     {
+        auto transComp = entity->GetComponent<TransformComponent>();
+        auto spriteComp = entity->GetComponent<SpriteComponent>();
+        const Texture *texture = spriteComp->GetTexture();
+        if (texture == nullptr)
+            return;
+        m_GizmoShaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
+        m_LinePrimitive->Bind(m_GizmoShaderProgram->GetAttribute("inPosition"));
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_LinePrimitive->GetIndexBuffer()->GetID());
+        glDrawElements(GL_LINES, m_LinePrimitive->GetIndexBuffer()->Size(), m_LinePrimitive->GetIndexBuffer()->GetDataType(), nullptr);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        m_LinePrimitive->UnBind(m_GizmoShaderProgram->GetAttribute("inPosition"));
     }
     void SceneRenderer::RenderPoint(const Entity *entity)
     {
+        auto transComp = entity->GetComponent<TransformComponent>();
+        auto spriteComp = entity->GetComponent<SpriteComponent>();
+        const Texture *texture = spriteComp->GetTexture();
+        if (texture == nullptr)
+            return;
+        m_GizmoShaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
+        m_PointPrimitive->Bind(m_GizmoShaderProgram->GetAttribute("inPosition"));
+        glPointSize(5);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_PointPrimitive->GetIndexBuffer()->GetID());
+        glDrawElements(GL_POINTS, m_PointPrimitive->GetIndexBuffer()->Size(), m_PointPrimitive->GetIndexBuffer()->GetDataType(), nullptr);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glPointSize(1);
+        m_PointPrimitive->UnBind(m_GizmoShaderProgram->GetAttribute("inPosition"));
     }
     void SceneRenderer::RenderQuad(const Entity *entity)
     {
+        auto transComp = entity->GetComponent<TransformComponent>();
+        auto spriteComp = entity->GetComponent<SpriteComponent>();
+        const Texture *texture = spriteComp->GetTexture();
+        if (texture == nullptr)
+            return;
+        m_GizmoShaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
+        m_QuadPrimitive->Bind(m_GizmoShaderProgram->GetAttribute("inPosition"));
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_QuadPrimitive->GetIndexBuffer()->GetID());
+        glDrawArrays(GL_LINE_LOOP, 0, m_QuadPrimitive->GetPosition().size());
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        m_QuadPrimitive->UnBind(m_GizmoShaderProgram->GetAttribute("inPosition"));
     }
     void SceneRenderer::RenderCircle(const Entity *entity)
     {
+        auto transComp = entity->GetComponent<TransformComponent>();
+        auto spriteComp = entity->GetComponent<SpriteComponent>();
+        const Texture *texture = spriteComp->GetTexture();
+        if (texture == nullptr)
+            return;
+        m_GizmoShaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
+        m_CirclePrimitive->Bind(m_GizmoShaderProgram->GetAttribute("inPosition"));
+        glPointSize(5);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_CirclePrimitive->GetIndexBuffer()->GetID());
+        glDrawArrays(GL_LINE_LOOP, 0, m_CirclePrimitive->GetPosition().size());
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glPointSize(1);
+        m_CirclePrimitive->UnBind(m_GizmoShaderProgram->GetAttribute("inPosition"));
     }
 
     void SceneRenderer::RenderLineInstances(const std::vector<const Entity *> entities)
@@ -108,9 +159,6 @@ namespace Pe2
     {
     }
 
-    void SceneRenderer::RenderGizmo(const Scene *scene)
-    {
-    }
     void SceneRenderer::Render(const Scene *scene)
     {
         std::vector<CameraComponent *> cameraComponents;
@@ -123,17 +171,17 @@ namespace Pe2
         std::vector<const Entity *> entitiesWithSpriteComp;
         for (const auto &entity : scene->m_Entities)
         {
-            if (entity->GetComponent<SpriteComponent>()!=nullptr)
+            if (entity->GetComponent<SpriteComponent>() != nullptr)
                 entitiesWithSpriteComp.emplace_back(entity.get());
         }
         for (auto camera : cameraComponents)
         {
             Mat4 viewMat = camera->GetViewMat();
             Mat4 projMat = camera->GetProjMat();
-            
-            Color clearColor=camera->GetClearColor();
-            
-            glClearColor(clearColor.r,clearColor.g,clearColor.b,clearColor.a);
+
+            Color clearColor = camera->GetClearColor();
+
+            glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
             glClear(GL_COLOR_BUFFER_BIT);
 
             glDisable(GL_DEPTH_TEST);
@@ -148,9 +196,38 @@ namespace Pe2
             for (const auto &entity : entitiesWithSpriteComp)
                 RenderSprite(entity);
             m_SpriteShaderProgram->SetActive(false);
+
+            //render quad
+            m_GizmoShaderProgram->SetActive(true);
+            m_GizmoShaderProgram->SetUniformValue("viewMat", viewMat);
+            m_GizmoShaderProgram->SetUniformValue("projMat", projMat);
+            for (const auto &entity : entitiesWithSpriteComp)
+                RenderQuad(entity);
+            m_GizmoShaderProgram->SetActive(false);
+
+            //render circle
+            m_GizmoShaderProgram->SetActive(true);
+            m_GizmoShaderProgram->SetUniformValue("viewMat", viewMat);
+            m_GizmoShaderProgram->SetUniformValue("projMat", projMat);
+            for (const auto &entity : entitiesWithSpriteComp)
+                RenderCircle(entity);
+            m_GizmoShaderProgram->SetActive(false);
+
+            //render point
+            m_GizmoShaderProgram->SetActive(true);
+            m_GizmoShaderProgram->SetUniformValue("viewMat", viewMat);
+            m_GizmoShaderProgram->SetUniformValue("projMat", projMat);
+            for (const auto &entity : entitiesWithSpriteComp)
+                RenderPoint(entity);
+            m_GizmoShaderProgram->SetActive(false);
+
+            //render line
+             m_GizmoShaderProgram->SetActive(true);
+            m_GizmoShaderProgram->SetUniformValue("viewMat", viewMat);
+            m_GizmoShaderProgram->SetUniformValue("projMat", projMat);
+            for (const auto &entity : entitiesWithSpriteComp)
+                RenderLine(entity);
+            m_GizmoShaderProgram->SetActive(false);
         }
-    }
-    void SceneRenderer::RenderUI(const Scene *scene)
-    {
     }
 }

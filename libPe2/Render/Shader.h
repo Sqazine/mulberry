@@ -6,7 +6,6 @@
 #include "../Math/Vec2.h"
 #include "../Math/Mat4.h"
 
-
 namespace Pe2
 {
     enum ShaderModuleType
@@ -45,7 +44,7 @@ namespace Pe2
         template <typename T>
         void SetUniformArray(std::string_view name, const std::vector<T> &valueArray);
 
-        bool AttachShader(const ShaderModule* shader);
+        bool AttachShader(const ShaderModule &shader);
 
         uint32_t GetAttribute(std::string_view name) const;
         uint32_t GetUniform(std::string_view name) const;
