@@ -7,7 +7,7 @@
 #include "../Render/RenderContext.h"
 #include "../Math/Vec2.h"
 #include "../Scene/Scene.h"
-
+#include "Timer.h"
 namespace Pe2
 {
 
@@ -45,6 +45,8 @@ namespace Pe2
 		static void CleanUp();
 
 		static AppState m_State;
+
+		static Timer m_Timer;
 
 		static std::vector<std::unique_ptr<Scene>> m_Scenes;
 		static int32_t m_SceneIdx;

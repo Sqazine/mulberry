@@ -18,6 +18,14 @@ namespace Pe2
         std::vector<std::unique_ptr<Component>>().swap(m_Components);
     }
 
+    std::vector<Component*> Entity::GetAllComponents() const
+    {
+        std::vector<Component*> result;
+        for(const auto& c:m_Components)
+            result.emplace_back(c.get());
+        return result;
+    }
+
     void Entity::SetVisiable(bool visiable)
     {
         m_Visiable = visiable;

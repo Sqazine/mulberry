@@ -1,6 +1,6 @@
 #pragma once
 #include "libPe2/libPe2.h"
-class ShipMoveComponent : Pe2::Component
+class ShipMoveComponent :public Pe2::Component
 {
     COMPONENT_DECLARATION()
 
@@ -16,7 +16,7 @@ public:
     {
         Pe2::TransformComponent *ownerTransformComponent = GetOwner()->GetComponent<Pe2::TransformComponent>();
         if (Pe2::Input::GetKeyboard()->GetKeyState(Pe2::KEYCODE_W) == Pe2::ButtonState::PRESS)
-            ownerTransformComponent->Translate(ownerTransformComponent->GetLocalAxisY() * speed * deltaTime);
+            ownerTransformComponent->Translate(ownerTransformComponent->GetLocalAxisX() * speed * deltaTime);
     }
 
 protected:
@@ -27,5 +27,5 @@ protected:
     }
 
 private:
-    float speed = 10;
+    float speed = 100;
 };

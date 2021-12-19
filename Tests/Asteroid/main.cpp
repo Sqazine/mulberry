@@ -1,4 +1,5 @@
 #include "libPe2/libPe2.h"
+#include "ShipMoveComponent.h"
 #undef main
 int main(int argc, char **argv)
 {
@@ -23,6 +24,8 @@ int main(int argc, char **argv)
     auto transComponent= rootEntity->GetComponent<Pe2::TransformComponent>();
     transComponent->SetRotation(90.0f);
     transComponent->SetPosition(0.0f,(-Pe2::App::GetWindowExtent().y+textureInfo.data.height*transComponent->GetScale().y)/2.0f);
+
+    rootEntity->CreateComponent<ShipMoveComponent>();
 
     Pe2::Entity* cameraEntity=scene->CreateEntity("Camera");
     auto cameraComp = cameraEntity->CreateComponent<Pe2::CameraComponent>();

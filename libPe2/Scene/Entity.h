@@ -22,6 +22,8 @@ namespace Pe2
         template <class T>
         T *GetComponent() const;
 
+        std::vector<Component*> GetAllComponents() const;
+
         void SetVisiable(bool visiable);
         bool IsVisiable() const;
 

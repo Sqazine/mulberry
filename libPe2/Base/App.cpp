@@ -6,6 +6,8 @@ namespace Pe2
 {
     AppState App::m_State = AppState::INIT;
 
+    Timer App::m_Timer;
+
     std::vector<std::unique_ptr<Scene>> App::m_Scenes;
     int32_t App::m_SceneIdx = 0;
 
@@ -15,6 +17,7 @@ namespace Pe2
     {
         while (m_State != AppState::EXIT)
         {
+            m_Timer.Update();
             ProcessInput();
             Update();
             Render();
@@ -69,6 +72,8 @@ namespace Pe2
 
         m_SceneIdx = 0;
         m_SceneRenderer.Init();
+
+        m_Timer.Init();
     }
 
     void App::ProcessInput()
@@ -82,10 +87,22 @@ namespace Pe2
                 m_State = AppState::EXIT;
             }
         }
+
+        Input::ProcessInput(event);
     }
     void App::Update()
     {
         Input::PreUpdate();
+
+        for(const auto& entity:m_Scenes[m_SceneIdx]->GetAllEntities())
+        {
+            for(const auto& comp:entity->GetAllComponents())
+                {
+                    comp->Update(m_Timer.GetDeltaTime());
+                    comp->LateUpdate(m_Timer.GetDeltaTime());
+                }
+
+        }
 
         Input::PostUpdate();
     }
