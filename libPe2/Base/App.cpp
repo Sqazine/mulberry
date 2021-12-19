@@ -105,4 +105,15 @@ namespace Pe2
     void App::CleanUp()
     {
     }
+
+    void App::SetWindowExtent(const Vec2 &extent)
+    {
+        SDL_SetWindowSize(RenderContext::GetWindow(), extent.x, extent.y);
+    }
+    Vec2 App::GetWindowExtent()
+    {
+        int32_t x,y;
+        SDL_GetWindowSize(RenderContext::GetWindow(), &x, &y);
+        return Vec2(x,y);
+    }
 }

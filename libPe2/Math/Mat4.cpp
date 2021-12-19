@@ -190,6 +190,6 @@ namespace Pe2
 		transPart.elements[13] = -position.y;
 		transPart.elements[14] = -10;
 
-		return rotPart * transPart;
+		return transPart*rotPart;
 	}
 }

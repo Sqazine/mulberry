@@ -33,6 +33,9 @@ namespace Pe2
 
 		static void Quit();
 
+		static void SetWindowExtent(const Vec2& extent);
+		static Vec2 GetWindowExtent();
+
 	private:
 		static void ProcessInput();
 		static void Update();

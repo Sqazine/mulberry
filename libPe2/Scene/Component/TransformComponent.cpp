@@ -32,9 +32,9 @@ namespace Pe2
         m_Transform.position = Vec2::Translate(m_Transform.position, pos);
     }
 
-    void TransformComponent::SetRotation(float radian)
+    void TransformComponent::SetRotation(float degree)
     {
-        m_Transform.rotation = radian;
+        m_Transform.rotation = degree;
     }
 
     float TransformComponent::GetRotation() const
@@ -42,9 +42,9 @@ namespace Pe2
         return m_Transform.rotation;
     }
 
-    void TransformComponent::Rotate(float radian)
+    void TransformComponent::Rotate(float degree)
     {
-        m_Transform.rotation += radian;
+        m_Transform.rotation += degree;
     }
 
     void TransformComponent::SetScale(float scale)

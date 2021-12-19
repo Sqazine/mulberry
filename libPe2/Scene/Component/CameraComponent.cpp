@@ -9,6 +9,7 @@ namespace Pe2
     CameraComponent::CameraComponent(int32_t updateOrder)
         : Component(updateOrder)
     {
+        m_ViewMat=Mat4::LookAt(Vec2::ZERO,0.0f);
     }
     CameraComponent::~CameraComponent()
     {

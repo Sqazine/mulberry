@@ -42,9 +42,9 @@ namespace Pe2
         const Vec2 &GetPosition() const;
         void Translate(const Vec2 &pos);
 
-        void SetRotation(float radian);
+        void SetRotation(float degree);
         float GetRotation() const;
-        void Rotate(float radian);
+        void Rotate(float degree);
 
         void SetScale(float scale);
         void SetScale(const Vec2 &scale);

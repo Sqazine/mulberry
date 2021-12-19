@@ -68,7 +68,12 @@ namespace Pe2
         const Texture *texture = spriteComp->GetTexture();
         if (texture == nullptr)
             return;
-        m_SpriteShaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
+        
+        //map to sprite size
+        Mat4 mat=transComp->GetModelMat();
+        mat*=Mat4::Scale(Vec2(texture->GetCreateInfo().data.width/2,texture->GetCreateInfo().data.height/2));
+
+        m_SpriteShaderProgram->SetUniformValue("modelMat", mat);
         texture->BindTo(m_SpriteShaderProgram->GetUniform("sprite"), 0);
         m_QuadPrimitive->Bind(m_SpriteShaderProgram->GetAttribute("inPosition"), m_SpriteShaderProgram->GetAttribute("inTexcoord"));
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_QuadPrimitive->GetIndexBuffer()->GetID());
@@ -196,38 +201,6 @@ namespace Pe2
             for (const auto &entity : entitiesWithSpriteComp)
                 RenderSprite(entity);
             m_SpriteShaderProgram->SetActive(false);
-
-            //render quad
-            m_GizmoShaderProgram->SetActive(true);
-            m_GizmoShaderProgram->SetUniformValue("viewMat", viewMat);
-            m_GizmoShaderProgram->SetUniformValue("projMat", projMat);
-            for (const auto &entity : entitiesWithSpriteComp)
-                RenderQuad(entity);
-            m_GizmoShaderProgram->SetActive(false);
-
-            //render circle
-            m_GizmoShaderProgram->SetActive(true);
-            m_GizmoShaderProgram->SetUniformValue("viewMat", viewMat);
-            m_GizmoShaderProgram->SetUniformValue("projMat", projMat);
-            for (const auto &entity : entitiesWithSpriteComp)
-                RenderCircle(entity);
-            m_GizmoShaderProgram->SetActive(false);
-
-            //render point
-            m_GizmoShaderProgram->SetActive(true);
-            m_GizmoShaderProgram->SetUniformValue("viewMat", viewMat);
-            m_GizmoShaderProgram->SetUniformValue("projMat", projMat);
-            for (const auto &entity : entitiesWithSpriteComp)
-                RenderPoint(entity);
-            m_GizmoShaderProgram->SetActive(false);
-
-            //render line
-             m_GizmoShaderProgram->SetActive(true);
-            m_GizmoShaderProgram->SetUniformValue("viewMat", viewMat);
-            m_GizmoShaderProgram->SetUniformValue("projMat", projMat);
-            for (const auto &entity : entitiesWithSpriteComp)
-                RenderLine(entity);
-            m_GizmoShaderProgram->SetActive(false);
         }
     }
 }

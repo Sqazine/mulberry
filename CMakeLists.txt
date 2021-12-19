@@ -19,3 +19,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/libPe2)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Tests/Sprite)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Tests/Asteroid)
