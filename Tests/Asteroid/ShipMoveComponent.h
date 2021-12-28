@@ -1,6 +1,6 @@
 #pragma once
 #include "libPe2/libPe2.h"
-class ShipMoveComponent :public Pe2::Component
+class ShipMoveComponent : public Pe2::Component
 {
     COMPONENT_DECLARATION()
 
@@ -12,11 +12,44 @@ public:
     {
     }
 
+    void ProcessInput(const Pe2::InputDevice *inputDevice) override
+    {
+        if (inputDevice->keyboard.GetKeyState(Pe2::KEYCODE_W) == Pe2::ButtonState::HOLD)
+            moveForward = true;
+        else
+            moveForward = false;
+
+        if (inputDevice->keyboard.GetKeyState(Pe2::KEYCODE_S) == Pe2::ButtonState::HOLD)
+            moveBackward = true;
+        else
+            moveBackward = false;
+
+        if (inputDevice->keyboard.GetKeyState(Pe2::KEYCODE_A) == Pe2::ButtonState::HOLD)
+            rotLeft = true;
+        else
+            rotLeft = false;
+
+        if (inputDevice->keyboard.GetKeyState(Pe2::KEYCODE_D) == Pe2::ButtonState::HOLD)
+            rotRight = true;
+        else
+            rotRight = false;
+    }
+
     void Update(float deltaTime) override
     {
-        Pe2::TransformComponent *ownerTransformComponent = GetOwner()->GetComponent<Pe2::TransformComponent>();
-        if (Pe2::Input::GetKeyboard()->GetKeyState(Pe2::KEYCODE_W) == Pe2::ButtonState::PRESS)
-            ownerTransformComponent->Translate(ownerTransformComponent->GetLocalAxisX() * speed * deltaTime);
+        if (!ownerTransformComponent)
+            ownerTransformComponent = GetOwner()->GetComponent<Pe2::TransformComponent>();
+
+        if (moveForward)
+            ownerTransformComponent->Translate(ownerTransformComponent->GetLocalAxisX() * moveSpeed * deltaTime);
+        if (moveBackward)
+            ownerTransformComponent->Translate(-ownerTransformComponent->GetLocalAxisX() * moveSpeed * deltaTime);
+
+        if(rotLeft)
+            ownerTransformComponent->Rotate(rotSpeed*deltaTime);
+
+        if(rotRight)
+            ownerTransformComponent->Rotate(-rotSpeed*deltaTime);
     }
 
 protected:
@@ -27,5 +60,11 @@ protected:
     }
 
 private:
-    float speed = 100;
+    Pe2::TransformComponent *ownerTransformComponent = nullptr;
+    float moveSpeed = 500;
+    float rotSpeed = 200;
+    bool moveForward = false;
+    bool moveBackward = false;
+    bool rotLeft = false;
+    bool rotRight = false;
 };

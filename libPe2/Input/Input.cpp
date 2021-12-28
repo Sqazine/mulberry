@@ -149,35 +149,42 @@ namespace Pe2
         return m_IsConnected;
     }
 
-    std::unique_ptr<Keyboard> Input::m_Keyboard = nullptr;
-    std::unique_ptr<Mouse> Input::m_Mouse = nullptr;
-    std::vector<std::unique_ptr<Controller>> Input::m_Controllers{};
+    Input::Input()
+        : m_Device(std::make_unique<InputDevice>())
+    {
+    }
+    Input::~Input()
+    {
+    }
+
+    const InputDevice *Input::GetDevice()
+    {
+        return m_Device.get();
+    }
 
     void Input::Init()
     {
-        m_Keyboard = std::make_unique<Keyboard>();
-        m_Mouse = std::make_unique<Mouse>();
-        m_Keyboard->m_CurKeyState = SDL_GetKeyboardState(nullptr);
-        m_Keyboard->m_PreKeyState = new uint8_t[KEYCODE_NUM];
-        memset(m_Keyboard->m_PreKeyState, 0, KEYCODE_NUM);
+        m_Device->keyboard.m_CurKeyState = SDL_GetKeyboardState(nullptr);
+        m_Device->keyboard.m_PreKeyState = new uint8_t[KEYCODE_NUM];
+        memset(m_Device->keyboard.m_PreKeyState, 0, KEYCODE_NUM);
     }
 
     void Input::PreUpdate()
     {
-        memcpy_s(m_Keyboard->m_PreKeyState, KEYCODE_NUM, m_Keyboard->m_CurKeyState, KEYCODE_NUM);
-        m_Mouse->m_PreButtons = m_Mouse->m_CurButtons;
-        m_Mouse->m_PrePos = m_Mouse->m_CurPos;
-        m_Mouse->m_MouseScrollWheel = Vec2::ZERO;
+        memcpy_s(m_Device->keyboard.m_PreKeyState, KEYCODE_NUM, m_Device->keyboard.m_CurKeyState, KEYCODE_NUM);
+        m_Device->mouse.m_PreButtons = m_Device->mouse.m_CurButtons;
+        m_Device->mouse.m_PrePos = m_Device->mouse.m_CurPos;
+        m_Device->mouse.m_MouseScrollWheel = Vec2::ZERO;
     }
 
     void Input::PostUpdate()
     {
         Vec2 p = Vec2::ZERO;
-        if (!m_Mouse->m_IsRelative)
-            m_Mouse->m_CurButtons = SDL_GetMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
+        if (!m_Device->mouse.m_IsRelative)
+            m_Device->mouse.m_CurButtons = SDL_GetMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
         else
-            m_Mouse->m_CurButtons = SDL_GetRelativeMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
-        m_Mouse->m_CurPos = p;
+            m_Device->mouse.m_CurButtons = SDL_GetRelativeMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
+        m_Device->mouse.m_CurPos = p;
     }
 
     void Input::ProcessInput(SDL_Event event)
@@ -185,27 +192,10 @@ namespace Pe2
         switch (event.type)
         {
         case SDL_MOUSEWHEEL:
-            m_Mouse->m_MouseScrollWheel = Vec2(event.wheel.x, static_cast<float>(event.wheel.y));
+            m_Device->mouse.m_MouseScrollWheel = Vec2(event.wheel.x, static_cast<float>(event.wheel.y));
             break;
         default:
             break;
         }
-    }
-
-    const Keyboard *Input::GetKeyboard()
-    {
-        return m_Keyboard.get();
-    }
-
-    const Mouse *Input::GetMouse()
-    {
-        return m_Mouse.get();
-    }
-
-    const Controller *Input::GetController(uint32_t idx)
-    {
-        if (m_Controllers.empty() || idx < 0 || idx >= m_Controllers.size())
-            return nullptr;
-        return m_Controllers[idx].get();
     }
 }

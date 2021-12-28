@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include "../../Input/Input.h"
 namespace Pe2
 {
 
@@ -30,7 +31,7 @@ public:                                 \
         Component(int32_t updateOrder = 100);
         virtual ~Component();
 
-        virtual void ProcessInput();
+        virtual void ProcessInput(const InputDevice* inputDevice);
         virtual void Update(float deltaTime);
         virtual void LateUpdate(float deltaTime);
         virtual void FixedUpdate();

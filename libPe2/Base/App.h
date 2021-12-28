@@ -45,7 +45,7 @@ namespace Pe2
 		static void CleanUp();
 
 		static AppState m_State;
-
+		static Input m_Input;
 		static Timer m_Timer;
 
 		static std::vector<std::unique_ptr<Scene>> m_Scenes;

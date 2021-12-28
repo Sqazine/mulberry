@@ -7,6 +7,7 @@ namespace Pe2
     AppState App::m_State = AppState::INIT;
 
     Timer App::m_Timer;
+    Input App::m_Input;
 
     std::vector<std::unique_ptr<Scene>> App::m_Scenes;
     int32_t App::m_SceneIdx = 0;
@@ -68,7 +69,7 @@ namespace Pe2
     void App::Init(const RenderContextInfo &info)
     {
         RenderContext::Init(info);
-        Input::Init();
+        m_Input.Init();
 
         m_SceneIdx = 0;
         m_SceneRenderer.Init();
@@ -88,23 +89,26 @@ namespace Pe2
             }
         }
 
-        Input::ProcessInput(event);
+        m_Input.ProcessInput(event);
+
+        for (const auto &entity : m_Scenes[m_SceneIdx]->GetAllEntities())
+            for (const auto &comp : entity->GetAllComponents())
+                comp->ProcessInput(m_Input.GetDevice());
     }
     void App::Update()
     {
-        Input::PreUpdate();
+        m_Input.PreUpdate();
 
-        for(const auto& entity:m_Scenes[m_SceneIdx]->GetAllEntities())
+        for (const auto &entity : m_Scenes[m_SceneIdx]->GetAllEntities())
         {
-            for(const auto& comp:entity->GetAllComponents())
-                {
-                    comp->Update(m_Timer.GetDeltaTime());
-                    comp->LateUpdate(m_Timer.GetDeltaTime());
-                }
-
+            for (const auto &comp : entity->GetAllComponents())
+            {
+                comp->Update(m_Timer.GetDeltaTime());
+                comp->LateUpdate(m_Timer.GetDeltaTime());
+            }
         }
 
-        Input::PostUpdate();
+        m_Input.PostUpdate();
     }
     void App::Render()
     {
@@ -129,8 +133,8 @@ namespace Pe2
     }
     Vec2 App::GetWindowExtent()
     {
-        int32_t x,y;
+        int32_t x, y;
         SDL_GetWindowSize(RenderContext::GetWindow(), &x, &y);
-        return Vec2(x,y);
+        return Vec2(x, y);
     }
 }

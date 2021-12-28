@@ -15,7 +15,7 @@ namespace Pe2
 	{
 	}
 
-	void Component::ProcessInput()
+	void Component::ProcessInput(const InputDevice* inputDevice)
 	{
 	}
 	void Component::Update(float deltaTime)

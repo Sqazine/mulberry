@@ -403,24 +403,25 @@ namespace Pe2
         Vec2 m_RightStickValue;
     };
 
+    struct InputDevice
+    {
+        Keyboard keyboard;
+        Mouse mouse;
+        std::vector<Controller> controllers;
+    };
+
     class Input
     {
     public:
-        static const Keyboard *GetKeyboard();
-        static const Mouse *GetMouse();
-        static const Controller *GetController(uint32_t idx);
+        Input();
+        ~Input();
+        const InputDevice *GetDevice();
 
-    private:
-        Input() {}
-        friend class App;
+        void Init();
+        void PreUpdate();
+        void PostUpdate();
+        void ProcessInput(SDL_Event event);
 
-        static void Init();
-        static void PreUpdate();
-        static void PostUpdate();
-        static void ProcessInput(SDL_Event event);
-        
-        static std::unique_ptr<Keyboard> m_Keyboard;
-        static std::unique_ptr<Mouse> m_Mouse;
-        static std::vector<std::unique_ptr<Controller>> m_Controllers;
+        std::unique_ptr<InputDevice> m_Device;
     };
 }
