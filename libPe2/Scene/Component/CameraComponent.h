@@ -19,6 +19,8 @@ namespace Pe2
         CameraComponent(int32_t updateOrder = 5);
         ~CameraComponent();
 
+        void Init() override;
+
         const Mat4& GetViewMat();
         const Mat4& GetProjMat() const;
 
@@ -27,10 +29,6 @@ namespace Pe2
 
         void SetExtent(const Vec2& extent);
         const Vec2 &GetExtent() const;
-
-    protected:
-        friend class Entity;
-        void DefineRequiredComponents() override;
 
     private:
         struct Camera m_Camera;

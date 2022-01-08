@@ -9,26 +9,31 @@ namespace Pe2
     CameraComponent::CameraComponent(int32_t updateOrder)
         : Component(updateOrder)
     {
-        m_ViewMat=Mat4::LookAt(Vec2::ZERO,0.0f);
+        m_ViewMat = Mat4::LookAt(Vec2::ZERO, 0.0f);
     }
     CameraComponent::~CameraComponent()
     {
     }
 
-    const Mat4& CameraComponent::GetViewMat() 
+    void CameraComponent::Init()
+    {
+        REQUIRED_COMPONENT(TransformComponent)
+    }
+
+    const Mat4 &CameraComponent::GetViewMat()
     {
         //only update viewmat while transform was updated
-        auto t=GetOwner()->GetComponent<TransformComponent>()->GetTransform();
+        auto t = GetOwner()->GetComponent<TransformComponent>()->GetTransform();
         if (m_PreTransform != t)
         {
             m_PreTransform = t;
-            m_ViewMat = Mat4::LookAt(m_PreTransform.position,m_PreTransform.rotation);
+            m_ViewMat = Mat4::LookAt(m_PreTransform.position, m_PreTransform.rotation);
         }
         return m_ViewMat;
     }
-    const Mat4& CameraComponent::GetProjMat() const
+    const Mat4 &CameraComponent::GetProjMat() const
     {
-       
+
         return m_ProjMat;
     }
 
@@ -45,17 +50,12 @@ namespace Pe2
     void CameraComponent::SetExtent(const Vec2 &extent)
     {
         m_Camera.extent = extent;
-         float halfWidth = m_Camera.extent.x / 2.0f;
+        float halfWidth = m_Camera.extent.x / 2.0f;
         float halfHeight = m_Camera.extent.y / 2.0f;
-        m_ProjMat=Mat4::Ortho(-halfWidth, halfWidth, halfHeight, -halfHeight, 0.1f, 1000.0f);
+        m_ProjMat = Mat4::Ortho(-halfWidth, halfWidth, halfHeight, -halfHeight, 0.1f, 1000.0f);
     }
     const Vec2 &CameraComponent::GetExtent() const
     {
         return m_Camera.extent;
-    }
-
-    void CameraComponent::DefineRequiredComponents()
-    {
-        REQUIRED_COMPONENT(TransformComponent)
     }
 }

@@ -11,12 +11,10 @@ namespace Pe2
 		SpriteComponent();
 		~SpriteComponent();
 
+		void Init() override;
+
 		const Texture* GetTexture() const;
 		void SetTexture(Texture* texture);
-	protected:
-		friend class Entity;
-		void DefineRequiredComponents() override;
-
 	private:
 		std::unique_ptr<Texture> m_Texture;
 	};

@@ -15,19 +15,18 @@ namespace Pe2
 	{
 	}
 
-	const Texture* SpriteComponent::GetTexture() const
-	{
-		return m_Texture.get();
-	}
-
-	void SpriteComponent::SetTexture(Texture* texture)
-	{
-		m_Texture.reset(texture);
-	}
-
-	void SpriteComponent::DefineRequiredComponents()
+	void SpriteComponent::Init()
 	{
 		REQUIRED_COMPONENT(TransformComponent)
 	}
 
+	const Texture *SpriteComponent::GetTexture() const
+	{
+		return m_Texture.get();
+	}
+
+	void SpriteComponent::SetTexture(Texture *texture)
+	{
+		m_Texture.reset(texture);
+	}
 }

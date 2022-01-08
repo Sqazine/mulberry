@@ -31,7 +31,8 @@ public:                                 \
         Component(int32_t updateOrder = 100);
         virtual ~Component();
 
-        virtual void ProcessInput(const InputDevice* inputDevice);
+        virtual void Init();
+        virtual void ProcessInput(const InputDevice *inputDevice);
         virtual void Update(float deltaTime);
         virtual void LateUpdate(float deltaTime);
         virtual void FixedUpdate();
@@ -40,12 +41,10 @@ public:                                 \
 
         class Entity *GetOwner() const;
 
-        virtual bool IsSameComponentType(const std::string &comonentType) const;
-        static std::string m_ComponentType;
-
     protected:
         friend class Entity;
-        virtual void DefineRequiredComponents() {}
+        virtual bool IsSameComponentType(const std::string &comonentType) const;
+        static std::string m_ComponentType;
 
     private:
         friend class Entity;

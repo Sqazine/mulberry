@@ -15,6 +15,11 @@ namespace Pe2
 	{
 	}
 
+	void Component::Init()
+	{
+
+	}
+
 	void Component::ProcessInput(const InputDevice* inputDevice)
 	{
 	}
