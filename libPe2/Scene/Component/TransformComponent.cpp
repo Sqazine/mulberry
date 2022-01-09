@@ -80,11 +80,7 @@ namespace Pe2
 
     Mat4 TransformComponent::GetModelMat() const
     {
-        Mat4 model=Mat4();
-        model*=Mat4::Translate(m_Transform.position);
-        model*=Mat4::Rotate(MathUtils::ToRadian(m_Transform.rotation));
-        model*=Mat4::Scale(m_Transform.scale);
-        return model ;
+        return m_Transform.ToMat4();
     }
 
      const Transform& TransformComponent::GetTransform() const
