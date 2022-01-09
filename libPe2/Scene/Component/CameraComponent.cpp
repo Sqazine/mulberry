@@ -33,7 +33,6 @@ namespace Pe2
     }
     const Mat4 &CameraComponent::GetProjMat() const
     {
-
         return m_ProjMat;
     }
 

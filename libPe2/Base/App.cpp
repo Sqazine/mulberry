@@ -1,7 +1,7 @@
 #include "App.h"
 #include "Render/Renderer.h"
 #include "Render/RenderContext.h"
-#include "Input/Input.h"
+#include "Input.h"
 namespace Pe2
 {
     AppState App::m_State = AppState::INIT;
