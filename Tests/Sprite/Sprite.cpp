@@ -25,8 +25,6 @@ int32_t main(int32_t argc,char** argv)
     Pe2::SpriteComponent* spriteComponent=rootEntity->CreateComponent<Pe2::SpriteComponent>();
     spriteComponent->SetTexture(new Pe2::Texture(textureInfo));
 
-    rootEntity->GetComponent<Pe2::TransformComponent>()->SetScale(100);
-
 
     Pe2::App::Run();
 
