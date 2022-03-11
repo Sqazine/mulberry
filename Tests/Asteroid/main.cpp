@@ -15,22 +15,31 @@ int main(int argc, char **argv)
     Pe2::Scene *scene = Pe2::App::CreateScene("Asteroid");
     Pe2::TextureInfo textureInfo{};
     textureInfo.data = scene->GetResourceManager().LoadImgData(std::string(RESOURCES_DIR) + "Ship.png");
-    textureInfo.filterMode=Pe2::FilterMode::LINEAR;
+    textureInfo.filterMode = Pe2::FilterMode::LINEAR;
 
     Pe2::Entity *rootEntity = scene->CreateEntity("Ship");
-    Pe2::SpriteComponent *spriteComponent = rootEntity->CreateComponent<Pe2::SpriteComponent>();
-    spriteComponent->SetTexture(new Pe2::Texture(textureInfo));
+    if (rootEntity)
+    {
+        Pe2::SpriteComponent *spriteComponent = rootEntity->CreateComponent<Pe2::SpriteComponent>();
+        spriteComponent->SetTexture(new Pe2::Texture(textureInfo));
+    }
 
-    auto transComponent= rootEntity->GetComponent<Pe2::TransformComponent>();
-    transComponent->SetRotation(90.0f);
-    transComponent->SetPosition(0.0f,(-Pe2::App::GetWindowExtent().y+textureInfo.data.height*transComponent->GetScale().y)/2.0f);
+    auto transComponent = rootEntity->GetComponent<Pe2::TransformComponent>();
+    if (transComponent)
+    {
+        transComponent->SetRotation(90.0f);
+        transComponent->SetPosition(0.0f, (-Pe2::App::GetWindowExtent().y + textureInfo.data.height * transComponent->GetScale().y) / 2.0f);
+    }
 
     rootEntity->CreateComponent<ShipMoveComponent>();
 
-    Pe2::Entity* cameraEntity=scene->CreateEntity("Camera");
+    Pe2::Entity *cameraEntity = scene->CreateEntity("Camera");
     auto cameraComp = cameraEntity->CreateComponent<Pe2::CameraComponent>();
-    cameraComp->SetClearColor(Pe2::Color::LightYellow);
-    cameraComp->SetExtent(Pe2::Vec2(winInfo.width, winInfo.height));
+    if (cameraComp)
+    {
+        cameraComp->SetClearColor(Pe2::Color::LightYellow);
+        cameraComp->SetExtent(Pe2::Vec2(winInfo.width, winInfo.height));
+    }
 
     Pe2::App::Run();
 

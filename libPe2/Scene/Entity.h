@@ -15,6 +15,8 @@ namespace Pe2
         template <class T, typename... Args>
         T *CreateComponent(Args &&...params);
 
+        bool AddComponent(Component* component);
+
         template <class T>
         bool RemoveComponent();
         void RemoveAllComponents();
@@ -45,11 +47,7 @@ namespace Pe2
         for (int32_t pos = 0; pos < m_Components.size(); ++pos)
         {
            if (m_Components[pos].get()->IsSameComponentType(T::m_ComponentType))
-            {
-                T *result = component.get();
-                m_Components[pos] = std::move(component);
-                 return result;
-            }
+                 return nullptr;
         }
 
         auto iter = m_Components.begin();

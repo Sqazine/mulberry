@@ -13,6 +13,27 @@ namespace Pe2
         RemoveAllComponents();
     }
 
+     bool Entity::AddComponent(Component* component)
+     {
+        component->m_Owner = this;
+        component->Init();
+        for (int32_t pos = 0; pos < m_Components.size(); ++pos)
+        {
+           if (m_Components[pos].get()->IsSameComponentType(component->m_ComponentType))
+               return false;
+        }
+
+        auto iter = m_Components.begin();
+        for (; iter != m_Components.end(); ++iter)
+            if (component->GetUpdateOrder() < (**iter).GetUpdateOrder())
+                break;
+
+        auto uniComp=std::unique_ptr<Component>(component);
+                
+        m_Components.insert(iter, std::move(uniComp));
+        return true;
+     }
+
     void Entity::RemoveAllComponents()
     {
         std::vector<std::unique_ptr<Component>>().swap(m_Components);
