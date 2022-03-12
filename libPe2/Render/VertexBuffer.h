@@ -19,8 +19,8 @@ namespace Pe2
 		uint32_t Size();
 
 	protected:
-		uint32_t m_VertexBufferID;
-		uint32_t m_Size;
+		uint32_t mVertexBufferID;
+		uint32_t mSize;
 
 	private:
 		void SetAttribPointer(uint32_t slot);
@@ -31,35 +31,35 @@ namespace Pe2
 	template <typename T>
 	inline VertexBuffer<T>::VertexBuffer()
 	{
-		glGenBuffers(1, &m_VertexBufferID);
-		m_Size = 0;
+		glGenBuffers(1, &mVertexBufferID);
+		mSize = 0;
 	}
 	template <typename T>
 	inline VertexBuffer<T>::VertexBuffer(const std::vector<T> &inputArray)
 	{
-		glGenBuffers(1, &m_VertexBufferID);
+		glGenBuffers(1, &mVertexBufferID);
 		Set(inputArray);
 	}
 
 	template <typename T>
 	inline VertexBuffer<T>::~VertexBuffer()
 	{
-		glDeleteBuffers(1, &m_VertexBufferID);
+		glDeleteBuffers(1, &mVertexBufferID);
 	}
 
 	template <typename T>
 	inline void VertexBuffer<T>::Set(const std::vector<T> &inputArray)
 	{
-		m_Size = inputArray.size();
-		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferID);
-		glBufferData(GL_ARRAY_BUFFER, m_Size * sizeof(T), inputArray.data(), GL_STATIC_DRAW);
+		mSize = inputArray.size();
+		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferID);
+		glBufferData(GL_ARRAY_BUFFER, mSize * sizeof(T), inputArray.data(), GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	template <typename T>
 	inline void VertexBuffer<T>::BindTo(uint32_t slot)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferID);
 		glEnableVertexAttribArray(slot);
 		SetAttribPointer(slot);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -68,7 +68,7 @@ namespace Pe2
 	template <typename T>
 	inline void VertexBuffer<T>::UnBindFrom(uint32_t slot)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferID);
 		glDisableVertexAttribArray(slot);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
@@ -94,7 +94,7 @@ namespace Pe2
 	template <typename T>
 	inline uint32_t VertexBuffer<T>::Size()
 	{
-		return m_Size;
+		return mSize;
 	}
 
 }

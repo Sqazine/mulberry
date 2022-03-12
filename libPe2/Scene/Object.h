@@ -12,6 +12,6 @@ namespace Pe2
         const std::string &GetName() const;
 
     protected:
-        std::string m_Name;
+        std::string mName;
     };
 }

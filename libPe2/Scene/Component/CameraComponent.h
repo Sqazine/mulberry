@@ -31,9 +31,9 @@ namespace Pe2
         const Vec2 &GetExtent() const;
 
     private:
-        struct Camera m_Camera;
-        Transform m_PreTransform;
-        Mat4 m_ProjMat;
-        Mat4 m_ViewMat;
+        struct Camera mCamera;
+        Transform mPreTransform;
+        Mat4 mProjMat;
+        Mat4 mViewMat;
     };
 }

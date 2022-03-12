@@ -7,58 +7,58 @@ namespace Pe2
 {
 
 	ShaderModule::ShaderModule(const ShaderModuleType &type, std::string_view content)
-		: m_ShaderID(-1), m_Type(type)
+		: mShaderID(-1), mType(type)
 	{
-		m_ShaderID = glCreateShader(type);
+		mShaderID = glCreateShader(type);
 		const char *vCode = content.data();
-		glShaderSource(m_ShaderID, 1, &vCode, nullptr);
-		glCompileShader(m_ShaderID);
+		glShaderSource(mShaderID, 1, &vCode, nullptr);
+		glCompileShader(mShaderID);
 		VerifyCompile();
 	}
 	ShaderModule::~ShaderModule()
 	{
-		glDeleteShader(m_ShaderID);
+		glDeleteShader(mShaderID);
 	}
 
 	const ShaderModuleType &ShaderModule::Type() const
 	{
-		return m_Type;
+		return mType;
 	}
 
 	void ShaderModule::VerifyCompile()
 	{
 		int32_t status;
-		glGetShaderiv(m_ShaderID, GL_COMPILE_STATUS, &status);
+		glGetShaderiv(mShaderID, GL_COMPILE_STATUS, &status);
 		if (status != GL_TRUE)
 		{
 			char buffer[512];
 			memset(buffer, 0, 512);
-			glGetShaderInfoLog(m_ShaderID, 511, nullptr, buffer);
+			glGetShaderInfoLog(mShaderID, 511, nullptr, buffer);
 			spdlog::error("GLSL compile failed:{}\n", buffer);
 		}
 	}
 
 	ShaderProgram::ShaderProgram()
 	{
-		m_ProgramID = glCreateProgram();
+		mProgramID = glCreateProgram();
 	}
 	ShaderProgram::~ShaderProgram()
 	{
-		glDeleteProgram(m_ProgramID);
+		glDeleteProgram(mProgramID);
 	}
 
 	void ShaderProgram::SetActive(bool isActive)
 	{
 		if (isActive)
-			glUseProgram(m_ProgramID);
+			glUseProgram(mProgramID);
 		else
 			glUseProgram(0);
 	}
 
 	bool ShaderProgram::AttachShader(const ShaderModule &shader)
 	{
-		glAttachShader(m_ProgramID, shader.m_ShaderID);
-		glLinkProgram(m_ProgramID);
+		glAttachShader(mProgramID, shader.mShaderID);
+		glLinkProgram(mProgramID);
 
 		bool validFlag = IsValidProgram();
 
@@ -73,8 +73,8 @@ namespace Pe2
 
 	uint32_t ShaderProgram::GetAttribute(std::string_view name) const
 	{
-		auto iter = m_ActiveAttributes.find(name.data());
-		if (iter == std::end(m_ActiveAttributes))
+		auto iter = mActiveAttributes.find(name.data());
+		if (iter == std::end(mActiveAttributes))
 		{
 			spdlog::error("bad attrib index:{}", name.data());
 			return 0;
@@ -83,8 +83,8 @@ namespace Pe2
 	}
 	uint32_t ShaderProgram::GetUniform(std::string_view name) const
 	{
-		auto iter = m_ActiveUniforms.find(name.data());
-		if (iter == std::end(m_ActiveUniforms))
+		auto iter = mActiveUniforms.find(name.data());
+		if (iter == std::end(mActiveUniforms))
 		{
 			spdlog::error("bad uniform index:{}", name.data());
 			return 0;
@@ -94,7 +94,7 @@ namespace Pe2
 
 	void ShaderProgram::PopulateAttributes()
 	{
-		m_ActiveAttributes.clear();
+		mActiveAttributes.clear();
 
 		int32_t count = -1;
 		int32_t length;
@@ -104,16 +104,16 @@ namespace Pe2
 
 		SetActive(true);
 
-		glGetProgramiv(m_ProgramID, GL_ACTIVE_ATTRIBUTES, &count);
+		glGetProgramiv(mProgramID, GL_ACTIVE_ATTRIBUTES, &count);
 
 		for (size_t i = 0; i < count; ++i)
 		{
 			memset(attribName, 0, sizeof(char) * 128);
-			glGetActiveAttrib(m_ProgramID, i, 128, &length, &size, &type, attribName);
-			int32_t attribIndex = glGetAttribLocation(m_ProgramID, attribName);
+			glGetActiveAttrib(mProgramID, i, 128, &length, &size, &type, attribName);
+			int32_t attribIndex = glGetAttribLocation(mProgramID, attribName);
 
 			if (attribIndex >= 0)
-				m_ActiveAttributes[attribName] = attribIndex;
+				mActiveAttributes[attribName] = attribIndex;
 		}
 
 		SetActive(false);
@@ -121,7 +121,7 @@ namespace Pe2
 
 	void ShaderProgram::PopulateUniforms()
 	{
-		m_ActiveUniforms.clear();
+		mActiveUniforms.clear();
 
 		int32_t count = -1;
 		int32_t length;
@@ -131,13 +131,13 @@ namespace Pe2
 
 		SetActive(true);
 
-		glGetProgramiv(m_ProgramID, GL_ACTIVE_UNIFORMS, &count);
+		glGetProgramiv(mProgramID, GL_ACTIVE_UNIFORMS, &count);
 
 		for (size_t i = 0; i < count; ++i)
 		{
 			memset(uniformName, 0, sizeof(char) * 128);
-			glGetActiveUniform(m_ProgramID, i, 128, &length, &size, &type, uniformName);
-			int32_t uniformIndex = glGetUniformLocation(m_ProgramID, uniformName);
+			glGetActiveUniform(mProgramID, i, 128, &length, &size, &type, uniformName);
+			int32_t uniformIndex = glGetUniformLocation(mProgramID, uniformName);
 			if (uniformIndex >= 0)
 			{
 				std::string name = uniformName;
@@ -152,14 +152,14 @@ namespace Pe2
 					{
 						memset(subName, 0, sizeof(char) * 256);
 						sprintf_s(subName, "%s[%d]", name.c_str(), index++);
-						int32_t location = glGetUniformLocation(m_ProgramID, subName);
+						int32_t location = glGetUniformLocation(mProgramID, subName);
 						if (location < 0)
 							break;
-						m_ActiveUniforms[subName] = location;
+						mActiveUniforms[subName] = location;
 					}
 				}
 				//单个uniform
-				m_ActiveUniforms[name] = uniformIndex;
+				mActiveUniforms[name] = uniformIndex;
 			}
 		}
 
@@ -169,12 +169,12 @@ namespace Pe2
 	bool ShaderProgram::IsValidProgram()
 	{
 		int32_t status=GL_TRUE;
-		glGetProgramiv(m_ProgramID, GL_LINK_STATUS, &status);
+		glGetProgramiv(mProgramID, GL_LINK_STATUS, &status);
 		if (status != GL_TRUE)
 		{
 			char buffer[512];
 			memset(buffer, 0, 512);
-			glGetProgramInfoLog(m_ProgramID, 512, nullptr, buffer);
+			glGetProgramInfoLog(mProgramID, 512, nullptr, buffer);
 			spdlog::error("GLSL link status:{}\n", buffer);
 			return false;
 		}

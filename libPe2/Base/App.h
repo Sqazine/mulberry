@@ -44,13 +44,13 @@ namespace Pe2
 		static void RenderUI();
 		static void CleanUp();
 
-		static AppState m_State;
-		static Input m_Input;
-		static Timer m_Timer;
+		static AppState mState;
+		static Input mInput;
+		static Timer mTimer;
 
-		static std::vector<std::unique_ptr<Scene>> m_Scenes;
-		static int32_t m_SceneIdx;
+		static std::vector<std::unique_ptr<Scene>> mScenes;
+		static int32_t mSceneIdx;
 
-		static SceneRenderer m_SceneRenderer;
+		static SceneRenderer mSceneRenderer;
 	};
 }

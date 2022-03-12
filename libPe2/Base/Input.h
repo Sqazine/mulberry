@@ -344,8 +344,8 @@ namespace Pe2
 
     private:
         friend class Input;
-        const uint8_t *m_CurKeyState;
-        uint8_t *m_PreKeyState;
+        const uint8_t *mCurKeyState;
+        uint8_t *mPreKeyState;
     };
 
     class Mouse
@@ -364,12 +364,12 @@ namespace Pe2
 
     private:
         friend class Input;
-        bool m_IsRelative;
-        Vec2 m_CurPos;
-        Vec2 m_PrePos;
-        Vec2 m_MouseScrollWheel;
-        uint32_t m_CurButtons;
-        uint32_t m_PreButtons;
+        bool mIsRelative;
+        Vec2 mCurPos;
+        Vec2 mPrePos;
+        Vec2 mMouseScrollWheel;
+        uint32_t mCurButtons;
+        uint32_t mPreButtons;
     };
 
     class Controller
@@ -392,15 +392,15 @@ namespace Pe2
 
     private:
         friend class Input;
-        uint8_t m_CurrentButtons[SDL_CONTROLLER_BUTTON_MAX];
-        uint8_t m_PreviousButtons[SDL_CONTROLLER_BUTTON_MAX];
-        bool m_IsConnected;
+        uint8_t mCurrentButtons[SDL_CONTROLLER_BUTTON_MAX];
+        uint8_t mPreviousButtons[SDL_CONTROLLER_BUTTON_MAX];
+        bool mIsConnected;
 
-        float m_LeftTriggerValue;
-        float m_RightTriggerValue;
+        float mLeftTriggerValue;
+        float mRightTriggerValue;
 
-        Vec2 m_LeftStickValue;
-        Vec2 m_RightStickValue;
+        Vec2 mLeftStickValue;
+        Vec2 mRightStickValue;
     };
 
     struct InputDevice
@@ -422,6 +422,6 @@ namespace Pe2
         void PostUpdate();
         void ProcessInput(SDL_Event event);
 
-        std::unique_ptr<InputDevice> m_Device;
+        std::unique_ptr<InputDevice> mDevice;
     };
 }

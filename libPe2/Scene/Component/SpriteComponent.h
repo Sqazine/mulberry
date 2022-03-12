@@ -16,7 +16,7 @@ namespace Pe2
 		const Texture* GetTexture() const;
 		void SetTexture(Texture* texture);
 	private:
-		std::unique_ptr<Texture> m_Texture;
+		std::unique_ptr<Texture> mTexture;
 	};
 
 }

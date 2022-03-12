@@ -10,14 +10,14 @@ namespace Pe2
 
 #define COMPONENT_DECLARATION()         \
 public:                                 \
-    static std::string m_ComponentType; \
+    static std::string mComponentType; \
     virtual bool IsSameComponentType(const std::string &comonentType) const override;
 
 #define COMPONENT_DEFINITION(parentCompName, childCompName)                             \
-    std::string childCompName::m_ComponentType = std::string(TO_STRING(childCompName)); \
+    std::string childCompName::mComponentType = std::string(TO_STRING(childCompName)); \
     bool childCompName::IsSameComponentType(const std::string &comonentType) const      \
     {                                                                                   \
-        if (childCompName::m_ComponentType == comonentType)                             \
+        if (childCompName::mComponentType == comonentType)                             \
             return true;                                                                \
         return parentCompName::IsSameComponentType(comonentType);                       \
     }
@@ -44,11 +44,11 @@ public:                                 \
     protected:
         friend class Entity;
         virtual bool IsSameComponentType(const std::string &comonentType) const;
-        static std::string m_ComponentType;
+        static std::string mComponentType;
 
     private:
         friend class Entity;
-        int32_t m_UpdateOrder;
-        class Entity *m_Owner;
+        int32_t mUpdateOrder;
+        class Entity *mOwner;
     };
 }

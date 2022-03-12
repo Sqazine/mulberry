@@ -23,7 +23,7 @@ namespace Pe2
         std::vector<Entity*> GetAllEntities() const;
     private:
         friend class SceneRenderer;
-        std::vector<std::unique_ptr<Entity>> m_Entities;
-        ResourceManager m_SceneResourceManager;
+        std::vector<std::unique_ptr<Entity>> mEntities;
+        ResourceManager mSceneResourceManager;
     };
 }

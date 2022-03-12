@@ -30,13 +30,13 @@ namespace Pe2
 		void RenderQuadInstanced(const std::vector<const Entity *> entities);
 		void RenderCircleInstanced(const std::vector<const Entity *> entities);
 
-		std::unique_ptr<ShaderProgram> m_SpriteShaderProgram;
-		std::unique_ptr<ShaderProgram> m_GizmoShaderProgram;
+		std::unique_ptr<ShaderProgram> mSpriteShaderProgram;
+		std::unique_ptr<ShaderProgram> mGizmoShaderProgram;
 
-		std::unique_ptr<Primitive> m_LinePrimitive;
-		std::unique_ptr<Primitive> m_PointPrimitive;
-		std::unique_ptr<Primitive> m_QuadPrimitive;
-		std::unique_ptr<Primitive> m_CirclePrimitive;
+		std::unique_ptr<Primitive> mLinePrimitive;
+		std::unique_ptr<Primitive> mPointPrimitive;
+		std::unique_ptr<Primitive> mQuadPrimitive;
+		std::unique_ptr<Primitive> mCirclePrimitive;
 	};
 
 }

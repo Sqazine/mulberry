@@ -61,7 +61,7 @@ namespace Pe2
 		uint32_t WarpModeMap(WrapMode mode);
 		uint32_t FilterModeMap(FilterMode mode);
 
-		uint32_t m_TextureID;
-		TextureInfo m_Info;
+		uint32_t mTextureID;
+		TextureInfo mInfo;
 	};
 }

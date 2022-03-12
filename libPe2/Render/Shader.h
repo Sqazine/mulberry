@@ -26,8 +26,8 @@ namespace Pe2
 
         friend class ShaderProgram;
 
-        uint32_t m_ShaderID;
-        ShaderModuleType m_Type;
+        uint32_t mShaderID;
+        ShaderModuleType mType;
     };
 
     class ShaderProgram //shader程序体
@@ -53,11 +53,11 @@ namespace Pe2
         void PopulateAttributes();
         void PopulateUniforms();
 
-        std::map<std::string, uint32_t> m_ActiveAttributes;
-        std::map<std::string, uint32_t> m_ActiveUniforms;
+        std::map<std::string, uint32_t> mActiveAttributes;
+        std::map<std::string, uint32_t> mActiveUniforms;
 
         bool IsValidProgram();
-        uint32_t m_ProgramID;
+        uint32_t mProgramID;
     };
 
 #define SHADER_PROGRAM_SET_VALUE(type)                                            \

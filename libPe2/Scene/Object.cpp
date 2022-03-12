@@ -3,7 +3,7 @@
 namespace Pe2
 {
     Object::Object(std::string_view name)
-        : m_Name(name)
+        : mName(name)
     {
     }
     Object::~Object()
@@ -12,10 +12,10 @@ namespace Pe2
 
     void Object::SetName(std::string_view name)
     {
-        m_Name = name;
+        mName = name;
     }
     const std::string &Object::GetName() const
     {
-        return m_Name;
+        return mName;
     }
 }

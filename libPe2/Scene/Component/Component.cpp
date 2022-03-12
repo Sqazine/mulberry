@@ -4,10 +4,10 @@
 namespace Pe2
 {
 
-	std::string Component::m_ComponentType = "Component";
+	std::string Component::mComponentType = "Component";
 
 	Component::Component(int32_t updateOrder)
-		: m_UpdateOrder(updateOrder)
+		: mUpdateOrder(updateOrder)
 	{
 	}
 
@@ -36,16 +36,16 @@ namespace Pe2
 
 	int32_t Component::GetUpdateOrder() const
 	{
-		return m_UpdateOrder;
+		return mUpdateOrder;
 	}
 
 	Entity *Component::GetOwner() const
 	{
-		return m_Owner;
+		return mOwner;
 	}
 
 	bool Component::IsSameComponentType(const std::string &componentType) const
 	{
-		return m_ComponentType == componentType;
+		return mComponentType == componentType;
 	}
 }

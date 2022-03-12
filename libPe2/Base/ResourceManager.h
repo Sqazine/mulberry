@@ -13,7 +13,7 @@ namespace Pe2
         const class ImgData& LoadImgData(const std::string &filePath);
         const std::string& LoadText(std::string_view path);
     private:
-        std::unordered_map<std::string, class ImgData> m_ImgDatas;
-        std::unordered_map<std::string, std::string> m_Texts;
+        std::unordered_map<std::string, class ImgData> mImgDatas;
+        std::unordered_map<std::string, std::string> mTexts;
     };
 }

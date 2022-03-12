@@ -41,14 +41,14 @@ namespace Pe2
 		void CreateLine();
 		void CreatePoint();
 
-		std::vector<Vec2> m_Position;
-		std::vector<Vec2> m_Texcoord;
+		std::vector<Vec2> mPosition;
+		std::vector<Vec2> mTexcoord;
 
-		std::vector<uint8_t> m_Indices;
+		std::vector<uint8_t> mIndices;
 
-		std::unique_ptr<VertexArray> m_VertexArray;
-		std::unique_ptr<VertexBuffer<Vec2>> m_PositionBuffer;
-		std::unique_ptr<VertexBuffer<Vec2>> m_TexcoordBuffer;
-		std::unique_ptr<IndexBuffer> m_IndexBuffer;
+		std::unique_ptr<VertexArray> mVertexArray;
+		std::unique_ptr<VertexBuffer<Vec2>> mPositionBuffer;
+		std::unique_ptr<VertexBuffer<Vec2>> mTexcoordBuffer;
+		std::unique_ptr<IndexBuffer> mIndexBuffer;
 	};
 }

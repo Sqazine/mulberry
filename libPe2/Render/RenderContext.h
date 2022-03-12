@@ -58,13 +58,13 @@ namespace Pe2
     private:
         RenderContext();
 
-        static RenderContextInfo m_RenderCreateInfo;
+        static RenderContextInfo mRenderCreateInfo;
 
-        static SDL_GLContext m_RenderContextHandle;
+        static SDL_GLContext mRenderContextHandle;
 
-        static std::vector<const char*> m_Extensions;
+        static std::vector<const char*> mExtensions;
 
-        static SDL_Window *m_WindowHandle;
+        static SDL_Window *mWindowHandle;
 
 
     };

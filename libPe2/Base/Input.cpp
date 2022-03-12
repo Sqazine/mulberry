@@ -10,21 +10,21 @@ namespace Pe2
     }
     bool Keyboard::GetKeyValue(KeyCode keyCode) const
     {
-        return m_CurKeyState[keyCode] == 1 ? true : false;
+        return mCurKeyState[keyCode] == 1 ? true : false;
     }
 
     ButtonState Keyboard::GetKeyState(KeyCode keyCode) const
     {
-        if (m_PreKeyState[keyCode] == 0)
+        if (mPreKeyState[keyCode] == 0)
         {
-            if (m_CurKeyState[keyCode] == 0)
+            if (mCurKeyState[keyCode] == 0)
                 return ButtonState::NONE;
             else
                 return ButtonState::PRESS;
         }
         else
         {
-            if (m_CurKeyState[keyCode] == 0)
+            if (mCurKeyState[keyCode] == 0)
                 return ButtonState::RELEASE;
             else
                 return ButtonState::HOLD;
@@ -32,7 +32,7 @@ namespace Pe2
     }
 
     Mouse::Mouse()
-        : m_CurPos(Vec2::ZERO), m_PrePos(Vec2::ZERO), m_MouseScrollWheel(Vec2::ZERO), m_CurButtons(0), m_PreButtons(0)
+        : mCurPos(Vec2::ZERO), mPrePos(Vec2::ZERO), mMouseScrollWheel(Vec2::ZERO), mCurButtons(0), mPreButtons(0)
     {
     }
     Mouse::~Mouse()
@@ -40,21 +40,21 @@ namespace Pe2
     }
     bool Mouse::GetButtonValue(int32_t button) const
     {
-        return (m_CurButtons & SDL_BUTTON(button)) == 1;
+        return (mCurButtons & SDL_BUTTON(button)) == 1;
     }
 
     ButtonState Mouse::GetButtonState(int32_t button) const
     {
-        if ((m_PreButtons & SDL_BUTTON(button)) == 0)
+        if ((mPreButtons & SDL_BUTTON(button)) == 0)
         {
-            if ((m_PreButtons & SDL_BUTTON(button)) == 0)
+            if ((mPreButtons & SDL_BUTTON(button)) == 0)
                 return ButtonState::NONE;
             else
                 return ButtonState::PRESS;
         }
         else
         {
-            if ((m_PreButtons & SDL_BUTTON(button)) == 0)
+            if ((mPreButtons & SDL_BUTTON(button)) == 0)
                 return ButtonState::RELEASE;
             else
                 return ButtonState::HOLD;
@@ -63,22 +63,22 @@ namespace Pe2
 
     Vec2 Mouse::GetMousePos() const
     {
-        return m_CurPos;
+        return mCurPos;
     }
 
     Vec2 Mouse::GetReleativeMove() const
     {
-        return m_CurPos - m_PrePos;
+        return mCurPos - mPrePos;
     }
 
     Vec2 Mouse::GetMouseScrollWheel() const
     {
-        return m_MouseScrollWheel;
+        return mMouseScrollWheel;
     }
 
     void Mouse::SetReleativeMode(bool isActive)
     {
-        m_IsRelative = isActive;
+        mIsRelative = isActive;
         if (isActive)
             SDL_SetRelativeMouseMode(SDL_TRUE);
         else
@@ -87,13 +87,13 @@ namespace Pe2
 
     bool Mouse::IsReleativeMode() const
     {
-        return m_IsRelative;
+        return mIsRelative;
     }
 
     Controller::Controller()
-        : m_IsConnected(false),
-          m_LeftStickValue(Vec2::ZERO), m_RightStickValue(Vec2::ZERO),
-          m_LeftTriggerValue(0.0f), m_RightTriggerValue(0.0f)
+        : mIsConnected(false),
+          mLeftStickValue(Vec2::ZERO), mRightStickValue(Vec2::ZERO),
+          mLeftTriggerValue(0.0f), mRightTriggerValue(0.0f)
     {
     }
 
@@ -103,21 +103,21 @@ namespace Pe2
 
     bool Controller::GetButtonValue(SDL_GameControllerButton button) const
     {
-        return m_CurrentButtons[button];
+        return mCurrentButtons[button];
     }
 
     ButtonState Controller::GetButtonState(SDL_GameControllerButton button) const
     {
-        if (m_PreviousButtons[button] == 0)
+        if (mPreviousButtons[button] == 0)
         {
-            if (m_CurrentButtons[button] == 0)
+            if (mCurrentButtons[button] == 0)
                 return ButtonState::NONE;
             else
                 return ButtonState::PRESS;
         }
         else
         {
-            if (m_CurrentButtons[button] == 0)
+            if (mCurrentButtons[button] == 0)
                 return ButtonState::RELEASE;
             else
                 return ButtonState::HOLD;
@@ -126,31 +126,31 @@ namespace Pe2
 
     float Controller::GetLeftTriggerValue() const
     {
-        return m_LeftTriggerValue;
+        return mLeftTriggerValue;
     }
 
     float Controller::GetRightTriggerValue() const
     {
-        return m_RightTriggerValue;
+        return mRightTriggerValue;
     }
 
     const Vec2 &Controller::GetLeftStickValue() const
     {
-        return m_LeftStickValue;
+        return mLeftStickValue;
     }
 
     const Vec2 &Controller::GetRightStickValue() const
     {
-        return m_RightStickValue;
+        return mRightStickValue;
     }
 
     bool Controller::IsConnected() const
     {
-        return m_IsConnected;
+        return mIsConnected;
     }
 
     Input::Input()
-        : m_Device(std::make_unique<InputDevice>())
+        : mDevice(std::make_unique<InputDevice>())
     {
     }
     Input::~Input()
@@ -159,32 +159,32 @@ namespace Pe2
 
     const InputDevice *Input::GetDevice()
     {
-        return m_Device.get();
+        return mDevice.get();
     }
 
     void Input::Init()
     {
-        m_Device->keyboard.m_CurKeyState = SDL_GetKeyboardState(nullptr);
-        m_Device->keyboard.m_PreKeyState = new uint8_t[KEYCODE_NUM];
-        memset(m_Device->keyboard.m_PreKeyState, 0, KEYCODE_NUM);
+        mDevice->keyboard.mCurKeyState = SDL_GetKeyboardState(nullptr);
+        mDevice->keyboard.mPreKeyState = new uint8_t[KEYCODE_NUM];
+        memset(mDevice->keyboard.mPreKeyState, 0, KEYCODE_NUM);
     }
 
     void Input::PreUpdate()
     {
-        memcpy_s(m_Device->keyboard.m_PreKeyState, KEYCODE_NUM, m_Device->keyboard.m_CurKeyState, KEYCODE_NUM);
-        m_Device->mouse.m_PreButtons = m_Device->mouse.m_CurButtons;
-        m_Device->mouse.m_PrePos = m_Device->mouse.m_CurPos;
-        m_Device->mouse.m_MouseScrollWheel = Vec2::ZERO;
+        memcpy_s(mDevice->keyboard.mPreKeyState, KEYCODE_NUM, mDevice->keyboard.mCurKeyState, KEYCODE_NUM);
+        mDevice->mouse.mPreButtons = mDevice->mouse.mCurButtons;
+        mDevice->mouse.mPrePos = mDevice->mouse.mCurPos;
+        mDevice->mouse.mMouseScrollWheel = Vec2::ZERO;
     }
 
     void Input::PostUpdate()
     {
         Vec2 p = Vec2::ZERO;
-        if (!m_Device->mouse.m_IsRelative)
-            m_Device->mouse.m_CurButtons = SDL_GetMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
+        if (!mDevice->mouse.mIsRelative)
+            mDevice->mouse.mCurButtons = SDL_GetMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
         else
-            m_Device->mouse.m_CurButtons = SDL_GetRelativeMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
-        m_Device->mouse.m_CurPos = p;
+            mDevice->mouse.mCurButtons = SDL_GetRelativeMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
+        mDevice->mouse.mCurPos = p;
     }
 
     void Input::ProcessInput(SDL_Event event)
@@ -192,7 +192,7 @@ namespace Pe2
         switch (event.type)
         {
         case SDL_MOUSEWHEEL:
-            m_Device->mouse.m_MouseScrollWheel = Vec2(event.wheel.x, static_cast<float>(event.wheel.y));
+            mDevice->mouse.mMouseScrollWheel = Vec2(event.wheel.x, static_cast<float>(event.wheel.y));
             break;
         default:
             break;

@@ -22,11 +22,11 @@ namespace Pe2
 
 	const Texture *SpriteComponent::GetTexture() const
 	{
-		return m_Texture.get();
+		return mTexture.get();
 	}
 
 	void SpriteComponent::SetTexture(Texture *texture)
 	{
-		m_Texture.reset(texture);
+		mTexture.reset(texture);
 	}
 }

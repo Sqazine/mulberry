@@ -33,14 +33,14 @@ namespace Pe2
         if (this == &other)
             return *this;
 
-        m_Position = other.m_Position;
-        m_Texcoord = other.m_Texcoord;
-        m_Indices = other.m_Indices;
+        mPosition = other.mPosition;
+        mTexcoord = other.mTexcoord;
+        mIndices = other.mIndices;
 
-        m_VertexArray = std::make_unique<VertexArray>();
-        m_PositionBuffer = std::make_unique<VertexBuffer<Vec2>>();
-        m_TexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>();
-        m_IndexBuffer = std::make_unique<IndexBuffer>();
+        mVertexArray = std::make_unique<VertexArray>();
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>();
+        mTexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>();
+        mIndexBuffer = std::make_unique<IndexBuffer>();
 
         UpdateBuffers();
         return *this;
@@ -52,139 +52,139 @@ namespace Pe2
 
     const std::vector<Vec2> &Primitive::GetPosition() const
     {
-        return m_Position;
+        return mPosition;
     }
 
     const std::vector<Vec2> &Primitive::GetTexcoord() const
     {
-        return m_Texcoord;
+        return mTexcoord;
     }
 
     const std::vector<uint8_t> &Primitive::GetIndex() const
     {
-        return m_Indices;
+        return mIndices;
     }
 
     const VertexArray *Primitive::GetVertexArray() const
     {
-        return m_VertexArray.get();
+        return mVertexArray.get();
     }
     const VertexBuffer<Vec2> *Primitive::GetPositionBuffer() const
     {
-        return m_PositionBuffer.get();
+        return mPositionBuffer.get();
     }
     const VertexBuffer<Vec2> *Primitive::GetTexcoordBuffer() const
     {
-        return m_TexcoordBuffer.get();
+        return mTexcoordBuffer.get();
     }
     const IndexBuffer *Primitive::GetIndexBuffer() const
     {
-        return m_IndexBuffer.get();
+        return mIndexBuffer.get();
     }
 
     void Primitive::UpdateBuffers()
     {
-        if (m_Position.size() > 0)
-            m_PositionBuffer->Set(m_Position);
-        if (m_Texcoord.size() > 0)
-            m_TexcoordBuffer->Set(m_Texcoord);
-        if (m_Indices.size() > 0)
-            m_IndexBuffer->Set(m_Indices);
+        if (mPosition.size() > 0)
+            mPositionBuffer->Set(mPosition);
+        if (mTexcoord.size() > 0)
+            mTexcoordBuffer->Set(mTexcoord);
+        if (mIndices.size() > 0)
+            mIndexBuffer->Set(mIndices);
     }
 
     void Primitive::CreateQuad()
     {
-        m_VertexArray = std::make_unique<VertexArray>();
-        m_VertexArray->SetActive(true);
+        mVertexArray = std::make_unique<VertexArray>();
+        mVertexArray->SetActive(true);
 
-        m_Position =
+        mPosition =
             {
                 Vec2(-1.0f, 1.0f),
                 Vec2(-1.0f, -1.0f),
                 Vec2(1.0f, -1.0f),
                 Vec2(1.0f, 1.0f)};
 
-        m_Texcoord =
+        mTexcoord =
             {
                 Vec2(0.0f, 1.0f),
                 Vec2(0.0f, 0.0f),
                 Vec2(1.0f, 0.0f),
                 Vec2(1.0f, 1.0f)};
 
-        m_PositionBuffer = std::make_unique<VertexBuffer<Vec2>>(m_Position);
-        m_TexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(m_Texcoord);
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>(mPosition);
+        mTexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(mTexcoord);
 
-        m_Indices =
+        mIndices =
             {
                 0, 1, 2,
                 0, 2, 3};
-        m_IndexBuffer = std::make_unique<IndexBuffer>(m_Indices);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
     void Primitive::CreateCircle()
     {
-        m_VertexArray = std::make_unique<VertexArray>();
-        m_VertexArray->SetActive(true);
+        mVertexArray = std::make_unique<VertexArray>();
+        mVertexArray->SetActive(true);
 
         for (float i = 0.0f; i < 360.0f; i += 12.0f)
         {
             Vec2 pos = Vec2::Rotate(Vec2::UNIT_X, MathUtils::ToRadian(i));
-            m_Position.emplace_back(pos);
+            mPosition.emplace_back(pos);
             Vec2 uv = pos * 0.5f + 0.5f;
-            m_Texcoord.emplace_back(uv);
+            mTexcoord.emplace_back(uv);
         }
 
-        m_PositionBuffer = std::make_unique<VertexBuffer<Vec2>>(m_Position);
-        m_TexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(m_Texcoord);
-        m_IndexBuffer = std::make_unique<IndexBuffer>(m_Indices);
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>(mPosition);
+        mTexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(mTexcoord);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
     void Primitive::CreateLine()
     {
-        m_VertexArray = std::make_unique<VertexArray>();
-        m_VertexArray->SetActive(true);
+        mVertexArray = std::make_unique<VertexArray>();
+        mVertexArray->SetActive(true);
 
-        m_Position = {Vec2(-1.0f, 0.0f), Vec2(1.0f, 0.0f)};
-        m_Texcoord = {Vec2(0.0f, 0.5f), Vec2(1.0f, 0.5f)};
+        mPosition = {Vec2(-1.0f, 0.0f), Vec2(1.0f, 0.0f)};
+        mTexcoord = {Vec2(0.0f, 0.5f), Vec2(1.0f, 0.5f)};
 
-        m_PositionBuffer = std::make_unique<VertexBuffer<Vec2>>(m_Position);
-        m_TexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(m_Texcoord);
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>(mPosition);
+        mTexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(mTexcoord);
 
-        m_Indices = {
+        mIndices = {
             0,
             1,
         };
-        m_IndexBuffer = std::make_unique<IndexBuffer>(m_Indices);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
     void Primitive::CreatePoint()
     {
-        m_VertexArray = std::make_unique<VertexArray>();
-        m_VertexArray->SetActive(true);
+        mVertexArray = std::make_unique<VertexArray>();
+        mVertexArray->SetActive(true);
 
-        m_Position = {Vec2(0.0f, 0.0f)};
+        mPosition = {Vec2(0.0f, 0.0f)};
 
-        m_Texcoord = {Vec2(0.0f, 0.0f)};
+        mTexcoord = {Vec2(0.0f, 0.0f)};
 
-        m_PositionBuffer = std::make_unique<VertexBuffer<Vec2>>(m_Position);
-        m_TexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(m_Texcoord);
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>(mPosition);
+        mTexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(mTexcoord);
 
-        m_Indices = {0};
-        m_IndexBuffer = std::make_unique<IndexBuffer>(m_Indices);
+        mIndices = {0};
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
 
     void Primitive::Bind(int32_t position, int32_t texcoord)
     {
-        m_VertexArray->SetActive(true);
+        mVertexArray->SetActive(true);
         if (position >= 0)
-            m_PositionBuffer->BindTo(position);
+            mPositionBuffer->BindTo(position);
         if (texcoord >= 0)
-            m_TexcoordBuffer->BindTo(texcoord);
+            mTexcoordBuffer->BindTo(texcoord);
     }
     void Primitive::UnBind(int32_t position, int32_t texcoord)
     {
         if (position >= 0)
-            m_PositionBuffer->UnBindFrom(position);
+            mPositionBuffer->UnBindFrom(position);
         if (texcoord >= 0)
-            m_TexcoordBuffer->UnBindFrom(texcoord);
+            mTexcoordBuffer->UnBindFrom(texcoord);
 
-        m_VertexArray->SetActive(false);
+        mVertexArray->SetActive(false);
     }
 }

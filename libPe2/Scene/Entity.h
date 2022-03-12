@@ -33,57 +33,57 @@ namespace Pe2
         bool IsStatic() const;
 
     private:
-        bool m_Visiable;
-        bool m_IsStatic;
-        std::vector<std::unique_ptr<Component>> m_Components;
+        bool mVisiable;
+        bool mIsStatic;
+        std::vector<std::unique_ptr<Component>> mComponents;
     };
 
     template <class T, typename... Args>
     inline T *Entity::CreateComponent(Args &&...params)
     {
         std::unique_ptr<T> component = std::make_unique<T>(std::forward<Args>(params)...);
-        component->m_Owner = this;
+        component->mOwner = this;
         component->Init();
-        for (int32_t pos = 0; pos < m_Components.size(); ++pos)
+        for (int32_t pos = 0; pos < mComponents.size(); ++pos)
         {
-           if (m_Components[pos].get()->IsSameComponentType(T::m_ComponentType))
+           if (mComponents[pos].get()->IsSameComponentType(T::mComponentType))
                  return nullptr;
         }
 
-        auto iter = m_Components.begin();
-        for (; iter != m_Components.end(); ++iter)
+        auto iter = mComponents.begin();
+        for (; iter != mComponents.end(); ++iter)
             if (component.get()->GetUpdateOrder() < (**iter).GetUpdateOrder())
                 break;
 
         T *result = component.get();
-        m_Components.insert(iter, std::move(component));
+        mComponents.insert(iter, std::move(component));
         return result;
     }
 
     template <class T>
     inline bool Entity::RemoveComponent()
     {
-        if (m_Components.empty())
+        if (mComponents.empty())
             return false;
 
-        auto iter = std::find_if(m_Components.begin(), m_Components.end(), [](auto &component)
-                                 { return component.get()->IsSameComponentType(T::m_ComponentType); });
+        auto iter = std::find_if(mComponents.begin(), mComponents.end(), [](auto &component)
+                                 { return component.get()->IsSameComponentType(T::mComponentType); });
 
-        bool success = iter != m_Components.end();
+        bool success = iter != mComponents.end();
         if (success)
-            m_Components.erase(iter);
+            mComponents.erase(iter);
     }
 
     template <class T>
     inline T *Entity::GetComponent() const
     {
-        if (m_Components.empty())
+        if (mComponents.empty())
             return nullptr;
 
-        auto iter = std::find_if(m_Components.begin(), m_Components.end(), [](auto &component)
-                                 { return component.get()->IsSameComponentType(T::m_ComponentType); });
+        auto iter = std::find_if(mComponents.begin(), mComponents.end(), [](auto &component)
+                                 { return component.get()->IsSameComponentType(T::mComponentType); });
 
-        bool success = iter != m_Components.end();
+        bool success = iter != mComponents.end();
         if (success)
             return static_cast<T *>((*(iter)).get());
         return nullptr;

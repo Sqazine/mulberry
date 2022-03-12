@@ -3,13 +3,13 @@
 #include "RenderContext.h"
 namespace Pe2
 {
-	RenderContextInfo RenderContext::m_RenderCreateInfo;
+	RenderContextInfo RenderContext::mRenderCreateInfo;
 
-	SDL_GLContext RenderContext::m_RenderContextHandle;
+	SDL_GLContext RenderContext::mRenderContextHandle;
 
-	std::vector<const char *> RenderContext::m_Extensions;
+	std::vector<const char *> RenderContext::mExtensions;
 
-	SDL_Window *RenderContext::m_WindowHandle = nullptr;
+	SDL_Window *RenderContext::mWindowHandle = nullptr;
 
 	RenderContext::RenderContext()
 	{
@@ -21,9 +21,9 @@ namespace Pe2
 
 	void RenderContext::Init(const RenderContextInfo &config)
 	{
-		m_RenderCreateInfo = config;
+		mRenderCreateInfo = config;
 
-		m_WindowHandle = SDL_CreateWindow(config.windowInfo.title.c_str(),
+		mWindowHandle = SDL_CreateWindow(config.windowInfo.title.c_str(),
 										  SDL_WINDOWPOS_CENTERED,
 										  SDL_WINDOWPOS_CENTERED,
 										  config.windowInfo.width,
@@ -45,9 +45,9 @@ namespace Pe2
 		else
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
 
-		m_RenderContextHandle = SDL_GL_CreateContext(m_WindowHandle);
+		mRenderContextHandle = SDL_GL_CreateContext(mWindowHandle);
 
-		if (!m_RenderContextHandle)
+		if (!mRenderContextHandle)
 			spdlog::error("Failed to create SDL opengl context:{}", SDL_GetError());
 
 		if (!gladLoadGL())
@@ -56,7 +56,7 @@ namespace Pe2
 		int num;
 		glGetIntegerv(GL_NUM_EXTENSIONS, &num);
 		for (size_t i = 0; i < num; ++i)
-			m_Extensions.emplace_back((const char *)glGetStringi(GL_EXTENSIONS, i));
+			mExtensions.emplace_back((const char *)glGetStringi(GL_EXTENSIONS, i));
 
 		spdlog::info("OpenGL Info:");
 		spdlog::info("Vendor:{}", glGetString(GL_VENDOR));
@@ -64,21 +64,21 @@ namespace Pe2
 		spdlog::info("Version:{}", glGetString(GL_VERSION));
 
 		std::string output;
-		for (size_t i = 0; i < m_Extensions.size(); ++i)
-			output += "		" + std::string(m_Extensions[i]) + "\n";
+		for (size_t i = 0; i < mExtensions.size(); ++i)
+			output += "		" + std::string(mExtensions[i]) + "\n";
 		spdlog::info("Extensions:\n{}", output.c_str());
 	}
 
 	void RenderContext::Destroy()
 	{
-		SDL_GL_DeleteContext(m_RenderContextHandle);
+		SDL_GL_DeleteContext(mRenderContextHandle);
 	}
 
 	bool RenderContext::IsSupportExtension(std::string_view extensionName)
 	{
-		auto iter = std::find_if(m_Extensions.begin(), m_Extensions.end(), [=](auto &ext)
+		auto iter = std::find_if(mExtensions.begin(), mExtensions.end(), [=](auto &ext)
 								 { return ext == extensionName; });
-		if (iter == m_Extensions.end())
+		if (iter == mExtensions.end())
 			return false;
 		return true;
 	}
@@ -90,17 +90,17 @@ namespace Pe2
 
 	void RenderContext::SwapWindow()
 	{
-		SDL_GL_SwapWindow(m_WindowHandle);
+		SDL_GL_SwapWindow(mWindowHandle);
 	}
 
 	SDL_GLContext RenderContext::GetRenderContextHandle()
 	{
-		return m_RenderContextHandle;
+		return mRenderContextHandle;
 	}
 
 	SDL_Window *RenderContext::GetWindow()
 	{
-		return m_WindowHandle;
+		return mWindowHandle;
 	}
 
 	Vec2 RenderContext::GetVersion()

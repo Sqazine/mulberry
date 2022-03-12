@@ -14,78 +14,78 @@ namespace Pe2
 
     void TransformComponent::SetPosition(const Vec2 &pos)
     {
-        m_Transform.position = pos;
+        mTransform.position = pos;
     }
 
     void TransformComponent::SetPosition(float posX, float posY)
     {
-        m_Transform.position = Vec2(posX, posY);
+        mTransform.position = Vec2(posX, posY);
     }
 
     const Vec2 &TransformComponent::GetPosition() const
     {
-        return m_Transform.position;
+        return mTransform.position;
     }
 
     void TransformComponent::Translate(const Vec2 &pos)
     {
-        m_Transform.position = Vec2::Translate(m_Transform.position, pos);
+        mTransform.position = Vec2::Translate(mTransform.position, pos);
     }
 
     void TransformComponent::SetRotation(float degree)
     {
-        m_Transform.rotation = degree;
+        mTransform.rotation = degree;
     }
 
     float TransformComponent::GetRotation() const
     {
-        return m_Transform.rotation;
+        return mTransform.rotation;
     }
 
     void TransformComponent::Rotate(float degree)
     {
-        m_Transform.rotation += degree;
+        mTransform.rotation += degree;
     }
 
     void TransformComponent::SetScale(float scale)
     {
-        m_Transform.scale.x = m_Transform.scale.y = scale;
+        mTransform.scale.x = mTransform.scale.y = scale;
     }
 
     void TransformComponent::SetScale(const Vec2 &scale)
     {
-        m_Transform.scale = scale;
+        mTransform.scale = scale;
     }
 
     void TransformComponent::SetScale(float scaleX, float scaleY)
     {
-        m_Transform.scale.x = scaleX;
-        m_Transform.scale.y = scaleY;
+        mTransform.scale.x = scaleX;
+        mTransform.scale.y = scaleY;
     }
 
     const Vec2 &TransformComponent::GetScale() const
     {
-        return m_Transform.scale;
+        return mTransform.scale;
     }
 
     Vec2 TransformComponent::GetLocalAxisX() const
     {
-        return Vec2::Rotate(Vec2::UNIT_X,MathUtils::ToRadian(m_Transform.rotation));
+        return Vec2::Rotate(Vec2::UNIT_X,MathUtils::ToRadian(mTransform.rotation));
     }
 
     Vec2 TransformComponent::GetLocalAxisY() const
     {
-        return Vec2::Rotate(Vec2::UNIT_Y, MathUtils::ToRadian(m_Transform.rotation));
+        return Vec2::Rotate(Vec2::UNIT_Y, MathUtils::ToRadian(mTransform.rotation));
     }
 
     Mat4 TransformComponent::GetModelMat() const
     {
-        return m_Transform.ToMat4();
+        return mTransform.ToMat4();
     }
 
      const Transform& TransformComponent::GetTransform() const
      {
-         return m_Transform;
+         return mTransform;
      }
 
 }

@@ -21,21 +21,21 @@ namespace Pe2
 
     const ImgData &ResourceManager::LoadImgData(const std::string &filePath)
     {
-        auto iter = m_ImgDatas.find(filePath);
-        if (iter != m_ImgDatas.end())
+        auto iter = mImgDatas.find(filePath);
+        if (iter != mImgDatas.end())
             return iter->second;
         ImgData tmp;
         stbi_set_flip_vertically_on_load(true);
         uint8_t *data = stbi_load(filePath.c_str(), (int32_t *)&tmp.width, (int32_t *)&tmp.height, nullptr, STBI_rgb_alpha);
         tmp.pixels = std::vector<uint8_t>(data, data + (tmp.width * tmp.height * 4));
-        m_ImgDatas[filePath] = tmp;
-        return m_ImgDatas[filePath];
+        mImgDatas[filePath] = tmp;
+        return mImgDatas[filePath];
     }
 
     const std::string &ResourceManager::LoadText(std::string_view path)
     {
-        auto iter = m_Texts.find(path.data());
-        if (iter != m_Texts.end())
+        auto iter = mTexts.find(path.data());
+        if (iter != mTexts.end())
             return iter->second;
 
         std::ifstream file(path.data(), std::ios::binary);
@@ -49,9 +49,9 @@ namespace Pe2
         std::string content = sstream.str();
         file.close();
 
-        m_Texts[path.data()] = content;
+        mTexts[path.data()] = content;
 
-        return m_Texts[path.data()];
+        return mTexts[path.data()];
     }
 
 }

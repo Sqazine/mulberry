@@ -27,14 +27,14 @@ namespace Pe2
                 SDL_Log("failed to load font %s in size %d", fileName.c_str(), size);
                 return false;
             }
-            m_FontData.emplace(size, font);
+            mFontData.emplace(size, font);
         }
         return true;
     }
 
     void Font::UnLoad()
     {
-        for (auto &font : m_FontData)
+        for (auto &font : mFontData)
             TTF_CloseFont(font.second);
     }
 
@@ -47,8 +47,8 @@ namespace Pe2
         sdlColor.b = static_cast<uint8_t>(color.b * 255);
         sdlColor.a = static_cast<uint8_t>(color.a * 255);
 
-        auto iter = m_FontData.find(pointSize);
-        if (iter != m_FontData.end())
+        auto iter = mFontData.find(pointSize);
+        if (iter != mFontData.end())
         {
             TTF_Font *font = iter->second;
             SDL_Surface *surf = TTF_RenderText_Blended(font, text.c_str(), sdlColor);

@@ -34,6 +34,6 @@ namespace Pe2
         const Transform &GetTransform() const;
 
     private:
-        Transform m_Transform;
+        Transform mTransform;
     };
 }

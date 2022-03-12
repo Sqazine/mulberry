@@ -4,21 +4,21 @@
 #include "Input.h"
 namespace Pe2
 {
-    AppState App::m_State = AppState::INIT;
+    AppState App::mState = AppState::INIT;
 
-    Timer App::m_Timer;
-    Input App::m_Input;
+    Timer App::mTimer;
+    Input App::mInput;
 
-    std::vector<std::unique_ptr<Scene>> App::m_Scenes;
-    int32_t App::m_SceneIdx = 0;
+    std::vector<std::unique_ptr<Scene>> App::mScenes;
+    int32_t App::mSceneIdx = 0;
 
-    SceneRenderer App::m_SceneRenderer;
+    SceneRenderer App::mSceneRenderer;
 
     void App::Run()
     {
-        while (m_State != AppState::EXIT)
+        while (mState != AppState::EXIT)
         {
-            m_Timer.Update();
+            mTimer.Update();
             ProcessInput();
             Update();
             Render();
@@ -33,48 +33,48 @@ namespace Pe2
     {
         auto scene = std::make_unique<Scene>(name);
         Scene *result = scene.get();
-        m_Scenes.emplace_back(std::move(scene));
+        mScenes.emplace_back(std::move(scene));
         return result;
     }
 
     Scene *App::GetScene(std::string_view name)
     {
-        auto iter = std::find_if(m_Scenes.begin(), m_Scenes.end(), [=](auto &scene)
+        auto iter = std::find_if(mScenes.begin(), mScenes.end(), [=](auto &scene)
                                  { return scene->GetName() == name; });
-        if (iter == m_Scenes.end())
+        if (iter == mScenes.end())
             return nullptr;
         return iter->get();
     }
 
     bool App::RemoveScene(std::string_view name)
     {
-        auto iter = std::find_if(m_Scenes.begin(), m_Scenes.end(), [=](auto &scene)
+        auto iter = std::find_if(mScenes.begin(), mScenes.end(), [=](auto &scene)
                                  { return scene->GetName() == name; });
-        bool exists = iter != m_Scenes.end();
+        bool exists = iter != mScenes.end();
         if (exists)
-            m_Scenes.erase(iter);
+            mScenes.erase(iter);
         return exists;
     }
 
     void App::RemoveAllScenes()
     {
-        std::vector<std::unique_ptr<Scene>>().swap(m_Scenes);
+        std::vector<std::unique_ptr<Scene>>().swap(mScenes);
     }
 
     void App::Quit()
     {
-        m_State = AppState::EXIT;
+        mState = AppState::EXIT;
     }
 
     void App::Init(const RenderContextInfo &info)
     {
         RenderContext::Init(info);
-        m_Input.Init();
+        mInput.Init();
 
-        m_SceneIdx = 0;
-        m_SceneRenderer.Init();
+        mSceneIdx = 0;
+        mSceneRenderer.Init();
 
-        m_Timer.Init();
+        mTimer.Init();
     }
 
     void App::ProcessInput()
@@ -85,34 +85,34 @@ namespace Pe2
             switch (event.type)
             {
             case SDL_QUIT:
-                m_State = AppState::EXIT;
+                mState = AppState::EXIT;
             }
         }
 
-        m_Input.ProcessInput(event);
+        mInput.ProcessInput(event);
 
-        for (const auto &entity : m_Scenes[m_SceneIdx]->GetAllEntities())
+        for (const auto &entity : mScenes[mSceneIdx]->GetAllEntities())
             for (const auto &comp : entity->GetAllComponents())
-                comp->ProcessInput(m_Input.GetDevice());
+                comp->ProcessInput(mInput.GetDevice());
     }
     void App::Update()
     {
-        m_Input.PreUpdate();
+        mInput.PreUpdate();
 
-        for (const auto &entity : m_Scenes[m_SceneIdx]->GetAllEntities())
+        for (const auto &entity : mScenes[mSceneIdx]->GetAllEntities())
         {
             for (const auto &comp : entity->GetAllComponents())
             {
-                comp->Update(m_Timer.GetDeltaTime());
-                comp->LateUpdate(m_Timer.GetDeltaTime());
+                comp->Update(mTimer.GetDeltaTime());
+                comp->LateUpdate(mTimer.GetDeltaTime());
             }
         }
 
-        m_Input.PostUpdate();
+        mInput.PostUpdate();
     }
     void App::Render()
     {
-        m_SceneRenderer.Render(m_Scenes[m_SceneIdx].get());
+        mSceneRenderer.Render(mScenes[mSceneIdx].get());
     }
 
     void App::RenderGizmo()

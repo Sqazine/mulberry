@@ -4,7 +4,7 @@ namespace Pe2
 {
 
     Entity::Entity(std::string_view name)
-        : Object(name), m_Visiable(true),m_IsStatic(false)
+        : Object(name), mVisiable(true),mIsStatic(false)
     {
     }
 
@@ -15,53 +15,53 @@ namespace Pe2
 
      bool Entity::AddComponent(Component* component)
      {
-        component->m_Owner = this;
+        component->mOwner = this;
         component->Init();
-        for (int32_t pos = 0; pos < m_Components.size(); ++pos)
+        for (int32_t pos = 0; pos < mComponents.size(); ++pos)
         {
-           if (m_Components[pos].get()->IsSameComponentType(component->m_ComponentType))
+           if (mComponents[pos].get()->IsSameComponentType(component->mComponentType))
                return false;
         }
 
-        auto iter = m_Components.begin();
-        for (; iter != m_Components.end(); ++iter)
+        auto iter = mComponents.begin();
+        for (; iter != mComponents.end(); ++iter)
             if (component->GetUpdateOrder() < (**iter).GetUpdateOrder())
                 break;
 
         auto uniComp=std::unique_ptr<Component>(component);
                 
-        m_Components.insert(iter, std::move(uniComp));
+        mComponents.insert(iter, std::move(uniComp));
         return true;
      }
 
     void Entity::RemoveAllComponents()
     {
-        std::vector<std::unique_ptr<Component>>().swap(m_Components);
+        std::vector<std::unique_ptr<Component>>().swap(mComponents);
     }
 
     std::vector<Component*> Entity::GetAllComponents() const
     {
         std::vector<Component*> result;
-        for(const auto& c:m_Components)
+        for(const auto& c:mComponents)
             result.emplace_back(c.get());
         return result;
     }
 
     void Entity::SetVisiable(bool visiable)
     {
-        m_Visiable = visiable;
+        mVisiable = visiable;
     }
     bool Entity::IsVisiable() const
     {
-        return m_Visiable;
+        return mVisiable;
     }
 
     void Entity::SetStatic(bool isStatic)
     {
-        m_IsStatic = isStatic;
+        mIsStatic = isStatic;
     }
     bool Entity::IsStatic() const
     {
-        return m_IsStatic;
+        return mIsStatic;
     }
 }

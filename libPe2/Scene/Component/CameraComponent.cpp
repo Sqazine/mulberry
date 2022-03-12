@@ -9,7 +9,7 @@ namespace Pe2
     CameraComponent::CameraComponent(int32_t updateOrder)
         : Component(updateOrder)
     {
-        m_ViewMat = Mat4::LookAt(Vec2::ZERO, 0.0f);
+        mViewMat = Mat4::LookAt(Vec2::ZERO, 0.0f);
     }
     CameraComponent::~CameraComponent()
     {
@@ -24,37 +24,37 @@ namespace Pe2
     {
         //only update viewmat while transform was updated
         auto t = GetOwner()->GetComponent<TransformComponent>()->GetTransform();
-        if (m_PreTransform != t)
+        if (mPreTransform != t)
         {
-            m_PreTransform = t;
-            m_ViewMat = Mat4::LookAt(m_PreTransform.position, m_PreTransform.rotation);
+            mPreTransform = t;
+            mViewMat = Mat4::LookAt(mPreTransform.position, mPreTransform.rotation);
         }
-        return m_ViewMat;
+        return mViewMat;
     }
     const Mat4 &CameraComponent::GetProjMat() const
     {
-        return m_ProjMat;
+        return mProjMat;
     }
 
     void CameraComponent::SetClearColor(const Color &color)
     {
-        m_Camera.clearColor = color;
+        mCamera.clearColor = color;
     }
 
     const Color &CameraComponent::GetClearColor() const
     {
-        return m_Camera.clearColor;
+        return mCamera.clearColor;
     }
 
     void CameraComponent::SetExtent(const Vec2 &extent)
     {
-        m_Camera.extent = extent;
-        float halfWidth = m_Camera.extent.x / 2.0f;
-        float halfHeight = m_Camera.extent.y / 2.0f;
-        m_ProjMat = Mat4::Ortho(-halfWidth, halfWidth, halfHeight, -halfHeight, 0.1f, 1000.0f);
+        mCamera.extent = extent;
+        float halfWidth = mCamera.extent.x / 2.0f;
+        float halfHeight = mCamera.extent.y / 2.0f;
+        mProjMat = Mat4::Ortho(-halfWidth, halfWidth, halfHeight, -halfHeight, 0.1f, 1000.0f);
     }
     const Vec2 &CameraComponent::GetExtent() const
     {
-        return m_Camera.extent;
+        return mCamera.extent;
     }
 }

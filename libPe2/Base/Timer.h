@@ -11,8 +11,8 @@ public:
 
 private:
 
-	 uint32_t m_StartTick;
-	 uint32_t m_CurTick;
-	 uint32_t m_LastTick;
-	 float m_DeltaTime;
+	 uint32_t mStartTick;
+	 uint32_t mCurTick;
+	 uint32_t mLastTick;
+	 float mDeltaTime;
 };
