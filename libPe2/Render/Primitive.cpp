@@ -24,6 +24,18 @@ namespace Pe2
         }
     }
 
+    Primitive::Primitive(const std::vector<Vec2> &pos, const std::vector<Vec2> &texcoord, const std::vector<uint32_t> &indices)
+        : mPosition(pos), mTexcoord(texcoord), mIndices(indices)
+    {
+        mVertexArray = std::make_unique<VertexArray>();
+        mVertexArray->SetActive(true);
+
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>(mPosition);
+        mTexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(mTexcoord);
+
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
+    }
+
     Primitive::Primitive(const Primitive &other)
     {
         *this = other;
@@ -60,7 +72,7 @@ namespace Pe2
         return mTexcoord;
     }
 
-    const std::vector<uint8_t> &Primitive::GetIndex() const
+    const std::vector<uint32_t> &Primitive::GetIndex() const
     {
         return mIndices;
     }

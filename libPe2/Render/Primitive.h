@@ -18,13 +18,16 @@ namespace Pe2
 	{
 	public:
 		Primitive(PrimitiveType type=PrimitiveType::QUAD);
+		Primitive(const std::vector<Vec2>& pos,
+		const std::vector<Vec2>& texcoord,
+		const std::vector<uint32_t>& indices);
 		Primitive(const Primitive &other);
 		Primitive &operator=(const Primitive &other);
 		~Primitive();
 
 		const std::vector<Vec2> &GetPosition() const;
 		const std::vector<Vec2> &GetTexcoord() const;
-		const std::vector<uint8_t> &GetIndex() const;
+		const std::vector<uint32_t> &GetIndex() const;
 
 		const VertexArray* GetVertexArray() const;
 		const VertexBuffer<Vec2>* GetPositionBuffer() const;
@@ -44,7 +47,7 @@ namespace Pe2
 		std::vector<Vec2> mPosition;
 		std::vector<Vec2> mTexcoord;
 
-		std::vector<uint8_t> mIndices;
+		std::vector<uint32_t> mIndices;
 
 		std::unique_ptr<VertexArray> mVertexArray;
 		std::unique_ptr<VertexBuffer<Vec2>> mPositionBuffer;
