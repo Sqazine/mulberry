@@ -3,14 +3,15 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include <string_view>
-#include "../Math/Vec2.h"
+#include "../../Math/Vec2.h"
+
 namespace Pe2
 {
     enum WindowFlags
     {
-        WINDOW_FULLSCREEN = 0x00000001, 
-        WINDOW_BORDERLESS = 0x00000010, 
-        WINDOW_RESIZABLE = 0x00000020,  
+        WINDOW_FULLSCREEN = 0x00000001,
+        WINDOW_BORDERLESS = 0x00000010,
+        WINDOW_RESIZABLE = 0x00000020,
         WINDOW_FULLSCREEN_DESKTOP = (WINDOW_FULLSCREEN | 0x00001000),
     };
 
@@ -19,9 +20,12 @@ namespace Pe2
         std::string title;
         float width;
         float height;
-        int32_t flags=0;
+        int32_t flags = 0;
     };
+}
 
+namespace Pe2::GL
+{
     enum RenderFlags
     {
         RENDER_DBUFFER = 0x00000001,
@@ -62,10 +66,8 @@ namespace Pe2
 
         static SDL_GLContext mRenderContextHandle;
 
-        static std::vector<const char*> mExtensions;
+        static std::vector<const char *> mExtensions;
 
         static SDL_Window *mWindowHandle;
-
-
     };
 }

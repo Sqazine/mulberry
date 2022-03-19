@@ -4,6 +4,7 @@ file(GLOB GEOMETRY "Math/Geometry/*.h" "Math/Geometry/*.cpp")
 file(GLOB SCENE "Scene/*.h" "Scene/*.cpp")
 file(GLOB COMPONENT "Scene/Component/*.h" "Scene/Component/*.cpp")
 file(GLOB RENDER "Render/*.h" "Render/*.cpp")
+file(GLOB GL "Render/GL/*.h" "Render/GL/*.cpp")
 file(GLOB UTILS "Utils/*.h" "Utils/*.cpp")
 file(GLOB BASE "Base/*.h" "Base/*.cpp")
 file(GLOB INPUT "Input/*.h" "Input/*.cpp")
@@ -13,7 +14,7 @@ find_package(sdl2-ttf CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
-add_library(libPe2 STATIC ${ROOT} ${MATH} ${GEOMETRY} ${SCENE} ${COMPONENT} ${RENDER} ${UTILS} ${BASE} ${INPUT})
+add_library(libPe2 STATIC ${ROOT} ${MATH} ${GEOMETRY} ${SCENE} ${COMPONENT} ${RENDER} ${GL} ${UTILS} ${BASE} ${INPUT})
 target_include_directories(libPe2 PRIVATE ${CMAKE_SOURCE_DIR}/libPe2 
                                           ${CMAKE_SOURCE_DIR}/libPe2/Audio 
                                           ${CMAKE_SOURCE_DIR}/libPe2/Base 

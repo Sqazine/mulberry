@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include <spdlog/spdlog.h>
 #include "RenderContext.h"
-namespace Pe2
+namespace Pe2::GL
 {
 	RenderContextInfo RenderContext::mRenderCreateInfo;
 

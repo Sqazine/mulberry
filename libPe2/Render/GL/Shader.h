@@ -6,7 +6,7 @@
 #include "../Math/Vec2.h"
 #include "../Math/Mat4.h"
 
-namespace Pe2
+namespace Pe2::GL
 {
     enum ShaderModuleType
     {

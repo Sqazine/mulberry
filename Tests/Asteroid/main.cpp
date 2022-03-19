@@ -8,20 +8,20 @@ int main(int argc, char **argv)
     winInfo.width = 1024;
     winInfo.height = 768;
 
-    Pe2::RenderContextInfo info{};
+    Pe2::GL::RenderContextInfo info{};
     info.windowInfo = winInfo;
     Pe2::App::Init(info);
 
     Pe2::Scene *scene = Pe2::App::CreateScene("Asteroid");
-    Pe2::TextureInfo textureInfo{};
+    Pe2::GL::TextureInfo textureInfo{};
     textureInfo.data = scene->GetResourceManager().LoadImgData(std::string(RESOURCES_DIR) + "Ship.png");
-    textureInfo.filterMode = Pe2::FilterMode::LINEAR;
+    textureInfo.filterMode = Pe2::GL::FilterMode::LINEAR;
 
     Pe2::Entity *rootEntity = scene->CreateEntity("Ship");
     if (rootEntity)
     {
         Pe2::SpriteComponent *spriteComponent = rootEntity->CreateComponent<Pe2::SpriteComponent>();
-        spriteComponent->SetTexture(new Pe2::Texture(textureInfo));
+        spriteComponent->SetTexture(new Pe2::GL::Texture(textureInfo));
     }
 
     auto transComponent = rootEntity->GetComponent<Pe2::TransformComponent>();

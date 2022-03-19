@@ -2,8 +2,8 @@
 #include <cstdint>
 #include <vector>
 #include <glad/glad.h>
-#include "../Math/Vec2.h"
-namespace Pe2
+#include "../../Math/Vec2.h"
+namespace Pe2::GL
 {
 	template <typename T>
 	class VertexBuffer

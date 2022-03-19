@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 #include <memory>
-#include "../../Render/Texture.h"
+#include "../../Render/GL/Texture.h"
 namespace Pe2
 {
 	class SpriteComponent : public Component
@@ -13,10 +13,10 @@ namespace Pe2
 
 		void Init() override;
 
-		const Texture* GetTexture() const;
-		void SetTexture(Texture* texture);
+		const GL::Texture* GetTexture() const;
+		void SetTexture(GL::Texture* texture);
 	private:
-		std::unique_ptr<Texture> mTexture;
+		std::unique_ptr<GL::Texture> mTexture;
 	};
 
 }

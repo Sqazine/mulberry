@@ -4,7 +4,7 @@
 #include <string>
 #include <glad/glad.h>
 
-namespace Pe2
+namespace Pe2::GL
 {
 
     class IndexBuffer

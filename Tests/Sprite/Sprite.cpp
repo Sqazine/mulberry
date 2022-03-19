@@ -7,12 +7,12 @@ int32_t main(int32_t argc, char **argv)
     winInfo.width = 1024;
     winInfo.height = 768;
 
-    Pe2::RenderContextInfo info{};
+    Pe2::GL::RenderContextInfo info{};
     info.windowInfo = winInfo;
     Pe2::App::Init(info);
 
     Pe2::Scene *scene = Pe2::App::CreateScene("Sprite");
-    Pe2::TextureInfo textureInfo{};
+    Pe2::GL::TextureInfo textureInfo{};
     textureInfo.data = scene->GetResourceManager().LoadImgData(std::string(RESOURCES_DIR) + "awesomeface.png");
 
     Pe2::Entity *rootEntity = scene->CreateEntity("Sprite");
@@ -26,7 +26,7 @@ int32_t main(int32_t argc, char **argv)
 
     Pe2::SpriteComponent *spriteComponent = rootEntity->CreateComponent<Pe2::SpriteComponent>();
     if (spriteComponent)
-        spriteComponent->SetTexture(new Pe2::Texture(textureInfo));
+        spriteComponent->SetTexture(new Pe2::GL::Texture(textureInfo));
 
     Pe2::App::Run();
 

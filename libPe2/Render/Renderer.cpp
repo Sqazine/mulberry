@@ -48,15 +48,15 @@ namespace Pe2
         mPointPrimitive = std::make_unique<Primitive>(PrimitiveType::POINT);
         mCirclePrimitive = std::make_unique<Primitive>(PrimitiveType::CIRCLE);
 
-        auto vertShader = ShaderModule(VERTEX_SHADER, spriteVertShader);
-        auto fragShader = ShaderModule(FRAGMENT_SHADER, spriteFragShader);
-        mSpriteShaderProgram = std::make_unique<ShaderProgram>();
+        auto vertShader = GL::ShaderModule(GL::VERTEX_SHADER, spriteVertShader);
+        auto fragShader = GL::ShaderModule(GL::FRAGMENT_SHADER, spriteFragShader);
+        mSpriteShaderProgram = std::make_unique<GL::ShaderProgram>();
         mSpriteShaderProgram->AttachShader(vertShader);
         mSpriteShaderProgram->AttachShader(fragShader);
 
-        auto gVertShader = ShaderModule(VERTEX_SHADER, gizmoVertShader);
-        auto gFragShader = ShaderModule(FRAGMENT_SHADER, gizmoFragShader);
-        mGizmoShaderProgram = std::make_unique<ShaderProgram>();
+        auto gVertShader = GL::ShaderModule(GL::VERTEX_SHADER, gizmoVertShader);
+        auto gFragShader = GL::ShaderModule(GL::FRAGMENT_SHADER, gizmoFragShader);
+        mGizmoShaderProgram = std::make_unique<GL::ShaderProgram>();
         mGizmoShaderProgram->AttachShader(gVertShader);
         mGizmoShaderProgram->AttachShader(gFragShader);
     }
@@ -65,7 +65,7 @@ namespace Pe2
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<SpriteComponent>();
-        const Texture *texture = spriteComp->GetTexture();
+        const GL::Texture *texture = spriteComp->GetTexture();
         if (texture == nullptr)
             return;
         
@@ -94,7 +94,7 @@ namespace Pe2
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<SpriteComponent>();
-        const Texture *texture = spriteComp->GetTexture();
+        const GL::Texture *texture = spriteComp->GetTexture();
         if (texture == nullptr)
             return;
         mGizmoShaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
@@ -108,7 +108,7 @@ namespace Pe2
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<SpriteComponent>();
-        const Texture *texture = spriteComp->GetTexture();
+        const GL::Texture *texture = spriteComp->GetTexture();
         if (texture == nullptr)
             return;
         mGizmoShaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
@@ -124,7 +124,7 @@ namespace Pe2
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<SpriteComponent>();
-        const Texture *texture = spriteComp->GetTexture();
+        const GL::Texture *texture = spriteComp->GetTexture();
         if (texture == nullptr)
             return;
         mGizmoShaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
@@ -138,7 +138,7 @@ namespace Pe2
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<SpriteComponent>();
-        const Texture *texture = spriteComp->GetTexture();
+        const GL::Texture *texture = spriteComp->GetTexture();
         if (texture == nullptr)
             return;
         mGizmoShaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());

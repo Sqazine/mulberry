@@ -2,10 +2,10 @@
 #include <cstdint>
 #include <glad/glad.h>
 #include <vector>
-#include "../Math/Vec2.h"
-#include "../Math/Mat4.h"
+#include "../../Math/Vec2.h"
+#include "../../Math/Mat4.h"
 
-namespace Pe2
+namespace Pe2::GL
 {
 
 	template <typename T>

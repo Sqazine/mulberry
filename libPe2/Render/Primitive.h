@@ -2,9 +2,9 @@
 #include <memory>
 #include <vector>
 #include "../Math/Vec2.h"
-#include "VertexArray.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
+#include "GL/VertexArray.h"
+#include "GL/VertexBuffer.h"
+#include "GL/IndexBuffer.h"
 namespace Pe2
 {
 	enum class PrimitiveType
@@ -29,10 +29,10 @@ namespace Pe2
 		const std::vector<Vec2> &GetTexcoord() const;
 		const std::vector<uint32_t> &GetIndex() const;
 
-		const VertexArray* GetVertexArray() const;
-		const VertexBuffer<Vec2>* GetPositionBuffer() const;
-		const VertexBuffer<Vec2>* GetTexcoordBuffer() const;
-		const IndexBuffer* GetIndexBuffer() const;
+		const GL::VertexArray* GetVertexArray() const;
+		const GL::VertexBuffer<Vec2>* GetPositionBuffer() const;
+		const GL::VertexBuffer<Vec2>* GetTexcoordBuffer() const;
+		const GL::IndexBuffer* GetIndexBuffer() const;
 
 		void Bind(int32_t position = -1, int32_t texcoord = -1);
 		void UnBind(int32_t position = -1, int32_t texcoord = -1);
@@ -49,9 +49,9 @@ namespace Pe2
 
 		std::vector<uint32_t> mIndices;
 
-		std::unique_ptr<VertexArray> mVertexArray;
-		std::unique_ptr<VertexBuffer<Vec2>> mPositionBuffer;
-		std::unique_ptr<VertexBuffer<Vec2>> mTexcoordBuffer;
-		std::unique_ptr<IndexBuffer> mIndexBuffer;
+		std::unique_ptr<GL::VertexArray> mVertexArray;
+		std::unique_ptr<GL::VertexBuffer<Vec2>> mPositionBuffer;
+		std::unique_ptr<GL::VertexBuffer<Vec2>> mTexcoordBuffer;
+		std::unique_ptr<GL::IndexBuffer> mIndexBuffer;
 	};
 }

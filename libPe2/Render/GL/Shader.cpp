@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include "Uniform.h"
 #include <spdlog/spdlog.h>
-namespace Pe2
+namespace Pe2::GL
 {
 
 	ShaderModule::ShaderModule(const ShaderModuleType &type, std::string_view content)

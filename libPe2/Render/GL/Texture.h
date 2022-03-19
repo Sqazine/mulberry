@@ -5,7 +5,17 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include "../Math/Color.h"
+
 namespace Pe2
+{
+	struct ImgData
+	{
+		std::vector<uint8_t> pixels{};
+		uint32_t width = 0, height = 0;
+	};
+}
+
+namespace Pe2::GL
 {
 	enum class WrapMode
 	{
@@ -28,16 +38,10 @@ namespace Pe2
 		RGBA8,
 	};
 
-	struct ImgData
-	{
-		std::vector<uint8_t> pixels{};
-		uint32_t width = 0, height = 0;
-	};
-
 	struct TextureInfo
 	{
 		WrapMode wrapS = WrapMode::REPEAT, wrapT = WrapMode::REPEAT;
-		FilterMode filterMode=FilterMode::NEAREST;
+		FilterMode filterMode = FilterMode::NEAREST;
 		Color borderColor = Color::Black;
 		ImgData data;
 	};

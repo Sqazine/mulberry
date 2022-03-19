@@ -1,6 +1,6 @@
 #include "App.h"
 #include "Render/Renderer.h"
-#include "Render/RenderContext.h"
+#include "Render/GL/RenderContext.h"
 #include "Input.h"
 namespace Pe2
 {
@@ -24,7 +24,7 @@ namespace Pe2
             Render();
             RenderGizmo();
             RenderUI();
-            RenderContext::SwapWindow();
+            GL::RenderContext::SwapWindow();
         }
         CleanUp();
     }
@@ -66,9 +66,9 @@ namespace Pe2
         mState = AppState::EXIT;
     }
 
-    void App::Init(const RenderContextInfo &info)
+    void App::Init(const GL::RenderContextInfo &info)
     {
-        RenderContext::Init(info);
+        GL::RenderContext::Init(info);
         mInput.Init();
 
         mSceneIdx = 0;
@@ -129,12 +129,12 @@ namespace Pe2
 
     void App::SetWindowExtent(const Vec2 &extent)
     {
-        SDL_SetWindowSize(RenderContext::GetWindow(), extent.x, extent.y);
+        SDL_SetWindowSize(GL::RenderContext::GetWindow(), extent.x, extent.y);
     }
     Vec2 App::GetWindowExtent()
     {
         int32_t x, y;
-        SDL_GetWindowSize(RenderContext::GetWindow(), &x, &y);
+        SDL_GetWindowSize(GL::RenderContext::GetWindow(), &x, &y);
         return Vec2(x, y);
     }
 }

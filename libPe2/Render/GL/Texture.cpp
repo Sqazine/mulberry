@@ -1,7 +1,7 @@
 #include "Texture.h"
 #include <vector>
 
-namespace Pe2
+namespace Pe2::GL
 {
 
 	Texture::Texture()

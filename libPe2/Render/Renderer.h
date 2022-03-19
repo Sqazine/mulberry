@@ -1,10 +1,10 @@
 #pragma once
 #include <cstdint>
 #include <memory>
-#include "IndexBuffer.h"
+#include "GL/IndexBuffer.h"
 #include <glad/glad.h>
 #include "Primitive.h"
-#include "Shader.h"
+#include "GL/Shader.h"
 #include "../Scene/Entity.h"
 #include "../Scene/Scene.h"
 #include "../Scene/Component/SpriteComponent.h"
@@ -30,8 +30,8 @@ namespace Pe2
 		void RenderQuadInstanced(const std::vector<const Entity *> entities);
 		void RenderCircleInstanced(const std::vector<const Entity *> entities);
 
-		std::unique_ptr<ShaderProgram> mSpriteShaderProgram;
-		std::unique_ptr<ShaderProgram> mGizmoShaderProgram;
+		std::unique_ptr<GL::ShaderProgram> mSpriteShaderProgram;
+		std::unique_ptr<GL::ShaderProgram> mGizmoShaderProgram;
 
 		std::unique_ptr<Primitive> mLinePrimitive;
 		std::unique_ptr<Primitive> mPointPrimitive;

@@ -20,12 +20,12 @@ namespace Pe2
 		REQUIRED_COMPONENT(TransformComponent)
 	}
 
-	const Texture *SpriteComponent::GetTexture() const
+	const GL::Texture *SpriteComponent::GetTexture() const
 	{
 		return mTexture.get();
 	}
 
-	void SpriteComponent::SetTexture(Texture *texture)
+	void SpriteComponent::SetTexture(GL::Texture *texture)
 	{
 		mTexture.reset(texture);
 	}

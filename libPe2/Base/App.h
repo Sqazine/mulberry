@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 #include <SDL2/SDL.h>
-#include "../Render/RenderContext.h"
+#include "../Render/GL/RenderContext.h"
 #include "../Math/Vec2.h"
 #include "../Scene/Scene.h"
 #include "Timer.h"
@@ -23,7 +23,7 @@ namespace Pe2
 	class App
 	{
 	public:
-		static void Init(const RenderContextInfo& info);
+		static void Init(const GL::RenderContextInfo& info);
 		static void Run();
 
 		static Scene* CreateScene(std::string_view name);
