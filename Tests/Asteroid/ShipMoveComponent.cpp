@@ -10,6 +10,26 @@ ShipMoveComponent::~ShipMoveComponent()
 void ShipMoveComponent::Init()
 {
     REQUIRED_COMPONENT(Pe2::TransformComponent);
+
+    Pe2::GL::TextureInfo textureInfo{};
+    textureInfo.data = GetOwner()->GetOwner()->GetResourceManager().LoadImgData(std::string(RESOURCES_DIR) + "ShipWithThrust.png");
+    textureInfo.filterMode = Pe2::GL::FilterMode::LINEAR;
+    movingTexture.reset(new Pe2::GL::Texture(textureInfo));
+
+    textureInfo = {};
+    textureInfo.data = GetOwner()->GetOwner()->GetResourceManager().LoadImgData(std::string(RESOURCES_DIR) + "Ship.png");
+    textureInfo.filterMode = Pe2::GL::FilterMode::LINEAR;
+    staticTexture.reset(new Pe2::GL::Texture(textureInfo));
+
+    if (!ownerSpriteComponent)
+        ownerSpriteComponent = GetOwner()->GetComponent<Pe2::SpriteComponent>();
+
+    ownerSpriteComponent->SetTexture(staticTexture.get());
+
+    if (!ownerTransformComponent)
+        ownerTransformComponent = GetOwner()->GetComponent<Pe2::TransformComponent>();
+    ownerTransformComponent->SetRotation(90.0f);
+    ownerTransformComponent->SetPosition(0.0f, (-Pe2::App::GetWindowExtent().y + textureInfo.data.height * ownerTransformComponent->GetScale().y) / 2.0f);
 }
 
 void ShipMoveComponent::ProcessInput(const Pe2::InputDevice *inputDevice)
@@ -35,11 +55,8 @@ void ShipMoveComponent::ProcessInput(const Pe2::InputDevice *inputDevice)
         rotRight = false;
 }
 
-void ShipMoveComponent::Update(float deltaTime) 
+void ShipMoveComponent::Update(float deltaTime)
 {
-    if (!ownerTransformComponent)
-        ownerTransformComponent = GetOwner()->GetComponent<Pe2::TransformComponent>();
-
     if (moveForward)
         ownerTransformComponent->Translate(ownerTransformComponent->GetLocalAxisX() * moveSpeed * deltaTime);
     if (moveBackward)
@@ -50,4 +67,9 @@ void ShipMoveComponent::Update(float deltaTime)
 
     if (rotRight)
         ownerTransformComponent->Rotate(-rotSpeed * deltaTime);
+
+    if (moveForward || moveBackward)
+        ownerSpriteComponent->SetTexture(movingTexture.get());
+    else
+        ownerSpriteComponent->SetTexture(staticTexture.get());
 }

@@ -15,7 +15,7 @@ namespace Pe2
         template <class T, typename... Args>
         T *CreateComponent(Args &&...params);
 
-        bool AddComponent(Component* component);
+        bool AddComponent(Component *component);
 
         template <class T>
         bool RemoveComponent();
@@ -24,7 +24,7 @@ namespace Pe2
         template <class T>
         T *GetComponent() const;
 
-        std::vector<Component*> GetAllComponents() const;
+        std::vector<Component *> GetAllComponents() const;
 
         void SetVisiable(bool visiable);
         bool IsVisiable() const;
@@ -32,7 +32,13 @@ namespace Pe2
         void SetStatic(bool isStatic);
         bool IsStatic() const;
 
+        class Scene *GetOwner() const;
+
     private:
+        friend class Scene;
+
+        class Scene *mOwner;
+
         bool mVisiable;
         bool mIsStatic;
         std::vector<std::unique_ptr<Component>> mComponents;
@@ -46,8 +52,8 @@ namespace Pe2
         component->Init();
         for (int32_t pos = 0; pos < mComponents.size(); ++pos)
         {
-           if (mComponents[pos].get()->IsSameComponentType(T::mComponentType))
-                 return nullptr;
+            if (mComponents[pos].get()->IsSameComponentType(T::mComponentType))
+                return nullptr;
         }
 
         auto iter = mComponents.begin();

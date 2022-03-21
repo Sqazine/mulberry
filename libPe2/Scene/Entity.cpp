@@ -4,7 +4,7 @@ namespace Pe2
 {
 
     Entity::Entity(std::string_view name)
-        : Object(name), mVisiable(true),mIsStatic(false)
+        : Object(name), mVisiable(true), mIsStatic(false)
     {
     }
 
@@ -13,14 +13,14 @@ namespace Pe2
         RemoveAllComponents();
     }
 
-     bool Entity::AddComponent(Component* component)
-     {
+    bool Entity::AddComponent(Component *component)
+    {
         component->mOwner = this;
         component->Init();
         for (int32_t pos = 0; pos < mComponents.size(); ++pos)
         {
-           if (mComponents[pos].get()->IsSameComponentType(component->mComponentType))
-               return false;
+            if (mComponents[pos].get()->IsSameComponentType(component->mComponentType))
+                return false;
         }
 
         auto iter = mComponents.begin();
@@ -28,21 +28,21 @@ namespace Pe2
             if (component->GetUpdateOrder() < (**iter).GetUpdateOrder())
                 break;
 
-        auto uniComp=std::unique_ptr<Component>(component);
-                
+        auto uniComp = std::unique_ptr<Component>(component);
+
         mComponents.insert(iter, std::move(uniComp));
         return true;
-     }
+    }
 
     void Entity::RemoveAllComponents()
     {
         std::vector<std::unique_ptr<Component>>().swap(mComponents);
     }
 
-    std::vector<Component*> Entity::GetAllComponents() const
+    std::vector<Component *> Entity::GetAllComponents() const
     {
-        std::vector<Component*> result;
-        for(const auto& c:mComponents)
+        std::vector<Component *> result;
+        for (const auto &c : mComponents)
             result.emplace_back(c.get());
         return result;
     }
@@ -63,5 +63,10 @@ namespace Pe2
     bool Entity::IsStatic() const
     {
         return mIsStatic;
+    }
+
+    Scene *Entity::GetOwner() const
+    {
+        return mOwner;
     }
 }

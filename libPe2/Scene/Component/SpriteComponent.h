@@ -16,7 +16,7 @@ namespace Pe2
 		const GL::Texture* GetTexture() const;
 		void SetTexture(GL::Texture* texture);
 	private:
-		std::unique_ptr<GL::Texture> mTexture;
+		GL::Texture* mTexture;
 	};
 
 }

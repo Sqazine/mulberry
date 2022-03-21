@@ -84,6 +84,9 @@
         "xstddef": "cpp",
         "xstring": "cpp",
         "xtr1common": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "cfenv": "cpp",
+        "queue": "cpp",
+        "stack": "cpp"
     }
 }

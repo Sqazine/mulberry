@@ -13,6 +13,7 @@ namespace Pe2
     Entity *Scene::CreateEntity(std::string_view name)
     {
         auto entity = std::make_unique<Entity>(name);
+        entity->mOwner = this;
         Entity *result = entity.get();
         mEntities.emplace_back(std::move(entity));
         return result;

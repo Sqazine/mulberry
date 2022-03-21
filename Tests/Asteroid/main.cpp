@@ -13,22 +13,12 @@ int main(int argc, char **argv)
     Pe2::App::Init(info);
 
     Pe2::Scene *scene = Pe2::App::CreateScene("Asteroid");
-    Pe2::GL::TextureInfo textureInfo{};
-    textureInfo.data = scene->GetResourceManager().LoadImgData(std::string(RESOURCES_DIR) + "Ship.png");
-    textureInfo.filterMode = Pe2::GL::FilterMode::LINEAR;
+ 
 
     Pe2::Entity *rootEntity = scene->CreateEntity("Ship");
     if (rootEntity)
     {
         Pe2::SpriteComponent *spriteComponent = rootEntity->CreateComponent<Pe2::SpriteComponent>();
-        spriteComponent->SetTexture(new Pe2::GL::Texture(textureInfo));
-    }
-
-    auto transComponent = rootEntity->GetComponent<Pe2::TransformComponent>();
-    if (transComponent)
-    {
-        transComponent->SetRotation(90.0f);
-        transComponent->SetPosition(0.0f, (-Pe2::App::GetWindowExtent().y + textureInfo.data.height * transComponent->GetScale().y) / 2.0f);
     }
 
     rootEntity->CreateComponent<ShipMoveComponent>();
