@@ -4,9 +4,9 @@
 #include <memory>
 #include <vector>
 #include <SDL2/SDL.h>
-#include "../Render/GL/RenderContext.h"
-#include "../Math/Vec2.h"
-#include "../Scene/Scene.h"
+#include "Graphics/GL/RenderContext.h"
+#include "Math/Vec2.h"
+#include "Scene/Scene.h"
 #include "Timer.h"
 namespace Pe2
 {

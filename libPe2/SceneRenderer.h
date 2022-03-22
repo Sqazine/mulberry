@@ -1,14 +1,14 @@
 #pragma once
 #include <cstdint>
 #include <memory>
-#include "GL/IndexBuffer.h"
+#include "Graphics/GL/IndexBuffer.h"
 #include <glad/glad.h>
-#include "Primitive.h"
-#include "GL/Shader.h"
-#include "../Scene/Entity.h"
-#include "../Scene/Scene.h"
-#include "../Scene/Component/SpriteComponent.h"
-#include "../Scene/Component/CameraComponent.h"
+#include "Graphics/Primitive.h"
+#include "Graphics/GL/Shader.h"
+#include "Scene/Entity.h"
+#include "Scene/Scene.h"
+#include "Scene/Component/SpriteComponent.h"
+#include "Scene/Component/CameraComponent.h"
 namespace Pe2
 {
 

@@ -4,7 +4,7 @@
 #include <string_view>
 #include "Entity.h"
 #include "Object.h"
-#include "../Base/ResourceManager.h"
+#include "../ResourceManager.h"
 namespace Pe2
 {
     class Scene : public Object

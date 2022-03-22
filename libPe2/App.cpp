@@ -1,6 +1,6 @@
 #include "App.h"
-#include "Render/Renderer.h"
-#include "Render/GL/RenderContext.h"
+#include "SceneRenderer.h"
+#include "Graphics/GL/RenderContext.h"
 #include "Input.h"
 namespace Pe2
 {

@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "SceneRenderer.h"
 
 namespace Pe2
 {
