@@ -3,7 +3,7 @@
 namespace Pe2
 {
     Scene::Scene(std::string_view name)
-        : Object(name)
+        : Object(name),mSceneAssetManager(std::make_unique<AssetManager>())
     {
     }
     Scene::~Scene()
@@ -42,9 +42,9 @@ namespace Pe2
         std::vector<std::unique_ptr<Entity>>().swap(mEntities);
     }
 
-    ResourceManager &Scene::GetResourceManager()
+    AssetManager *Scene::GetSceneAssetManager()
     {
-        return mSceneResourceManager;
+        return mSceneAssetManager.get();
     }
 
     std::vector<Entity *> Scene::GetAllEntities() const

@@ -4,11 +4,11 @@
 namespace Pe2
 {
 
-    class ResourceManager
+    class AssetManager
     {
     public:
-        ResourceManager();
-        ~ResourceManager();
+        AssetManager();
+        ~AssetManager();
 
         const class ImgData& LoadImgData(const std::string &filePath);
         const std::string& LoadText(std::string_view path);

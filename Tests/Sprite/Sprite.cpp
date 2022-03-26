@@ -13,7 +13,7 @@ int32_t main(int32_t argc, char **argv)
 
     Pe2::Scene *scene = Pe2::App::CreateScene("Sprite");
     Pe2::GL::TextureInfo textureInfo{};
-    textureInfo.data = scene->GetResourceManager().LoadImgData(std::string(RESOURCES_DIR) + "awesomeface.png");
+    textureInfo.data = scene->GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "awesomeface.png");
 
     Pe2::Entity *rootEntity = scene->CreateEntity("Sprite");
 

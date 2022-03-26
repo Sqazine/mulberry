@@ -1,6 +1,7 @@
 #include "Component.h"
 #include "../Entity.h"
-
+#include"../Scene.h"
+#include "../../AssetManager.h"
 namespace Pe2
 {
 
@@ -17,10 +18,9 @@ namespace Pe2
 
 	void Component::Init()
 	{
-
 	}
 
-	void Component::ProcessInput(const InputDevice* inputDevice)
+	void Component::ProcessInput(const InputDevice *inputDevice)
 	{
 	}
 	void Component::Update(float deltaTime)
@@ -43,6 +43,17 @@ namespace Pe2
 	{
 		return mOwner;
 	}
+
+	Scene *Component::GetScene() const
+	{
+		return mOwner->GetOwner();
+	}
+
+	 AssetManager* Component::GetSceneAssetManager() const
+	 {
+		 return GetScene()->GetSceneAssetManager();
+	 }	
+
 
 	bool Component::IsSameComponentType(const std::string &componentType) const
 	{

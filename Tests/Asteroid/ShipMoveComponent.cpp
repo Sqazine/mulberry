@@ -12,12 +12,12 @@ void ShipMoveComponent::Init()
     REQUIRED_COMPONENT(Pe2::TransformComponent);
 
     Pe2::GL::TextureInfo textureInfo{};
-    textureInfo.data = GetOwner()->GetOwner()->GetResourceManager().LoadImgData(std::string(RESOURCES_DIR) + "ShipWithThrust.png");
+    textureInfo.data =  GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "ShipWithThrust.png");
     textureInfo.filterMode = Pe2::GL::FilterMode::LINEAR;
     movingTexture.reset(new Pe2::GL::Texture(textureInfo));
 
     textureInfo = {};
-    textureInfo.data = GetOwner()->GetOwner()->GetResourceManager().LoadImgData(std::string(RESOURCES_DIR) + "Ship.png");
+    textureInfo.data =GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "Ship.png");
     textureInfo.filterMode = Pe2::GL::FilterMode::LINEAR;
     staticTexture.reset(new Pe2::GL::Texture(textureInfo));
 

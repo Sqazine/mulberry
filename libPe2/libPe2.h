@@ -1,6 +1,6 @@
 #pragma once
 #include "App.h"
-#include "ResourceManager.h"
+#include "AssetManager.h"
 #include "Input.h"
 #include "SceneRenderer.h"
 #include "Math/AABB.h"

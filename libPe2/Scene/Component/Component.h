@@ -40,7 +40,8 @@ public:                                 \
         int32_t GetUpdateOrder() const;
 
         class Entity *GetOwner() const;
-
+        class Scene* GetScene() const;
+        class AssetManager* GetSceneAssetManager() const;
     protected:
         friend class Entity;
         virtual bool IsSameComponentType(const std::string &comonentType) const;

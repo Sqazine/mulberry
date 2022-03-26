@@ -1,6 +1,6 @@
 
 
-#include "ResourceManager.h"
+#include "AssetManager.h"
 #include "Graphics/GL/Texture.h"
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
@@ -11,15 +11,15 @@
 #include <iostream>
 namespace Pe2
 {
-    ResourceManager::ResourceManager()
+    AssetManager::AssetManager()
     {
     }
 
-    ResourceManager::~ResourceManager()
+    AssetManager::~AssetManager()
     {
     }
 
-    const ImgData &ResourceManager::LoadImgData(const std::string &filePath)
+    const ImgData &AssetManager::LoadImgData(const std::string &filePath)
     {
         auto iter = mImgDatas.find(filePath);
         if (iter != mImgDatas.end())
@@ -32,7 +32,7 @@ namespace Pe2
         return mImgDatas[filePath];
     }
 
-    const std::string &ResourceManager::LoadText(std::string_view path)
+    const std::string &AssetManager::LoadText(std::string_view path)
     {
         auto iter = mTexts.find(path.data());
         if (iter != mTexts.end())
