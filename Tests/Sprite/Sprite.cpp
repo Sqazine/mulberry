@@ -1,34 +1,34 @@
-#include "libPe2/libPe2.h"
+#include "libmulberry/libmulberry.h"
 int32_t main(int32_t argc, char **argv)
 {
 
-    Pe2::WindowInfo winInfo{};
+    mulberry::WindowInfo winInfo{};
     winInfo.title = "Sprite";
     winInfo.width = 1024;
     winInfo.height = 768;
 
-    Pe2::GL::RenderContextInfo info{};
+    mulberry::GL::RenderContextInfo info{};
     info.windowInfo = winInfo;
-    Pe2::App::Init(info);
+    mulberry::App::Init(info);
 
-    Pe2::Scene *scene = Pe2::App::CreateScene("Sprite");
-    Pe2::GL::TextureInfo textureInfo{};
+    mulberry::Scene *scene = mulberry::App::CreateScene("Sprite");
+    mulberry::GL::TextureInfo textureInfo{};
     textureInfo.data = scene->GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "awesomeface.png");
 
-    Pe2::Entity *rootEntity = scene->CreateEntity("Sprite");
+    mulberry::Entity *rootEntity = scene->CreateEntity("Sprite");
 
-    auto cameraComp = rootEntity->CreateComponent<Pe2::CameraComponent>();
+    auto cameraComp = rootEntity->CreateComponent<mulberry::CameraComponent>();
     if (cameraComp)
     {
-        cameraComp->SetClearColor(Pe2::Color::LightYellow);
-        cameraComp->SetExtent(Pe2::Vec2(winInfo.width, winInfo.height));
+        cameraComp->SetClearColor(mulberry::Color::LightYellow);
+        cameraComp->SetExtent(mulberry::Vec2(winInfo.width, winInfo.height));
     }
 
-    Pe2::SpriteComponent *spriteComponent = rootEntity->CreateComponent<Pe2::SpriteComponent>();
+    mulberry::SpriteComponent *spriteComponent = rootEntity->CreateComponent<mulberry::SpriteComponent>();
     if (spriteComponent)
-        spriteComponent->SetTexture(new Pe2::GL::Texture(textureInfo));
+        spriteComponent->SetTexture(new mulberry::GL::Texture(textureInfo));
 
-    Pe2::App::Run();
+    mulberry::App::Run();
 
     return 0;
 }

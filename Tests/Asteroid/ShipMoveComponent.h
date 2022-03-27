@@ -1,6 +1,6 @@
 #pragma once
-#include "libPe2/libPe2.h"
-class ShipMoveComponent : public Pe2::Component
+#include "libmulberry/libmulberry.h"
+class ShipMoveComponent : public mulberry::Component
 {
     COMPONENT_DECLARATION()
 
@@ -9,14 +9,14 @@ public:
     ~ShipMoveComponent();
 
     void Init() override;
-    void ProcessInput(const Pe2::InputDevice *inputDevice) override;
+    void ProcessInput(const mulberry::InputDevice *inputDevice) override;
     void Update(float deltaTime) override;
 private:
-    Pe2::TransformComponent *ownerTransformComponent = nullptr;
-    Pe2::SpriteComponent *ownerSpriteComponent = nullptr;
+    mulberry::TransformComponent *ownerTransformComponent = nullptr;
+    mulberry::SpriteComponent *ownerSpriteComponent = nullptr;
 
-    std::unique_ptr<Pe2::GL::Texture> movingTexture;
-    std::unique_ptr<Pe2::GL::Texture> staticTexture;
+    std::unique_ptr<mulberry::GL::Texture> movingTexture;
+    std::unique_ptr<mulberry::GL::Texture> staticTexture;
 
     float moveSpeed = 500;
     float rotSpeed = 200;
