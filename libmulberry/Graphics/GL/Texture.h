@@ -11,7 +11,7 @@ namespace mulberry
 	struct ImgData
 	{
 		std::vector<uint8_t> pixels{};
-		uint32_t width = 0, height = 0;
+		uint32_t width = 0, height = 0,channel=4;
 	};
 }
 
@@ -34,6 +34,8 @@ namespace mulberry::GL
 
 	enum class ChannelMode
 	{
+		R8,
+		RG8,
 		RGB8,
 		RGBA8,
 	};

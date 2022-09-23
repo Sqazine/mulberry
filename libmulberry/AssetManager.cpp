@@ -26,7 +26,7 @@ namespace mulberry
             return iter->second;
         ImgData tmp;
         stbi_set_flip_vertically_on_load(true);
-        uint8_t *data = stbi_load(filePath.c_str(), (int32_t *)&tmp.width, (int32_t *)&tmp.height, nullptr, STBI_rgb_alpha);
+        uint8_t *data = stbi_load(filePath.c_str(), (int32_t *)&tmp.width, (int32_t *)&tmp.height, (int32_t*)&tmp.channel, STBI_default);
         tmp.pixels = std::vector<uint8_t>(data, data + (tmp.width * tmp.height * 4));
         mImgDatas[filePath] = tmp;
         return mImgDatas[filePath];
@@ -41,7 +41,7 @@ namespace mulberry
         std::ifstream file(path.data(), std::ios::binary);
         if (!file.is_open())
         {
-            std::cout << "failed to load shader file:" << path << std::endl;
+            std::cout << "failed to load text:" << path << std::endl;
             exit(1);
         }
         std::stringstream sstream;

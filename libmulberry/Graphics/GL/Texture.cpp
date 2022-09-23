@@ -51,7 +51,30 @@ namespace mulberry::GL
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, FilterModeMap(mInfo.filterMode));
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &mInfo.borderColor.values[0]);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mInfo.data.width, mInfo.data.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, mInfo.data.pixels.data());
+		uint32_t internalFormat;
+		uint32_t externalFormat;
+
+		switch (mInfo.data.channel)
+		{
+		case 1:
+			internalFormat = GL_R8;
+			externalFormat = GL_R;
+			break;
+		case 2:
+			internalFormat = GL_RG8;
+			externalFormat = GL_RG;
+			break;
+		case 3:
+			internalFormat = GL_RGB8;
+			externalFormat = GL_RGB;
+			break;
+		default:
+			internalFormat = GL_RGBA8;
+			externalFormat = GL_RGBA;
+			break;
+		}
+
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, mInfo.data.width, mInfo.data.height, 0, externalFormat, GL_UNSIGNED_BYTE, mInfo.data.pixels.data());
 
 		if (mInfo.filterMode == FilterMode::TRILINEAR)
 			glGenerateTextureMipmap(mTextureID);
