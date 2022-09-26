@@ -9,6 +9,7 @@ namespace mulberry
 {
 	enum class PrimitiveType
 	{
+		SPRITE,
 		QUAD,
 		CIRCLE,
 		LINE,
@@ -17,10 +18,10 @@ namespace mulberry
 	class Primitive
 	{
 	public:
-		Primitive(PrimitiveType type=PrimitiveType::QUAD);
-		Primitive(const std::vector<Vec2>& pos,
-		const std::vector<Vec2>& texcoord,
-		const std::vector<uint32_t>& indices);
+		Primitive(PrimitiveType type = PrimitiveType::SPRITE);
+		Primitive(const std::vector<Vec2> &pos,
+				  const std::vector<Vec2> &texcoord,
+				  const std::vector<uint32_t> &indices);
 		Primitive(const Primitive &other);
 		Primitive &operator=(const Primitive &other);
 		~Primitive();
@@ -29,16 +30,17 @@ namespace mulberry
 		const std::vector<Vec2> &GetTexcoord() const;
 		const std::vector<uint32_t> &GetIndex() const;
 
-		const GL::VertexArray* GetVertexArray() const;
-		const GL::VertexBuffer<Vec2>* GetPositionBuffer() const;
-		const GL::VertexBuffer<Vec2>* GetTexcoordBuffer() const;
-		const GL::IndexBuffer* GetIndexBuffer() const;
+		const GL::VertexArray *GetVertexArray() const;
+		const GL::VertexBuffer<Vec2> *GetPositionBuffer() const;
+		const GL::VertexBuffer<Vec2> *GetTexcoordBuffer() const;
+		const GL::IndexBuffer *GetIndexBuffer() const;
 
 		void Bind(int32_t position = -1, int32_t texcoord = -1);
 		void UnBind(int32_t position = -1, int32_t texcoord = -1);
 
 	protected:
 		void UpdateBuffers();
+		void CreateSprite();
 		void CreateQuad();
 		void CreateCircle();
 		void CreateLine();

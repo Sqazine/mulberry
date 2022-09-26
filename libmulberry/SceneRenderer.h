@@ -18,23 +18,24 @@ namespace mulberry
 		void Init();
 		void Render(const Scene *scene);
 	private:
-		void RenderSprite(const Entity *entity);
-		void RenderLine(const Entity *entity);
-		void RenderPoint(const Entity *entity);
-		void RenderQuad(const Entity *entity);
-		void RenderCircle(const Entity *entity);
+		void RenderSprite(const Entity *entity,CameraComponent *camera);
+		void RenderLine(const Entity *entity,CameraComponent *camera);
+		void RenderPoint(const Entity *entity,CameraComponent *camera);
+		void RenderQuad(const Entity *entity,CameraComponent *camera);
+		void RenderCircle(const Entity *entity,CameraComponent *camera);
 
-		void RenderSpriteInstanced(const std::vector<const Entity *> spriteComps);
-		void RenderLineInstances(const std::vector<const Entity *> entities);
-		void RenderPointInstanced(const std::vector<const Entity *> entities);
-		void RenderQuadInstanced(const std::vector<const Entity *> entities);
-		void RenderCircleInstanced(const std::vector<const Entity *> entities);
+		void RenderSpriteInstanced(const std::vector<const Entity *> spriteComps,CameraComponent *camera);
+		void RenderLineInstances(const std::vector<const Entity *> entities,CameraComponent *camera);
+		void RenderPointInstanced(const std::vector<const Entity *> entities,CameraComponent *camera);
+		void RenderQuadInstanced(const std::vector<const Entity *> entities,CameraComponent *camera);
+		void RenderCircleInstanced(const std::vector<const Entity *> entities,CameraComponent *camera);
 
 		std::unique_ptr<GL::ShaderProgram> mSpriteShaderProgram;
 		std::unique_ptr<GL::ShaderProgram> mGizmoShaderProgram;
 
 		std::unique_ptr<Primitive> mLinePrimitive;
 		std::unique_ptr<Primitive> mPointPrimitive;
+		std::unique_ptr<Primitive> mSpritePrimitive;
 		std::unique_ptr<Primitive> mQuadPrimitive;
 		std::unique_ptr<Primitive> mCirclePrimitive;
 	};
