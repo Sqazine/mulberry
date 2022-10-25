@@ -29,8 +29,7 @@ namespace mulberry
 		void RenderPointInstanced(const std::vector<const Entity *> entities,CameraComponent *camera);
 		void RenderQuadInstanced(const std::vector<const Entity *> entities,CameraComponent *camera);
 		void RenderCircleInstanced(const std::vector<const Entity *> entities,CameraComponent *camera);
-
-		std::unique_ptr<GL::ShaderProgram> mSpriteShaderProgram;
+		
 		std::unique_ptr<GL::ShaderProgram> mGizmoShaderProgram;
 
 		std::unique_ptr<Primitive> mLinePrimitive;

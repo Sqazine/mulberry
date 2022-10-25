@@ -15,6 +15,8 @@ int32_t main(int32_t argc, char **argv)
     mulberry::GL::TextureInfo textureInfo{};
     textureInfo.data = scene->GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "awesomeface.png");
 
+    auto texture=std::make_unique<mulberry::GL::Texture>(textureInfo);
+
     mulberry::Entity *rootEntity = scene->CreateEntity("Sprite");
 
     auto cameraComp = rootEntity->CreateComponent<mulberry::CameraComponent>();
@@ -25,8 +27,9 @@ int32_t main(int32_t argc, char **argv)
     }
 
     mulberry::SpriteComponent *spriteComponent = rootEntity->CreateComponent<mulberry::SpriteComponent>();
+    spriteComponent->material=std::make_unique<mulberry::SpriteMaterial>();
     if (spriteComponent)
-        spriteComponent->SetTexture(new mulberry::GL::Texture(textureInfo));
+        ((mulberry::SpriteMaterial *)spriteComponent->material.get())->SetSpriteTexture(texture.get());
 
     mulberry::App::Run();
 

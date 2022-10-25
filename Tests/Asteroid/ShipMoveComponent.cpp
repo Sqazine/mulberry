@@ -12,19 +12,20 @@ void ShipMoveComponent::Init()
     REQUIRED_COMPONENT(mulberry::TransformComponent);
 
     mulberry::GL::TextureInfo textureInfo{};
-    textureInfo.data =  GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "ShipWithThrust.png");
+    textureInfo.data = GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "ShipWithThrust.png");
     textureInfo.filterMode = mulberry::GL::FilterMode::LINEAR;
     movingTexture.reset(new mulberry::GL::Texture(textureInfo));
 
     textureInfo = {};
-    textureInfo.data =GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "Ship.png");
+    textureInfo.data = GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "Ship.png");
     textureInfo.filterMode = mulberry::GL::FilterMode::LINEAR;
     staticTexture.reset(new mulberry::GL::Texture(textureInfo));
 
     if (!ownerSpriteComponent)
         ownerSpriteComponent = GetOwner()->GetComponent<mulberry::SpriteComponent>();
 
-    ownerSpriteComponent->SetTexture(staticTexture.get());
+    ownerSpriteComponent->material = std::make_unique<mulberry::SpriteMaterial>();
+    ((mulberry::SpriteMaterial *)ownerSpriteComponent->material.get())->SetSpriteTexture(staticTexture.get());
 
     if (!ownerTransformComponent)
         ownerTransformComponent = GetOwner()->GetComponent<mulberry::TransformComponent>();
@@ -69,7 +70,7 @@ void ShipMoveComponent::Update(float deltaTime)
         ownerTransformComponent->Rotate(-rotSpeed * deltaTime);
 
     if (moveForward || moveBackward)
-        ownerSpriteComponent->SetTexture(movingTexture.get());
+        ((mulberry::SpriteMaterial *)ownerSpriteComponent->material.get())->SetSpriteTexture(movingTexture.get());
     else
-        ownerSpriteComponent->SetTexture(staticTexture.get());
+        ((mulberry::SpriteMaterial *)ownerSpriteComponent->material.get())->SetSpriteTexture(staticTexture.get());
 }

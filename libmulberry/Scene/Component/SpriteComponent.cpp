@@ -19,14 +19,4 @@ namespace mulberry
 	{
 		REQUIRED_COMPONENT(TransformComponent)
 	}
-
-	const GL::Texture *SpriteComponent::GetTexture() const
-	{
-		return mTexture;
-	}
-
-	void SpriteComponent::SetTexture(GL::Texture *texture)
-	{
-		mTexture=texture;
-	}
 }

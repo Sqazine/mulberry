@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include <memory>
+#include "Graphics/RenderMaterial.h"
 #include "../../Graphics/GL/Texture.h"
 namespace mulberry
 {
@@ -13,10 +14,7 @@ namespace mulberry
 
 		void Init() override;
 
-		const GL::Texture* GetTexture() const;
-		void SetTexture(GL::Texture* texture);
-	private:
-		GL::Texture* mTexture;
+		std::unique_ptr<RenderMaterial> material;
 	};
 
 }

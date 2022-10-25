@@ -13,6 +13,7 @@
 #include "Math/Vec2.h"
 #include "Graphics/Font.h"
 #include "Graphics/Primitive.h"
+#include "Graphics/RenderMaterial.h"
 #include "Graphics/GL/IndexBuffer.h"
 #include "Graphics/GL/RenderContext.h"
 #include "Graphics/GL/Shader.h"
