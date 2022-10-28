@@ -19,8 +19,15 @@ namespace mulberry
         SpriteMaterial();
         ~SpriteMaterial() override;
 
-        void SetSpriteTexture(GL::Texture* sprite);
+        void SetSpriteTexture(GL::Texture *sprite);
 
-        GL::Texture* spriteTexture;
+        GL::Texture *spriteTexture;
+    };
+
+    class GizmoMaterial : public RenderMaterial
+    {
+    public:
+        GizmoMaterial();
+        ~GizmoMaterial() override;
     };
 }

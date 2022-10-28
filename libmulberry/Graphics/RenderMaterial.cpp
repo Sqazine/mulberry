@@ -56,6 +56,18 @@ namespace mulberry
 
     void SpriteMaterial::SetSpriteTexture(GL::Texture *sprite)
     {
-        spriteTexture=sprite;
+        spriteTexture = sprite;
+    }
+
+    GizmoMaterial::GizmoMaterial()
+    {
+        auto vertShader = GL::ShaderModule(GL::VERTEX_SHADER, gizmoVertShader);
+        auto fragShader = GL::ShaderModule(GL::FRAGMENT_SHADER, gizmoFragShader);
+        shaderProgram = std::make_unique<GL::ShaderProgram>();
+        shaderProgram->AttachShader(vertShader);
+        shaderProgram->AttachShader(fragShader);
+    }
+    GizmoMaterial::~GizmoMaterial()
+    {
     }
 }

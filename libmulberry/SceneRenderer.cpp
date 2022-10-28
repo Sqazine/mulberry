@@ -2,36 +2,15 @@
 #include "GL/Renderer.h"
 namespace mulberry
 {
-    const std::string gizmoVertShader = "#version 330 core\n"
-                                        "in vec2 inPosition;\n"
-                                        "uniform mat4 modelMat;\n"
-                                        "uniform mat4 viewMat;\n"
-                                        "uniform mat4 projMat;\n"
-                                        "void main()\n"
-                                        "{\n"
-                                        "	gl_Position=projMat*viewMat*modelMat*vec4(inPosition,0.0,1.0);\n"
-                                        "}";
-
-    const std::string gizmoFragShader = "#version 330 core\n"
-                                        "out vec4 outColor;\n"
-                                        "void main()\n"
-                                        "{\n"
-                                        "	outColor=vec4(0.0,1.0,0.0,1.0);\n"
-                                        "}";
-
     void SceneRenderer::Init()
     {
+        mGizmoMaterial = std::make_unique<GizmoMaterial>();
+
         mQuadPrimitive = std::make_unique<Primitive>(PrimitiveType::QUAD);
         mSpritePrimitive = std::make_unique<Primitive>(PrimitiveType::SPRITE);
         mLinePrimitive = std::make_unique<Primitive>(PrimitiveType::LINE);
         mPointPrimitive = std::make_unique<Primitive>(PrimitiveType::POINT);
         mCirclePrimitive = std::make_unique<Primitive>(PrimitiveType::CIRCLE);
-
-        auto gVertShader = GL::ShaderModule(GL::VERTEX_SHADER, gizmoVertShader);
-        auto gFragShader = GL::ShaderModule(GL::FRAGMENT_SHADER, gizmoFragShader);
-        mGizmoShaderProgram = std::make_unique<GL::ShaderProgram>();
-        mGizmoShaderProgram->AttachShader(gVertShader);
-        mGizmoShaderProgram->AttachShader(gFragShader);
     }
 
     void SceneRenderer::RenderSprite(const Entity *entity, CameraComponent *camera)
@@ -40,7 +19,7 @@ namespace mulberry
         auto spriteComp = entity->GetComponent<SpriteComponent>();
         const SpriteMaterial *material = (SpriteMaterial *)spriteComp->material.get();
 
-        //map to sprite size
+        // map to sprite size
         Mat4 mat = transComp->GetModelMat();
         mat *= Mat4::Scale(Vec2(material->spriteTexture->GetCreateInfo().data.width / 2, material->spriteTexture->GetCreateInfo().data.height / 2));
 
@@ -67,21 +46,21 @@ namespace mulberry
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<SpriteComponent>();
-        mGizmoShaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
-        mLinePrimitive->Bind(mGizmoShaderProgram->GetAttribute("inPosition"));
+        mGizmoMaterial->shaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
+        mLinePrimitive->Bind(mGizmoMaterial->shaderProgram->GetAttribute("inPosition"));
         GL::Renderer::Render(mLinePrimitive->GetIndexBuffer(), GL::LINES);
-        mLinePrimitive->UnBind(mGizmoShaderProgram->GetAttribute("inPosition"));
+        mLinePrimitive->UnBind(mGizmoMaterial->shaderProgram->GetAttribute("inPosition"));
     }
     void SceneRenderer::RenderPoint(const Entity *entity, CameraComponent *camera)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<SpriteComponent>();
-        mGizmoShaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
-        mPointPrimitive->Bind(mGizmoShaderProgram->GetAttribute("inPosition"));
+        mGizmoMaterial->shaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
+        mPointPrimitive->Bind(mGizmoMaterial->shaderProgram->GetAttribute("inPosition"));
         glPointSize(5);
         GL::Renderer::Render(mPointPrimitive->GetIndexBuffer(), GL::POINTS);
         glPointSize(1);
-        mPointPrimitive->UnBind(mGizmoShaderProgram->GetAttribute("inPosition"));
+        mPointPrimitive->UnBind(mGizmoMaterial->shaderProgram->GetAttribute("inPosition"));
     }
     void SceneRenderer::RenderQuad(const Entity *entity, CameraComponent *camera)
     {
@@ -89,18 +68,18 @@ namespace mulberry
         auto spriteComp = entity->GetComponent<SpriteComponent>();
         const SpriteMaterial *material = (SpriteMaterial *)spriteComp->material.get();
 
-        //map to sprite size
+        // map to sprite size
         Mat4 mat = transComp->GetModelMat();
         mat *= Mat4::Scale(Vec2(material->spriteTexture->GetCreateInfo().data.width / 2, material->spriteTexture->GetCreateInfo().data.height / 2));
 
-        mGizmoShaderProgram->SetActive(true);
-        mGizmoShaderProgram->SetUniformValue("modelMat", mat);
-        mGizmoShaderProgram->SetUniformValue("viewMat", camera->GetViewMat());
-        mGizmoShaderProgram->SetUniformValue("projMat", camera->GetProjMat());
-        mQuadPrimitive->Bind(mGizmoShaderProgram->GetAttribute("inPosition"));
+        mGizmoMaterial->shaderProgram->SetActive(true);
+        mGizmoMaterial->shaderProgram->SetUniformValue("modelMat", mat);
+        mGizmoMaterial->shaderProgram->SetUniformValue("viewMat", camera->GetViewMat());
+        mGizmoMaterial->shaderProgram->SetUniformValue("projMat", camera->GetProjMat());
+        mQuadPrimitive->Bind(mGizmoMaterial->shaderProgram->GetAttribute("inPosition"));
         GL::Renderer::Render(mQuadPrimitive->GetIndexBuffer(), GL::LINES);
-        mQuadPrimitive->UnBind(mGizmoShaderProgram->GetAttribute("inPosition"));
-        mGizmoShaderProgram->SetActive(false);
+        mQuadPrimitive->UnBind(mGizmoMaterial->shaderProgram->GetAttribute("inPosition"));
+        mGizmoMaterial->shaderProgram->SetActive(false);
     }
     void SceneRenderer::RenderCircle(const Entity *entity, CameraComponent *camera)
     {
@@ -108,18 +87,18 @@ namespace mulberry
         auto spriteComp = entity->GetComponent<SpriteComponent>();
         const SpriteMaterial *material = (SpriteMaterial *)spriteComp->material.get();
 
-        //map to sprite size
+        // map to sprite size
         Mat4 mat = transComp->GetModelMat();
         mat *= Mat4::Scale(Vec2(material->spriteTexture->GetCreateInfo().data.width / 2, material->spriteTexture->GetCreateInfo().data.height / 2));
 
-        mGizmoShaderProgram->SetActive(true);
-        mGizmoShaderProgram->SetUniformValue("modelMat", mat);
-        mGizmoShaderProgram->SetUniformValue("viewMat", camera->GetViewMat());
-        mGizmoShaderProgram->SetUniformValue("projMat", camera->GetProjMat());
-        mCirclePrimitive->Bind(mGizmoShaderProgram->GetAttribute("inPosition"));
+        mGizmoMaterial->shaderProgram->SetActive(true);
+        mGizmoMaterial->shaderProgram->SetUniformValue("modelMat", mat);
+        mGizmoMaterial->shaderProgram->SetUniformValue("viewMat", camera->GetViewMat());
+        mGizmoMaterial->shaderProgram->SetUniformValue("projMat", camera->GetProjMat());
+        mCirclePrimitive->Bind(mGizmoMaterial->shaderProgram->GetAttribute("inPosition"));
         GL::Renderer::Render(mCirclePrimitive->GetIndexBuffer(), GL::LINE_LOOP);
-        mCirclePrimitive->UnBind(mGizmoShaderProgram->GetAttribute("inPosition"));
-        mGizmoShaderProgram->SetActive(false);
+        mCirclePrimitive->UnBind(mGizmoMaterial->shaderProgram->GetAttribute("inPosition"));
+        mGizmoMaterial->shaderProgram->SetActive(false);
     }
 
     void SceneRenderer::RenderLineInstances(const std::vector<const Entity *> entities, CameraComponent *camera)
@@ -162,7 +141,7 @@ namespace mulberry
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-            //render sprite
+            // render sprite
             for (const auto &entity : entitiesWithSpriteComp)
                 RenderSprite(entity, camera);
         }
