@@ -10,10 +10,12 @@ namespace mulberry
                                          "uniform mat4 modelMat;\n"
                                          "uniform mat4 viewMat;\n"
                                          "uniform mat4 projMat;\n"
+                                         "uniform vec2 tiling;\n"
+                                         "uniform vec2 offset;\n"
                                          "void main()\n"
                                          "{\n"
                                          "	gl_Position=projMat*viewMat*modelMat*vec4(inPosition,0.0,1.0);\n"
-                                         "	fragTexcoord=inTexcoord;\n"
+                                         "	fragTexcoord=inTexcoord*tiling+offset;\n"
                                          "}";
 
     const std::string spriteFragShader = "#version 330 core\n"
@@ -43,6 +45,7 @@ namespace mulberry
                                         "}";
 
     SpriteMaterial::SpriteMaterial()
+        : mTiling(1.0), mOffset(0.0)
     {
         auto vertShader = GL::ShaderModule(GL::VERTEX_SHADER, spriteVertShader);
         auto fragShader = GL::ShaderModule(GL::FRAGMENT_SHADER, spriteFragShader);
@@ -54,9 +57,21 @@ namespace mulberry
     {
     }
 
-    void SpriteMaterial::SetSpriteTexture(GL::Texture *sprite)
+    void SpriteMaterial::SetSprite(GL::Texture *sprite)
     {
-        spriteTexture = sprite;
+        this->mSprite = sprite;
+    }
+
+    const GL::Texture *SpriteMaterial::GetSprite() const
+    {
+        return mSprite;
+    }
+
+    void SpriteMaterial::SetUniformValue() const
+    {
+        mSprite->BindTo(shaderProgram->GetUniform("sprite"), 0);
+        shaderProgram->SetUniformValue("tiling",mTiling);
+        shaderProgram->SetUniformValue("offset",mOffset);
     }
 
     GizmoMaterial::GizmoMaterial()

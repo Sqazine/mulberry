@@ -2,19 +2,21 @@
 #include "Component.h"
 #include <memory>
 #include "Graphics/RenderMaterial.h"
-#include "../../Graphics/GL/Texture.h"
+#include "Graphics/GL/Texture.h"
+#include "RenderComponent.h"
 namespace mulberry
 {
-	class SpriteComponent : public Component
-	{
-		COMPONENT_DECLARATION()
-	public:
-		SpriteComponent();
-		~SpriteComponent();
+    class SpriteComponent : public RenderComponent
+    {
+        COMPONENT_DECLARATION()
+    public:
+        SpriteComponent();
+        ~SpriteComponent();
 
-		void Init() override;
+        void Init() override;
 
-		std::unique_ptr<RenderMaterial> material;
-	};
+        void SetSprite(GL::Texture *texture);
+        const GL::Texture *GetSprite() const;
+    };
 
 }

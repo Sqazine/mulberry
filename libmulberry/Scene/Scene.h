@@ -4,7 +4,7 @@
 #include <string_view>
 #include "Entity.h"
 #include "Object.h"
-#include "../AssetManager.h"
+#include "AssetManager.h"
 namespace mulberry
 {
     class Scene : public Object

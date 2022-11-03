@@ -1,7 +1,7 @@
 #include "Component.h"
-#include "../Entity.h"
-#include"../Scene.h"
-#include "../../AssetManager.h"
+#include "Entity.h"
+#include"Scene.h"
+#include "AssetManager.h"
 namespace mulberry
 {
 

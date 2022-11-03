@@ -26,10 +26,10 @@ int32_t main(int32_t argc, char **argv)
         cameraComp->SetExtent(mulberry::Vec2(winInfo.width, winInfo.height));
     }
 
-    mulberry::SpriteComponent *spriteComponent = rootEntity->CreateComponent<mulberry::SpriteComponent>();
-    spriteComponent->material=std::make_unique<mulberry::SpriteMaterial>();
+    mulberry::RenderComponent *spriteComponent = rootEntity->CreateComponent<mulberry::RenderComponent>();
+    spriteComponent->SetMaterial(new mulberry::SpriteMaterial());;
     if (spriteComponent)
-        ((mulberry::SpriteMaterial *)spriteComponent->material.get())->SetSpriteTexture(texture.get());
+        ((mulberry::SpriteMaterial *)spriteComponent->GetMaterial())->SetSprite(texture.get());
 
     mulberry::App::Run();
 

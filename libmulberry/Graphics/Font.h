@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <SDL2/SDL_ttf.h>
 #include <memory>
-#include "../Math/Color.h"
+#include "Math/Color.h"
 #include "GL/Texture.h"
 namespace mulberry
 {

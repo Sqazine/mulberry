@@ -16,24 +16,24 @@ namespace mulberry
     void SceneRenderer::RenderSprite(const Entity *entity, CameraComponent *camera)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
-        auto spriteComp = entity->GetComponent<SpriteComponent>();
-        const SpriteMaterial *material = (SpriteMaterial *)spriteComp->material.get();
+        auto spriteComp = entity->GetComponent<RenderComponent>();
+        const SpriteMaterial *material = (SpriteMaterial*)spriteComp->GetMaterial();
 
         // map to sprite size
         Mat4 mat = transComp->GetModelMat();
-        mat *= Mat4::Scale(Vec2(material->spriteTexture->GetCreateInfo().data.width / 2, material->spriteTexture->GetCreateInfo().data.height / 2));
+        mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
 
         material->shaderProgram->SetActive(true);
         material->shaderProgram->SetUniformValue("modelMat", mat);
         material->shaderProgram->SetUniformValue("viewMat", camera->GetViewMat());
         material->shaderProgram->SetUniformValue("projMat", camera->GetProjMat());
-        material->spriteTexture->BindTo(material->shaderProgram->GetUniform("sprite"), 0);
+        material->SetUniformValue();
         mSpritePrimitive->Bind(material->shaderProgram->GetAttribute("inPosition"), material->shaderProgram->GetAttribute("inTexcoord"));
 
         GL::Renderer::Render(mSpritePrimitive->GetIndexBuffer(), GL::TRIANGLES);
 
         mSpritePrimitive->UnBind(material->shaderProgram->GetAttribute("inPosition"), material->shaderProgram->GetAttribute("inTexcoord"));
-        material->spriteTexture->UnBindFrom(material->shaderProgram->GetUniform("sprite"));
+        material->GetSprite()->UnBindFrom(material->shaderProgram->GetUniform("sprite"));
         material->shaderProgram->SetActive(false);
     }
 
@@ -45,7 +45,7 @@ namespace mulberry
     void SceneRenderer::RenderLine(const Entity *entity, CameraComponent *camera)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
-        auto spriteComp = entity->GetComponent<SpriteComponent>();
+        auto spriteComp = entity->GetComponent<RenderComponent>();
         mGizmoMaterial->shaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
         mLinePrimitive->Bind(mGizmoMaterial->shaderProgram->GetAttribute("inPosition"));
         GL::Renderer::Render(mLinePrimitive->GetIndexBuffer(), GL::LINES);
@@ -54,7 +54,7 @@ namespace mulberry
     void SceneRenderer::RenderPoint(const Entity *entity, CameraComponent *camera)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
-        auto spriteComp = entity->GetComponent<SpriteComponent>();
+        auto spriteComp = entity->GetComponent<RenderComponent>();
         mGizmoMaterial->shaderProgram->SetUniformValue("modelMat", transComp->GetModelMat());
         mPointPrimitive->Bind(mGizmoMaterial->shaderProgram->GetAttribute("inPosition"));
         glPointSize(5);
@@ -65,12 +65,12 @@ namespace mulberry
     void SceneRenderer::RenderQuad(const Entity *entity, CameraComponent *camera)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
-        auto spriteComp = entity->GetComponent<SpriteComponent>();
-        const SpriteMaterial *material = (SpriteMaterial *)spriteComp->material.get();
+        auto spriteComp = entity->GetComponent<RenderComponent>();
+        const SpriteMaterial *material = (SpriteMaterial *)spriteComp->GetMaterial();
 
         // map to sprite size
         Mat4 mat = transComp->GetModelMat();
-        mat *= Mat4::Scale(Vec2(material->spriteTexture->GetCreateInfo().data.width / 2, material->spriteTexture->GetCreateInfo().data.height / 2));
+        mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
 
         mGizmoMaterial->shaderProgram->SetActive(true);
         mGizmoMaterial->shaderProgram->SetUniformValue("modelMat", mat);
@@ -84,12 +84,12 @@ namespace mulberry
     void SceneRenderer::RenderCircle(const Entity *entity, CameraComponent *camera)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
-        auto spriteComp = entity->GetComponent<SpriteComponent>();
-        const SpriteMaterial *material = (SpriteMaterial *)spriteComp->material.get();
+        auto spriteComp = entity->GetComponent<RenderComponent>();
+        const SpriteMaterial *material = (SpriteMaterial *)spriteComp->GetMaterial();
 
         // map to sprite size
         Mat4 mat = transComp->GetModelMat();
-        mat *= Mat4::Scale(Vec2(material->spriteTexture->GetCreateInfo().data.width / 2, material->spriteTexture->GetCreateInfo().data.height / 2));
+        mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
 
         mGizmoMaterial->shaderProgram->SetActive(true);
         mGizmoMaterial->shaderProgram->SetUniformValue("modelMat", mat);
@@ -126,15 +126,13 @@ namespace mulberry
         std::vector<const Entity *> entitiesWithSpriteComp;
         for (const auto &entity : scene->mEntities)
         {
-            if (entity->GetComponent<SpriteComponent>() != nullptr)
+            if (entity->GetComponent<RenderComponent>() != nullptr)
                 entitiesWithSpriteComp.emplace_back(entity.get());
         }
         for (auto camera : cameraComponents)
         {
             Color clearColor = camera->GetClearColor();
-
-            glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-            glClear(GL_COLOR_BUFFER_BIT);
+            GL::Renderer::ClearColorBuffer(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 
             glDisable(GL_DEPTH_TEST);
             glEnable(GL_CULL_FACE);

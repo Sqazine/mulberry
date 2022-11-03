@@ -1,10 +1,10 @@
 
 find_package(SDL2 CONFIG REQUIRED)
-find_package(sdl2-ttf CONFIG REQUIRED)
+find_package(SDL2_ttf CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 add_executable(Sprite Sprite.cpp)
 target_include_directories(Sprite PRIVATE ${CMAKE_SOURCE_DIR})
-target_link_libraries( Sprite PRIVATE  glm::glm libmulberry SDL2::SDL2 SDL2::SDL2main spdlog::spdlog spdlog::spdlog_header_only glad::glad SDL2::SDL2_ttf)
+target_link_libraries( Sprite PRIVATE  glm::glm libmulberry SDL2::SDL2 SDL2::SDL2main spdlog::spdlog spdlog::spdlog_header_only glad::glad SDL2_ttf::SDL2_ttf)
 target_compile_definitions(Sprite PRIVATE RESOURCES_DIR="${CMAKE_SOURCE_DIR}/Tests/Assets/")

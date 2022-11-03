@@ -21,11 +21,11 @@ void ShipMoveComponent::Init()
     textureInfo.filterMode = mulberry::GL::FilterMode::LINEAR;
     staticTexture.reset(new mulberry::GL::Texture(textureInfo));
 
-    if (!ownerSpriteComponent)
-        ownerSpriteComponent = GetOwner()->GetComponent<mulberry::SpriteComponent>();
+    if (!ownerRenderComponent)
+        ownerRenderComponent = GetOwner()->GetComponent<mulberry::RenderComponent>();
 
-    ownerSpriteComponent->material = std::make_unique<mulberry::SpriteMaterial>();
-    ((mulberry::SpriteMaterial *)ownerSpriteComponent->material.get())->SetSpriteTexture(staticTexture.get());
+    ownerRenderComponent->SetMaterial(new mulberry::SpriteMaterial());
+    ((mulberry::SpriteMaterial *)ownerRenderComponent->GetMaterial())->SetSprite(staticTexture.get());
 
     if (!ownerTransformComponent)
         ownerTransformComponent = GetOwner()->GetComponent<mulberry::TransformComponent>();
@@ -70,7 +70,7 @@ void ShipMoveComponent::Update(float deltaTime)
         ownerTransformComponent->Rotate(-rotSpeed * deltaTime);
 
     if (moveForward || moveBackward)
-        ((mulberry::SpriteMaterial *)ownerSpriteComponent->material.get())->SetSpriteTexture(movingTexture.get());
+        ((mulberry::SpriteMaterial *)ownerRenderComponent->GetMaterial())->SetSprite(movingTexture.get());
     else
-        ((mulberry::SpriteMaterial *)ownerSpriteComponent->material.get())->SetSpriteTexture(staticTexture.get());
+        ((mulberry::SpriteMaterial *)ownerRenderComponent->GetMaterial())->SetSprite(staticTexture.get());
 }

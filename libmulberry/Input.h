@@ -2,7 +2,7 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include <memory>
-#include "../Math/Vec2.h"
+#include "Math/Vec2.h"
 namespace mulberry
 {
     enum KeyCode

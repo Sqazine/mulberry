@@ -3,8 +3,8 @@
 #include <map>
 #include <glad/glad.h>
 #include "Uniform.h"
-#include "../../Math/Vec2.h"
-#include "../../Math/Mat4.h"
+#include "Math/Vec2.h"
+#include "Math/Mat4.h"
 
 namespace mulberry::GL
 {

@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <SDL2/SDL.h>
 #include <vector>
-#include "../../Math/Color.h"
+#include "Math/Color.h"
 
 namespace mulberry
 {

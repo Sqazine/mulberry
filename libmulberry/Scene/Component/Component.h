@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "../../Input.h"
+#include "Input.h"
 namespace mulberry
 {
 

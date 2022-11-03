@@ -13,7 +13,7 @@ public:
     void Update(float deltaTime) override;
 private:
     mulberry::TransformComponent *ownerTransformComponent = nullptr;
-    mulberry::SpriteComponent *ownerSpriteComponent = nullptr;
+    mulberry::RenderComponent *ownerRenderComponent = nullptr;
 
     std::unique_ptr<mulberry::GL::Texture> movingTexture;
     std::unique_ptr<mulberry::GL::Texture> staticTexture;

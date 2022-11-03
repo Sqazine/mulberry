@@ -3,7 +3,7 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include <string_view>
-#include "../../Math/Vec2.h"
+#include "Math/Vec2.h"
 
 namespace mulberry
 {

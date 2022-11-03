@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
-#include "../Math/Vec2.h"
+#include "Math/Vec2.h"
 #include "GL/VertexArray.h"
 #include "GL/VertexBuffer.h"
 #include "GL/IndexBuffer.h"

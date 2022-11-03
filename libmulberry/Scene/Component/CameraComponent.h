@@ -3,7 +3,6 @@
 #include "Math/Mat4.h"
 #include "Math/Vec2.h"
 #include "Math/Color.h"
-#include "../Entity.h"
 #include "TransformComponent.h"
 namespace mulberry
 {

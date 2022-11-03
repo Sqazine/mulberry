@@ -4,19 +4,29 @@
 namespace mulberry
 {
 
-	COMPONENT_DEFINITION(Component, SpriteComponent)
+    COMPONENT_DEFINITION(Component, SpriteComponent)
 
-	SpriteComponent::SpriteComponent()
-		: Component()
-	{
-	}
+    SpriteComponent::SpriteComponent()
+        : RenderComponent()
+    {
+    }
 
-	SpriteComponent::~SpriteComponent()
-	{
-	}
+    SpriteComponent::~SpriteComponent()
+    {
+    }
 
-	void SpriteComponent::Init()
-	{
-		REQUIRED_COMPONENT(TransformComponent)
-	}
+    void SpriteComponent::Init()
+    {
+        RenderComponent::Init();
+        material = std::make_unique<SpriteMaterial>();
+    }
+
+    void SpriteComponent::SetSprite(GL::Texture *texture)
+    {
+        ((SpriteMaterial *)material.get())->SetSprite(texture);
+    }
+    const GL::Texture *SpriteComponent::GetSprite() const
+    {
+        return ((SpriteMaterial *)material.get())->GetSprite();
+    }
 }
