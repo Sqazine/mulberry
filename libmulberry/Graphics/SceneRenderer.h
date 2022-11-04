@@ -41,5 +41,4 @@ namespace mulberry
 		std::unique_ptr<Primitive> mQuadPrimitive;
 		std::unique_ptr<Primitive> mCirclePrimitive;
 	};
-
 }

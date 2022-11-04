@@ -15,7 +15,6 @@ private:
     mulberry::TransformComponent *ownerTransformComponent = nullptr;
     mulberry::SpriteComponent *ownerSpriteComponent = nullptr;
 
-
     std::unique_ptr<mulberry::GL::Texture> movingTexture;
     std::unique_ptr<mulberry::GL::Texture> staticTexture;
 

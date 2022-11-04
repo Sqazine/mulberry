@@ -42,14 +42,10 @@ namespace  mulberry::GL
 
     void Renderer::Render(const IndexBuffer* ibo, RenderType mode)
     {
+        glEnable(GL_MULTISAMPLE);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->GetID());
         glDrawElements(mode, ibo->Size(), ibo->GetDataType(), nullptr);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    }
-
-    void Renderer::Render(uint32_t vertexCount, RenderType mode)
-    {
-        glDrawArrays(mode, 0, vertexCount);
     }
 
     void Renderer::RenderInstanced(const IndexBuffer* ibo, RenderType mode, uint32_t instanceCount)
@@ -57,10 +53,5 @@ namespace  mulberry::GL
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo->GetID());
         glDrawElementsInstanced(mode, ibo->Size(), ibo->GetDataType(), nullptr, instanceCount);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    }
-
-    void Renderer::RenderInstanced(uint32_t vertexCount, RenderType mode, uint32_t instanceCount)
-    {
-        glDrawArraysInstanced(mode, 0, vertexCount, instanceCount);
     }
 }

@@ -28,7 +28,7 @@ namespace mulberry::GL
 		glBindTexture(GL_TEXTURE_2D, mTextureID);
 	}
 
-	void Texture::UnBindFrom(uint32_t textureIndex) const
+	void Texture::UnBind() const
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);

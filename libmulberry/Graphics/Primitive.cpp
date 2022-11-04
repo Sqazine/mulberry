@@ -146,7 +146,10 @@ namespace mulberry
                 Vec2(-1.0f, 1.0f),
                 Vec2(-1.0f, -1.0f),
                 Vec2(1.0f, -1.0f),
-                Vec2(1.0f, 1.0f)};
+                Vec2(1.0f, 1.0f),
+                Vec2(0.0f, 0.0f),
+                Vec2(0.0f, 1.0f),
+            };
 
         mPositionBuffer = std::make_unique<GL::VertexBuffer<Vec2>>(mPosition);
 
@@ -155,7 +158,8 @@ namespace mulberry
                 0, 1,
                 1, 2,
                 2, 3,
-                3, 0};
+                3, 0,
+                4, 5};
         mIndexBuffer = std::make_unique<GL::IndexBuffer>(mIndices);
     }
 
@@ -170,11 +174,11 @@ namespace mulberry
             mPosition.emplace_back(pos);
         }
 
-        int32_t i=0;
-        for(i=0;i<mPosition.size();++i)
+        int32_t i = 0;
+        for (i = 0; i < mPosition.size(); ++i)
         {
             mIndices.emplace_back(i);
-            mIndices.emplace_back(i+1);
+            mIndices.emplace_back(i + 1);
         }
 
         mPositionBuffer = std::make_unique<GL::VertexBuffer<Vec2>>(mPosition);

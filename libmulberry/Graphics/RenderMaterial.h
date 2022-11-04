@@ -11,7 +11,12 @@ namespace mulberry
         virtual ~RenderMaterial() {}
 
         virtual void SetUniformValue() const {}
+        virtual void ResetUniformValue() const {}
 
+        void SetShaderProgram(GL::ShaderProgram *program);
+        GL::ShaderProgram *GetShaderProgram() const;
+
+    protected:
         std::unique_ptr<GL::ShaderProgram> shaderProgram;
     };
 
@@ -27,10 +32,11 @@ namespace mulberry
         void SetTiling(const Vec2 &t);
         const Vec2 &GetTiling() const;
 
-        void SetOffSet(const Vec2& o);
-        const Vec2& GetOffset() const;
+        void SetOffSet(const Vec2 &o);
+        const Vec2 &GetOffset() const;
 
         void SetUniformValue() const override;
+        void ResetUniformValue() const override;
 
     private:
         GL::Texture *mSprite;

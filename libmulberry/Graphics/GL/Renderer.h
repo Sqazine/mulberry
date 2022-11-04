@@ -33,9 +33,7 @@ namespace mulberry::GL
 		static void EnableCullFace(bool active);
 
 		static void Render(const IndexBuffer* ibo, RenderType mode);
-		static void Render(uint32_t vertexCount, RenderType mode);
 		static void RenderInstanced(const IndexBuffer* ibo, RenderType mode, uint32_t instanceCount);
-		static void RenderInstanced(uint32_t vertexCount, RenderType mode, uint32_t instanceCount);
 	};
 
 }

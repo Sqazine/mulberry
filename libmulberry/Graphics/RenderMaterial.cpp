@@ -15,7 +15,7 @@ namespace mulberry
                                          "void main()\n"
                                          "{\n"
                                          "	gl_Position=projMat*viewMat*modelMat*vec4(inPosition,0.0,1.0);\n"
-                                         "	fragTexcoord=inTexcoord*tiling+offset;\n"
+                                         "	fragTexcoord= inTexcoord*tiling+offset;\n"
                                          "}";
 
     const std::string spriteFragShader = "#version 330 core\n"
@@ -44,6 +44,15 @@ namespace mulberry
                                         "	outColor=vec4(0.0,1.0,0.0,1.0);\n"
                                         "}";
 
+    void RenderMaterial::SetShaderProgram(GL::ShaderProgram *program)
+    {
+        shaderProgram.reset(program);
+    }
+    GL::ShaderProgram *RenderMaterial::GetShaderProgram() const
+    {
+        return shaderProgram.get();
+    }
+
     SpriteMaterial::SpriteMaterial()
         : mTiling(1.0), mOffset(0.0)
     {
@@ -69,7 +78,7 @@ namespace mulberry
 
     void SpriteMaterial::SetTiling(const Vec2 &t)
     {
-        mTiling=t;
+        mTiling = t;
     }
     const Vec2 &SpriteMaterial::GetTiling() const
     {
@@ -78,7 +87,7 @@ namespace mulberry
 
     void SpriteMaterial::SetOffSet(const Vec2 &o)
     {
-        mOffset=o;
+        mOffset = o;
     }
     const Vec2 &SpriteMaterial::GetOffset() const
     {
@@ -90,6 +99,11 @@ namespace mulberry
         mSprite->BindTo(shaderProgram->GetUniform("sprite"), 0);
         shaderProgram->SetUniformValue("tiling", mTiling);
         shaderProgram->SetUniformValue("offset", mOffset);
+    }
+
+    void SpriteMaterial::ResetUniformValue() const
+    {
+        mSprite->UnBind();
     }
 
     GizmoMaterial::GizmoMaterial()

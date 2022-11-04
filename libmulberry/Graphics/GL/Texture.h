@@ -58,7 +58,7 @@ namespace mulberry::GL
 		void CreateFromSurface(SDL_Surface *surface);
 
 		void BindTo(uint32_t uniform, uint32_t texIndex) const;
-		void UnBindFrom(uint32_t textureIndex) const;
+		void UnBind() const;
 
 		uint32_t GetID() const;
 		const TextureInfo &GetCreateInfo() const;

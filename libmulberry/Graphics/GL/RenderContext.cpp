@@ -23,12 +23,7 @@ namespace mulberry::GL
 	{
 		mRenderCreateInfo = config;
 
-		mWindowHandle = SDL_CreateWindow(config.windowInfo.title.c_str(),
-										  SDL_WINDOWPOS_CENTERED,
-										  SDL_WINDOWPOS_CENTERED,
-										  config.windowInfo.width,
-										  config.windowInfo.height,
-										  SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL | config.windowInfo.flags);
+		SDL_SetHint(SDL_HINT_RENDER_DRIVER,"opengl");
 
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_EGL);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
@@ -39,11 +34,21 @@ namespace mulberry::GL
 		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,1);
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,4);
+
 		SDL_GL_SetSwapInterval(((config.flags & RENDER_VSYNC) == RENDER_VSYNC ? 1 : 0));
 		if ((config.flags & RENDER_DBUFFER) == RENDER_DBUFFER)
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		else
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
+
+		mWindowHandle = SDL_CreateWindow(config.windowInfo.title.c_str(),
+										  SDL_WINDOWPOS_CENTERED,
+										  SDL_WINDOWPOS_CENTERED,
+										  config.windowInfo.width,
+										  config.windowInfo.height,
+										  SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL | config.windowInfo.flags);
 
 		mRenderContextHandle = SDL_GL_CreateContext(mWindowHandle);
 
