@@ -16,7 +16,7 @@ namespace mulberry
     void SceneRenderer::RenderSprite(const Entity *entity, CameraComponent *camera)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
-        auto spriteComp = entity->GetComponent<RenderComponent>();
+        auto spriteComp = entity->GetComponent<SpriteComponent>();
         const SpriteMaterial *material = (SpriteMaterial*)spriteComp->GetMaterial();
 
         // map to sprite size
@@ -126,7 +126,7 @@ namespace mulberry
         std::vector<const Entity *> entitiesWithSpriteComp;
         for (const auto &entity : scene->mEntities)
         {
-            if (entity->GetComponent<RenderComponent>() != nullptr)
+            if (entity->GetComponent<SpriteComponent>() != nullptr)
                 entitiesWithSpriteComp.emplace_back(entity.get());
         }
         for (auto camera : cameraComponents)

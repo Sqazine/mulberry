@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     mulberry::Entity *rootEntity = scene->CreateEntity("Ship");
     if (rootEntity)
     {
-        mulberry::RenderComponent *spriteComponent = rootEntity->CreateComponent<mulberry::RenderComponent>();
+        mulberry::SpriteComponent *spriteComponent = rootEntity->CreateComponent<mulberry::SpriteComponent>();
     }
 
     rootEntity->CreateComponent<ShipMoveComponent>();

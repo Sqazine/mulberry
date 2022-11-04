@@ -67,11 +67,29 @@ namespace mulberry
         return mSprite;
     }
 
+    void SpriteMaterial::SetTiling(const Vec2 &t)
+    {
+        mTiling=t;
+    }
+    const Vec2 &SpriteMaterial::GetTiling() const
+    {
+        return mTiling;
+    }
+
+    void SpriteMaterial::SetOffSet(const Vec2 &o)
+    {
+        mOffset=o;
+    }
+    const Vec2 &SpriteMaterial::GetOffset() const
+    {
+        return mOffset;
+    }
+
     void SpriteMaterial::SetUniformValue() const
     {
         mSprite->BindTo(shaderProgram->GetUniform("sprite"), 0);
-        shaderProgram->SetUniformValue("tiling",mTiling);
-        shaderProgram->SetUniformValue("offset",mOffset);
+        shaderProgram->SetUniformValue("tiling", mTiling);
+        shaderProgram->SetUniformValue("offset", mOffset);
     }
 
     GizmoMaterial::GizmoMaterial()

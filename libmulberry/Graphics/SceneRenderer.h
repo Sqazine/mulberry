@@ -8,6 +8,7 @@
 #include "Scene/Entity.h"
 #include "Scene/Scene.h"
 #include "Scene/Component/RenderComponent.h"
+#include "Scene/Component/SpriteComponent.h"
 #include "Scene/Component/CameraComponent.h"
 #include "Graphics/RenderMaterial.h"
 namespace mulberry

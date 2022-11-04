@@ -24,6 +24,7 @@
 #include "Scene/Component/CameraComponent.h"
 #include "Scene/Component/Component.h"
 #include "Scene/Component/RenderComponent.h"
+#include "Scene/Component/SpriteComponent.h"
 #include "Scene/Component/TransformComponent.h"
 #include "Scene/Entity.h"
 #include "Scene/Layer.h"

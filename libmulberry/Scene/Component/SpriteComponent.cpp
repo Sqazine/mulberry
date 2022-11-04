@@ -29,4 +29,22 @@ namespace mulberry
     {
         return ((SpriteMaterial *)material.get())->GetSprite();
     }
+
+    void SpriteComponent::SetTiling(const Vec2 &t)
+    {
+        ((SpriteMaterial *)material.get())->SetTiling(t);
+    }
+    const Vec2 &SpriteComponent::GetTiling() const
+    {
+        return ((SpriteMaterial *)material.get())->GetTiling();
+    }
+
+    void SpriteComponent::SetOffset(const Vec2 &o)
+    {
+         ((SpriteMaterial *)material.get())->SetOffSet(o);
+    }
+    const Vec2 &SpriteComponent::GetOffset() const
+    {
+        return  ((SpriteMaterial *)material.get())->GetOffset();
+    }
 }

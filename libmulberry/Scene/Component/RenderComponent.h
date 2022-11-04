@@ -14,10 +14,12 @@ namespace mulberry
 
 		void Init() override;
 
+	protected:
+
+		friend class SceneRenderer;
+
 		void SetMaterial(RenderMaterial *mat);
 		const RenderMaterial *GetMaterial() const;
-
-	protected:
 		std::unique_ptr<RenderMaterial> material;
 	};
 }
