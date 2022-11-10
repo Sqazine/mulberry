@@ -17,12 +17,10 @@ namespace mulberry
     {
         component->mOwner = this;
         component->Init();
-        for (int32_t pos = 0; pos < mComponents.size(); ++pos)
-        {
-            if (mComponents[pos].get()->IsSameComponentType(component->mComponentType))
+        for (const auto &c : mComponents)
+            if (strcmp(typeid(*c).name(), typeid(*component).name()) == 0)
                 return false;
-        }
-
+                
         auto iter = mComponents.begin();
         for (; iter != mComponents.end(); ++iter)
             if (component->GetUpdateOrder() < (**iter).GetUpdateOrder())

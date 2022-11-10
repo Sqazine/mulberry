@@ -1,8 +1,6 @@
 #include "TransformComponent.h"
 namespace mulberry
 {
-    COMPONENT_DEFINITION(Component, TransformComponent)
-
     TransformComponent::TransformComponent(int32_t updateOrder)
         : Component(updateOrder)
     {
@@ -70,7 +68,7 @@ namespace mulberry
 
     Vec2 TransformComponent::GetLocalAxisX() const
     {
-        return Vec2::Rotate(Vec2::UNIT_X,MathUtils::ToRadian(mTransform.rotation));
+        return Vec2::Rotate(Vec2::UNIT_X, MathUtils::ToRadian(mTransform.rotation));
     }
 
     Vec2 TransformComponent::GetLocalAxisY() const
@@ -83,9 +81,9 @@ namespace mulberry
         return mTransform.ToMat4();
     }
 
-     const Transform& TransformComponent::GetTransform() const
-     {
-         return mTransform;
-     }
+    const Transform &TransformComponent::GetTransform() const
+    {
+        return mTransform;
+    }
 
 }

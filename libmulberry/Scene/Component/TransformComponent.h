@@ -7,7 +7,6 @@ namespace mulberry
 {
     class TransformComponent : public Component
     {
-        COMPONENT_DECLARATION()
     public:
         TransformComponent(int32_t updateOrder = 0);
         ~TransformComponent();

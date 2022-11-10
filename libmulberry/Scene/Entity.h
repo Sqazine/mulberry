@@ -12,10 +12,13 @@ namespace mulberry
         Entity(std::string_view name);
         ~Entity();
 
+        bool AddComponent(Component* component);
+
         template <class T, typename... Args>
         T *CreateComponent(Args &&...params);
 
-        bool AddComponent(Component *component);
+        template <class T, typename... Args>
+        T *GetOrCreateComponent(Args &&...params);
 
         template <class T>
         bool RemoveComponent();
@@ -52,7 +55,7 @@ namespace mulberry
         component->Init();
         for (int32_t pos = 0; pos < mComponents.size(); ++pos)
         {
-            if (mComponents[pos].get()->IsSameComponentType(T::mComponentType))
+            if (dynamic_cast<T *>(mComponents[pos].get()))
                 return nullptr;
         }
 
@@ -64,6 +67,15 @@ namespace mulberry
         T *result = component.get();
         mComponents.insert(iter, std::move(component));
         return result;
+    }
+
+    template <class T, typename... Args>
+    T *Entity::GetOrCreateComponent(Args &&...params)
+    {
+        auto result = GetComponent<T>();
+        if (result)
+            return result;
+        return CreateComponent<T>(params...);
     }
 
     template <class T>
@@ -87,11 +99,11 @@ namespace mulberry
             return nullptr;
 
         auto iter = std::find_if(mComponents.begin(), mComponents.end(), [](auto &component)
-                                 { return component.get()->IsSameComponentType(T::mComponentType); });
+                                 { return dynamic_cast<T *>(component.get()) != nullptr; });
 
         bool success = iter != mComponents.end();
         if (success)
-            return static_cast<T *>((*(iter)).get());
+            return dynamic_cast<T *>((*(iter)).get());
         return nullptr;
     }
 }

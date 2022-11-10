@@ -5,8 +5,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 namespace mulberry
 {
-    COMPONENT_DEFINITION(Component, CameraComponent)
-
     CameraComponent::CameraComponent(int32_t updateOrder)
         : Component(updateOrder)
     {
@@ -18,7 +16,7 @@ namespace mulberry
 
     void CameraComponent::Init()
     {
-        REQUIRED_COMPONENT(TransformComponent)
+        GetOwner()->GetOrCreateComponent<TransformComponent>();
     }
 
     const Mat4 &CameraComponent::GetViewMat()

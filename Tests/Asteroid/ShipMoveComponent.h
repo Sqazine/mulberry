@@ -2,8 +2,6 @@
 #include "libmulberry/libmulberry.h"
 class ShipMoveComponent : public mulberry::Component
 {
-    COMPONENT_DECLARATION()
-
 public:
     ShipMoveComponent();
     ~ShipMoveComponent();

@@ -7,7 +7,6 @@ namespace mulberry
 {
 	class RenderComponent : public Component
 	{
-		COMPONENT_DECLARATION()
 	public:
 		RenderComponent();
 		~RenderComponent();

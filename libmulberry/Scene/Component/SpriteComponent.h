@@ -8,7 +8,6 @@ namespace mulberry
 {
     class SpriteComponent : public RenderComponent
     {
-        COMPONENT_DECLARATION()
     public:
         SpriteComponent();
         ~SpriteComponent();

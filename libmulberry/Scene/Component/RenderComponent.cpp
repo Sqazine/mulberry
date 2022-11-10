@@ -3,9 +3,6 @@
 #include "TransformComponent.h"
 namespace mulberry
 {
-
-	COMPONENT_DEFINITION(Component, RenderComponent)
-
 	RenderComponent::RenderComponent()
 		: Component()
 	{
@@ -17,7 +14,7 @@ namespace mulberry
 
 	void RenderComponent::Init()
 	{
-		REQUIRED_COMPONENT(TransformComponent)
+		GetOwner()->GetOrCreateComponent<TransformComponent>();
 	}
 
 	void RenderComponent::SetMaterial(RenderMaterial *mat)

@@ -13,7 +13,6 @@ namespace mulberry
     };
     class CameraComponent : public Component
     {
-        COMPONENT_DECLARATION()
     public:
         CameraComponent(int32_t updateOrder = 5);
         ~CameraComponent();

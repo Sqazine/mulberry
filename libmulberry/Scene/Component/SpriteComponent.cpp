@@ -3,9 +3,6 @@
 #include "TransformComponent.h"
 namespace mulberry
 {
-
-    COMPONENT_DEFINITION(Component, SpriteComponent)
-
     SpriteComponent::SpriteComponent()
         : RenderComponent()
     {

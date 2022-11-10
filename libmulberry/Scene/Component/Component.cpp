@@ -4,9 +4,6 @@
 #include "AssetManager.h"
 namespace mulberry
 {
-
-	std::string Component::mComponentType = "Component";
-
 	Component::Component(int32_t updateOrder)
 		: mUpdateOrder(updateOrder)
 	{
@@ -53,10 +50,4 @@ namespace mulberry
 	 {
 		 return GetScene()->GetSceneAssetManager();
 	 }	
-
-
-	bool Component::IsSameComponentType(const std::string &componentType) const
-	{
-		return mComponentType == componentType;
-	}
 }
