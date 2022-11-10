@@ -2,6 +2,7 @@
 #include "SceneRenderer.h"
 #include "Graphics/GL/RenderContext.h"
 #include "Input.h"
+#include "Log.h"
 namespace mulberry
 {
     AppState App::mState = AppState::INIT;
@@ -70,6 +71,8 @@ namespace mulberry
     {
         GL::RenderContext::Init(info);
         mInput.Init();
+
+        Log::Init(info.windowInfo.title);
 
         mSceneIdx = 0;
         mSceneRenderer.Init();

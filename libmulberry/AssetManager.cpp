@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "Log.h"
 namespace mulberry
 {
     AssetManager::AssetManager()
@@ -41,7 +42,7 @@ namespace mulberry
         std::ifstream file(path.data(), std::ios::binary);
         if (!file.is_open())
         {
-            std::cout << "failed to load text:" << path << std::endl;
+            MULBERRY_CORE_ERROR("failed to load text:{}\n");
             exit(1);
         }
         std::stringstream sstream;

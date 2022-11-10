@@ -1,5 +1,5 @@
 #include "Entity.h"
-
+#include "Log.h"
 namespace mulberry
 {
 
@@ -18,9 +18,16 @@ namespace mulberry
         component->mOwner = this;
         component->Init();
         for (const auto &c : mComponents)
-            if (strcmp(typeid(*c).name(), typeid(*component).name()) == 0)
+        {
+            std::string cName = typeid(*c).name();
+            std::string componentName = typeid(*component).name();
+            if (cName == componentName)
+            {
+                MULBERRY_WARN("[API:AddComponent(in Entity) return false]:Cannot Add a component(type={}) to entity '{}',already exists a same type component", componentName, mName);
                 return false;
-                
+            }
+        }
+
         auto iter = mComponents.begin();
         for (; iter != mComponents.end(); ++iter)
             if (component->GetUpdateOrder() < (**iter).GetUpdateOrder())
