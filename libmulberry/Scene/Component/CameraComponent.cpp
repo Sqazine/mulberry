@@ -16,7 +16,7 @@ namespace mulberry
 
     void CameraComponent::Init()
     {
-        GetOwner()->GetOrCreateComponent<TransformComponent>();
+        RequiredComponent<TransformComponent>();
     }
 
     const Mat4 &CameraComponent::GetViewMat()

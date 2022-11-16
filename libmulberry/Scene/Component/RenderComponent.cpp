@@ -14,7 +14,7 @@ namespace mulberry
 
 	void RenderComponent::Init()
 	{
-		GetOwner()->GetOrCreateComponent<TransformComponent>();
+		RequiredComponent<TransformComponent>();
 	}
 
 	void RenderComponent::SetMaterial(RenderMaterial *mat)

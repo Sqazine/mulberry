@@ -17,9 +17,6 @@ namespace mulberry
         template <class T, typename... Args>
         T *CreateComponent(Args &&...params);
 
-        template <class T, typename... Args>
-        T *GetOrCreateComponent(Args &&...params);
-
         template <class T>
         bool RemoveComponent();
         void RemoveAllComponents();
@@ -67,15 +64,6 @@ namespace mulberry
         T *result = component.get();
         mComponents.insert(iter, std::move(component));
         return result;
-    }
-
-    template <class T, typename... Args>
-    T *Entity::GetOrCreateComponent(Args &&...params)
-    {
-        auto result = GetComponent<T>();
-        if (result)
-            return result;
-        return CreateComponent<T>(params...);
     }
 
     template <class T>

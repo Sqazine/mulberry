@@ -9,7 +9,7 @@ ShipMoveComponent::~ShipMoveComponent()
 
 void ShipMoveComponent::Init()
 {
-    GetOwner()->GetOrCreateComponent<mulberry::TransformComponent>();
+    RequiredComponent<mulberry::TransformComponent>();
 
     mulberry::GL::TextureInfo textureInfo{};
     textureInfo.data = GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "ShipWithThrust.png");
