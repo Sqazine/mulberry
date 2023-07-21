@@ -1,7 +1,7 @@
 #include "Texture.h"
 #include <vector>
 
-namespace mulberry::GL
+namespace mulberry::gl
 {
 
 	Texture::Texture()

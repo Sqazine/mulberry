@@ -129,8 +129,8 @@ namespace mulberry
 	Mat4 Mat4::Rotate(float radian)
 	{
 		Mat4 tmpMat;
-		float radian_cos = MathUtils::Cos(radian);
-		float radian_sin = MathUtils::Sin(radian);
+		float radian_cos = math::Cos(radian);
+		float radian_sin = math::Sin(radian);
 
 		tmpMat.e00 = tmpMat.e11 = radian_cos;
 		tmpMat.e10 = radian_sin;

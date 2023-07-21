@@ -5,7 +5,7 @@
 #include <array>
 #include "IndexBuffer.h"
 
-namespace mulberry::GL
+namespace mulberry::gl
 {
 
 	enum RenderType
@@ -17,6 +17,13 @@ namespace mulberry::GL
 		TRIANGLES = GL_TRIANGLES,
 		TRIANGLE_STRIP = GL_TRIANGLE_STRIP,
 		TRIANGLE_FAN = GL_TRIANGLE_FAN,
+	};
+
+	enum CullType
+	{
+		NONE,
+		FRONT,
+
 	};
 
 	class Renderer

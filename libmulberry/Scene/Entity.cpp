@@ -1,5 +1,5 @@
 #include "Entity.h"
-#include "Log.h"
+#include "Logger.h"
 namespace mulberry
 {
 

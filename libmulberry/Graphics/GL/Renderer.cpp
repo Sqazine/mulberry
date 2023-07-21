@@ -1,5 +1,5 @@
 #include "Renderer.h"
-namespace  mulberry::GL
+namespace  mulberry::gl
 {
     std::array<int32_t, 4> Renderer::GetCurViewportInfo()
     {

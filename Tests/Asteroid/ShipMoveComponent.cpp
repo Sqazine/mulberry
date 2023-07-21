@@ -11,15 +11,15 @@ void ShipMoveComponent::Init()
 {
     RequiredComponent<mulberry::TransformComponent>();
 
-    mulberry::GL::TextureInfo textureInfo{};
+    mulberry::gl::TextureInfo textureInfo{};
     textureInfo.data = GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "ShipWithThrust.png");
-    textureInfo.filterMode = mulberry::GL::FilterMode::LINEAR;
-    movingTexture.reset(new mulberry::GL::Texture(textureInfo));
+    textureInfo.filterMode = mulberry::gl::FilterMode::LINEAR;
+    movingTexture.reset(new mulberry::gl::Texture(textureInfo));
 
     textureInfo = {};
     textureInfo.data = GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "Ship.png");
-    textureInfo.filterMode = mulberry::GL::FilterMode::LINEAR;
-    staticTexture.reset(new mulberry::GL::Texture(textureInfo));
+    textureInfo.filterMode = mulberry::gl::FilterMode::LINEAR;
+    staticTexture.reset(new mulberry::gl::Texture(textureInfo));
 
     if (!ownerSpriteComponent)
         ownerSpriteComponent = GetOwner()->GetComponent<mulberry::SpriteComponent>();
@@ -29,7 +29,7 @@ void ShipMoveComponent::Init()
     if (!ownerTransformComponent)
         ownerTransformComponent = GetOwner()->GetComponent<mulberry::TransformComponent>();
     ownerTransformComponent->SetRotation(90.0f);
-    ownerTransformComponent->SetPosition(0.0f, (-mulberry::App::GetWindowExtent().y + textureInfo.data.height * ownerTransformComponent->GetScale().y) / 2.0f);
+    ownerTransformComponent->SetPosition(0.0f, (-mulberry::App::GetInstance().GetWindow()->GetSize().y + textureInfo.data.height * ownerTransformComponent->GetScale().y) / 2.0f);
 }
 
 void ShipMoveComponent::ProcessInput(const mulberry::InputDevice *inputDevice)

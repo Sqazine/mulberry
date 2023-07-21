@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <glad/glad.h>
 
-namespace mulberry::GL
+namespace mulberry::gl
 {
 
     class VertexArray

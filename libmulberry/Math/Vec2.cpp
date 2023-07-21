@@ -141,12 +141,12 @@ namespace mulberry
 		Normalize(left);
 		Normalize(right);
 
-		return MathUtils::ArcCos(Dot(left, right));
+		return math::ArcCos(Dot(left, right));
 	}
 
 	Vec2 Vec2::Rotate(const Vec2 &vec, float radian)
 	{
-		return Vec2(MathUtils::Cos(radian) * vec.x - MathUtils::Sin(radian) * vec.y, MathUtils::Sin(radian) * vec.x + MathUtils::Cos(radian) * vec.y);
+		return Vec2(math::Cos(radian) * vec.x - math::Sin(radian) * vec.y, math::Sin(radian) * vec.x + math::Cos(radian) * vec.y);
 	}
 
 	Vec2 Vec2::Translate(const Vec2 &vec, const Vec2 &t)
@@ -165,6 +165,6 @@ namespace mulberry
 
 	float Vec2::Length() const
 	{
-		return MathUtils::Sqrt(SquareLength());
+		return math::Sqrt(SquareLength());
 	}
 }

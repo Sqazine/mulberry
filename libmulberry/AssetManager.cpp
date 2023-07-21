@@ -9,7 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "Log.h"
+#include "Logger.h"
 namespace mulberry
 {
     AssetManager::AssetManager()

@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "Math/Vec2.h"
+#include "Vec2.h"
 #include "Math/Mat4.h"
 #include "Math/Transform.h"
 namespace mulberry

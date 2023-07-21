@@ -3,10 +3,10 @@
 #include <map>
 #include <glad/glad.h>
 #include "Uniform.h"
-#include "Math/Vec2.h"
+#include "Vec2.h"
 #include "Math/Mat4.h"
 
-namespace mulberry::GL
+namespace mulberry::gl
 {
     enum ShaderModuleType
     {

@@ -2,8 +2,8 @@
 #include <cstdint>
 #include <vector>
 #include <glad/glad.h>
-#include "Math/Vec2.h"
-namespace mulberry::GL
+#include "Vec2.h"
+namespace mulberry::gl
 {
 	template <typename T>
 	class VertexBuffer

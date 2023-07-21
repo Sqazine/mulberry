@@ -3,16 +3,14 @@
 #undef main
 int main(int argc, char **argv)
 {
-    mulberry::WindowInfo winInfo{};
-    winInfo.title = "Asteroid";
-    winInfo.width = 1024;
-    winInfo.height = 768;
 
-    mulberry::GL::RenderContextInfo info{};
-    info.windowInfo = winInfo;
-    mulberry::App::Init(info);
+     mulberry::App::GetInstance().SetGraphicsBackend(mulberry::GraphicsBackend::GL);
+    mulberry::App::GetInstance().Init();
 
-    mulberry::Scene *scene = mulberry::App::CreateScene("Asteroid");
+    mulberry::App::GetInstance().GetWindow()->SetTitle("Asteroid");
+    mulberry::App::GetInstance().GetWindow()->Resize(1024,768);
+
+    mulberry::Scene *scene = mulberry::App::GetInstance().CreateScene("Asteroid");
  
 
     mulberry::Entity *rootEntity = scene->CreateEntity("Ship");
@@ -28,10 +26,10 @@ int main(int argc, char **argv)
     if (cameraComp)
     {
         cameraComp->SetClearColor(mulberry::Color::LightYellow);
-        cameraComp->SetExtent(mulberry::Vec2(winInfo.width, winInfo.height));
+        cameraComp->SetExtent(mulberry::App::GetInstance().GetWindow()->GetSize());
     }
 
-    mulberry::App::Run();
+    mulberry::App::GetInstance().Run();
 
     return 0;
 }

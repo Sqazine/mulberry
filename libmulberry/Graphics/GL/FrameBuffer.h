@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <vector>
 #include "Texture.h"
-namespace  mulberry::GL
+namespace  mulberry::gl
 {
     class FrameBuffer
     {

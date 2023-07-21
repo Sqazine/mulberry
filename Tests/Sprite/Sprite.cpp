@@ -1,21 +1,20 @@
 #include "libmulberry/libmulberry.h"
+
+
+#undef main
 int32_t main(int32_t argc, char **argv)
 {
+    mulberry::App::GetInstance().SetGraphicsBackend(mulberry::GraphicsBackend::GL);
+    mulberry::App::GetInstance().Init();
 
-    mulberry::WindowInfo winInfo{};
-    winInfo.title = "Sprite";
-    winInfo.width = 1024;
-    winInfo.height = 768;
+    mulberry::App::GetInstance().GetWindow()->SetTitle("Sprite");
+    mulberry::App::GetInstance().GetWindow()->Resize(1024,768);
 
-    mulberry::GL::RenderContextInfo info{};
-    info.windowInfo = winInfo;
-    mulberry::App::Init(info);
-
-    mulberry::Scene *scene = mulberry::App::CreateScene("Sprite");
-    mulberry::GL::TextureInfo textureInfo{};
+    mulberry::Scene *scene = mulberry::App::GetInstance().CreateScene("Sprite");
+    mulberry::gl::TextureInfo textureInfo{};
     textureInfo.data = scene->GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "awesomeface.png");
 
-    auto texture=std::make_unique<mulberry::GL::Texture>(textureInfo);
+    auto texture=std::make_unique<mulberry::gl::Texture>(textureInfo);
 
     mulberry::Entity *rootEntity = scene->CreateEntity("Sprite");
 
@@ -23,13 +22,13 @@ int32_t main(int32_t argc, char **argv)
     if (cameraComp)
     {
         cameraComp->SetClearColor(mulberry::Color::LightYellow);
-        cameraComp->SetExtent(mulberry::Vec2(winInfo.width, winInfo.height));
+          cameraComp->SetExtent(mulberry::App::GetInstance().GetWindow()->GetSize());
     }
 
     mulberry::SpriteComponent *spriteComponent = rootEntity->CreateComponent<mulberry::SpriteComponent>();
     spriteComponent->SetSprite(texture.get());;
 
-    mulberry::App::Run();
+    mulberry::App::GetInstance().Run();
 
     return 0;
 }

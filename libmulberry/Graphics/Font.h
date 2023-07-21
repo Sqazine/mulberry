@@ -15,7 +15,7 @@ namespace mulberry
         bool Load(const std::string &fileName);
         void UnLoad();
 
-        std::unique_ptr<GL::Texture> RenderText(const std::string &text, const Color &color = Color::White, int32_t pointSize = 30);
+        std::unique_ptr<gl::Texture> RenderText(const std::string &text, const Color &color = Color::White, int32_t pointSize = 30);
 
     private:
         std::unordered_map<int, TTF_Font *> mFontData;

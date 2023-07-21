@@ -1,7 +1,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
-namespace mulberry::MathUtils
+namespace mulberry::math
 {
 	constexpr float PI = 3.1415926535f;
 

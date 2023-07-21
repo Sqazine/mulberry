@@ -1,6 +1,6 @@
 #include "FrameBuffer.h"
 #include <glad/glad.h>
-namespace mulberry::GL
+namespace mulberry::gl
 {
     FrameBuffer::FrameBuffer()
     {

@@ -13,7 +13,6 @@
 #include "Graphics/RenderMaterial.h"
 namespace mulberry
 {
-
 	class SceneRenderer
 	{
 	public:

@@ -44,11 +44,11 @@ namespace mulberry
                                         "	outColor=vec4(0.0,1.0,0.0,1.0);\n"
                                         "}";
 
-    void RenderMaterial::SetShaderProgram(GL::ShaderProgram *program)
+    void RenderMaterial::SetShaderProgram(gl::ShaderProgram *program)
     {
         shaderProgram.reset(program);
     }
-    GL::ShaderProgram *RenderMaterial::GetShaderProgram() const
+    gl::ShaderProgram *RenderMaterial::GetShaderProgram() const
     {
         return shaderProgram.get();
     }
@@ -56,9 +56,9 @@ namespace mulberry
     SpriteMaterial::SpriteMaterial()
         : mTiling(1.0), mOffset(0.0)
     {
-        auto vertShader = GL::ShaderModule(GL::VERTEX_SHADER, spriteVertShader);
-        auto fragShader = GL::ShaderModule(GL::FRAGMENT_SHADER, spriteFragShader);
-        shaderProgram = std::make_unique<GL::ShaderProgram>();
+        auto vertShader = gl::ShaderModule(gl::VERTEX_SHADER, spriteVertShader);
+        auto fragShader = gl::ShaderModule(gl::FRAGMENT_SHADER, spriteFragShader);
+        shaderProgram = std::make_unique<gl::ShaderProgram>();
         shaderProgram->AttachShader(vertShader);
         shaderProgram->AttachShader(fragShader);
     }
@@ -66,12 +66,12 @@ namespace mulberry
     {
     }
 
-    void SpriteMaterial::SetSprite(GL::Texture *sprite)
+    void SpriteMaterial::SetSprite(gl::Texture *sprite)
     {
         this->mSprite = sprite;
     }
 
-    const GL::Texture *SpriteMaterial::GetSprite() const
+    const gl::Texture *SpriteMaterial::GetSprite() const
     {
         return mSprite;
     }
@@ -108,9 +108,9 @@ namespace mulberry
 
     GizmoMaterial::GizmoMaterial()
     {
-        auto vertShader = GL::ShaderModule(GL::VERTEX_SHADER, gizmoVertShader);
-        auto fragShader = GL::ShaderModule(GL::FRAGMENT_SHADER, gizmoFragShader);
-        shaderProgram = std::make_unique<GL::ShaderProgram>();
+        auto vertShader = gl::ShaderModule(gl::VERTEX_SHADER, gizmoVertShader);
+        auto fragShader = gl::ShaderModule(gl::FRAGMENT_SHADER, gizmoFragShader);
+        shaderProgram = std::make_unique<gl::ShaderProgram>();
         shaderProgram->AttachShader(vertShader);
         shaderProgram->AttachShader(fragShader);
     }

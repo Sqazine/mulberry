@@ -1,5 +1,6 @@
 #include "SceneRenderer.h"
 #include "GL/Renderer.h"
+#include "App.h"
 namespace mulberry
 {
     void SceneRenderer::Init()
@@ -30,7 +31,7 @@ namespace mulberry
         material->SetUniformValue();
         mSpritePrimitive->Bind(material->GetShaderProgram()->GetAttribute("inPosition"), material->GetShaderProgram()->GetAttribute("inTexcoord"));
 
-        GL::Renderer::Render(mSpritePrimitive->GetIndexBuffer(), GL::TRIANGLES);
+        gl::Renderer::Render(mSpritePrimitive->GetIndexBuffer(), gl::TRIANGLES);
 
         mSpritePrimitive->UnBind(material->GetShaderProgram()->GetAttribute("inPosition"), material->GetShaderProgram()->GetAttribute("inTexcoord"));
         material->ResetUniformValue();
@@ -39,7 +40,7 @@ namespace mulberry
 
     void SceneRenderer::RenderSpriteInstanced(const std::vector<const Entity *> spriteComps, CameraComponent *camera)
     {
-        GL::Renderer::RenderInstanced(mSpritePrimitive->GetIndexBuffer(), GL::TRIANGLES, spriteComps.size());
+        gl::Renderer::RenderInstanced(mSpritePrimitive->GetIndexBuffer(), gl::TRIANGLES, spriteComps.size());
     }
 
     void SceneRenderer::RenderLine(const Entity *entity, CameraComponent *camera)
@@ -48,7 +49,7 @@ namespace mulberry
         auto spriteComp = entity->GetComponent<RenderComponent>();
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", transComp->GetModelMat());
         mLinePrimitive->Bind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
-        GL::Renderer::Render(mLinePrimitive->GetIndexBuffer(), GL::LINES);
+        gl::Renderer::Render(mLinePrimitive->GetIndexBuffer(), gl::LINES);
         mLinePrimitive->UnBind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
     }
     void SceneRenderer::RenderPoint(const Entity *entity, CameraComponent *camera)
@@ -58,7 +59,7 @@ namespace mulberry
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", transComp->GetModelMat());
         mPointPrimitive->Bind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
         glPointSize(5);
-        GL::Renderer::Render(mPointPrimitive->GetIndexBuffer(), GL::POINTS);
+        gl::Renderer::Render(mPointPrimitive->GetIndexBuffer(), gl::POINTS);
         glPointSize(1);
         mPointPrimitive->UnBind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
     }
@@ -77,7 +78,7 @@ namespace mulberry
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
         mQuadPrimitive->Bind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
-        GL::Renderer::Render(mQuadPrimitive->GetIndexBuffer(), GL::LINES);
+        gl::Renderer::Render(mQuadPrimitive->GetIndexBuffer(), gl::LINES);
         mQuadPrimitive->UnBind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
         mGizmoMaterial->GetShaderProgram()->SetActive(false);
     }
@@ -96,7 +97,7 @@ namespace mulberry
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
         mCirclePrimitive->Bind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
-        GL::Renderer::Render(mCirclePrimitive->GetIndexBuffer(), GL::LINE_LOOP);
+        gl::Renderer::Render(mCirclePrimitive->GetIndexBuffer(), gl::LINE_LOOP);
         mCirclePrimitive->UnBind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
         mGizmoMaterial->GetShaderProgram()->SetActive(false);
     }
@@ -131,8 +132,10 @@ namespace mulberry
         }
         for (auto camera : cameraComponents)
         {
+            gl::Renderer::SetViewport(App::GetInstance().GetWindow()->GetViewportInfo());
+
             Color clearColor = camera->GetClearColor();
-            GL::Renderer::ClearColorBuffer(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+            gl::Renderer::ClearColorBuffer(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 
             glDisable(GL_DEPTH_TEST);
             glEnable(GL_CULL_FACE);

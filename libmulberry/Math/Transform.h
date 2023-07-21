@@ -30,7 +30,7 @@ namespace mulberry
         {
             Mat4 model = Mat4();
             model *= Mat4::Translate(position);
-            model *= Mat4::Rotate(MathUtils::ToRadian(rotation));
+            model *= Mat4::Rotate(math::ToRadian(rotation));
             model *= Mat4::Scale(scale);
             return model;
         }

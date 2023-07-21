@@ -68,12 +68,12 @@ namespace mulberry
 
     Vec2 TransformComponent::GetLocalAxisX() const
     {
-        return Vec2::Rotate(Vec2::UNIT_X, MathUtils::ToRadian(mTransform.rotation));
+        return Vec2::Rotate(Vec2::UNIT_X, math::ToRadian(mTransform.rotation));
     }
 
     Vec2 TransformComponent::GetLocalAxisY() const
     {
-        return Vec2::Rotate(Vec2::UNIT_Y, MathUtils::ToRadian(mTransform.rotation));
+        return Vec2::Rotate(Vec2::UNIT_Y, math::ToRadian(mTransform.rotation));
     }
 
     Mat4 TransformComponent::GetModelMat() const

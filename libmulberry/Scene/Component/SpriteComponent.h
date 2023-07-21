@@ -14,8 +14,8 @@ namespace mulberry
 
         void Init() override;
 
-        void SetSprite(GL::Texture *texture);
-        const GL::Texture *GetSprite() const;
+        void SetSprite(gl::Texture *texture);
+        const gl::Texture *GetSprite() const;
 
         void SetTiling(const Vec2 &t);
         const Vec2 &GetTiling() const;

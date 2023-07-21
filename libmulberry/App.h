@@ -4,13 +4,14 @@
 #include <memory>
 #include <vector>
 #include <SDL2/SDL.h>
-#include "Graphics/GL/RenderContext.h"
-#include "Math/Vec2.h"
-#include "Scene/Scene.h"
+#include "Graphics/GraphicsContext.h"
+#include "Graphics/SceneRenderer.h"
+#include "Vec2.h"
+#include "Scene.h"
 #include "Timer.h"
+#include "Window.h"
 namespace mulberry
 {
-
 	enum class AppState
 	{
 		INIT,
@@ -20,37 +21,43 @@ namespace mulberry
 		EXIT
 	};
 
-	class App
+	class App : public Singleton<App>
 	{
 	public:
-		static void Init(const GL::RenderContextInfo& info);
-		static void Run();
+		void Init();
+		void Run();
 
-		static Scene* CreateScene(std::string_view name);
-		static Scene* GetScene(std::string_view name);
-		static bool RemoveScene(std::string_view name);
-		static void RemoveAllScenes();
+		Scene *CreateScene(std::string_view name);
+		Scene *GetScene(std::string_view name);
+		bool RemoveScene(std::string_view name);
+		void RemoveAllScenes();
 
-		static void Quit();
+		void Quit();
 
-		static void SetWindowExtent(const Vec2& extent);
-		static Vec2 GetWindowExtent();
+		void SetGraphicsBackend(GraphicsBackend graphicsBackend);
+		const GraphicsConfig& GetGraphicsConfig() const;
+
+		Window *GetWindow() const;
 
 	private:
-		static void ProcessInput();
-		static void Update();
-		static void Render();
-		static void RenderGizmo();
-		static void RenderUI();
-		static void CleanUp();
+		void ProcessInput();
+		void Update();
+		void Render();
+		void RenderGizmo();
+		void RenderUI();
+		void CleanUp();
 
-		static AppState mState;
-		static Input mInput;
-		static Timer mTimer;
+		GraphicsConfig mGraphicsConfig;
 
-		static std::vector<std::unique_ptr<Scene>> mScenes;
-		static int32_t mSceneIdx;
+		std::unique_ptr<Window> mWindow;
 
-		static SceneRenderer mSceneRenderer;
+		AppState mState;
+		Input mInput;
+		Timer mTimer;
+
+		std::vector<std::unique_ptr<Scene>> mScenes;
+		int32_t mSceneIdx;
+
+		SceneRenderer mSceneRenderer;
 	};
 }

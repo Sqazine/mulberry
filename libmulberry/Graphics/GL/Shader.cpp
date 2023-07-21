@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include "Uniform.h"
 #include <spdlog/spdlog.h>
-namespace mulberry::GL
+namespace mulberry::gl
 {
 
 	ShaderModule::ShaderModule(const ShaderModuleType &type, std::string_view content)

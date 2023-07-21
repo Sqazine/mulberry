@@ -13,11 +13,11 @@ namespace mulberry
         virtual void SetUniformValue() const {}
         virtual void ResetUniformValue() const {}
 
-        void SetShaderProgram(GL::ShaderProgram *program);
-        GL::ShaderProgram *GetShaderProgram() const;
+        void SetShaderProgram(gl::ShaderProgram *program);
+        gl::ShaderProgram *GetShaderProgram() const;
 
     protected:
-        std::unique_ptr<GL::ShaderProgram> shaderProgram;
+        std::unique_ptr<gl::ShaderProgram> shaderProgram;
     };
 
     class SpriteMaterial : public RenderMaterial
@@ -26,8 +26,8 @@ namespace mulberry
         SpriteMaterial();
         ~SpriteMaterial() override;
 
-        void SetSprite(GL::Texture *sprite);
-        const GL::Texture *GetSprite() const;
+        void SetSprite(gl::Texture *sprite);
+        const gl::Texture *GetSprite() const;
 
         void SetTiling(const Vec2 &t);
         const Vec2 &GetTiling() const;
@@ -39,7 +39,7 @@ namespace mulberry
         void ResetUniformValue() const override;
 
     private:
-        GL::Texture *mSprite;
+        gl::Texture *mSprite;
         Vec2 mTiling;
         Vec2 mOffset;
     };
