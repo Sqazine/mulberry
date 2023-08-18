@@ -18,8 +18,7 @@ namespace mulberry
         return maps.find(type)->second;
     }
 
-
-     uint32_t ToGLPrimitiveType(PrimitiveRenderType type)
+    uint32_t ToGLPrimitiveType(PrimitiveRenderType type)
     {
         const std::unordered_map<PrimitiveRenderType, uint32_t> maps = {
             {PrimitiveRenderType::POINT_LIST, GL_POINTS},
@@ -31,5 +30,74 @@ namespace mulberry
         };
 
         return maps.find(type)->second;
+    }
+
+    uint32_t ToGLWarpMode(WrapMode mode)
+    {
+        switch (mode)
+        {
+        case WrapMode::REPEAT:
+            return GL_REPEAT;
+        case WrapMode::MIRROR_REPEAT:
+            return GL_MIRRORED_REPEAT;
+        case WrapMode::CLAMP_TO_EDGE:
+            return GL_CLAMP_TO_EDGE;
+        case WrapMode::CLAMP_TO_BORDER:
+            return GL_CLAMP_TO_BORDER;
+        default:
+            return GL_REPEAT;
+        }
+    }
+    uint32_t ToGLFilterMode(FilterMode mode)
+    {
+        switch (mode)
+        {
+        case FilterMode::NEAREST:
+            return GL_NEAREST;
+        case FilterMode::LINEAR:
+            return GL_LINEAR;
+        case FilterMode::TRILINEAR:
+            return GL_LINEAR_MIPMAP_LINEAR;
+        case FilterMode::NEAREST_MIPMAP_NEAREST:
+            return GL_NEAREST_MIPMAP_NEAREST;
+        case FilterMode::NEAREST_MIPMAP_LINEAR:
+            return GL_NEAREST_MIPMAP_LINEAR;
+        case FilterMode::LINEAR_MIPMAP_NEAREST:
+            return GL_LINEAR_MIPMAP_NEAREST;
+        default:
+            return GL_NEAREST;
+        }
+    }
+
+    uint32_t ToGLFormat(Format mode)
+    {
+        switch (mode)
+        {
+        case Format::R8:
+            return GL_R8;
+        case Format::RG8:
+            return GL_RG8;
+        case Format::RGB8:
+            return GL_RGB8;
+        case Format::RGBA8:
+            return GL_RGBA8;
+        case Format::R16F:
+            return GL_R16F;
+        case Format::RG16F:
+            return GL_RG16;
+        case Format::RGB16F:
+            return GL_RGB16F;
+        case Format::R32F:
+            return GL_R32F;
+        case Format::RG32F:
+            return GL_RG32F;
+        case Format::RGB32F:
+            return GL_RGB32F;
+        case Format::RGBA32F:
+            return GL_RGBA32F;
+        default:
+            break;
+        }
+        return GL_RGBA;
     }
 }

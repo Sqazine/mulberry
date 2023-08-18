@@ -56,6 +56,16 @@ namespace mulberry
         }
     }
 
+    void ShaderProgram::SetTexture(std::string_view name, const Texture *texture)
+    {
+        switch (mBackend)
+        {
+        case GraphicsBackend::GL:
+            return mGLShaderProgram->SetTexture(name, texture->mGLTexture.get());
+            break;
+        }
+    }
+
     bool ShaderProgram::AttachShader(const ShaderModule &shader)
     {
         switch (mBackend)

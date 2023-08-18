@@ -45,6 +45,8 @@ namespace mulberry
         template <typename T>
         void SetUniformArray(std::string_view name, const std::vector<T> &valueArray);
 
+            void SetTexture(std::string_view name,const Texture* texture);
+
         bool AttachShader(const ShaderModule &shader);
 
         uint32_t GetAttribute(std::string_view name) const;

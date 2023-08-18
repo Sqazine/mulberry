@@ -56,29 +56,6 @@ namespace mulberry
         }
     }
 
-    void Texture::BindTo(uint32_t uniform, uint32_t texIndex) const
-    {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
-        {
-        case GraphicsBackend::GL:
-            mGLTexture->BindTo(uniform, texIndex);
-            break;
-        default:
-            break;
-        }
-    }
-    void Texture::UnBind() const
-    {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
-        {
-        case GraphicsBackend::GL:
-            mGLTexture->UnBind();
-            break;
-        default:
-            break;
-        }
-    }
-
     const TextureInfo &Texture::GetCreateInfo() const
     {
         switch (App::GetInstance().GetGraphicsConfig().backend)

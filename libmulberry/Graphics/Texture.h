@@ -68,12 +68,10 @@ namespace mulberry
         void CreateFrom(const TextureInfo &info);
         void CreateFromSurface(SDL_Surface *surface);
 
-        void BindTo(uint32_t uniform, uint32_t texIndex) const;
-        void UnBind() const;
-
         const TextureInfo &GetCreateInfo() const;
 
     private:
+        friend class ShaderProgram;
         std::unique_ptr<class GLTexture> mGLTexture;
         //std::unique_ptr<class VKTexture> mVKTexture;
     };

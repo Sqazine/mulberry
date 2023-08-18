@@ -6,6 +6,7 @@
 #include "GLUtils.h"
 #include "Vec2.h"
 #include "Math/Mat4.h"
+#include "GLTexture.h"
 
 namespace mulberry
 {
@@ -41,6 +42,8 @@ namespace mulberry
         template <typename T>
         void SetUniformArray(std::string_view name, const std::vector<T> &valueArray);
 
+        void SetTexture(std::string_view name,const GLTexture* texture);
+
         bool AttachShader(const GLShaderModule &shader);
 
         uint32_t GetAttribute(std::string_view name) const;
@@ -52,6 +55,8 @@ namespace mulberry
 
         std::map<std::string, uint32_t> mActiveAttributes;
         std::map<std::string, uint32_t> mActiveUniforms;
+
+        uint32_t mTextureBindingIdx;
 
         bool IsValidProgram();
         uint32_t mProgramID;

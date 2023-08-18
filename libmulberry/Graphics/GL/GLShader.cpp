@@ -40,6 +40,7 @@ namespace mulberry
 	}
 
 	GLShaderProgram::GLShaderProgram()
+	:mTextureBindingIdx(0)
 	{
 		mProgramID = glCreateProgram();
 	}
@@ -55,6 +56,14 @@ namespace mulberry
 		else
 			glUseProgram(0);
 	}
+
+	void GLShaderProgram::SetTexture(std::string_view name,const GLTexture* texture)
+     {
+		glUniform1i(GetUniform(name), mTextureBindingIdx);
+		glActiveTexture(GL_TEXTURE0 + mTextureBindingIdx);
+		mTextureBindingIdx++;
+		glBindTexture(GL_TEXTURE_2D,texture->GetHandle());
+     }
 
 	bool GLShaderProgram::AttachShader(const GLShaderModule &shader)
 	{

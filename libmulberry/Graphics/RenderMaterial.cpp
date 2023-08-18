@@ -101,14 +101,14 @@ namespace mulberry
 
     void SpriteMaterial::SetUniformValue() const
     {
-        mSprite->BindTo(shaderProgram->GetUniform("sprite"), 0);
+        shaderProgram->SetTexture("sprite",mSprite);
         shaderProgram->SetUniformValue("tiling", mTiling);
         shaderProgram->SetUniformValue("offset", mOffset);
     }
 
     void SpriteMaterial::ResetUniformValue() const
     {
-        mSprite->UnBind();
+       
     }
 
     GizmoMaterial::GizmoMaterial()
