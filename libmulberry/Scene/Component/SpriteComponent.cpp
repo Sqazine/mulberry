@@ -18,11 +18,11 @@ namespace mulberry
         material = std::make_unique<SpriteMaterial>();
     }
 
-    void SpriteComponent::SetSprite(gl::Texture *texture)
+    void SpriteComponent::SetSprite(Texture *texture)
     {
         ((SpriteMaterial *)material.get())->SetSprite(texture);
     }
-    const gl::Texture *SpriteComponent::GetSprite() const
+    const Texture *SpriteComponent::GetSprite() const
     {
         return ((SpriteMaterial *)material.get())->GetSprite();
     }

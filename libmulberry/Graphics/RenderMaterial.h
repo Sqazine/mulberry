@@ -1,7 +1,8 @@
 #pragma once
 #include <memory>
-#include "Graphics/GL/Shader.h"
-#include "Graphics/GL/Texture.h"
+#include "Math/Vec2.h"
+#include "Graphics/Shader.h"
+#include "Graphics/Texture.h"
 namespace mulberry
 {
     class RenderMaterial
@@ -13,11 +14,11 @@ namespace mulberry
         virtual void SetUniformValue() const {}
         virtual void ResetUniformValue() const {}
 
-        void SetShaderProgram(gl::ShaderProgram *program);
-        gl::ShaderProgram *GetShaderProgram() const;
+        void SetShaderProgram(ShaderProgram *program);
+        ShaderProgram *GetShaderProgram() const;
 
     protected:
-        std::unique_ptr<gl::ShaderProgram> shaderProgram;
+        std::unique_ptr<ShaderProgram> shaderProgram;
     };
 
     class SpriteMaterial : public RenderMaterial
@@ -26,8 +27,8 @@ namespace mulberry
         SpriteMaterial();
         ~SpriteMaterial() override;
 
-        void SetSprite(gl::Texture *sprite);
-        const gl::Texture *GetSprite() const;
+        void SetSprite(Texture *sprite);
+        const Texture *GetSprite() const;
 
         void SetTiling(const Vec2 &t);
         const Vec2 &GetTiling() const;
@@ -39,7 +40,7 @@ namespace mulberry
         void ResetUniformValue() const override;
 
     private:
-        gl::Texture *mSprite;
+        Texture *mSprite;
         Vec2 mTiling;
         Vec2 mOffset;
     };

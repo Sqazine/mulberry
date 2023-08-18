@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "Input.h"
+#include "Platform/Input.h"
 namespace mulberry
 {
     class Component
@@ -24,7 +24,7 @@ namespace mulberry
         class AssetManager *GetSceneAssetManager() const;
 
         template <typename T, typename... Args>
-        T* RequiredComponent(Args &&...params);
+        T *RequiredComponent(Args &&...params);
 
     private:
         friend class Entity;
@@ -33,9 +33,9 @@ namespace mulberry
     };
 
     template <typename T, typename... Args>
-    inline T* Component::RequiredComponent(Args &&...params)
+    inline T *Component::RequiredComponent(Args &&...params)
     {
-         auto result = mOwner->GetComponent<T>();
+        auto result = mOwner->GetComponent<T>();
         if (result)
             return result;
         return mOwner->CreateComponent<T>(params...);

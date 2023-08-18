@@ -1,7 +1,7 @@
 
 
 #include "AssetManager.h"
-#include "Graphics/GL/Texture.h"
+#include "Graphics/GL/GLTexture.h"
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #endif

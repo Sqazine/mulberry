@@ -13,8 +13,8 @@ private:
     mulberry::TransformComponent *ownerTransformComponent = nullptr;
     mulberry::SpriteComponent *ownerSpriteComponent = nullptr;
 
-    std::unique_ptr<mulberry::gl::Texture> movingTexture;
-    std::unique_ptr<mulberry::gl::Texture> staticTexture;
+    std::unique_ptr<mulberry::Texture> movingTexture;
+    std::unique_ptr<mulberry::Texture> staticTexture;
 
     float moveSpeed = 500;
     float rotSpeed = 200;

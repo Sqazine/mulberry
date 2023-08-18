@@ -2,7 +2,7 @@
 #include "Component.h"
 #include <memory>
 #include "Graphics/RenderMaterial.h"
-#include "Graphics/GL/Texture.h"
+#include "Graphics/Texture.h"
 namespace mulberry
 {
 	class RenderComponent : public Component

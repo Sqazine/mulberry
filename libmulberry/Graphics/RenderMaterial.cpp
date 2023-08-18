@@ -1,5 +1,6 @@
 #include "RenderMaterial.h"
-
+#include <string>
+#include "Shader.h"
 namespace mulberry
 {
 
@@ -44,11 +45,12 @@ namespace mulberry
                                         "	outColor=vec4(0.0,1.0,0.0,1.0);\n"
                                         "}";
 
-    void RenderMaterial::SetShaderProgram(gl::ShaderProgram *program)
+    void RenderMaterial::SetShaderProgram(ShaderProgram *program)
     {
         shaderProgram.reset(program);
     }
-    gl::ShaderProgram *RenderMaterial::GetShaderProgram() const
+
+    ShaderProgram *RenderMaterial::GetShaderProgram() const
     {
         return shaderProgram.get();
     }
@@ -56,22 +58,23 @@ namespace mulberry
     SpriteMaterial::SpriteMaterial()
         : mTiling(1.0), mOffset(0.0)
     {
-        auto vertShader = gl::ShaderModule(gl::VERTEX_SHADER, spriteVertShader);
-        auto fragShader = gl::ShaderModule(gl::FRAGMENT_SHADER, spriteFragShader);
-        shaderProgram = std::make_unique<gl::ShaderProgram>();
+        auto vertShader = ShaderModule(ShaderType::VERTEX, spriteVertShader);
+        auto fragShader = ShaderModule(ShaderType::FRAGMENT, spriteFragShader);
+        shaderProgram = std::make_unique<ShaderProgram>();
         shaderProgram->AttachShader(vertShader);
         shaderProgram->AttachShader(fragShader);
     }
+    
     SpriteMaterial::~SpriteMaterial()
     {
     }
 
-    void SpriteMaterial::SetSprite(gl::Texture *sprite)
+    void SpriteMaterial::SetSprite(Texture *sprite)
     {
         this->mSprite = sprite;
     }
 
-    const gl::Texture *SpriteMaterial::GetSprite() const
+    const Texture *SpriteMaterial::GetSprite() const
     {
         return mSprite;
     }
@@ -80,6 +83,7 @@ namespace mulberry
     {
         mTiling = t;
     }
+
     const Vec2 &SpriteMaterial::GetTiling() const
     {
         return mTiling;
@@ -89,6 +93,7 @@ namespace mulberry
     {
         mOffset = o;
     }
+    
     const Vec2 &SpriteMaterial::GetOffset() const
     {
         return mOffset;
@@ -108,12 +113,13 @@ namespace mulberry
 
     GizmoMaterial::GizmoMaterial()
     {
-        auto vertShader = gl::ShaderModule(gl::VERTEX_SHADER, gizmoVertShader);
-        auto fragShader = gl::ShaderModule(gl::FRAGMENT_SHADER, gizmoFragShader);
-        shaderProgram = std::make_unique<gl::ShaderProgram>();
+        auto vertShader = ShaderModule(ShaderType::VERTEX, gizmoVertShader);
+        auto fragShader = ShaderModule(ShaderType::FRAGMENT, gizmoFragShader);
+        shaderProgram = std::make_unique<ShaderProgram>();
         shaderProgram->AttachShader(vertShader);
         shaderProgram->AttachShader(fragShader);
     }
+
     GizmoMaterial::~GizmoMaterial()
     {
     }

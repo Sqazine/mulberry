@@ -1,7 +1,7 @@
 #pragma once
 #include "App.h"
 #include "AssetManager.h"
-#include "Input.h"
+#include "Platform/Input.h"
 #include "Math/AABB.h"
 #include "Math/Circle.h"
 #include "Math/LineSegement.h"

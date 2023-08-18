@@ -1,6 +1,7 @@
 #include "SceneRenderer.h"
-#include "GL/Renderer.h"
+#include "RasterPipeline.h"
 #include "App.h"
+#include "RenderMaterial.h"
 namespace mulberry
 {
     void SceneRenderer::Init()
@@ -12,6 +13,8 @@ namespace mulberry
         mLinePrimitive = std::make_unique<Primitive>(PrimitiveType::LINE);
         mPointPrimitive = std::make_unique<Primitive>(PrimitiveType::POINT);
         mCirclePrimitive = std::make_unique<Primitive>(PrimitiveType::CIRCLE);
+
+        mRasterPipeline = std::make_unique<RasterPipeline>();
     }
 
     void SceneRenderer::RenderSprite(const Entity *entity, CameraComponent *camera)
@@ -31,7 +34,7 @@ namespace mulberry
         material->SetUniformValue();
         mSpritePrimitive->Bind(material->GetShaderProgram()->GetAttribute("inPosition"), material->GetShaderProgram()->GetAttribute("inTexcoord"));
 
-        gl::Renderer::Render(mSpritePrimitive->GetIndexBuffer(), gl::TRIANGLES);
+        mRasterPipeline->Render(*mSpritePrimitive, PrimitiveRenderType::TRIANGLE_LIST);
 
         mSpritePrimitive->UnBind(material->GetShaderProgram()->GetAttribute("inPosition"), material->GetShaderProgram()->GetAttribute("inTexcoord"));
         material->ResetUniformValue();
@@ -40,7 +43,7 @@ namespace mulberry
 
     void SceneRenderer::RenderSpriteInstanced(const std::vector<const Entity *> spriteComps, CameraComponent *camera)
     {
-        gl::Renderer::RenderInstanced(mSpritePrimitive->GetIndexBuffer(), gl::TRIANGLES, spriteComps.size());
+        mRasterPipeline->RenderInstanced(*mSpritePrimitive, PrimitiveRenderType::LINE_LIST, spriteComps.size());
     }
 
     void SceneRenderer::RenderLine(const Entity *entity, CameraComponent *camera)
@@ -49,7 +52,7 @@ namespace mulberry
         auto spriteComp = entity->GetComponent<RenderComponent>();
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", transComp->GetModelMat());
         mLinePrimitive->Bind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
-        gl::Renderer::Render(mLinePrimitive->GetIndexBuffer(), gl::LINES);
+        mRasterPipeline->Render(*mLinePrimitive, PrimitiveRenderType::LINE_LIST);
         mLinePrimitive->UnBind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
     }
     void SceneRenderer::RenderPoint(const Entity *entity, CameraComponent *camera)
@@ -58,9 +61,9 @@ namespace mulberry
         auto spriteComp = entity->GetComponent<RenderComponent>();
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", transComp->GetModelMat());
         mPointPrimitive->Bind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
-        glPointSize(5);
-        gl::Renderer::Render(mPointPrimitive->GetIndexBuffer(), gl::POINTS);
-        glPointSize(1);
+        mRasterPipeline->SetPointSize(5);
+        mRasterPipeline->Render(*mPointPrimitive, PrimitiveRenderType::POINT_LIST);
+        mRasterPipeline->SetPointSize(1);
         mPointPrimitive->UnBind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
     }
     void SceneRenderer::RenderQuad(const Entity *entity, CameraComponent *camera)
@@ -78,7 +81,7 @@ namespace mulberry
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
         mQuadPrimitive->Bind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
-        gl::Renderer::Render(mQuadPrimitive->GetIndexBuffer(), gl::LINES);
+        mRasterPipeline->Render(*mQuadPrimitive, PrimitiveRenderType::LINE_LIST);
         mQuadPrimitive->UnBind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
         mGizmoMaterial->GetShaderProgram()->SetActive(false);
     }
@@ -97,7 +100,7 @@ namespace mulberry
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
         mCirclePrimitive->Bind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
-        gl::Renderer::Render(mCirclePrimitive->GetIndexBuffer(), gl::LINE_LOOP);
+        mRasterPipeline->Render(*mCirclePrimitive, PrimitiveRenderType::LINE_LIST);
         mCirclePrimitive->UnBind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
         mGizmoMaterial->GetShaderProgram()->SetActive(false);
     }
@@ -132,13 +135,16 @@ namespace mulberry
         }
         for (auto camera : cameraComponents)
         {
-            gl::Renderer::SetViewport(App::GetInstance().GetWindow()->GetViewportInfo());
+            mRasterPipeline->SetViewport(App::GetInstance().GetWindow()->GetViewport());
 
-            Color clearColor = camera->GetClearColor();
-            gl::Renderer::ClearColorBuffer(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+            mRasterPipeline->SetBufferClearColor(camera->GetClearColor());
 
-            glDisable(GL_DEPTH_TEST);
-            glEnable(GL_CULL_FACE);
+            mRasterPipeline->ClearColorBuffer();
+
+            mRasterPipeline->SetCull(CullType::BACK);
+
+            mRasterPipeline->SetDepthTest(DepthTestType::NONE);
+
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

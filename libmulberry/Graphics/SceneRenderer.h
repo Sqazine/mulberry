@@ -1,16 +1,16 @@
 #pragma once
 #include <cstdint>
 #include <memory>
-#include "Graphics/GL/IndexBuffer.h"
+#include "Graphics/GL/GLIndexBuffer.h"
 #include <glad/glad.h>
 #include "Graphics/Primitive.h"
-#include "Graphics/GL/Shader.h"
+#include "Graphics/GL/GLShader.h"
 #include "Scene/Entity.h"
 #include "Scene/Scene.h"
 #include "Scene/Component/RenderComponent.h"
 #include "Scene/Component/SpriteComponent.h"
 #include "Scene/Component/CameraComponent.h"
-#include "Graphics/RenderMaterial.h"
+#include "RasterPipeline.h"
 namespace mulberry
 {
 	class SceneRenderer
@@ -32,12 +32,14 @@ namespace mulberry
 		void RenderQuadInstanced(const std::vector<const Entity *> entities, CameraComponent *camera);
 		void RenderCircleInstanced(const std::vector<const Entity *> entities, CameraComponent *camera);
 
-		std::unique_ptr<GizmoMaterial> mGizmoMaterial;
+		std::unique_ptr<class GizmoMaterial> mGizmoMaterial;
 
 		std::unique_ptr<Primitive> mLinePrimitive;
 		std::unique_ptr<Primitive> mPointPrimitive;
 		std::unique_ptr<Primitive> mSpritePrimitive;
 		std::unique_ptr<Primitive> mQuadPrimitive;
 		std::unique_ptr<Primitive> mCirclePrimitive;
+
+		std::unique_ptr<RasterPipeline> mRasterPipeline;
 	};
 }

@@ -2,7 +2,7 @@
 #include "Component.h"
 #include <memory>
 #include "Graphics/RenderMaterial.h"
-#include "Graphics/GL/Texture.h"
+#include "Graphics/Texture.h"
 #include "RenderComponent.h"
 namespace mulberry
 {
@@ -14,8 +14,8 @@ namespace mulberry
 
         void Init() override;
 
-        void SetSprite(gl::Texture *texture);
-        const gl::Texture *GetSprite() const;
+        void SetSprite(Texture *texture);
+        const Texture *GetSprite() const;
 
         void SetTiling(const Vec2 &t);
         const Vec2 &GetTiling() const;

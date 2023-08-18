@@ -28,6 +28,7 @@ namespace mulberry
 		GraphicsBackend backend = GraphicsBackend::GL;
 		bool useVSync = false;
 		bool useDoubleBuffer = true;
+		MsaaLevel msaaLevel=MsaaLevel::NONE;
 	};
 
 	class GraphicsContext : public Singleton<GraphicsContext>

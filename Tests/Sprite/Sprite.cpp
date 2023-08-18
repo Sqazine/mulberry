@@ -11,10 +11,10 @@ int32_t main(int32_t argc, char **argv)
     mulberry::App::GetInstance().GetWindow()->Resize(1024,768);
 
     mulberry::Scene *scene = mulberry::App::GetInstance().CreateScene("Sprite");
-    mulberry::gl::TextureInfo textureInfo{};
+    mulberry::TextureInfo textureInfo{};
     textureInfo.data = scene->GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "awesomeface.png");
 
-    auto texture=std::make_unique<mulberry::gl::Texture>(textureInfo);
+    auto texture=std::make_unique<mulberry::Texture>(textureInfo);
 
     mulberry::Entity *rootEntity = scene->CreateEntity("Sprite");
 

@@ -1,7 +1,7 @@
 #include "GraphicsContext.h"
 #include "App.h"
-#include "GL/Context.h"
-#include "VK/Context.h"
+#include "GL/GLContext.h"
+#include "VK/VKContext.h"
 namespace mulberry
 {
 	void GraphicsContext::Init()
@@ -9,10 +9,10 @@ namespace mulberry
 		switch (App::GetInstance().GetGraphicsConfig().backend)
 		{
 		case GraphicsBackend::GL:
-			gl::Context::GetInstance().Init();
+			GLContext::GetInstance().Init();
 			break;
 		default:
-			vk::Context::GetInstance().Init();
+			VKContext::GetInstance().Init();
 			break;
 		}
 	}
@@ -21,10 +21,10 @@ namespace mulberry
 		switch (App::GetInstance().GetGraphicsConfig().backend)
 		{
 		case GraphicsBackend::GL:
-			gl::Context::GetInstance().Destroy();
+			GLContext::GetInstance().Destroy();
 			break;
 		default:
-			vk::Context::GetInstance().Destroy();
+			VKContext::GetInstance().Destroy();
 			break;
 		}
 	}
@@ -34,10 +34,10 @@ namespace mulberry
 		switch (App::GetInstance().GetGraphicsConfig().backend)
 		{
 		case GraphicsBackend::GL:
-			gl::Context::GetInstance().BeginFrame();
+			GLContext::GetInstance().BeginFrame();
 			break;
 		default:
-			vk::Context::GetInstance().BeginFrame();
+			VKContext::GetInstance().BeginFrame();
 			break;
 		}
 	}
@@ -46,10 +46,10 @@ namespace mulberry
 		switch (App::GetInstance().GetGraphicsConfig().backend)
 		{
 		case GraphicsBackend::GL:
-			gl::Context::GetInstance().EndFrame();
+			GLContext::GetInstance().EndFrame();
 			break;
 		default:
-			vk::Context::GetInstance().EndFrame();
+			VKContext::GetInstance().EndFrame();
 			break;
 		}
 	}

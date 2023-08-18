@@ -9,7 +9,7 @@
 #include "Vec2.h"
 #include "Scene.h"
 #include "Timer.h"
-#include "Window.h"
+#include "Platform/Window.h"
 namespace mulberry
 {
 	enum class AppState

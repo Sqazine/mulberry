@@ -11,15 +11,15 @@ void ShipMoveComponent::Init()
 {
     RequiredComponent<mulberry::TransformComponent>();
 
-    mulberry::gl::TextureInfo textureInfo{};
+    mulberry::TextureInfo textureInfo{};
     textureInfo.data = GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "ShipWithThrust.png");
-    textureInfo.filterMode = mulberry::gl::FilterMode::LINEAR;
-    movingTexture.reset(new mulberry::gl::Texture(textureInfo));
+    textureInfo.filterMode = mulberry::FilterMode::LINEAR;
+    movingTexture.reset(new mulberry::Texture(textureInfo));
 
     textureInfo = {};
     textureInfo.data = GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "Ship.png");
-    textureInfo.filterMode = mulberry::gl::FilterMode::LINEAR;
-    staticTexture.reset(new mulberry::gl::Texture(textureInfo));
+    textureInfo.filterMode = mulberry::FilterMode::LINEAR;
+    staticTexture.reset(new mulberry::Texture(textureInfo));
 
     if (!ownerSpriteComponent)
         ownerSpriteComponent = GetOwner()->GetComponent<mulberry::SpriteComponent>();
