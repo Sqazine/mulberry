@@ -1,10 +1,10 @@
 #pragma once
 #include <cstdint>
 #include <memory>
-#include "Graphics/GL/GLIndexBuffer.h"
+#include "Graphics/RHI/GL/GLIndexBuffer.h"
 #include <glad/glad.h>
 #include "Graphics/Primitive.h"
-#include "Graphics/GL/GLShader.h"
+#include "Graphics/RHI/GL/GLShader.h"
 #include "Scene/Entity.h"
 #include "Scene/Scene.h"
 #include "Scene/Component/RenderComponent.h"

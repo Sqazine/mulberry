@@ -1,7 +1,6 @@
 #include <glad/glad.h>
 #include <SDL2/SDL.h>
-#include <spdlog/spdlog.h>
-#include "Graphics/GraphicsContext.h"
+#include "RHI/GraphicsContext.h"
 #include "GLContext.h"
 #include "App.h"
 namespace mulberry

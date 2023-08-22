@@ -2,7 +2,7 @@
 #include "Component.h"
 #include <memory>
 #include "Graphics/RenderMaterial.h"
-#include "Graphics/Texture.h"
+#include "Graphics/RHI/Texture.h"
 #include "RenderComponent.h"
 namespace mulberry
 {

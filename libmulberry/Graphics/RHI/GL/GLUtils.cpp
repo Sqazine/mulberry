@@ -1,6 +1,6 @@
 #include "GLUtils.h"
-#include "Graphics/Shader.h"
-#include "Graphics/RasterPipeline.h"
+#include "Graphics/RHI/Shader.h"
+#include "Graphics/RHI/RasterPipeline.h"
 #include <unordered_map>
 namespace mulberry
 {

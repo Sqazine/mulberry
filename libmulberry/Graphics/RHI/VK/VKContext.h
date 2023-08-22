@@ -4,7 +4,7 @@
 #include <vulkan/vulkan.h>
 #include <mutex>
 #include "Singleton.h"
-#include "Graphics/GraphicsContext.h"
+#include "Graphics/RHI/GraphicsContext.h"
 
 namespace mulberry
 {

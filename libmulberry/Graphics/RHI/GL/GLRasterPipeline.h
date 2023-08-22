@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <array>
 #include "GLIndexBuffer.h"
-#include "Graphics/RasterPipeline.h"
+#include "Graphics/RHI/RasterPipeline.h"
 
 namespace mulberry
 {

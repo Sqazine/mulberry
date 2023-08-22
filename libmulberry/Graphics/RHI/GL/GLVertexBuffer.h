@@ -15,16 +15,17 @@ namespace mulberry
 		~GLVertexBuffer();
 
 		void Set(const std::vector<T> &inputArray);
-		void BindTo(uint32_t slot);
-		void UnBindFrom(uint32_t slot);
+
 		uint32_t Size();
 
 	protected:
+		friend class GLShaderProgram;
 		uint32_t mVertexBufferID;
 		uint32_t mSize;
 
 	private:
-		void SetAttribPointer(uint32_t slot);
+		friend class GLShaderProgram;
+		void SetAttribPointer(uint32_t slot) const;
 	};
 
 	template <typename T>
@@ -55,37 +56,20 @@ namespace mulberry
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	template <typename T>
-	inline void GLVertexBuffer<T>::BindTo(uint32_t slot)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferID);
-		glEnableVertexAttribArray(slot);
-		SetAttribPointer(slot);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-
-	template <typename T>
-	inline void GLVertexBuffer<T>::UnBindFrom(uint32_t slot)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, mVertexBufferID);
-		glDisableVertexAttribArray(slot);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-
 	template <>
-	inline void GLVertexBuffer<int32_t>::SetAttribPointer(uint32_t slot)
+	inline void GLVertexBuffer<int32_t>::SetAttribPointer(uint32_t slot) const
 	{
 		glVertexAttribIPointer(slot, 1, GL_INT, GL_FALSE, reinterpret_cast<void *>(0));
 	}
 
 	template <>
-	inline void GLVertexBuffer<float>::SetAttribPointer(uint32_t slot)
+	inline void GLVertexBuffer<float>::SetAttribPointer(uint32_t slot) const
 	{
 		glVertexAttribPointer(slot, 1, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<void *>(0));
 	}
 
 	template <>
-	inline void GLVertexBuffer<Vec2>::SetAttribPointer(uint32_t slot)
+	inline void GLVertexBuffer<Vec2>::SetAttribPointer(uint32_t slot) const
 	{
 		glVertexAttribPointer(slot, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<void *>(0));
 	}

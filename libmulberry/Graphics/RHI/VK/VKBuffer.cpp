@@ -10,8 +10,8 @@
 namespace mulberry
 {
 	VKBuffer::VKBuffer(VkDeviceSize size,
-				   VkBufferUsageFlags usage,
-				   VkMemoryPropertyFlags properties)
+					   VkBufferUsageFlags usage,
+					   VkMemoryPropertyFlags properties)
 	{
 		VkSharingMode sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		if (!VKContext::GetInstance().GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.IsSameFamilyIndex())
@@ -68,6 +68,11 @@ namespace mulberry
 		return mSize;
 	}
 
+	VKCpuBuffer::VKCpuBuffer(VkDeviceSize size, VkBufferUsageFlags usage)
+		: VKBuffer(size, usage, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
+	{
+	}
+
 	void VKCpuBuffer::Fill(size_t size, const void *data)
 	{
 		void *mappedMemory = nullptr;
@@ -81,4 +86,31 @@ namespace mulberry
 	{
 		vkCmdCopyBuffer(commandBuffer->GetHandle(), buffer.mBuffer, mBuffer, 1, &bufferCopy);
 	}
+
+	VKGpuBuffer::VKGpuBuffer(VkDeviceSize size, VkBufferUsageFlags usage)
+		: VKBuffer(size, usage, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+	{
+	}
+
+	VKGpuBuffer::VKGpuBuffer(const VKCpuBuffer &srcBuffer, VkBufferUsageFlags usage)
+		: VKBuffer(srcBuffer.GetSize(), usage, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+	{
+	}
+
+	void VKGpuBuffer::CopyFrom(class VKCommandBuffer *commandBuffer, VkBufferCopy bufferCopy, const VKCpuBuffer &buffer)
+	{
+	}
+
+	void VKGpuBuffer::CopyFromStagingBuffer(VkDeviceSize bufferSize, VKCpuBuffer &stagingBuffer)
+    {
+        VKContext::GetInstance().GetDevice()->GetGraphicsCommandPool()->SubmitOnce([bufferSize, &stagingBuffer, this](VKCommandBuffer *cmd)
+                                                                                   {
+                                                                                       VkBufferCopy copyRegion{};
+                                                                                       copyRegion.srcOffset = 0;
+                                                                                       copyRegion.dstOffset = 0;
+                                                                                       copyRegion.size = bufferSize;
+
+                                                                                       this->CopyFrom(cmd, copyRegion, stagingBuffer);
+                                                                                   });
+    }
 }

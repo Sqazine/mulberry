@@ -7,6 +7,8 @@
 #include "Vec2.h"
 #include "Math/Mat4.h"
 #include "GLTexture.h"
+#include "GLVertexBuffer.h"
+#include "GLVertexArray.h"
 
 namespace mulberry
 {
@@ -42,7 +44,14 @@ namespace mulberry
         template <typename T>
         void SetUniformArray(std::string_view name, const std::vector<T> &valueArray);
 
-        void SetTexture(std::string_view name,const GLTexture* texture);
+        void SetTexture(std::string_view name, const GLTexture *texture);
+
+        void SetVertexArray(const GLVertexArray *vertexArray);
+        void ResetVertexArray();
+
+        template <typename T>
+        void SetVertexBuffer(std::string_view name, const GLVertexBuffer<T> *vertexBuffer);
+        void ResetVertexBuffer(std::string_view name);
 
         bool AttachShader(const GLShaderModule &shader);
 
@@ -61,6 +70,16 @@ namespace mulberry
         bool IsValidProgram();
         uint32_t mProgramID;
     };
+
+    template <typename T>
+    void GLShaderProgram::SetVertexBuffer(std::string_view name, const GLVertexBuffer<T> *vertexBuffer)
+    {
+        auto slot = GetAttribute(name);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->mVertexBufferID);
+        glEnableVertexAttribArray(slot);
+        vertexBuffer->SetAttribPointer(slot);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
 
 #define SHADER_PROGRAM_SET_VALUE(type)                                              \
     template <>                                                                     \

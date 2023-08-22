@@ -49,11 +49,11 @@ namespace mulberry
 		void BindPipeline(const VkPipeline &pipeline);
 
 		void DrawIndexed(uint32_t indexCount);
+		
 		template <typename T>
 		void BindVertexBuffer(const VKVertexBuffer<T> &vertexBuffer);
 
-		template <typename T>
-		void BindIndexBuffer(const VKIndexBuffer<T> &indexBuffer);
+		void BindIndexBuffer(const VKIndexBuffer &indexBuffer);
 
 		void TransitionImageNewLayout(class VKImage *image, VkImageLayout newLayout);
 
@@ -73,9 +73,8 @@ namespace mulberry
 		vkCmdBindVertexBuffers(mCommandBuffer, 0, 1, &vertexBuffer.GetBuffer(), &offsets);
 	}
 
-	template <typename T>
-	inline void VKCommandBuffer::BindIndexBuffer(const VKIndexBuffer<T> &indexBuffer)
+	inline void VKCommandBuffer::BindIndexBuffer(const VKIndexBuffer &indexBuffer)
 	{
-		vkCmdBindIndexBuffer(mCommandBuffer, indexBuffer.GetBuffer(), 0, indexBuffer.GetDataType());
+		vkCmdBindIndexBuffer(mCommandBuffer, indexBuffer.GetHandle(), 0, indexBuffer.GetDataType());
 	}
 }

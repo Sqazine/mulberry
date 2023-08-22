@@ -3,6 +3,7 @@
 #include <glslang/Public/ShaderLang.h>
 #include <glslang/SPIRV/GlslangToSpv.h>
 #include "Logger.h"
+#include "Graphics/RHI/Shader.h"
 namespace mulberry
 {
 	bool HasStencilComponent(VkFormat format)
@@ -171,7 +172,7 @@ namespace mulberry
 			return {};
 		}
 
-		std::vector<uint32_t> result;		
+		std::vector<uint32_t> result;
 
 		glslang::GlslangToSpv(*program.getIntermediate(stage), result);
 
@@ -195,5 +196,26 @@ namespace mulberry
 		}
 		else
 			return val == 0 ? 1 : val;
+	}
+
+	VkShaderStageFlagBits ToVkShaderType(ShaderType type)
+	{
+		switch (type)
+		{
+		case ShaderType::VERTEX:
+			return VK_SHADER_STAGE_VERTEX_BIT;
+		case ShaderType::FRAGMENT:
+			return VK_SHADER_STAGE_FRAGMENT_BIT;
+		case ShaderType::GEOMETRY:
+			return VK_SHADER_STAGE_GEOMETRY_BIT;
+		case ShaderType::COMPUTE:
+			return VK_SHADER_STAGE_COMPUTE_BIT;
+		case ShaderType::TESSELLATION_CONTROL:
+			return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+		case ShaderType::TESSELLATION_EVAL:
+			return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+		default:
+			return VK_SHADER_STAGE_VERTEX_BIT;
+		}
 	}
 }

@@ -63,6 +63,43 @@ namespace mulberry
         case GraphicsBackend::GL:
             return mGLShaderProgram->SetTexture(name, texture->mGLTexture.get());
             break;
+        default:
+            break;
+        }
+    }
+
+    void ShaderProgram::SetVertexArray(const VertexArray *vertexArray)
+    {
+        switch (mBackend)
+        {
+        case GraphicsBackend::GL:
+            return mGLShaderProgram->SetVertexArray(vertexArray->mGLVertexArray.get());
+            break;
+        default:
+            break;
+        }
+    }
+    void ShaderProgram::ResetVertexArray()
+    {
+        switch (mBackend)
+        {
+        case GraphicsBackend::GL:
+            return mGLShaderProgram->ResetVertexArray();
+            break;
+        default:
+            break;
+        }
+    }
+
+    void ShaderProgram::ResetVertexBuffer(std::string_view name)
+    {
+        switch (mBackend)
+        {
+        case GraphicsBackend::GL:
+            return mGLShaderProgram->ResetVertexBuffer(name);
+            break;
+        default:
+            break;
         }
     }
 

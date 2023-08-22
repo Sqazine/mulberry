@@ -1,6 +1,6 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#include "Graphics/Texture.h"
+#include "Graphics/RHI/Texture.h"
 
 namespace mulberry 
 {

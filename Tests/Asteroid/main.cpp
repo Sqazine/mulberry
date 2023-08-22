@@ -4,14 +4,13 @@
 int main(int argc, char **argv)
 {
 
-     mulberry::App::GetInstance().SetGraphicsBackend(mulberry::GraphicsBackend::GL);
+    mulberry::App::GetInstance().SetGraphicsBackend(mulberry::GraphicsBackend::GL);
     mulberry::App::GetInstance().Init();
 
     mulberry::App::GetInstance().GetWindow()->SetTitle("Asteroid");
-    mulberry::App::GetInstance().GetWindow()->Resize(1024,768);
+    mulberry::App::GetInstance().GetWindow()->Resize(1024, 768);
 
     mulberry::Scene *scene = mulberry::App::GetInstance().CreateScene("Asteroid");
- 
 
     mulberry::Entity *rootEntity = scene->CreateEntity("Ship");
     if (rootEntity)

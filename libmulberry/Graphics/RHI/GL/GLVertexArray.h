@@ -10,9 +10,9 @@ namespace mulberry
     public:
         GLVertexArray();
         ~GLVertexArray();
-        void SetActive(bool isActive);
 
     private:
+        friend class GLShaderProgram;
         uint32_t mVertexArrayID;
     };
 
@@ -24,13 +24,5 @@ namespace mulberry
     inline GLVertexArray::~GLVertexArray()
     {
         glDeleteVertexArrays(1,&mVertexArrayID);
-    }
-
-    inline void GLVertexArray::SetActive(bool isActive)
-    {
-        if (isActive)
-            glBindVertexArray(mVertexArrayID);
-        else
-            glBindVertexArray(0);
     }
 }

@@ -1,8 +1,8 @@
 #pragma once
 #include <memory>
 #include "Math/Vec2.h"
-#include "Graphics/Shader.h"
-#include "Graphics/Texture.h"
+#include "Graphics/RHI/Shader.h"
+#include "Graphics/RHI/Texture.h"
 namespace mulberry
 {
     class RenderMaterial

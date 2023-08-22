@@ -31,13 +31,23 @@ namespace mulberry
         material->GetShaderProgram()->SetUniformValue("modelMat", mat);
         material->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
         material->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
+
         material->SetUniformValue();
-        mSpritePrimitive->Bind(material->GetShaderProgram()->GetAttribute("inPosition"), material->GetShaderProgram()->GetAttribute("inTexcoord"));
+
+        material->GetShaderProgram()->SetVertexArray(mSpritePrimitive->GetVertexArray());
+
+        material->GetShaderProgram()->SetVertexBuffer("inPosition", mSpritePrimitive->GetPositionBuffer());
+        material->GetShaderProgram()->SetVertexBuffer("inTexcoord", mSpritePrimitive->GetTexcoordBuffer());
 
         mRasterPipeline->Render(*mSpritePrimitive, PrimitiveRenderType::TRIANGLE_LIST);
 
-        mSpritePrimitive->UnBind(material->GetShaderProgram()->GetAttribute("inPosition"), material->GetShaderProgram()->GetAttribute("inTexcoord"));
+        material->GetShaderProgram()->ResetVertexBuffer("inTexcoord");
+        material->GetShaderProgram()->ResetVertexBuffer("inPosition");
+
+        material->GetShaderProgram()->ResetVertexArray();
+
         material->ResetUniformValue();
+
         material->GetShaderProgram()->SetActive(false);
     }
 
@@ -50,21 +60,57 @@ namespace mulberry
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<RenderComponent>();
+
+        mGizmoMaterial->GetShaderProgram()->SetActive(true);
+
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", transComp->GetModelMat());
-        mLinePrimitive->Bind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
+        mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
+        mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
+
+        mGizmoMaterial->SetUniformValue();
+
+        mGizmoMaterial->GetShaderProgram()->SetVertexArray(mLinePrimitive->GetVertexArray());
+
+        mGizmoMaterial->GetShaderProgram()->SetVertexBuffer("inPosition", mLinePrimitive->GetPositionBuffer());
+
         mRasterPipeline->Render(*mLinePrimitive, PrimitiveRenderType::LINE_LIST);
-        mLinePrimitive->UnBind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
+
+        mGizmoMaterial->GetShaderProgram()->ResetVertexBuffer("inPosition");
+
+        mGizmoMaterial->ResetUniformValue();
+
+        mGizmoMaterial->GetShaderProgram()->ResetVertexArray();
+
+        mGizmoMaterial->GetShaderProgram()->SetActive(false);
     }
     void SceneRenderer::RenderPoint(const Entity *entity, CameraComponent *camera)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<RenderComponent>();
+
+        mGizmoMaterial->GetShaderProgram()->SetActive(true);
+
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", transComp->GetModelMat());
-        mPointPrimitive->Bind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
+        mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
+        mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
+
+        mGizmoMaterial->SetUniformValue();
+
+        mGizmoMaterial->GetShaderProgram()->SetVertexArray(mPointPrimitive->GetVertexArray());
+
+        mGizmoMaterial->GetShaderProgram()->SetVertexBuffer("inPosition", mPointPrimitive->GetPositionBuffer());
+
         mRasterPipeline->SetPointSize(5);
         mRasterPipeline->Render(*mPointPrimitive, PrimitiveRenderType::POINT_LIST);
         mRasterPipeline->SetPointSize(1);
-        mPointPrimitive->UnBind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
+
+        mGizmoMaterial->GetShaderProgram()->ResetVertexBuffer("inPosition");
+
+        mGizmoMaterial->ResetUniformValue();
+
+        mGizmoMaterial->GetShaderProgram()->ResetVertexArray();
+
+        mGizmoMaterial->GetShaderProgram()->SetActive(false);
     }
     void SceneRenderer::RenderQuad(const Entity *entity, CameraComponent *camera)
     {
@@ -80,9 +126,19 @@ namespace mulberry
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", mat);
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
-        mQuadPrimitive->Bind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
+
+        mGizmoMaterial->SetUniformValue();
+
+        mGizmoMaterial->GetShaderProgram()->SetVertexArray(mQuadPrimitive->GetVertexArray());
+
+        mGizmoMaterial->GetShaderProgram()->SetVertexBuffer("inPosition", mQuadPrimitive->GetPositionBuffer());
+
         mRasterPipeline->Render(*mQuadPrimitive, PrimitiveRenderType::LINE_LIST);
-        mQuadPrimitive->UnBind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
+
+        mGizmoMaterial->GetShaderProgram()->ResetVertexBuffer("inPosition");
+
+        mGizmoMaterial->ResetUniformValue();
+
         mGizmoMaterial->GetShaderProgram()->SetActive(false);
     }
     void SceneRenderer::RenderCircle(const Entity *entity, CameraComponent *camera)
@@ -99,9 +155,19 @@ namespace mulberry
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", mat);
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
-        mCirclePrimitive->Bind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
+
+        mGizmoMaterial->SetUniformValue();
+
+        mGizmoMaterial->GetShaderProgram()->SetVertexArray(mCirclePrimitive->GetVertexArray());
+
+        mGizmoMaterial->GetShaderProgram()->SetVertexBuffer("inPosition", mCirclePrimitive->GetPositionBuffer());
+
         mRasterPipeline->Render(*mCirclePrimitive, PrimitiveRenderType::LINE_LIST);
-        mCirclePrimitive->UnBind(mGizmoMaterial->GetShaderProgram()->GetAttribute("inPosition"));
+
+        mGizmoMaterial->GetShaderProgram()->ResetVertexBuffer("inPosition");
+
+        mGizmoMaterial->ResetUniformValue();
+
         mGizmoMaterial->GetShaderProgram()->SetActive(false);
     }
 

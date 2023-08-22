@@ -30,13 +30,12 @@ namespace mulberry
     Primitive::Primitive(const std::vector<Vec2> &pos, const std::vector<Vec2> &texcoord, const std::vector<uint32_t> &indices)
         : mPosition(pos), mTexcoord(texcoord), mIndices(indices)
     {
-        mVertexArray = std::make_unique<GLVertexArray>();
-        mVertexArray->SetActive(true);
+        mVertexArray = std::make_unique<VertexArray>();
 
-        mPositionBuffer = std::make_unique<GLVertexBuffer<Vec2>>(mPosition);
-        mTexcoordBuffer = std::make_unique<GLVertexBuffer<Vec2>>(mTexcoord);
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>(mPosition);
+        mTexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(mTexcoord);
 
-        mIndexBuffer = std::make_unique<GLIndexBuffer>(mIndices);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
 
     Primitive::Primitive(const Primitive &other)
@@ -52,10 +51,10 @@ namespace mulberry
         mTexcoord = other.mTexcoord;
         mIndices = other.mIndices;
 
-        mVertexArray = std::make_unique<GLVertexArray>();
-        mPositionBuffer = std::make_unique<GLVertexBuffer<Vec2>>();
-        mTexcoordBuffer = std::make_unique<GLVertexBuffer<Vec2>>();
-        mIndexBuffer = std::make_unique<GLIndexBuffer>();
+        mVertexArray = std::make_unique<VertexArray>();
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>();
+        mTexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>();
+        mIndexBuffer = std::make_unique<IndexBuffer>();
 
         UpdateBuffers();
         return *this;
@@ -80,19 +79,19 @@ namespace mulberry
         return mIndices;
     }
 
-    const GLVertexArray *Primitive::GetVertexArray() const
+    const VertexArray *Primitive::GetVertexArray() const
     {
         return mVertexArray.get();
     }
-    const GLVertexBuffer<Vec2> *Primitive::GetPositionBuffer() const
+    const VertexBuffer<Vec2> *Primitive::GetPositionBuffer() const
     {
         return mPositionBuffer.get();
     }
-    const GLVertexBuffer<Vec2> *Primitive::GetTexcoordBuffer() const
+    const VertexBuffer<Vec2> *Primitive::GetTexcoordBuffer() const
     {
         return mTexcoordBuffer.get();
     }
-    const GLIndexBuffer *Primitive::GetIndexBuffer() const
+    const IndexBuffer *Primitive::GetIndexBuffer() const
     {
         return mIndexBuffer.get();
     }
@@ -109,8 +108,7 @@ namespace mulberry
 
     void Primitive::CreateSprite()
     {
-        mVertexArray = std::make_unique<GLVertexArray>();
-        mVertexArray->SetActive(true);
+        mVertexArray = std::make_unique<VertexArray>();
 
         mPosition =
             {
@@ -126,20 +124,19 @@ namespace mulberry
                 Vec2(1.0f, 0.0f),
                 Vec2(1.0f, 1.0f)};
 
-        mPositionBuffer = std::make_unique<GLVertexBuffer<Vec2>>(mPosition);
-        mTexcoordBuffer = std::make_unique<GLVertexBuffer<Vec2>>(mTexcoord);
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>(mPosition);
+        mTexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(mTexcoord);
 
         mIndices =
             {
                 0, 1, 2,
                 0, 2, 3};
-        mIndexBuffer = std::make_unique<GLIndexBuffer>(mIndices);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
 
     void Primitive::CreateQuad()
     {
-        mVertexArray = std::make_unique<GLVertexArray>();
-        mVertexArray->SetActive(true);
+        mVertexArray = std::make_unique<VertexArray>();
 
         mPosition =
             {
@@ -151,7 +148,7 @@ namespace mulberry
                 Vec2(0.0f, 1.0f),
             };
 
-        mPositionBuffer = std::make_unique<GLVertexBuffer<Vec2>>(mPosition);
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>(mPosition);
 
         mIndices =
             {
@@ -160,13 +157,12 @@ namespace mulberry
                 2, 3,
                 3, 0,
                 4, 5};
-        mIndexBuffer = std::make_unique<GLIndexBuffer>(mIndices);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
 
     void Primitive::CreateCircle()
     {
-        mVertexArray = std::make_unique<GLVertexArray>();
-        mVertexArray->SetActive(true);
+        mVertexArray = std::make_unique<VertexArray>();
 
         for (float i = 0.0f; i <= 360.0f; i += 12.0f)
         {
@@ -181,54 +177,36 @@ namespace mulberry
             mIndices.emplace_back(i + 1);
         }
 
-        mPositionBuffer = std::make_unique<GLVertexBuffer<Vec2>>(mPosition);
-        mIndexBuffer = std::make_unique<GLIndexBuffer>(mIndices);
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>(mPosition);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
+
     void Primitive::CreateLine()
     {
-        mVertexArray = std::make_unique<GLVertexArray>();
-        mVertexArray->SetActive(true);
+        mVertexArray = std::make_unique<VertexArray>();
 
         mPosition = {Vec2(-1.0f, 0.0f), Vec2(1.0f, 0.0f)};
-        mPositionBuffer = std::make_unique<GLVertexBuffer<Vec2>>(mPosition);
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>(mPosition);
 
         mIndices = {
             0,
             1,
         };
-        mIndexBuffer = std::make_unique<GLIndexBuffer>(mIndices);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
+
     void Primitive::CreatePoint()
     {
-        mVertexArray = std::make_unique<GLVertexArray>();
-        mVertexArray->SetActive(true);
+        mVertexArray = std::make_unique<VertexArray>();
 
         mPosition = {Vec2(0.0f, 0.0f)};
 
         mTexcoord = {Vec2(0.0f, 0.0f)};
 
-        mPositionBuffer = std::make_unique<GLVertexBuffer<Vec2>>(mPosition);
-        mTexcoordBuffer = std::make_unique<GLVertexBuffer<Vec2>>(mTexcoord);
+        mPositionBuffer = std::make_unique<VertexBuffer<Vec2>>(mPosition);
+        mTexcoordBuffer = std::make_unique<VertexBuffer<Vec2>>(mTexcoord);
 
         mIndices = {0};
-        mIndexBuffer = std::make_unique<GLIndexBuffer>(mIndices);
-    }
-
-    void Primitive::Bind(int32_t position, int32_t texcoord)
-    {
-        mVertexArray->SetActive(true);
-        if (position >= 0)
-            mPositionBuffer->BindTo(position);
-        if (texcoord >= 0)
-            mTexcoordBuffer->BindTo(texcoord);
-    }
-    void Primitive::UnBind(int32_t position, int32_t texcoord)
-    {
-        if (position >= 0)
-            mPositionBuffer->UnBindFrom(position);
-        if (texcoord >= 0)
-            mTexcoordBuffer->UnBindFrom(texcoord);
-
-        mVertexArray->SetActive(false);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
 }

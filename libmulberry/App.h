@@ -4,11 +4,11 @@
 #include <memory>
 #include <vector>
 #include <SDL2/SDL.h>
-#include "Graphics/GraphicsContext.h"
+#include "Graphics/RHI/GraphicsContext.h"
 #include "Graphics/SceneRenderer.h"
 #include "Vec2.h"
 #include "Scene.h"
-#include "Timer.h"
+#include "Platform/Timer.h"
 #include "Platform/Window.h"
 namespace mulberry
 {
@@ -46,8 +46,6 @@ namespace mulberry
 		void RenderGizmo();
 		void RenderUI();
 		void CleanUp();
-
-		GraphicsConfig mGraphicsConfig;
 
 		std::unique_ptr<Window> mWindow;
 

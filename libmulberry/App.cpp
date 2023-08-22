@@ -2,6 +2,7 @@
 #include "SceneRenderer.h"
 #include "GraphicsContext.h"
 #include "Logger.h"
+#include "AppGlobalConfig.h"
 namespace mulberry
 {
 	void App::Run()
@@ -60,12 +61,12 @@ namespace mulberry
 
 	void App::SetGraphicsBackend(GraphicsBackend graphicsBackend)
 	{
-		mGraphicsConfig.backend = graphicsBackend;
+		AppGlobalConfig::gGraphicsConfig.backend = graphicsBackend;
 	}
 
 	const GraphicsConfig &App::GetGraphicsConfig() const
 	{
-		return mGraphicsConfig;
+		return AppGlobalConfig::gGraphicsConfig;
 	}
 
 	Window *App::GetWindow() const

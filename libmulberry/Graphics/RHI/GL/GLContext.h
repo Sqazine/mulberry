@@ -6,7 +6,7 @@
 #include <mutex>
 #include "Singleton.h"
 #include "Vec2.h"
-#include "Graphics/GraphicsContext.h"
+#include "Graphics/RHI/GraphicsContext.h"
 
 namespace mulberry
 {

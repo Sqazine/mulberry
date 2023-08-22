@@ -2,7 +2,7 @@
 #include <GL/glcorearb.h>
 #include <SDL2/SDL.h>
 #include "GLUniform.h"
-#include "Graphics/Shader.h"
+#include "Graphics/RHI/Shader.h"
 #include "Core/Logger.h"
 namespace mulberry
 {
@@ -40,7 +40,7 @@ namespace mulberry
 	}
 
 	GLShaderProgram::GLShaderProgram()
-	:mTextureBindingIdx(0)
+		: mTextureBindingIdx(0)
 	{
 		mProgramID = glCreateProgram();
 	}
@@ -57,13 +57,27 @@ namespace mulberry
 			glUseProgram(0);
 	}
 
-	void GLShaderProgram::SetTexture(std::string_view name,const GLTexture* texture)
-     {
+	void GLShaderProgram::SetTexture(std::string_view name, const GLTexture *texture)
+	{
 		glUniform1i(GetUniform(name), mTextureBindingIdx);
 		glActiveTexture(GL_TEXTURE0 + mTextureBindingIdx);
 		mTextureBindingIdx++;
-		glBindTexture(GL_TEXTURE_2D,texture->GetHandle());
-     }
+		glBindTexture(GL_TEXTURE_2D, texture->GetHandle());
+	}
+
+	void GLShaderProgram::SetVertexArray(const GLVertexArray *vertexArray)
+	{
+		glBindVertexArray(vertexArray->mVertexArrayID);
+	}
+	void GLShaderProgram::ResetVertexArray()
+	{
+		glBindVertexArray(0);
+	}
+
+	void GLShaderProgram::ResetVertexBuffer(std::string_view name)
+	{
+		glDisableVertexAttribArray(GetAttribute(name));
+	}
 
 	bool GLShaderProgram::AttachShader(const GLShaderModule &shader)
 	{

@@ -1,5 +1,5 @@
 #include "Font.h"
-#include <spdlog/spdlog.h>
+#include "Core/Logger.h"
 namespace mulberry
 {
     Font::Font()
@@ -60,7 +60,7 @@ namespace mulberry
             }
         }
         else
-            spdlog::error("Points size %d is unsupported", pointSize);
+            MULBERRY_CORE_ERROR("Points size %d is unsupported", pointSize);
         return std::move(texture);
     }
 }

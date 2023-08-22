@@ -3,6 +3,8 @@
 #include <memory>
 #include <vector>
 #include "GraphicsContext.h"
+#include "VertexArray.h"
+#include "VertexBuffer.h"
 #include "GL/GLShader.h"
 
 namespace mulberry
@@ -45,7 +47,14 @@ namespace mulberry
         template <typename T>
         void SetUniformArray(std::string_view name, const std::vector<T> &valueArray);
 
-            void SetTexture(std::string_view name,const Texture* texture);
+        void SetTexture(std::string_view name, const Texture *texture);
+
+        void SetVertexArray(const VertexArray *vertexArray);
+        void ResetVertexArray();
+
+        template <typename T>
+        void SetVertexBuffer(std::string_view name, const VertexBuffer<T> *vertexBuffer);
+        void ResetVertexBuffer(std::string_view name);
 
         bool AttachShader(const ShaderModule &shader);
 
@@ -72,10 +81,22 @@ namespace mulberry
     template <typename T>
     inline void ShaderProgram::SetUniformArray(std::string_view name, const std::vector<T> &valueArray)
     {
-        switch (App::GetInstance().GetGraphicsConfig())
+        switch (mBackend)
         {
         case GraphicsBackend::GL:
-            mGLShaderProgram->SetUniformValue<T>(name, valueArray);
+            mGLShaderProgram->SetUniformArray<T>(name, valueArray);
+        default:
+            break;
+        }
+    }
+
+    template <typename T>
+    inline void ShaderProgram::SetVertexBuffer(std::string_view name, const VertexBuffer<T> *vertexBuffer)
+    {
+        switch (mBackend)
+        {
+        case GraphicsBackend::GL:
+            mGLShaderProgram->SetVertexBuffer<T>(name, vertexBuffer->mGLVertexBuffer.get());
         default:
             break;
         }

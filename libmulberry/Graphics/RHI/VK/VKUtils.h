@@ -3,7 +3,6 @@
 #include <vulkan/vulkan.h>
 #include <iostream>
 #include <cassert>
-#include "Graphics/Shader.h"
 #include "VKQueue.h"
 
 namespace mulberry
@@ -87,5 +86,5 @@ namespace mulberry
 
 	uint32_t GetBiggerTwoPower(uint32_t val);
 
-	VkShaderStageFlagBits ToVkShaderType(ShaderType type);
+	VkShaderStageFlagBits ToVkShaderType(enum class ShaderType type);
 }

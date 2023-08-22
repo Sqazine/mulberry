@@ -13,7 +13,6 @@ namespace mulberry
 
         void Wait();
         void Reset();
-
     private:
         VkFence mHandle;
     };

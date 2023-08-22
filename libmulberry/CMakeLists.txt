@@ -9,8 +9,9 @@ file(GLOB PLATFORM "Platform/*.h" "Platform/*.cpp")
 file(GLOB SCENE "Scene/*.h" "Scene/*.cpp")
 file(GLOB COMPONENT "Scene/Component/*.h" "Scene/Component/*.cpp")
 file(GLOB GRAPHICS "Graphics/*.h" "Graphics/*.cpp")
-file(GLOB GL "Graphics/GL/*.h" "Graphics/GL/*.cpp")
-file(GLOB VK "Graphics/VK/*.h" "Graphics/VK/*.cpp")
+file(GLOB RHI "Graphics/RHI/*.h" "Graphics/RHI/*.cpp")
+file(GLOB GL "Graphics/RHI/GL/*.h" "Graphics/RHI/GL/*.cpp")
+file(GLOB VK "Graphics/RHI/VK/*.h" "Graphics/RHI/VK/*.cpp")
 
 source_group("" FILES ${ROOT})
 source_group("Core" FILES ${CORE})
@@ -19,8 +20,9 @@ source_group("Platform" FILES ${PLATFORM})
 source_group("Scene" FILES ${SCENE})
 source_group("Scene/Component" FILES ${COMPONENT})
 source_group("Graphics" FILES ${GRAPHICS})
-source_group("Graphics/GL" FILES ${GL})
-source_group("Graphics/VK" FILES ${VK})
+source_group("Graphics/RHI" FILES ${RHI})
+source_group("Graphics/RHI/GL" FILES ${GL})
+source_group("Graphics/RHI/VK" FILES ${VK})
 
 find_package(glslang CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
@@ -28,13 +30,14 @@ find_package(SDL2_ttf CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
-add_library(libmulberry STATIC ${ROOT} ${CORE} ${MATH} ${PLATFORM} ${SCENE} ${COMPONENT} ${GRAPHICS} ${GL} ${VK})
+add_library(libmulberry STATIC ${ROOT} ${CORE} ${MATH} ${PLATFORM} ${SCENE} ${COMPONENT} ${GRAPHICS} ${RHI} ${GL} ${VK})
 target_include_directories(libmulberry PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} 
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Core
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Math
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Graphics
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/Graphics/GL
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/Graphics/VK
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/Graphics/RHI/GL
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/Graphics/RHI/VK
+                                          ${CMAKE_CURRENT_SOURCE_DIR}/Graphics/RHI
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Scene/Component
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Scene
                                           ${VULKAN_ROOT}/Include)

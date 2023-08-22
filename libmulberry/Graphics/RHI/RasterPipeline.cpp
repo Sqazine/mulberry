@@ -15,6 +15,7 @@ namespace mulberry
             break;
         }
     }
+    
     RasterPipeline::RasterPipeline(const RasterPipelineConfig &config)
     {
         switch (App::GetInstance().GetGraphicsConfig().backend)
@@ -27,6 +28,7 @@ namespace mulberry
             break;
         }
     }
+
     RasterPipeline::~RasterPipeline()
     {
     }
@@ -56,6 +58,7 @@ namespace mulberry
             break;
         }
     }
+
     Viewport RasterPipeline::GetViewport()
     {
         switch (App::GetInstance().GetGraphicsConfig().backend)
@@ -67,6 +70,7 @@ namespace mulberry
             break;
         }
     }
+
     void RasterPipeline::SetViewport(const Viewport &info)
     {
         switch (App::GetInstance().GetGraphicsConfig().backend)
@@ -79,6 +83,7 @@ namespace mulberry
             break;
         }
     }
+
     void RasterPipeline::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
     {
         SetViewport(Viewport{
@@ -93,19 +98,20 @@ namespace mulberry
         switch (App::GetInstance().GetGraphicsConfig().backend)
         {
         case GraphicsBackend::GL:
-            mGLRasterPipeline->Render(primitive.GetIndexBuffer(), mode);
+            mGLRasterPipeline->Render(primitive.GetIndexBuffer()->mGLIndexBuffer.get(), mode);
             break;
         default:
             //TODO...
             break;
         }
     }
+
     void RasterPipeline::RenderInstanced(const Primitive &primitive, PrimitiveRenderType mode, uint32_t instanceCount)
     {
         switch (App::GetInstance().GetGraphicsConfig().backend)
         {
         case GraphicsBackend::GL:
-            mGLRasterPipeline->RenderInstanced(primitive.GetIndexBuffer(), mode, instanceCount);
+            mGLRasterPipeline->RenderInstanced(primitive.GetIndexBuffer()->mGLIndexBuffer.get(), mode, instanceCount);
             break;
         default:
             //TODO...
@@ -125,6 +131,7 @@ namespace mulberry
             break;
         }
     }
+
     uint32_t RasterPipeline::GetPointSize() const
     {
         switch (App::GetInstance().GetGraphicsConfig().backend)
@@ -148,6 +155,7 @@ namespace mulberry
             break;
         }
     }
+
     const CullType &RasterPipeline::GetCull() const
     {
         switch (App::GetInstance().GetGraphicsConfig().backend)
@@ -171,6 +179,7 @@ namespace mulberry
             break;
         }
     }
+
     const DepthTestType &RasterPipeline::GetDepthTest() const
     {
         switch (App::GetInstance().GetGraphicsConfig().backend)
@@ -194,6 +203,7 @@ namespace mulberry
             break;
         }
     }
+
     const DepthMask &RasterPipeline::GetDepthMask() const
     {
         switch (App::GetInstance().GetGraphicsConfig().backend)

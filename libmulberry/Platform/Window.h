@@ -5,8 +5,8 @@
 #include <SDL2/SDL_vulkan.h>
 #include "Vec2.h"
 #include "Logger.h"
-#include "Graphics/VK/VKAdapter.h"
-#include "Graphics/RasterPipeline.h"
+#include "Graphics/RHI/VK/VKAdapter.h"
+#include "Graphics/RHI/RasterPipeline.h"
 
 namespace mulberry
 {
