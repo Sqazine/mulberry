@@ -211,8 +211,7 @@ namespace mulberry
 
             mRasterPipeline->SetDepthTest(DepthTestType::NONE);
 
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            mRasterPipeline->SetBlendState(true,BlendFunc::SRC_ALPHA,BlendFunc::ONE_MINUS_SRC_ALPHA);
 
             // render sprite
             for (const auto &entity : entitiesWithSpriteComp)

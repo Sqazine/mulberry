@@ -100,4 +100,47 @@ namespace mulberry
         }
         return GL_RGBA;
     }
+
+    uint32_t ToGLBlendFunc(BlendFunc mode)
+    {
+        switch (mode)
+        {
+        case BlendFunc::ZERO:
+            return GL_ZERO;
+        case BlendFunc::ONE:
+            return GL_ONE;
+        case BlendFunc::SRC_COLOR:
+            return GL_SRC_COLOR;
+        case BlendFunc::ONE_MINUS_SRC_COLOR:
+            return GL_ONE_MINUS_SRC_COLOR;
+        case BlendFunc::SRC_ALPHA:
+            return GL_SRC_ALPHA;
+        case BlendFunc::ONE_MINUS_SRC_ALPHA:
+            return GL_ONE_MINUS_SRC_ALPHA;
+        case BlendFunc::DST_ALPHA:
+            return GL_DST_ALPHA;
+        case BlendFunc::ONE_MINUS_DST_ALPHA:
+            return GL_ONE_MINUS_DST_ALPHA;
+        case BlendFunc::CONSTANT_COLOR:
+            return GL_CONSTANT_COLOR;
+        case BlendFunc::ONE_MINUS_CONSTANT_COLOR:
+            return GL_ONE_MINUS_CONSTANT_COLOR;
+        case BlendFunc::CONSTANT_ALPHA:
+            return GL_CONSTANT_ALPHA;
+        case BlendFunc::ONE_MINUS_CONSTANT_ALPHA:
+            return GL_ONE_MINUS_CONSTANT_ALPHA;
+        case BlendFunc::SRC_ALPHA_SATURATE:
+            return GL_SRC_ALPHA_SATURATE;
+        case BlendFunc::SRC1_COLOR:
+            return GL_SRC1_COLOR;
+        case BlendFunc::ONE_MINUS_SRC1_COLOR:
+            return GL_ONE_MINUS_SRC1_COLOR;
+        case BlendFunc::SRC1_ALPHA:
+            return GL_SRC1_ALPHA;
+        case BlendFunc::ONE_MINUS_SRC1_ALPHA:
+            return GL_ONE_MINUS_SRC1_ALPHA;
+        default:
+            return GL_ZERO;
+        }
+    }
 }

@@ -92,41 +92,36 @@ namespace mulberry
     void GLRasterPipeline::SetDepthTest(DepthTestType depthTest)
     {
         mConfig.depthTestType = depthTest;
+
+        if (mConfig.depthTestType == DepthTestType::NONE)
+            glDisable(GL_DEPTH_TEST);
+        else
+            glEnable(GL_DEPTH_TEST);
+
         switch (mConfig.depthTestType)
         {
-        case DepthTestType::NONE:
-            glDisable(GL_DEPTH_TEST);
-            break;
         case DepthTestType::ALWAYS:
-            glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_ALWAYS);
             break;
         case DepthTestType::NEVER:
-            glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_NEVER);
             break;
         case DepthTestType::LESS:
-            glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
             break;
         case DepthTestType::EQUAL:
-            glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_EQUAL);
             break;
         case DepthTestType::LESS_EQUAL:
-            glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LEQUAL);
             break;
         case DepthTestType::GREATER:
-            glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_GREATER);
             break;
         case DepthTestType::NOT_EQUAL:
-            glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_NOTEQUAL);
             break;
         case DepthTestType::GREATER_EQUAL:
-            glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_GEQUAL);
             break;
         default:
@@ -149,8 +144,6 @@ namespace mulberry
             glDepthMask(GL_TRUE);
             break;
         case DepthMask::CLOSE:
-            glDepthMask(GL_FALSE);
-            break;
         default:
             glDepthMask(GL_FALSE);
             break;
@@ -160,6 +153,42 @@ namespace mulberry
     const DepthMask &GLRasterPipeline::GetDepthMask() const
     {
         return mConfig.depthMask;
+    }
+
+    void GLRasterPipeline::SetStencilMask(StencilMask stencilMask)
+    {
+        mConfig.stencilMask = stencilMask;
+        switch (mConfig.stencilMask)
+        {
+        case StencilMask::OPEN:
+
+            glStencilMask(GL_TRUE);
+            break;
+        case StencilMask::CLOSE:
+        default:
+            glStencilMask(GL_FALSE);
+            break;
+        }
+    }
+    const StencilMask &GLRasterPipeline::GetStencilMask() const
+    {
+        return mConfig.stencilMask;
+    }
+
+    void GLRasterPipeline::SetBlendState(bool isOpen, BlendFunc srcFunc, BlendFunc dstFunc)
+    {
+        mConfig.blendState = {isOpen, srcFunc, dstFunc};
+
+        if (isOpen)
+            glEnable(GL_BLEND);
+        else
+            glDisable(GL_BLEND);
+
+        glBlendFunc(ToGLBlendFunc(srcFunc), ToGLBlendFunc(dstFunc));
+    }
+    std::tuple<bool, BlendFunc, BlendFunc> GLRasterPipeline::GetBlendState() const
+    {
+        return mConfig.blendState;
     }
 
     void GLRasterPipeline::Render(const GLIndexBuffer *ibo, PrimitiveRenderType mode)

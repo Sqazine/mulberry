@@ -1,30 +1,31 @@
 #include "RasterPipeline.h"
 #include "App.h"
 #include "GL/GLRasterPipeline.h"
+#include "VK/VKRasterPipeline.h"
 namespace mulberry
 {
     RasterPipeline::RasterPipeline()
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline = std::make_unique<GLRasterPipeline>();
             break;
         default:
-            //TODO...
+            mVKRasterPipeline = std::make_unique<VKRasterPipeline>();
             break;
         }
     }
-    
+
     RasterPipeline::RasterPipeline(const RasterPipelineConfig &config)
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline = std::make_unique<GLRasterPipeline>(config);
             break;
         default:
-            //TODO...
+            mVKRasterPipeline = std::make_unique<VKRasterPipeline>(config);
             break;
         }
     }
@@ -35,51 +36,51 @@ namespace mulberry
 
     void RasterPipeline::SetBufferClearColor(const Color &color)
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline->SetBufferClearColor(color);
             break;
         default:
-            //TODO...
+            mVKRasterPipeline->SetBufferClearColor(color);
             break;
         }
     }
 
     void RasterPipeline::ClearColorBuffer()
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline->ClearColorBuffer();
             break;
         default:
-            //TODO...
+            mVKRasterPipeline->ClearColorBuffer();
             break;
         }
     }
 
     Viewport RasterPipeline::GetViewport()
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             return mGLRasterPipeline->GetViewport();
         default:
-            //TODO...
+            return mVKRasterPipeline->GetViewport();
             break;
         }
     }
 
     void RasterPipeline::SetViewport(const Viewport &info)
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline->SetViewport(info);
             break;
         default:
-            //TODO...
+            mGLRasterPipeline->SetViewport(info);
             break;
         }
     }
@@ -95,125 +96,169 @@ namespace mulberry
 
     void RasterPipeline::Render(const Primitive &primitive, PrimitiveRenderType mode)
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline->Render(primitive.GetIndexBuffer()->mGLIndexBuffer.get(), mode);
             break;
         default:
-            //TODO...
+            mVKRasterPipeline->Render(primitive.GetIndexBuffer()->mVKIndexBuffer.get(), mode);
             break;
         }
     }
 
     void RasterPipeline::RenderInstanced(const Primitive &primitive, PrimitiveRenderType mode, uint32_t instanceCount)
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline->RenderInstanced(primitive.GetIndexBuffer()->mGLIndexBuffer.get(), mode, instanceCount);
             break;
         default:
-            //TODO...
+            mVKRasterPipeline->RenderInstanced(primitive.GetIndexBuffer()->mVKIndexBuffer.get(), mode, instanceCount);
             break;
         }
     }
 
     void RasterPipeline::SetPointSize(uint32_t size)
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline->SetPointSize(size);
             break;
         default:
-            //TODO...
+            mVKRasterPipeline->SetPointSize(size);
             break;
         }
     }
 
     uint32_t RasterPipeline::GetPointSize() const
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             return mGLRasterPipeline->GetPointSize();
         default:
-            //TODO...
-            break;
+            return mVKRasterPipeline->GetPointSize();
         }
     }
 
     void RasterPipeline::SetCull(CullType cullType)
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline->SetCull(cullType);
+            break;
         default:
-            //TODO...
+            mVKRasterPipeline->SetCull(cullType);
             break;
         }
     }
 
     const CullType &RasterPipeline::GetCull() const
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             return mGLRasterPipeline->GetCullType();
         default:
-            //TODO...
-            break;
+            return mVKRasterPipeline->GetCullType();
         }
     }
 
     void RasterPipeline::SetDepthTest(DepthTestType depthTest)
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline->SetDepthTest(depthTest);
+            break;
         default:
-            //TODO...
+            mVKRasterPipeline->SetDepthTest(depthTest);
             break;
         }
     }
 
     const DepthTestType &RasterPipeline::GetDepthTest() const
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             return mGLRasterPipeline->GetDepthTest();
         default:
-            //TODO...
-            break;
+            return mVKRasterPipeline->GetDepthTest();
         }
     }
 
     void RasterPipeline::SetDepthMask(DepthMask depthMask)
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline->SetDepthMask(depthMask);
+            break;
         default:
-            //TODO...
+            mVKRasterPipeline->SetDepthMask(depthMask);
             break;
         }
     }
 
     const DepthMask &RasterPipeline::GetDepthMask() const
     {
-        switch (App::GetInstance().GetGraphicsConfig().backend)
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             return mGLRasterPipeline->GetDepthMask();
         default:
-            //TODO...
-            break;
+            return mVKRasterPipeline->GetDepthMask();
         }
     }
 
+    void RasterPipeline::SetStencilMask(StencilMask stencilMask)
+    {
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        {
+        case GraphicsBackend::GL:
+            mGLRasterPipeline->SetStencilMask(stencilMask);
+            break;
+        default:
+            mVKRasterPipeline->SetStencilMask(stencilMask);
+            break;
+        }
+    }
+    const StencilMask &RasterPipeline::GetStencilMask() const
+    {
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        {
+        case GraphicsBackend::GL:
+            return mGLRasterPipeline->GetStencilMask();
+        default:
+            return mVKRasterPipeline->GetStencilMask();
+        }
+    }
+
+    void RasterPipeline::SetBlendState(bool isOpen, BlendFunc srcFunc, BlendFunc dstFunc)
+    {
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        {
+        case GraphicsBackend::GL:
+            mGLRasterPipeline->SetBlendState(isOpen, srcFunc, dstFunc);
+            break;
+        default:
+            mVKRasterPipeline->SetBlendState(isOpen, srcFunc, dstFunc);
+            break;
+        }
+    }
+    std::tuple<bool, BlendFunc, BlendFunc> RasterPipeline::GetBlendState() const
+    {
+        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        {
+        case GraphicsBackend::GL:
+            return mGLRasterPipeline->GetBlendState();
+        default:
+            return mVKRasterPipeline->GetBlendState();
+        }
+    }
 }

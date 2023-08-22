@@ -31,6 +31,7 @@ namespace mulberry
         friend class ShaderProgram;
 
         std::unique_ptr<class GLShaderModule> mGLShaderModule;
+        std::unique_ptr<class VKShaderModule> mVKShaderModule;
     };
 
     class ShaderProgram

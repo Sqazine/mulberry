@@ -9,6 +9,7 @@
 namespace mulberry
 {
 	VKShaderModule::VKShaderModule(ShaderType type, std::string_view content)
+		: mType(type)
 	{
 		auto nativeVkShaderType = ToVkShaderType(type);
 
@@ -45,5 +46,10 @@ namespace mulberry
 	const VkShaderModule &VKShaderModule::GetHandle() const
 	{
 		return mShaderModule;
+	}
+
+	const ShaderType &VKShaderModule::Type() const
+	{
+		return mType;
 	}
 }

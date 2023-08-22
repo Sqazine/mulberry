@@ -43,6 +43,12 @@ namespace mulberry
         CLOSE,
     };
 
+    enum class StencilMask
+    {
+        OPEN,
+        CLOSE,
+    };
+
     enum class BlendFunc
     {
         ZERO,
@@ -53,7 +59,7 @@ namespace mulberry
 
         DST_COLOR,
         ONE_MINUS_DST_COLOR,
-        
+
         SRC_ALPHA,
         ONE_MINUS_SRC_ALPHA,
 
@@ -70,7 +76,7 @@ namespace mulberry
 
         SRC1_COLOR,
         ONE_MINUS_SRC1_COLOR,
-       
+
         SRC1_ALPHA,
         ONE_MINUS_SRC1_ALPHA
     };
@@ -87,6 +93,8 @@ namespace mulberry
         CullType cullType;
         DepthTestType depthTestType;
         DepthMask depthMask;
+        StencilMask stencilMask;
+        std::tuple<bool, BlendFunc, BlendFunc> blendState;
         Color clearColor;
         uint32_t pointSize;
     };
@@ -114,12 +122,19 @@ namespace mulberry
         const DepthTestType &GetDepthTest() const;
 
         void SetDepthMask(DepthMask depthMask);
-        const DepthMask& GetDepthMask() const;
+        const DepthMask &GetDepthMask() const;
+
+        void SetStencilMask(StencilMask stencilMask);
+        const StencilMask &GetStencilMask() const;
+
+        void SetBlendState(bool isOpen, BlendFunc srcFunc=BlendFunc::SRC_ALPHA, BlendFunc dstFunc=BlendFunc::ONE_MINUS_SRC_ALPHA);
+        std::tuple<bool, BlendFunc, BlendFunc> GetBlendState() const;
 
         void Render(const Primitive &primitive, PrimitiveRenderType mode);
         void RenderInstanced(const Primitive &primitive, PrimitiveRenderType mode, uint32_t instanceCount);
 
     private:
         std::unique_ptr<class GLRasterPipeline> mGLRasterPipeline;
+        std::unique_ptr<class VKRasterPipeline> mVKRasterPipeline;
     };
 }

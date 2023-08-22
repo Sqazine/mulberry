@@ -18,21 +18,27 @@ namespace mulberry
 
 		void SetBufferClearColor(const Color &color);
 		void ClearColorBuffer();
-		
+
 		Viewport GetViewport() const;
 		void SetViewport(const Viewport &info);
-		
+
 		void SetPointSize(uint32_t size);
 		uint32_t GetPointSize() const;
 
 		void SetCull(CullType cullType);
-		const CullType& GetCullType() const;
+		const CullType &GetCullType() const;
 
 		void SetDepthTest(DepthTestType depthTest);
-        const DepthTestType& GetDepthTest() const;
+		const DepthTestType &GetDepthTest() const;
 
 		void SetDepthMask(DepthMask depthMask);
-        const DepthMask& GetDepthMask() const;
+		const DepthMask &GetDepthMask() const;
+
+		void SetStencilMask(StencilMask stencilMask);
+        const StencilMask &GetStencilMask() const;
+
+		void SetBlendState(bool isOpen, BlendFunc srcFunc, BlendFunc dstFunc);
+		std::tuple<bool, BlendFunc, BlendFunc> GetBlendState() const;
 
 		void Render(const GLIndexBuffer *ibo, PrimitiveRenderType mode);
 		void RenderInstanced(const GLIndexBuffer *ibo, PrimitiveRenderType mode, uint32_t instanceCount);

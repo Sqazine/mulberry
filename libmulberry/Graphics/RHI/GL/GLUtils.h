@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "Graphics/RHI/RasterPipeline.h"
 namespace mulberry
 {
      enum class ShaderType;
@@ -14,4 +15,6 @@ namespace mulberry
      uint32_t ToGLWarpMode(WrapMode mode);
      uint32_t ToGLFilterMode(FilterMode mode);
      uint32_t ToGLFormat(Format mode);
+
+     uint32_t ToGLBlendFunc(BlendFunc mode);
 }
