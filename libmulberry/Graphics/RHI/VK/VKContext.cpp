@@ -11,6 +11,11 @@ namespace mulberry
 	void VKContext::Init()
 	{
 		mAdapter = new VKAdapter();
+
+#ifdef _DEBUG
+		mAdapter->PrintInstanceInfo();
+		mAdapter->PrintPhysicalDeviceSpecs();
+#endif
 		mDevice = mAdapter->CreateDevice();
 		mSwapChain = new VKSwapChain();
 	}

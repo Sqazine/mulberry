@@ -87,4 +87,6 @@ namespace mulberry
 	uint32_t GetBiggerTwoPower(uint32_t val);
 
 	VkShaderStageFlagBits ToVkShaderType(enum class ShaderType type);
+
+	std::string ToVKShaderSourceCode(std::string_view src);
 }

@@ -166,6 +166,7 @@ namespace mulberry
 	VKAdapter::VKAdapter()
 	{
 		CheckInstanceValidationLayerSupport();
+		CheckInstanceExtensionsSupport();
 		mRequiredInstanceExtensions = App::GetInstance().GetWindow()->GetVulkanRequiredExtensions();
 
 #ifdef _DEBUG
@@ -213,8 +214,9 @@ namespace mulberry
 		VK_CHECK(CreateDebugUtilsMessengerEXT(mInstanceHandle, &debugCreateInfo, nullptr, &mDebugMessengerHandle))
 #endif
 
-	mSurface=std::make_unique<VKSurface>();
+		mSurface = std::make_unique<VKSurface>(mInstanceHandle);
 
+		EnumPhysicalDeviceSpecs();
 	}
 	VKAdapter::~VKAdapter()
 	{
@@ -277,6 +279,7 @@ namespace mulberry
 		std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
 		vkEnumeratePhysicalDevices(mInstanceHandle, &physicalDeviceCount, physicalDevices.data());
 
+		mPhysicalDeviceSpecs.resize(physicalDeviceCount);
 		for (int32_t i = 0; i < physicalDevices.size(); ++i)
 			mPhysicalDeviceSpecs[i] = EnumPhysicalDeviceSpecForHandle(physicalDevices[i]);
 	}
@@ -313,33 +316,33 @@ namespace mulberry
 			VkBool32 surfaceSupported;
 			VK_CHECK(vkGetPhysicalDeviceSurfaceSupportKHR(result.handle, i, mSurface->GetHandle(), &surfaceSupported))
 			if (surfaceSupported)
-				result.queueFamilyIndices.presentFamilyIdx=i;
+				result.queueFamilyIndices.presentFamilyIdx = i;
 
 			if (result.queueFamilyIndices.IsComplete())
 				break;
 			i++;
 		}
 
-		uint32_t count=0;
-		vkGetPhysicalDeviceSurfaceFormatsKHR(device,mSurface->GetHandle(),&count,nullptr);
+		uint32_t count = 0;
+		vkGetPhysicalDeviceSurfaceFormatsKHR(device, mSurface->GetHandle(), &count, nullptr);
 		result.swapChainDetails.surfaceFormats.resize(count);
-		vkGetPhysicalDeviceSurfaceFormatsKHR(device,mSurface->GetHandle(),&count,result.swapChainDetails.surfaceFormats.data());
+		vkGetPhysicalDeviceSurfaceFormatsKHR(device, mSurface->GetHandle(), &count, result.swapChainDetails.surfaceFormats.data());
 
-		count=0;
-		vkGetPhysicalDeviceSurfacePresentModesKHR(device,mSurface->GetHandle(),&count,nullptr);
+		count = 0;
+		vkGetPhysicalDeviceSurfacePresentModesKHR(device, mSurface->GetHandle(), &count, nullptr);
 		result.swapChainDetails.presentModes.resize(count);
-		vkGetPhysicalDeviceSurfacePresentModesKHR(device,mSurface->GetHandle(),&count,result.swapChainDetails.presentModes.data());
+		vkGetPhysicalDeviceSurfacePresentModesKHR(device, mSurface->GetHandle(), &count, result.swapChainDetails.presentModes.data());
 
-		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device,mSurface->GetHandle(),&result.swapChainDetails.surfaceCapabilities);
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, mSurface->GetHandle(), &result.swapChainDetails.surfaceCapabilities);
 
 		return result;
 	}
 	void VKAdapter::PrintInstanceInfo()
 	{
-		MULBERRY_CORE_INFO("Available vulkan instance layers:\n");
+		MULBERRY_CORE_INFO("Available vulkan instance layers:");
 		for (const auto &layerProps : mInstanceLayerProps)
 		{
-			MULBERRY_CORE_INFO("\tname:{}\n\tdesc:{}\n\timplVer:{}.{}.{}\n\tspecVer:{}.{}.{}\n",
+			MULBERRY_CORE_INFO("\tname:{}\n\t\t\tdesc:{}\n\t\t\timplVer:{}.{}.{}\n\t\t\tspecVer:{}.{}.{}",
 							   layerProps.layerName,
 							   layerProps.description,
 							   VK_VERSION_MAJOR(layerProps.implementationVersion),
@@ -350,10 +353,10 @@ namespace mulberry
 							   VK_VERSION_PATCH(layerProps.specVersion));
 		}
 
-		MULBERRY_CORE_INFO("Available vulkan instance extensions:\n");
+		MULBERRY_CORE_INFO("Available vulkan instance extensions:");
 		for (const auto &extensionProps : mInstanceExtensionProps)
 		{
-			MULBERRY_CORE_INFO("\tname:{}\n\tspecVer:{}.{}.{}", extensionProps.extensionName,
+			MULBERRY_CORE_INFO("\tname:{}\n\t\t\tspecVer:{}.{}.{}", extensionProps.extensionName,
 							   VK_VERSION_MAJOR(extensionProps.specVersion),
 							   VK_VERSION_MINOR(extensionProps.specVersion),
 							   VK_VERSION_PATCH(extensionProps.specVersion));
@@ -365,30 +368,31 @@ namespace mulberry
 		for (const auto &spec : mPhysicalDeviceSpecs)
 		{
 
-			MULBERRY_CORE_INFO("Device name:{} ", spec.deviceProps.deviceName);
-			MULBERRY_CORE_INFO("Device type: ");
+			MULBERRY_CORE_INFO("Device: ");
+			MULBERRY_CORE_INFO("\tname:{}", spec.deviceProps.deviceName);
+
 			switch (spec.deviceProps.deviceType)
 			{
 			case VK_PHYSICAL_DEVICE_TYPE_OTHER:
-				MULBERRY_CORE_INFO("Unknown device.");
+				MULBERRY_CORE_INFO("\ttype:Unknown device.");
 				break;
 			case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU:
-				MULBERRY_CORE_INFO("Integrate GPU");
+				MULBERRY_CORE_INFO("\ttype:Integrate GPU");
 				break;
 			case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:
-				MULBERRY_CORE_INFO("Discrete GPU");
+				MULBERRY_CORE_INFO("\ttype:Discrete GPU");
 				break;
 			case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:
-				MULBERRY_CORE_INFO("Virtual GPU");
+				MULBERRY_CORE_INFO("\ttype:Virtual GPU");
 				break;
 			case VK_PHYSICAL_DEVICE_TYPE_CPU:
-				MULBERRY_CORE_INFO("CPU");
+				MULBERRY_CORE_INFO("\ttype:CPU");
 				break;
 			default:;
 			}
 
-			MULBERRY_CORE_INFO("Device driver version:{}.{}.{}", VK_VERSION_MAJOR(spec.deviceProps.driverVersion), VK_VERSION_MAJOR(spec.deviceProps.driverVersion), VK_VERSION_MAJOR(spec.deviceProps.driverVersion));
-			MULBERRY_CORE_INFO("Device vulkan api version:{}.{}.{}", VK_VERSION_MAJOR(spec.deviceProps.apiVersion), VK_VERSION_MAJOR(spec.deviceProps.apiVersion), VK_VERSION_MAJOR(spec.deviceProps.apiVersion));
+			MULBERRY_CORE_INFO("\tdriver version:{}.{}.{}", VK_VERSION_MAJOR(spec.deviceProps.driverVersion), VK_VERSION_MINOR(spec.deviceProps.driverVersion), VK_VERSION_PATCH(spec.deviceProps.driverVersion));
+			MULBERRY_CORE_INFO("\tvulkan api version:{}.{}.{}", VK_VERSION_MAJOR(spec.deviceProps.apiVersion), VK_VERSION_MINOR(spec.deviceProps.apiVersion), VK_VERSION_PATCH(spec.deviceProps.apiVersion));
 		}
 	}
 	const VkInstance &VKAdapter::GetInstanceHandle() const
@@ -404,13 +408,33 @@ namespace mulberry
 		return mInstanceExtensionProps;
 	}
 
-	const VKSurface* VKAdapter::GetSurface() const
+	const VKSurface *VKAdapter::GetSurface() const
 	{
 		return mSurface.get();
 	}
 
 	VKDevice *VKAdapter::CreateDevice()
 	{
-		return new VKDevice(mPhysicalDeviceSpecs[0]);
+		auto idx = 0;
+		for (idx = 0; idx < mPhysicalDeviceSpecs.size(); ++idx)
+		{
+			bool isFound = false;
+			for (const auto &requiredDeviceExt : mRequiredDeviceExtensions)
+			{
+				int32_t isSatisfied = 0;
+				for (int32_t i = 0; i < mPhysicalDeviceSpecs[idx].deviceExtensions.size(); ++i)
+				{
+					if (mPhysicalDeviceSpecs[idx].deviceExtensions[i].extensionName == requiredDeviceExt)
+						isSatisfied++;
+				}
+				if (isSatisfied == mRequiredDeviceExtensions.size()-1)
+					isFound = true;
+			}
+
+			if (isFound)
+				break;
+		}
+
+		return new VKDevice(mPhysicalDeviceSpecs[idx],mRequiredDeviceExtensions);
 	}
 }

@@ -218,4 +218,62 @@ namespace mulberry
 			return VK_SHADER_STAGE_VERTEX_BIT;
 		}
 	}
+
+	std::string ToVKShaderSourceCode(std::string_view src)
+	{
+		std::string result = src.data();
+
+		int32_t outKeyIdx = 0;
+		int32_t inKeyIdx = 0;
+		int32_t uniformKeyIdx = 0;
+
+		for (int32_t idx = 0; idx < result.size(); ++idx)
+		{
+			char c = result[idx];
+
+			if (c == 'u')
+			{
+				std::string keyword = "uniform ";
+				auto literal = result.substr(idx, keyword.size());
+				if (literal == keyword)
+				{
+					std::string insertCode = "layout(set=0,binding=" + std::to_string((uniformKeyIdx++)) + ") ";
+					result.insert(idx, insertCode, 0, insertCode.size());
+
+					idx += insertCode.size() + keyword.size();
+				}
+			}
+			else if (c == 'i')
+			{
+				std::string keyword = "in ";
+				auto literal = result.substr(idx, keyword.size());
+				if (literal == keyword)
+				{
+					std::string insertCode = "layout(set=0,location=" + std::to_string((inKeyIdx++)) + ") ";
+					result.insert(idx, insertCode, 0, insertCode.size());
+
+					idx += insertCode.size() + keyword.size();
+				}
+			}
+			else if (c == 'o')
+			{
+				std::string keyword = "out ";
+				auto literal = result.substr(idx, keyword.size());
+				if (literal == keyword)
+				{
+					std::string insertCode = "layout(set=0,location=" + std::to_string((outKeyIdx++)) + ") ";
+					result.insert(idx, insertCode, 0, insertCode.size());
+
+					idx += insertCode.size() + keyword.size();
+				}
+			}
+		}
+
+		std::string header = "#version 450 core\n";
+
+		std::string definition = "#define gl_VertexIndex gl_VertexID\n"
+								 "#define gl_InstanceIndex gl_InstanceID\n";
+
+		return header + definition + result;
+	}
 }

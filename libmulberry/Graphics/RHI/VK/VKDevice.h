@@ -13,7 +13,7 @@ namespace mulberry
 	class VKDevice : public NonCopyable
 	{
 	public:
-		VKDevice(const PhysicalDeviceSpec &physicalDeviceSpec);
+		VKDevice(const PhysicalDeviceSpec &physicalDeviceSpec,const std::vector<const char*>& requiredDeviceExts);
 		~VKDevice();
 
 		const VkDevice &GetHandle() const;

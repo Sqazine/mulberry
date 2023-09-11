@@ -17,4 +17,6 @@ namespace mulberry
      uint32_t ToGLFormat(Format mode);
 
      uint32_t ToGLBlendFunc(BlendFunc mode);
+
+     std::string ToGLShaderSourceCode(std::string_view source);
 }

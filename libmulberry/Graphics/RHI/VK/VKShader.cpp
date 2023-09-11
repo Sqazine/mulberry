@@ -13,7 +13,9 @@ namespace mulberry
 	{
 		auto nativeVkShaderType = ToVkShaderType(type);
 
-		std::vector<uint32_t> pCode = GlslToSpv(nativeVkShaderType, content);
+		auto sourceCode=ToVKShaderSourceCode(content);
+
+		std::vector<uint32_t> pCode = GlslToSpv(nativeVkShaderType, sourceCode.data());
 
 		VkShaderModuleCreateInfo info;
 		info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;

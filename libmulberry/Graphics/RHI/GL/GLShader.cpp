@@ -11,8 +11,9 @@ namespace mulberry
 		: mShaderID(-1), mType(type)
 	{
 		mShaderID = glCreateShader(ToGLShaderType(type));
-		const char *vCode = content.data();
-		glShaderSource(mShaderID, 1, &vCode, nullptr);
+		auto sourceCode =ToGLShaderSourceCode(content);
+		auto cSourceCode=sourceCode.c_str();
+		glShaderSource(mShaderID, 1,&cSourceCode, nullptr);
 		glCompileShader(mShaderID);
 		VerifyCompile();
 	}

@@ -6,15 +6,15 @@
 
 namespace mulberry {
 
-	VKRenderPass::VKRenderPass(const std::vector<VkFormat>& colorformats)
+	VKRenderPass::VKRenderPass(const std::vector<VkFormat>& colorformats,VkFormat depthStencilFormat)
 	{
 		std::vector<VkAttachmentDescription> attachments;
 		std::vector<VkAttachmentReference> colorReferences;
-		for (auto colorFormat : colorformats)
+		for (int32_t i = 0; i < colorformats.size(); ++i)
 		{
 			VkAttachmentDescription colorAttachment{};
 			colorAttachment.flags = 0;
-			colorAttachment.format = colorFormat;
+			colorAttachment.format = colorformats[i];
 			colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 			colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 			colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -24,22 +24,38 @@ namespace mulberry {
 			colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
 			attachments.emplace_back(colorAttachment);
-		}
 
-		for (int32_t i = 0; i < colorformats.size(); ++i)
-		{
 			VkAttachmentReference colorAttachmentRef{};
 			colorAttachmentRef.attachment = i;
 			colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
 			colorReferences.emplace_back(colorAttachmentRef);
 		}
+
+		VkAttachmentDescription depthStencilAttachment{};
+		depthStencilAttachment.flags=0;
+		depthStencilAttachment.format=depthStencilFormat;
+		depthStencilAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+		depthStencilAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		depthStencilAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+		depthStencilAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		depthStencilAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
+		depthStencilAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		depthStencilAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+		attachments.emplace_back(depthStencilAttachment);
+
+		VkAttachmentReference depthStencilAttachmentRef{};
+		depthStencilAttachmentRef.attachment=attachments.size();
+		depthStencilAttachmentRef.layout=VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
 
 		VkSubpassDescription subpass{};
 		subpass.flags = 0;
 		subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-		subpass.colorAttachmentCount = attachments.size() - 1;
+		subpass.colorAttachmentCount = attachments.size();
 		subpass.pColorAttachments = colorReferences.data();
-		subpass.pDepthStencilAttachment = nullptr;
+		subpass.pDepthStencilAttachment = &depthStencilAttachmentRef;
 		subpass.inputAttachmentCount = 0;
 		subpass.pInputAttachments = nullptr;
 		subpass.pPreserveAttachments = nullptr;

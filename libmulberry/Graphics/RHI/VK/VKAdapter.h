@@ -25,12 +25,12 @@ namespace mulberry
 
 		bool IsSameFamilyIndex() const
 		{
-			return graphicsFamilyIdx.value() == computeFamilyIdx.value() && computeFamilyIdx.value() == transferFamilyIdx.value() && transferFamilyIdx.value()==presentFamilyIdx.value();
+			return graphicsFamilyIdx.value() == computeFamilyIdx.value() && computeFamilyIdx.value() == transferFamilyIdx.value() && transferFamilyIdx.value() == presentFamilyIdx.value();
 		}
 
 		std::vector<uint32_t> IndexArray() const
 		{
-			return {graphicsFamilyIdx.value(), computeFamilyIdx.value(), transferFamilyIdx.value(),presentFamilyIdx.value()};
+			return {graphicsFamilyIdx.value(), computeFamilyIdx.value(), transferFamilyIdx.value(), presentFamilyIdx.value()};
 		}
 	};
 
@@ -66,7 +66,7 @@ namespace mulberry
 		const std::vector<VkLayerProperties> &GetInstanceLayerProps() const;
 		const std::vector<VkExtensionProperties> &GetInstanceExtensionProps() const;
 
-		const VKSurface* GetSurface() const;
+		const VKSurface *GetSurface() const;
 
 		class VKDevice *CreateDevice();
 
@@ -92,6 +92,9 @@ namespace mulberry
 
 		VkDebugUtilsMessengerEXT mDebugMessengerHandle;
 #endif
+
+		std::vector<const char *> mRequiredDeviceExtensions = {
+			VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
 		std::vector<PhysicalDeviceSpec> mPhysicalDeviceSpecs;
 

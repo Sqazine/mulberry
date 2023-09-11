@@ -6,12 +6,13 @@ namespace mulberry
     class VKSurface 
     {
     public:
-        VKSurface();
+        VKSurface(const VkInstance& instance);
         ~VKSurface();
 
       const  VkSurfaceKHR& GetHandle() const;
 
     private:
+        const VkInstance& mInstanceHandle;
         VkSurfaceKHR mSurfaceHandle;
     };
 }

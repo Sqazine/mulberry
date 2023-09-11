@@ -5,16 +5,17 @@
 #include "VKUtils.h"
 #include "Logger.h"
 
-namespace mulberry {
+namespace mulberry
+{
 
-	VKDevice::VKDevice(const PhysicalDeviceSpec& physicalDeviceSpec)
-		:mPhysicalDeviceSpec(physicalDeviceSpec)
+	VKDevice::VKDevice(const PhysicalDeviceSpec &physicalDeviceSpec, const std::vector<const char *> &requiredDeviceExts)
+		: mPhysicalDeviceSpec(physicalDeviceSpec)
 	{
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 
 		if (mPhysicalDeviceSpec.queueFamilyIndices.IsSameFamilyIndex())
 		{
-			const float queuePriorities[3]{ 1, 1, 1 };
+			const float queuePriorities[3]{1, 1, 1};
 			VkDeviceQueueCreateInfo info = {};
 			info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
 			info.pNext = nullptr;
@@ -48,6 +49,8 @@ namespace mulberry {
 		deviceCreateInfo.pEnabledFeatures = &mPhysicalDeviceSpec.features;
 		deviceCreateInfo.queueCreateInfoCount = queueCreateInfos.size();
 		deviceCreateInfo.pQueueCreateInfos = queueCreateInfos.data();
+		deviceCreateInfo.enabledExtensionCount = requiredDeviceExts.size();
+		deviceCreateInfo.ppEnabledExtensionNames = requiredDeviceExts.data();
 
 		VK_CHECK(vkCreateDevice(mPhysicalDeviceSpec.handle, &deviceCreateInfo, nullptr, &mHandle));
 	}
@@ -68,7 +71,7 @@ namespace mulberry {
 		vkDeviceWaitIdle(mHandle);
 	}
 
-	const VkDevice& VKDevice::GetHandle() const
+	const VkDevice &VKDevice::GetHandle() const
 	{
 		return mHandle;
 	}
@@ -78,42 +81,42 @@ namespace mulberry {
 		return mPhysicalDeviceSpec;
 	}
 
-	const VKGraphicsQueue* VKDevice::GetGraphicsQueue()
+	const VKGraphicsQueue *VKDevice::GetGraphicsQueue()
 	{
 		if (mGraphicsQueue == nullptr)
 			mGraphicsQueue = std::make_unique<VKGraphicsQueue>(mPhysicalDeviceSpec.queueFamilyIndices.graphicsFamilyIdx.value());
 		return mGraphicsQueue.get();
 	}
 
-	const VKComputeQueue* VKDevice::GetComputeQueue()
+	const VKComputeQueue *VKDevice::GetComputeQueue()
 	{
 		if (mComputeQueue == nullptr)
 			mComputeQueue = std::make_unique<VKComputeQueue>(mPhysicalDeviceSpec.queueFamilyIndices.computeFamilyIdx.value());
 		return mComputeQueue.get();
 	}
 
-	const VKTransferQueue* VKDevice::GetTransferQueue()
+	const VKTransferQueue *VKDevice::GetTransferQueue()
 	{
 		if (mTransferQueue == nullptr)
 			mTransferQueue = std::make_unique<VKTransferQueue>(mPhysicalDeviceSpec.queueFamilyIndices.transferFamilyIdx.value());
 		return mTransferQueue.get();
 	}
 
-	VKCommandPool* VKDevice::GetGraphicsCommandPool()
+	VKCommandPool *VKDevice::GetGraphicsCommandPool()
 	{
 		if (mGraphicsCommandPool == nullptr)
 			mGraphicsCommandPool = std::make_unique<VKCommandPool>(mPhysicalDeviceSpec.queueFamilyIndices.graphicsFamilyIdx.value());
 		return mGraphicsCommandPool.get();
 	}
 
-	VKCommandPool* VKDevice::GetComputeCommandPool()
+	VKCommandPool *VKDevice::GetComputeCommandPool()
 	{
 		if (mComputeCommandPool == nullptr)
 			mComputeCommandPool = std::make_unique<VKCommandPool>(mPhysicalDeviceSpec.queueFamilyIndices.computeFamilyIdx.value());
 		return mComputeCommandPool.get();
 	}
 
-	VKCommandPool* VKDevice::GetTransferCommandPool()
+	VKCommandPool *VKDevice::GetTransferCommandPool()
 	{
 		if (mTransferCommandPool == nullptr)
 			mTransferCommandPool = std::make_unique<VKCommandPool>(mPhysicalDeviceSpec.queueFamilyIndices.transferFamilyIdx.value());

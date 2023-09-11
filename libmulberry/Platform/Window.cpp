@@ -12,7 +12,7 @@ namespace mulberry
         SDL_Rect rect;
         auto ret = SDL_GetDisplayBounds(0, &rect);
 
-        uint32_t windowFlag = SDL_WINDOW_HIDDEN;
+        uint32_t windowFlag = SDL_WINDOW_HIDDEN|SDL_WINDOW_ALLOW_HIGHDPI;
 
         if (App::GetInstance().GetGraphicsConfig().backend == GraphicsBackend::GL)
             windowFlag |= SDL_WINDOW_OPENGL;
@@ -90,7 +90,7 @@ namespace mulberry
     {
         uint32_t extensionCount;
         SDL_Vulkan_GetInstanceExtensions(mHandle, &extensionCount, nullptr);
-        std::vector<const char *> result;
+        std::vector<const char *> result(extensionCount);
         SDL_Vulkan_GetInstanceExtensions(mHandle, &extensionCount, result.data());
         return result;
     }

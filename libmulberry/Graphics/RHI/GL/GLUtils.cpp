@@ -1,6 +1,7 @@
 #include "GLUtils.h"
 #include "Graphics/RHI/Shader.h"
 #include "Graphics/RHI/RasterPipeline.h"
+#include "GL/GLContext.h"
 #include <unordered_map>
 namespace mulberry
 {
@@ -142,5 +143,11 @@ namespace mulberry
         default:
             return GL_ZERO;
         }
+    }
+
+    std::string ToGLShaderSourceCode(std::string_view source)
+    {
+        auto version = GLContext::GetInstance().GetVersion();
+        return "#version " + std::to_string((int32_t)version.x) + std::to_string((int32_t)version.y) + "0 core\n" + std::string(source);
     }
 }

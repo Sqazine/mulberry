@@ -9,19 +9,16 @@
 
 namespace mulberry
 {
-	VKSurface::VKSurface()
-		: mSurfaceHandle(VK_NULL_HANDLE)
+	VKSurface::VKSurface(const VkInstance &instance)
+		: mInstanceHandle(instance), mSurfaceHandle(VK_NULL_HANDLE)
 	{
-		if (SDL_Vulkan_CreateSurface(App::GetInstance().GetWindow()->GetHandle(), VKContext::GetInstance().GetAdapter()->GetInstanceHandle(), &mSurfaceHandle) != SDL_TRUE)
-		{
+		if (SDL_Vulkan_CreateSurface(App::GetInstance().GetWindow()->GetHandle(), mInstanceHandle, &mSurfaceHandle) != SDL_TRUE)
 			MULBERRY_CORE_ERROR("[ERROR]:failed to create vulkan surface.");
-			exit(1);
-		}
 	}
 
 	VKSurface::~VKSurface()
 	{
-		vkDestroySurfaceKHR(VKContext::GetInstance().GetAdapter()->GetInstanceHandle(), mSurfaceHandle, nullptr);
+		vkDestroySurfaceKHR(mInstanceHandle, mSurfaceHandle, nullptr);
 	}
 
 	const VkSurfaceKHR &VKSurface::GetHandle() const

@@ -4,8 +4,7 @@
 namespace mulberry
 {
 
-    const std::string spriteVertShader = "#version 330 core\n"
-                                         "out vec2 fragTexcoord;\n"
+    const std::string spriteVertShader = "out vec2 fragTexcoord;\n"
                                          "in vec2 inPosition;\n"
                                          "in vec2 inTexcoord;\n"
                                          "uniform mat4 modelMat;\n"
@@ -19,8 +18,7 @@ namespace mulberry
                                          "	fragTexcoord= inTexcoord*tiling+offset;\n"
                                          "}";
 
-    const std::string spriteFragShader = "#version 330 core\n"
-                                         "out vec4 outColor;\n"
+    const std::string spriteFragShader = "out vec4 outColor;\n"
                                          "in vec2 fragTexcoord;\n"
                                          "uniform sampler2D sprite;\n"
                                          "void main()\n"
@@ -28,8 +26,7 @@ namespace mulberry
                                          "	outColor=texture(sprite,fragTexcoord);\n"
                                          "}";
 
-    const std::string gizmoVertShader = "#version 330 core\n"
-                                        "in vec2 inPosition;\n"
+    const std::string gizmoVertShader = "in vec2 inPosition;\n"
                                         "uniform mat4 modelMat;\n"
                                         "uniform mat4 viewMat;\n"
                                         "uniform mat4 projMat;\n"
@@ -38,8 +35,7 @@ namespace mulberry
                                         "	gl_Position=projMat*viewMat*modelMat*vec4(inPosition,0.0,1.0);\n"
                                         "}";
 
-    const std::string gizmoFragShader = "#version 330 core\n"
-                                        "out vec4 outColor;\n"
+    const std::string gizmoFragShader = "out vec4 outColor;\n"
                                         "void main()\n"
                                         "{\n"
                                         "	outColor=vec4(0.0,1.0,0.0,1.0);\n"

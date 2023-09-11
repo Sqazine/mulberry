@@ -7,7 +7,7 @@ namespace mulberry
     class VKRenderPass
     {
     public:
-        VKRenderPass(const std::vector<VkFormat>& colorformats);
+        VKRenderPass(const std::vector<VkFormat>& colorformats,VkFormat depthStencilFormat);
         ~VKRenderPass();
 
         const VkRenderPass& GetHandle() const;
