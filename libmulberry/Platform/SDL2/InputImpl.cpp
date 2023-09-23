@@ -1,4 +1,4 @@
-#include "SDL2Input.h"
+#include "InputImpl.h"
 #include <memory>
 #include "Platform/Input.h"
 namespace mulberry
@@ -150,24 +150,24 @@ namespace mulberry
         return mIsConnected;
     }
 
-    SDL2Input::SDL2Input() 
+    InputImpl::InputImpl() 
     : mIsWindowCLoseButtonClick(false)
     {
         mDevice.mouse = std::make_unique<SDL2Mouse>();
         mDevice.keyboard = std::make_unique<SDL2Keyboard>();
     }
-    SDL2Input::~SDL2Input()
+    InputImpl::~InputImpl()
     {
     }
 
-    void SDL2Input::Init()
+    void InputImpl::Init()
     {
         ((SDL2Keyboard *)mDevice.keyboard.get())->mCurKeyState = SDL_GetKeyboardState(nullptr);
         ((SDL2Keyboard *)mDevice.keyboard.get())->mPreKeyState = new uint8_t[SDL_NUM_SCANCODES];
         memset(((SDL2Keyboard *)mDevice.keyboard.get())->mPreKeyState, 0, SDL_NUM_SCANCODES);
     }
 
-    void SDL2Input::PreUpdate()
+    void InputImpl::PreUpdate()
     {
         memcpy_s(((SDL2Keyboard *)mDevice.keyboard.get())->mPreKeyState, SDL_NUM_SCANCODES, ((SDL2Keyboard *)mDevice.keyboard.get())->mCurKeyState, SDL_NUM_SCANCODES);
         ((SDL2Mouse *)mDevice.mouse.get())->mPreButtons = ((SDL2Mouse *)mDevice.mouse.get())->mCurButtons;
@@ -175,7 +175,7 @@ namespace mulberry
         ((SDL2Mouse *)mDevice.mouse.get())->mMouseScrollWheel = Vec2::ZERO;
     }
 
-    void SDL2Input::PostUpdate()
+    void InputImpl::PostUpdate()
     {
         Vec2 p = Vec2::ZERO;
         if (!((SDL2Mouse *)mDevice.mouse.get())->mIsRelative)
@@ -187,7 +187,7 @@ namespace mulberry
         ProcessEvent();
     }
 
-    void SDL2Input::ProcessEvent()
+    void InputImpl::ProcessEvent()
     {
         SDL_Event event;
         SDL_PollEvent(&event);
@@ -204,7 +204,7 @@ namespace mulberry
         }
     }
 
-    bool SDL2Input::IsWindowCloseButtonClick()
+    bool InputImpl::IsWindowCloseButtonClick()
     {
         return mIsWindowCLoseButtonClick;
     }

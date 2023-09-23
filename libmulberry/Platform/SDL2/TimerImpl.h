@@ -3,11 +3,11 @@
 #include "Platform/Timer.h"
 namespace mulberry
 {
-	class SDL2Timer : public Timer
+	class TimerImpl : public Timer
 	{
 	public:
-		SDL2Timer();
-		~SDL2Timer() override;
+		TimerImpl();
+		~TimerImpl() override;
 		void Init() override;
 		void Update(uint32_t lockFrame = 0) override;
 

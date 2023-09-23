@@ -9,7 +9,7 @@
 #include "Graphics/RHI/GraphicsContext.h"
 
 #if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
-#include "Platform/SDL2Wrapper/SDL2GLContext.h"
+#include "Platform/SDL2/GLContextImpl.h"
 #else
 #endif
 
@@ -28,7 +28,7 @@ namespace mulberry
 
 	private:
 #if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
-		SDL2GLContext mSDL2GLContextImpl;
+		GLContextImpl mSDL2GLContextImpl;
 #else
 #error "Unknown platform Timer"
 #endif

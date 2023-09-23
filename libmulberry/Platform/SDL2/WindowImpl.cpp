@@ -1,9 +1,9 @@
 #include "Window.h"
 #include "App.h"
-#include "SDL2Window.h"
+#include "WindowImpl.h"
 namespace mulberry
 {
-    SDL2Window::SDL2Window()
+    WindowImpl::WindowImpl()
         : mHandle(nullptr), mIsShown(false)
     {
         auto flag = SDL_Init(SDL_INIT_EVERYTHING);
@@ -30,64 +30,64 @@ namespace mulberry
         };
     }
 
-    SDL2Window::~SDL2Window()
+    WindowImpl::~WindowImpl()
     {
         if (mHandle)
             SDL_DestroyWindow(mHandle);
     }
 
-    void SDL2Window::SetTitle(std::string_view str)
+    void WindowImpl::SetTitle(std::string_view str)
     {
         mTitle = str;
         SDL_SetWindowTitle(mHandle, mTitle.c_str());
     }
 
-    std::string_view SDL2Window::GetTitle() const
+    std::string_view WindowImpl::GetTitle() const
     {
         return SDL_GetWindowTitle(mHandle);
     }
 
-    void SDL2Window::Resize(const Vec2 &extent)
+    void WindowImpl::Resize(const Vec2 &extent)
     {
         Resize(extent.x, extent.y);
     }
 
-    void SDL2Window::Resize(uint32_t w, uint32_t h)
+    void WindowImpl::Resize(uint32_t w, uint32_t h)
     {
         mViewport = {0, 0, w, h};
         SDL_SetWindowSize(mHandle, w, h);
         SDL_SetWindowPosition(mHandle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     }
 
-    Vec2 SDL2Window::GetSize()
+    Vec2 WindowImpl::GetSize()
     {
         int32_t x, y;
         SDL_GetWindowSize(mHandle, (int *)&x, (int *)&y);
         return Vec2(x, y);
     }
 
-    SDL_Window *SDL2Window::GetHandle()
+    SDL_Window *WindowImpl::GetHandle()
     {
         return mHandle;
     }
 
-    const Viewport &SDL2Window::GetViewport() const
+    const Viewport &WindowImpl::GetViewport() const
     {
         return mViewport;
     }
 
-    void SDL2Window::Show()
+    void WindowImpl::Show()
     {
         SDL_ShowWindow(mHandle);
         mIsShown = true;
     }
-    void SDL2Window::Hide()
+    void WindowImpl::Hide()
     {
         SDL_HideWindow(mHandle);
         mIsShown = false;
     }
 
-    std::vector<const char *> SDL2Window::GetVulkanRequiredExtensions()
+    std::vector<const char *> WindowImpl::GetVulkanRequiredExtensions()
     {
         uint32_t extensionCount;
         SDL_Vulkan_GetInstanceExtensions(mHandle, &extensionCount, nullptr);
@@ -96,7 +96,7 @@ namespace mulberry
         return result;
     }
 
-    VkSurfaceKHR SDL2Window::CreateSurface(VkInstance instance)
+    VkSurfaceKHR WindowImpl::CreateSurface(VkInstance instance)
     {
         VkSurfaceKHR result = VK_NULL_HANDLE;
         SDL_bool flag = SDL_Vulkan_CreateSurface(mHandle, instance, &result);

@@ -1,12 +1,12 @@
 #include <glad/glad.h>
 #include <SDL2/SDL.h>
-#include "SDL2GLContext.h"
-#include "SDL2Window.h"
+#include "GLContextImpl.h"
+#include "WindowImpl.h"
 #include "App.h"
 #include "Core/Logger.h"
 namespace mulberry
 {
-	void SDL2GLContext::Init()
+	void GLContextImpl::Init()
 	{
 		SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
@@ -28,7 +28,7 @@ namespace mulberry
 		else
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
 
-		mContextHandle = SDL_GL_CreateContext(((SDL2Window*)App::GetInstance().GetWindow())->GetHandle());
+		mContextHandle = SDL_GL_CreateContext(((WindowImpl*)App::GetInstance().GetWindow())->GetHandle());
 
 		if (!mContextHandle)
 			MULBERRY_CORE_ERROR("Failed to create SDL opengl context:{}", SDL_GetError());
@@ -53,12 +53,12 @@ namespace mulberry
 		MULBERRY_CORE_INFO("Extensions:\n{}", output.c_str());
 	}
 
-	void SDL2GLContext::Destroy()
+	void GLContextImpl::Destroy()
 	{
 		SDL_GL_DeleteContext(mContextHandle);
 	}
 
-	Vec2 SDL2GLContext::GetVersion()
+	Vec2 GLContextImpl::GetVersion()
 	{
 		GLint major, minor;
 		glGetIntegerv(GL_MAJOR_VERSION, &major);
@@ -66,12 +66,12 @@ namespace mulberry
 		return Vec2(major, minor);
 	}
 
-	void SDL2GLContext::BeginFrame()
+	void GLContextImpl::BeginFrame()
 	{
 	}
 
-	void SDL2GLContext::EndFrame()
+	void GLContextImpl::EndFrame()
 	{
-		SDL_GL_SwapWindow(((SDL2Window*)App::GetInstance().GetWindow())->GetHandle());
+		SDL_GL_SwapWindow(((WindowImpl*)App::GetInstance().GetWindow())->GetHandle());
 	}
 }

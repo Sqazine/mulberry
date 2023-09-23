@@ -4,11 +4,11 @@
 #include "Logger.h"
 #include "AppGlobalConfig.h"
 
-		#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
-#include "Platform/SDL2Wrapper/SDL2GLContext.h"
-#include "Platform/SDL2Wrapper/SDL2Input.h"
-#include "Platform/SDL2Wrapper/SDL2Timer.h"
-#include "Platform/SDL2Wrapper/SDL2Window.h"
+#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
+#include "Platform/SDL2/GLContextImpl.h"
+#include "Platform/SDL2/InputImpl.h"
+#include "Platform/SDL2/TimerImpl.h"
+#include "Platform/SDL2/WindowImpl.h"
 #else
 #endif
 
@@ -86,11 +86,10 @@ namespace mulberry
 	void App::Init()
 	{
 
-
-		#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
-mInput=std::make_unique<SDL2Input>();
-mTimer=std::make_unique<SDL2Timer>();
-		mWindow = std::make_unique<SDL2Window>();
+#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
+		mInput = std::make_unique<InputImpl>();
+		mTimer = std::make_unique<TimerImpl>();
+		mWindow = std::make_unique<WindowImpl>();
 #else
 #error "Not Support Platform,only windows is available now!"
 #endif
@@ -107,7 +106,6 @@ mTimer=std::make_unique<SDL2Timer>();
 
 	void App::ProcessInput()
 	{
-
 		if (mInput->IsWindowCloseButtonClick())
 			mState = AppState::EXIT;
 
