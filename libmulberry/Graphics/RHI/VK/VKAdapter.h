@@ -5,7 +5,6 @@
 #include <optional>
 #include <memory>
 #include "NonCopyable.h"
-#include "VKSurface.h"
 namespace mulberry
 {
 	struct QueueFamilyIndices
@@ -66,7 +65,7 @@ namespace mulberry
 		const std::vector<VkLayerProperties> &GetInstanceLayerProps() const;
 		const std::vector<VkExtensionProperties> &GetInstanceExtensionProps() const;
 
-		const VKSurface *GetSurface() const;
+		const VkSurfaceKHR GetSurface() const;
 
 		class VKDevice *CreateDevice();
 
@@ -98,6 +97,6 @@ namespace mulberry
 
 		std::vector<PhysicalDeviceSpec> mPhysicalDeviceSpecs;
 
-		std::unique_ptr<VKSurface> mSurface;
+		VkSurfaceKHR mSurface;
 	};
 }

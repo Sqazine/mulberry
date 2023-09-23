@@ -34,7 +34,7 @@ void ShipMoveComponent::Init()
 
 void ShipMoveComponent::ProcessInput(const mulberry::InputDevice *inputDevice)
 {
-    if (inputDevice->keyboard.GetKeyState(mulberry::KEYCODE_W) == mulberry::ButtonState::HOLD)
+    if (inputDevice->keyboard.GetKeyState(mulberry::KeyCode::KEYCODE_W) == mulberry::ButtonState::HOLD)
         moveForward = true;
     else
         moveForward = false;

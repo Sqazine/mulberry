@@ -214,7 +214,7 @@ namespace mulberry
 		VK_CHECK(CreateDebugUtilsMessengerEXT(mInstanceHandle, &debugCreateInfo, nullptr, &mDebugMessengerHandle))
 #endif
 
-		mSurface = std::make_unique<VKSurface>(mInstanceHandle);
+		mSurface = App::GetInstance().GetWindow()->CreateSurface(mInstanceHandle);
 
 		EnumPhysicalDeviceSpecs();
 	}
@@ -314,7 +314,7 @@ namespace mulberry
 				result.queueFamilyIndices.transferFamilyIdx = i;
 
 			VkBool32 surfaceSupported;
-			VK_CHECK(vkGetPhysicalDeviceSurfaceSupportKHR(result.handle, i, mSurface->GetHandle(), &surfaceSupported))
+			VK_CHECK(vkGetPhysicalDeviceSurfaceSupportKHR(result.handle, i, mSurface, &surfaceSupported))
 			if (surfaceSupported)
 				result.queueFamilyIndices.presentFamilyIdx = i;
 
@@ -324,16 +324,16 @@ namespace mulberry
 		}
 
 		uint32_t count = 0;
-		vkGetPhysicalDeviceSurfaceFormatsKHR(device, mSurface->GetHandle(), &count, nullptr);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(device, mSurface, &count, nullptr);
 		result.swapChainDetails.surfaceFormats.resize(count);
-		vkGetPhysicalDeviceSurfaceFormatsKHR(device, mSurface->GetHandle(), &count, result.swapChainDetails.surfaceFormats.data());
+		vkGetPhysicalDeviceSurfaceFormatsKHR(device, mSurface, &count, result.swapChainDetails.surfaceFormats.data());
 
 		count = 0;
-		vkGetPhysicalDeviceSurfacePresentModesKHR(device, mSurface->GetHandle(), &count, nullptr);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(device, mSurface, &count, nullptr);
 		result.swapChainDetails.presentModes.resize(count);
-		vkGetPhysicalDeviceSurfacePresentModesKHR(device, mSurface->GetHandle(), &count, result.swapChainDetails.presentModes.data());
+		vkGetPhysicalDeviceSurfacePresentModesKHR(device, mSurface, &count, result.swapChainDetails.presentModes.data());
 
-		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, mSurface->GetHandle(), &result.swapChainDetails.surfaceCapabilities);
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, mSurface, &result.swapChainDetails.surfaceCapabilities);
 
 		return result;
 	}
@@ -408,9 +408,9 @@ namespace mulberry
 		return mInstanceExtensionProps;
 	}
 
-	const VKSurface *VKAdapter::GetSurface() const
+	const VkSurfaceKHR VKAdapter::GetSurface() const
 	{
-		return mSurface.get();
+		return mSurface;
 	}
 
 	VKDevice *VKAdapter::CreateDevice()

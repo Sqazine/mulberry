@@ -1,5 +1,4 @@
 #include "VKUtils.h"
-#include <SDL2/SDL_vulkan.h>
 #include <glslang/Public/ShaderLang.h>
 #include <glslang/SPIRV/GlslangToSpv.h>
 #include "Logger.h"

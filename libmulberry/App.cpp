@@ -90,17 +90,10 @@ namespace mulberry
 
 	void App::ProcessInput()
 	{
-		SDL_Event event;
-		if (SDL_PollEvent(&event))
-		{
-			switch (event.type)
-			{
-			case SDL_QUIT:
-				mState = AppState::EXIT;
-			}
-		}
+		mInput.ProcessEvent();
 
-		mInput.ProcessInput(event);
+		if (mInput.GetCurEvent().type == SDL_QUIT)
+			mState = AppState::EXIT;
 
 		for (const auto &entity : mScenes[mSceneIdx]->GetAllEntities())
 			for (const auto &comp : entity->GetAllComponents())

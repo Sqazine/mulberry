@@ -8,6 +8,11 @@
 #include "Vec2.h"
 #include "Graphics/RHI/GraphicsContext.h"
 
+#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
+#include "Platform/SDL2Wrapper/SDL2GLContext.h"
+#else
+#endif
+
 namespace mulberry
 {
 	class GLContext : public Singleton<GLContext>
@@ -22,7 +27,10 @@ namespace mulberry
 		void EndFrame();
 
 	private:
-		SDL_GLContext mContextHandle;
-		std::vector<const char *> mExtensions;
+#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
+		SDL2GLContext mSDL2GLContextImpl;
+#else
+#error "Unknown platform Timer"
+#endif
 	};
 }

@@ -3,7 +3,6 @@
 #include <algorithm>
 #include "VKContext.h"
 #include "VKDevice.h"
-#include "VKSurface.h"
 #include "VKUtils.h"
 #include "Logger.h"
 #include "App.h"
@@ -23,7 +22,7 @@ namespace mulberry
 			.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
 			.pNext = nullptr,
 			.flags = 0,
-			.surface = VKContext::GetInstance().GetAdapter()->GetSurface()->GetHandle(),
+			.surface = VKContext::GetInstance().GetAdapter()->GetSurface(),
 			.minImageCount = uint32_t(App::GetInstance().GetGraphicsConfig().useDoubleBuffer ? 2 : 1),
 			.imageFormat = mSwapChainSurfaceFormat.format,
 			.imageColorSpace = mSwapChainSurfaceFormat.colorSpace,

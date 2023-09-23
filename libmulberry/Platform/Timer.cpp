@@ -1,28 +1,39 @@
 #include "Timer.h"
-#include <SDL2/SDL.h>
 
-Timer::Timer()
+namespace mulberry
 {
-}
+    Timer::Timer()
+        :
+#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
+          mSDL2TimerImpl()
+#else
+#error "Unknown platform Timer"
+#endif
+    {
+    }
+    void Timer::Init()
+    {
+#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
+        mSDL2TimerImpl.Init();
+#else
+#error "Unknown platform Timer"
+#endif
+    }
+    void Timer::Update(uint32_t lockFrame)
+    {
+#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
+        mSDL2TimerImpl.Update(lockFrame);
+#else
+#error "Unknown platform Timer"
+#endif
+    }
 
-void Timer::Init()
-{
-	mStartTick = SDL_GetTicks();
-}
-
-void Timer::Update(uint32_t lockFrame)
-{
-	mCurTick = SDL_GetTicks();
-	if (lockFrame > 0)
-		while (!SDL_TICKS_PASSED(SDL_GetTicks(), mCurTick + (1.0f / lockFrame) * 1000))
-			;
-	mDeltaTime = (mCurTick - mLastTick) / 1000.0f;
-	mLastTick = mCurTick;
-	if (mDeltaTime > 0.05f)
-		mDeltaTime = 0.05f;
-}
-
-float Timer::GetDeltaTime()
-{
-	return mDeltaTime;
+    float Timer::GetDeltaTime()
+    {
+#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
+        return mSDL2TimerImpl.GetDeltaTime();
+#else
+#error "Unknown platform Timer"
+#endif
+    }
 }
