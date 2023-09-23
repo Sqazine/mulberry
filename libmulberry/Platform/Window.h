@@ -1,40 +1,32 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
-#include "SDL2Wrapper/SDL2Window.h"
-#else
-#endif
+#include <cstdint>
+#include <string_view>
+#include "Math/Vec2.h"
+#include "Graphics/RHI/RasterPipeline.h"
 
 namespace mulberry
 {
     class Window
     {
     public:
-        Window();
-        ~Window();
+        Window() = default;
+        virtual ~Window() = default;
 
-        void SetTitle(std::string_view str);
-        std::string_view GetTitle() const;
-        void Resize(const Vec2 &extent);
-        void Resize(uint32_t w, uint32_t h);
-        Vec2 GetSize();
+        virtual void SetTitle(std::string_view str) = 0;
+        virtual std::string_view GetTitle() const = 0;
+        virtual void Resize(const Vec2 &extent) = 0;
+        virtual void Resize(uint32_t w, uint32_t h) = 0;
+        virtual Vec2 GetSize() = 0;
 
-        const Viewport &GetViewport() const;
+        virtual const Viewport &GetViewport() const = 0;
 
-        void Show();
-        void Hide();
+        virtual void Show() = 0;
+        virtual void Hide() = 0;
 
-    private:
+    protected:
         friend class VKAdapter;
-        std::vector<const char *> GetVulkanRequiredExtensions();
-        VkSurfaceKHR CreateSurface(VkInstance instance);
-
-    private:
-#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
-        friend class SDL2GlContext;
-        SDL2Window mSDL2WindowImpl;
-#else
-#error "Unknown platform Window"
-#endif
+        virtual std::vector<const char *> GetVulkanRequiredExtensions() = 0;
+        virtual VkSurfaceKHR CreateSurface(VkInstance instance) = 0;
     };
 }

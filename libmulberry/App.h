@@ -50,8 +50,8 @@ namespace mulberry
 		std::unique_ptr<Window> mWindow;
 
 		AppState mState;
-		Input mInput;
-		Timer mTimer;
+		std::unique_ptr<Input> mInput;
+		std::unique_ptr<Timer> mTimer;
 
 		std::vector<std::unique_ptr<Scene>> mScenes;
 		int32_t mSceneIdx;

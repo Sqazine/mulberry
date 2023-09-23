@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "App.h"
+#include "SDL2Window.h"
 namespace mulberry
 {
     SDL2Window::SDL2Window()

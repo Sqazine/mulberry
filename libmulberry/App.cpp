@@ -3,6 +3,15 @@
 #include "GraphicsContext.h"
 #include "Logger.h"
 #include "AppGlobalConfig.h"
+
+		#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
+#include "Platform/SDL2Wrapper/SDL2GLContext.h"
+#include "Platform/SDL2Wrapper/SDL2Input.h"
+#include "Platform/SDL2Wrapper/SDL2Timer.h"
+#include "Platform/SDL2Wrapper/SDL2Window.h"
+#else
+#endif
+
 namespace mulberry
 {
 	void App::Run()
@@ -10,7 +19,7 @@ namespace mulberry
 		mWindow->Show();
 		while (mState != AppState::EXIT)
 		{
-			mTimer.Update();
+			mTimer->Update();
 			ProcessInput();
 			Update();
 			GraphicsContext::GetInstance().BeginFrame();
@@ -76,11 +85,19 @@ namespace mulberry
 
 	void App::Init()
 	{
-		mWindow = std::make_unique<Window>();
+
+
+		#if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
+mInput=std::make_unique<SDL2Input>();
+mTimer=std::make_unique<SDL2Timer>();
+		mWindow = std::make_unique<SDL2Window>();
+#else
+#error "Not Support Platform,only windows is available now!"
+#endif
 
 		Logger::GetInstance().Init();
-		mInput.Init();
-		mTimer.Init();
+		mInput->Init();
+		mTimer->Init();
 
 		GraphicsContext::GetInstance().Init();
 
@@ -90,29 +107,28 @@ namespace mulberry
 
 	void App::ProcessInput()
 	{
-		mInput.ProcessEvent();
 
-		if (mInput.GetCurEvent().type == SDL_QUIT)
+		if (mInput->IsWindowCloseButtonClick())
 			mState = AppState::EXIT;
 
 		for (const auto &entity : mScenes[mSceneIdx]->GetAllEntities())
 			for (const auto &comp : entity->GetAllComponents())
-				comp->ProcessInput(mInput.GetDevice());
+				comp->ProcessInput(mInput->GetDevice());
 	}
 	void App::Update()
 	{
-		mInput.PreUpdate();
+		mInput->PreUpdate();
 
 		for (const auto &entity : mScenes[mSceneIdx]->GetAllEntities())
 		{
 			for (const auto &comp : entity->GetAllComponents())
 			{
-				comp->Update(mTimer.GetDeltaTime());
-				comp->LateUpdate(mTimer.GetDeltaTime());
+				comp->Update(mTimer->GetDeltaTime());
+				comp->LateUpdate(mTimer->GetDeltaTime());
 			}
 		}
 
-		mInput.PostUpdate();
+		mInput->PostUpdate();
 	}
 	void App::Render()
 	{

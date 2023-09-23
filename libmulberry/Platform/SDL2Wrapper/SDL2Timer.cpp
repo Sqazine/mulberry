@@ -1,8 +1,12 @@
-#include "Timer.h"
+#include "SDL2Timer.h"
 #include <SDL2/SDL.h>
 namespace mulberry
 {
 	SDL2Timer::SDL2Timer()
+	{
+	}
+
+	SDL2Timer::~SDL2Timer()
 	{
 	}
 

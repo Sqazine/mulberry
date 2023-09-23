@@ -1,7 +1,9 @@
 #include <glad/glad.h>
 #include <SDL2/SDL.h>
-#include "RHI/GraphicsContext.h"
+#include "SDL2GLContext.h"
+#include "SDL2Window.h"
 #include "App.h"
+#include "Core/Logger.h"
 namespace mulberry
 {
 	void SDL2GLContext::Init()
@@ -26,7 +28,7 @@ namespace mulberry
 		else
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
 
-		mContextHandle = SDL_GL_CreateContext(App::GetInstance().GetWindow()->GetHandle());
+		mContextHandle = SDL_GL_CreateContext(((SDL2Window*)App::GetInstance().GetWindow())->GetHandle());
 
 		if (!mContextHandle)
 			MULBERRY_CORE_ERROR("Failed to create SDL opengl context:{}", SDL_GetError());
@@ -70,6 +72,6 @@ namespace mulberry
 
 	void SDL2GLContext::EndFrame()
 	{
-		SDL_GL_SwapWindow(App::GetInstance().GetWindow()->mSDL2WindowImpl.GetHandle());
+		SDL_GL_SwapWindow(((SDL2Window*)App::GetInstance().GetWindow())->GetHandle());
 	}
 }

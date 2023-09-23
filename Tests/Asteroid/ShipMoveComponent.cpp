@@ -32,24 +32,24 @@ void ShipMoveComponent::Init()
     ownerTransformComponent->SetPosition(0.0f, (-mulberry::App::GetInstance().GetWindow()->GetSize().y + textureInfo.data.height * ownerTransformComponent->GetScale().y) / 2.0f);
 }
 
-void ShipMoveComponent::ProcessInput(const mulberry::InputDevice *inputDevice)
+void ShipMoveComponent::ProcessInput(const mulberry::InputDevice &inputDevice)
 {
-    if (inputDevice->keyboard.GetKeyState(mulberry::KeyCode::KEYCODE_W) == mulberry::ButtonState::HOLD)
+    if (inputDevice.keyboard->GetKeyState(mulberry::KeyCode::KEYCODE_W) == mulberry::ButtonState::HOLD)
         moveForward = true;
     else
         moveForward = false;
 
-    if (inputDevice->keyboard.GetKeyState(mulberry::KEYCODE_S) == mulberry::ButtonState::HOLD)
+    if (inputDevice.keyboard->GetKeyState(mulberry::KEYCODE_S) == mulberry::ButtonState::HOLD)
         moveBackward = true;
     else
         moveBackward = false;
 
-    if (inputDevice->keyboard.GetKeyState(mulberry::KEYCODE_A) == mulberry::ButtonState::HOLD)
+    if (inputDevice.keyboard->GetKeyState(mulberry::KEYCODE_A) == mulberry::ButtonState::HOLD)
         rotLeft = true;
     else
         rotLeft = false;
 
-    if (inputDevice->keyboard.GetKeyState(mulberry::KEYCODE_D) == mulberry::ButtonState::HOLD)
+    if (inputDevice.keyboard->GetKeyState(mulberry::KEYCODE_D) == mulberry::ButtonState::HOLD)
         rotRight = true;
     else
         rotRight = false;

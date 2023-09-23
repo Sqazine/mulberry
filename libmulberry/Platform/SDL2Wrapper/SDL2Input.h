@@ -4,16 +4,17 @@
 #include <memory>
 #include "Vec2.h"
 #include "Platform/Input.h"
+
 namespace mulberry
 {
-   
-    class SDL2Keyboard
+
+    class SDL2Keyboard : public Keyboard
     {
     public:
         SDL2Keyboard();
-        ~SDL2Keyboard();
-        bool GetKeyValue(KeyCode keyCode) const;
-        ButtonState GetKeyState(KeyCode keyCode) const;
+        ~SDL2Keyboard() override;
+        bool GetKeyValue(KeyCode keyCode) const override;
+        ButtonState GetKeyState(KeyCode keyCode) const override;
 
     private:
         friend class SDL2Input;
@@ -21,19 +22,19 @@ namespace mulberry
         uint8_t *mPreKeyState;
     };
 
-    class SDL2Mouse
+    class SDL2Mouse : public Mouse
     {
     public:
         SDL2Mouse();
-        ~SDL2Mouse();
-        bool GetButtonValue(int32_t button) const;
-        ButtonState GetButtonState(int32_t button) const;
-        Vec2 GetMousePos() const;
-        Vec2 GetReleativeMove() const;
-        Vec2 GetMouseScrollWheel() const;
+        ~SDL2Mouse() override;
+        bool GetButtonValue(int32_t button) const override;
+        ButtonState GetButtonState(int32_t button) const override;
+        Vec2 GetMousePos() const override;
+        Vec2 GetReleativeMove() const override;
+        Vec2 GetMouseScrollWheel() const override;
 
-        void SetReleativeMode(bool isActive);
-        bool IsReleativeMode() const;
+        void SetReleativeMode(bool isActive) override;
+        bool IsReleativeMode() const override;
 
     private:
         friend class SDL2Input;
@@ -46,23 +47,23 @@ namespace mulberry
         uint32_t mPreButtons;
     };
 
-    class SDL2Controller
+    class SDL2Controller:public Controller
     {
     public:
         SDL2Controller();
-        ~SDL2Controller();
+        ~SDL2Controller() override;
 
-        bool GetButtonValue(SDL_GameControllerButton button) const;
+        bool GetButtonValue(ControllerButton button) const override;
 
-        ButtonState GetButtonState(SDL_GameControllerButton button) const;
+        ButtonState GetButtonState(ControllerButton button) const override;
 
-        float GetLeftTriggerValue() const;
-        float GetRightTriggerValue() const;
+        float GetLeftTriggerValue() const override;
+        float GetRightTriggerValue() const override;
 
-        const Vec2 &GetLeftStickValue() const;
-        const Vec2 &GetRightStickValue() const;
+        const Vec2 &GetLeftStickValue() const override;
+        const Vec2 &GetRightStickValue() const override;
 
-        bool IsConnected() const;
+        bool IsConnected() const override;
 
     private:
         friend class SDL2Input;
@@ -77,22 +78,20 @@ namespace mulberry
         Vec2 mRightStickValue;
     };
 
-    class SDL2Input
+    class SDL2Input : public Input
     {
     public:
         SDL2Input();
-        ~SDL2Input();
-        const InputDevice *GetDevice();
+        ~SDL2Input() override;
 
-        void Init();
-        void PreUpdate();
-        void PostUpdate();
-        void ProcessEvent();
+        void Init() override;
+        void PreUpdate() override;
+        void PostUpdate() override;
+        void ProcessEvent() override;
 
-        SDL_Event GetCurEvent() const;        
+        bool IsWindowCloseButtonClick() override;
 
     private:
-        SDL_Event mCurEvent;
-        std::unique_ptr<InputDevice> mDevice;
+        bool mIsWindowCLoseButtonClick;
     };
 }

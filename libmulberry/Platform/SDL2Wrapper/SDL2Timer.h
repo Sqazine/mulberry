@@ -1,16 +1,17 @@
 #pragma once
 #include <cstdint>
-
+#include "Platform/Timer.h"
 namespace mulberry
 {
-	class SDL2Timer
+	class SDL2Timer : public Timer
 	{
 	public:
 		SDL2Timer();
-		void Init();
-		void Update(uint32_t lockFrame = 0);
+		~SDL2Timer() override;
+		void Init() override;
+		void Update(uint32_t lockFrame = 0) override;
 
-		float GetDeltaTime();
+		float GetDeltaTime() override;
 
 	private:
 		uint32_t mStartTick;

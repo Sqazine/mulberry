@@ -12,7 +12,7 @@ namespace mulberry
         virtual ~Component();
 
         virtual void Init();
-        virtual void ProcessInput(const InputDevice *inputDevice);
+        virtual void ProcessInput(const InputDevice &inputDevice);
         virtual void Update(float deltaTime);
         virtual void LateUpdate(float deltaTime);
         virtual void FixedUpdate();

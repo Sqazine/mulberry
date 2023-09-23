@@ -7,7 +7,7 @@ public:
     ~ShipMoveComponent();
 
     void Init() override;
-    void ProcessInput(const mulberry::InputDevice *inputDevice) override;
+    void ProcessInput(const mulberry::InputDevice &inputDevice) override;
     void Update(float deltaTime) override;
 private:
     mulberry::TransformComponent *ownerTransformComponent = nullptr;
