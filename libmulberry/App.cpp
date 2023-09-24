@@ -106,12 +106,9 @@ namespace mulberry
 
 	void App::ProcessInput()
 	{
-		if (mInput->IsWindowCloseButtonClick())
-			mState = AppState::EXIT;
-
 		for (const auto &entity : mScenes[mSceneIdx]->GetAllEntities())
 			for (const auto &comp : entity->GetAllComponents())
-				comp->ProcessInput(mInput->GetDevice());
+				comp->ProcessInput(mInput.get());
 	}
 	void App::Update()
 	{
@@ -125,6 +122,8 @@ namespace mulberry
 				comp->LateUpdate(mTimer->GetDeltaTime());
 			}
 		}
+
+		mWindow->ProcessEvent();
 
 		mInput->PostUpdate();
 	}

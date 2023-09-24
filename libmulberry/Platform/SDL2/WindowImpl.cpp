@@ -4,7 +4,10 @@
 namespace mulberry
 {
     WindowImpl::WindowImpl()
-        : mHandle(nullptr), mIsShown(false)
+        : mHandle(nullptr), mIsShown(false),
+          mIsWindowCloseButtonClick(false),
+          mIsWindowMaxButtonClick(false),
+          mIsWindowMinButtonClick(false)
     {
         auto flag = SDL_Init(SDL_INIT_EVERYTHING);
         if (flag < 0)
@@ -13,7 +16,7 @@ namespace mulberry
         SDL_Rect rect;
         auto ret = SDL_GetDisplayBounds(0, &rect);
 
-        uint32_t windowFlag = SDL_WINDOW_HIDDEN|SDL_WINDOW_ALLOW_HIGHDPI;
+        uint32_t windowFlag = SDL_WINDOW_HIDDEN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
 
         if (App::GetInstance().GetGraphicsConfig().backend == GraphicsBackend::GL)
             windowFlag |= SDL_WINDOW_OPENGL;
@@ -34,6 +37,7 @@ namespace mulberry
     {
         if (mHandle)
             SDL_DestroyWindow(mHandle);
+        SDL_Quit();
     }
 
     void WindowImpl::SetTitle(std::string_view str)
@@ -57,6 +61,7 @@ namespace mulberry
         mViewport = {0, 0, w, h};
         SDL_SetWindowSize(mHandle, w, h);
         SDL_SetWindowPosition(mHandle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+        mIsWindowResize = true;
     }
 
     Vec2 WindowImpl::GetSize()
@@ -103,6 +108,52 @@ namespace mulberry
         if (flag == SDL_FALSE)
             MULBERRY_CORE_ERROR("Failed to create vulkan surface from window.");
         return result;
+    }
+
+    void WindowImpl::ProcessEvent()
+    {
+        SDL_Event event;
+        SDL_PollEvent(&event);
+        switch (event.type)
+        {
+        case SDL_QUIT:
+            mIsWindowCloseButtonClick = true;
+            break;
+        case SDL_WINDOWEVENT:
+        {
+            switch (event.window.event)
+            {
+            case SDL_WINDOWEVENT_MINIMIZED:
+                mIsWindowMinButtonClick = true;
+                break;
+            case SDL_WINDOWEVENT_MAXIMIZED:
+                mIsWindowMaxButtonClick = true;
+                break;
+            case SDL_WINDOWEVENT_CLOSE:
+                mIsWindowCloseButtonClick = true;
+                break;
+            default:
+                break;
+            }
+        }
+        default:
+            break;
+        }
+    }
+
+    bool WindowImpl::IsWindowCloseButtonClick() const
+    {
+        return mIsWindowCloseButtonClick;
+    }
+
+    bool WindowImpl::IsWindowMaxButtonClick() const
+    {
+        return mIsWindowMaxButtonClick;
+    }
+
+    bool WindowImpl::IsWindowMinButtonClick() const
+    {
+        return mIsWindowMinButtonClick;
     }
 
 }

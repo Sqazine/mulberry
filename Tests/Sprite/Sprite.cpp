@@ -1,5 +1,18 @@
 #include "libmulberry/libmulberry.h"
 
+class AppQuitComponent : public mulberry::Component
+{
+public:
+    AppQuitComponent() = default;
+    ~AppQuitComponent() = default;
+
+    void ProcessInput(const mulberry::Input *input) override
+    {
+        if (mulberry::App::GetInstance().GetWindow()->IsWindowCloseButtonClick())
+            mulberry::App::GetInstance().Quit();
+    }
+};
+
 #undef main
 int32_t main(int32_t argc, char **argv)
 {
@@ -26,6 +39,8 @@ int32_t main(int32_t argc, char **argv)
 
     mulberry::SpriteComponent *spriteComponent = rootEntity->CreateComponent<mulberry::SpriteComponent>();
     spriteComponent->SetSprite(texture.get());
+
+    rootEntity->CreateComponent<AppQuitComponent>();
 
     mulberry::App::GetInstance().Run();
 

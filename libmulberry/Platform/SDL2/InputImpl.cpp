@@ -150,11 +150,10 @@ namespace mulberry
         return mIsConnected;
     }
 
-    InputImpl::InputImpl() 
-    : mIsWindowCLoseButtonClick(false)
+    InputImpl::InputImpl()
     {
-        mDevice.mouse = std::make_unique<SDL2Mouse>();
-        mDevice.keyboard = std::make_unique<SDL2Keyboard>();
+        mMouse = std::make_unique<SDL2Mouse>();
+        mKeyboard = std::make_unique<SDL2Keyboard>();
     }
     InputImpl::~InputImpl()
     {
@@ -162,27 +161,27 @@ namespace mulberry
 
     void InputImpl::Init()
     {
-        ((SDL2Keyboard *)mDevice.keyboard.get())->mCurKeyState = SDL_GetKeyboardState(nullptr);
-        ((SDL2Keyboard *)mDevice.keyboard.get())->mPreKeyState = new uint8_t[SDL_NUM_SCANCODES];
-        memset(((SDL2Keyboard *)mDevice.keyboard.get())->mPreKeyState, 0, SDL_NUM_SCANCODES);
+        ((SDL2Keyboard *)mKeyboard.get())->mCurKeyState = SDL_GetKeyboardState(nullptr);
+        ((SDL2Keyboard *)mKeyboard.get())->mPreKeyState = new uint8_t[SDL_NUM_SCANCODES];
+        memset(((SDL2Keyboard *)mKeyboard.get())->mPreKeyState, 0, SDL_NUM_SCANCODES);
     }
 
     void InputImpl::PreUpdate()
     {
-        memcpy_s(((SDL2Keyboard *)mDevice.keyboard.get())->mPreKeyState, SDL_NUM_SCANCODES, ((SDL2Keyboard *)mDevice.keyboard.get())->mCurKeyState, SDL_NUM_SCANCODES);
-        ((SDL2Mouse *)mDevice.mouse.get())->mPreButtons = ((SDL2Mouse *)mDevice.mouse.get())->mCurButtons;
-        ((SDL2Mouse *)mDevice.mouse.get())->mPrePos = ((SDL2Mouse *)mDevice.mouse.get())->mCurPos;
-        ((SDL2Mouse *)mDevice.mouse.get())->mMouseScrollWheel = Vec2::ZERO;
+        memcpy_s(((SDL2Keyboard *)mKeyboard.get())->mPreKeyState, SDL_NUM_SCANCODES, ((SDL2Keyboard *)mKeyboard.get())->mCurKeyState, SDL_NUM_SCANCODES);
+        ((SDL2Mouse *)mMouse.get())->mPreButtons = ((SDL2Mouse *)mMouse.get())->mCurButtons;
+        ((SDL2Mouse *)mMouse.get())->mPrePos = ((SDL2Mouse *)mMouse.get())->mCurPos;
+        ((SDL2Mouse *)mMouse.get())->mMouseScrollWheel = Vec2::ZERO;
     }
 
     void InputImpl::PostUpdate()
     {
         Vec2 p = Vec2::ZERO;
-        if (!((SDL2Mouse *)mDevice.mouse.get())->mIsRelative)
-            ((SDL2Mouse *)mDevice.mouse.get())->mCurButtons = SDL_GetMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
+        if (!((SDL2Mouse *)mMouse.get())->mIsRelative)
+            ((SDL2Mouse *)mMouse.get())->mCurButtons = SDL_GetMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
         else
-            ((SDL2Mouse *)mDevice.mouse.get())->mCurButtons = SDL_GetRelativeMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
-        ((SDL2Mouse *)mDevice.mouse.get())->mCurPos = p;
+            ((SDL2Mouse *)mMouse.get())->mCurButtons = SDL_GetRelativeMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
+        ((SDL2Mouse *)mMouse.get())->mCurPos = p;
 
         ProcessEvent();
     }
@@ -194,18 +193,9 @@ namespace mulberry
         switch (event.type)
         {
         case SDL_MOUSEWHEEL:
-            ((SDL2Mouse *)mDevice.mouse.get())->mMouseScrollWheel = Vec2(event.wheel.x, static_cast<float>(event.wheel.y));
-            break;
-        case SDL_QUIT:
-            mIsWindowCLoseButtonClick = true;
-            break;
-        default:
+            ((SDL2Mouse *)mMouse.get())->mMouseScrollWheel = Vec2(event.wheel.x, static_cast<float>(event.wheel.y));
             break;
         }
     }
 
-    bool InputImpl::IsWindowCloseButtonClick()
-    {
-        return mIsWindowCLoseButtonClick;
-    }
 }

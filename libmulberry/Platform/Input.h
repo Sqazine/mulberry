@@ -301,7 +301,7 @@ namespace mulberry
 
     enum ControllerButton
     {
-        A=0,
+        A = 0,
         B,
         X,
         Y,
@@ -335,8 +335,8 @@ namespace mulberry
     class Keyboard
     {
     public:
-        Keyboard()=default;
-        virtual ~Keyboard()=default;
+        Keyboard() = default;
+        virtual ~Keyboard() = default;
         virtual bool GetKeyValue(KeyCode keyCode) const = 0;
         virtual ButtonState GetKeyState(KeyCode keyCode) const = 0;
     };
@@ -344,65 +344,63 @@ namespace mulberry
     class Mouse
     {
     public:
-        Mouse()=default;
-        virtual ~Mouse()=default;
-        virtual bool GetButtonValue(int32_t button) const=0;
-        virtual ButtonState GetButtonState(int32_t button) const=0;
-        virtual Vec2 GetMousePos() const=0;
-        virtual Vec2 GetReleativeMove() const=0;
-        virtual Vec2 GetMouseScrollWheel() const=0;
- 
-        virtual void SetReleativeMode(bool isActive)=0;
-        virtual bool IsReleativeMode() const=0;
+        Mouse() = default;
+        virtual ~Mouse() = default;
+        virtual bool GetButtonValue(int32_t button) const = 0;
+        virtual ButtonState GetButtonState(int32_t button) const = 0;
+        virtual Vec2 GetMousePos() const = 0;
+        virtual Vec2 GetReleativeMove() const = 0;
+        virtual Vec2 GetMouseScrollWheel() const = 0;
 
+        virtual void SetReleativeMode(bool isActive) = 0;
+        virtual bool IsReleativeMode() const = 0;
     };
 
     class Controller
     {
     public:
-        Controller()=default;
-        virtual ~Controller()=default;
+        Controller() = default;
+        virtual ~Controller() = default;
 
-        virtual bool GetButtonValue(ControllerButton button) const=0;
- 
-        virtual enum ButtonState GetButtonState(ControllerButton button) const=0;
- 
-        virtual float GetLeftTriggerValue() const=0;
-        virtual float GetRightTriggerValue() const=0;
- 
-        virtual const Vec2 &GetLeftStickValue() const=0;
-        virtual const Vec2 &GetRightStickValue() const=0;
- 
-        virtual bool IsConnected() const=0;
+        virtual bool GetButtonValue(ControllerButton button) const = 0;
+
+        virtual enum ButtonState GetButtonState(ControllerButton button) const = 0;
+
+        virtual float GetLeftTriggerValue() const = 0;
+        virtual float GetRightTriggerValue() const = 0;
+
+        virtual const Vec2 &GetLeftStickValue() const = 0;
+        virtual const Vec2 &GetRightStickValue() const = 0;
+
+        virtual bool IsConnected() const = 0;
 
     private:
-    };
-
-    struct InputDevice
-    {
-        std::unique_ptr<Keyboard> keyboard;
-        std::unique_ptr<Mouse> mouse;
-        std::vector<std::unique_ptr<Controller>> controllers;
     };
 
     class Input
     {
     public:
-        Input(){}
-        virtual ~Input(){}
-        const InputDevice &GetDevice() const
+        Input() {}
+        virtual ~Input() {}
+
+        const Keyboard* GetKeyboard() const
         {
-            return mDevice;
+            return mKeyboard.get();
         }
 
+        const Mouse* GetMouse() const
+        {
+            return mMouse.get();
+        }
+
+    protected:
+        friend class App;
         virtual void Init() = 0;
         virtual void PreUpdate() = 0;
         virtual void PostUpdate() = 0;
-        virtual void ProcessEvent() = 0;
 
-        virtual bool IsWindowCloseButtonClick()=0;
-
-    protected:
-        InputDevice mDevice;
+        std::unique_ptr<Keyboard> mKeyboard;
+        std::unique_ptr<Mouse> mMouse;
+        std::vector<std::unique_ptr<Controller>> mControllers;
     };
 }

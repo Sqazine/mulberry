@@ -87,11 +87,8 @@ namespace mulberry
         void Init() override;
         void PreUpdate() override;
         void PostUpdate() override;
-        void ProcessEvent() override;
-
-        bool IsWindowCloseButtonClick() override;
-
     private:
-        bool mIsWindowCLoseButtonClick;
+        void ProcessEvent();
+
     };
 }

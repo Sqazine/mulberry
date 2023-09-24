@@ -17,7 +17,7 @@ namespace mulberry
 	{
 	}
 
-	void Component::ProcessInput(const InputDevice &inputDevice)
+	void Component::ProcessInput(const Input *input)
 	{
 	}
 	void Component::Update(float deltaTime)

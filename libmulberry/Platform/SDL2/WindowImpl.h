@@ -28,6 +28,10 @@ namespace mulberry
 		void Show() override;
 		void Hide() override;
 
+		bool IsWindowCloseButtonClick() const override;
+        bool IsWindowMaxButtonClick() const override;
+        bool IsWindowMinButtonClick() const override;
+
 	private:
 		SDL_Window *mHandle;
 		std::string mTitle = "";
@@ -36,7 +40,13 @@ namespace mulberry
 
 		bool mIsShown;
 
+		bool mIsWindowCloseButtonClick;
+        bool mIsWindowMaxButtonClick;
+        bool mIsWindowMinButtonClick;
+        bool mIsWindowResize;
+
 	protected:
+	 void ProcessEvent()  override;
 		std::vector<const char *> GetVulkanRequiredExtensions() override;
 		VkSurfaceKHR CreateSurface(VkInstance instance) override;
 	};
