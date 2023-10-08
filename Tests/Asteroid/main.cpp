@@ -1,5 +1,6 @@
 #include "libmulberry/libmulberry.h"
 #include "ShipMoveComponent.h"
+#include "ShipShootComponent.h"
 #undef main
 int main(int argc, char **argv)
 {
@@ -19,6 +20,7 @@ int main(int argc, char **argv)
     }
 
     rootEntity->CreateComponent<ShipMoveComponent>();
+    rootEntity->CreateComponent<ShipShootComponent>();
 
     mulberry::Entity *cameraEntity = scene->CreateEntity("Camera");
     auto cameraComp = cameraEntity->CreateComponent<mulberry::CameraComponent>();

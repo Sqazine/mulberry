@@ -23,6 +23,13 @@ namespace mulberry
         std::vector<Entity *> GetAllEntities() const;
 
     private:
+        friend class App;
+        void Init();
+        void Update();
+        void Render();
+        void RenderGizmo();
+        void CleanUp();
+
         friend class SceneRenderer;
         std::vector<std::unique_ptr<Entity>> mEntities;
         std::unique_ptr<AssetManager> mSceneAssetManager;

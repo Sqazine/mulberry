@@ -4,6 +4,7 @@
 #include <memory>
 #include <SDL2/SDL.h>
 #include "Math/Color.h"
+#include "Math/Vec2.h"
 namespace mulberry
 {
     struct ImgData
@@ -69,6 +70,11 @@ namespace mulberry
         void CreateFromSurface(SDL_Surface *surface);
 
         const TextureInfo &GetCreateInfo() const;
+
+        uint32_t GetWidth() const;
+        uint32_t GetHeight() const;
+
+        Vec2 GetExtent() const;
 
     private:
         friend class ShaderProgram;

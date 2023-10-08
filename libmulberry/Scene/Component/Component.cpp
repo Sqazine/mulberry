@@ -1,6 +1,6 @@
 #include "Component.h"
 #include "Entity.h"
-#include"Scene.h"
+#include "Scene.h"
 #include "AssetManager.h"
 namespace mulberry
 {
@@ -17,14 +17,11 @@ namespace mulberry
 	{
 	}
 
-	void Component::ProcessInput(const Input *input)
-	{
-	}
-	void Component::Update(float deltaTime)
+	void Component::Update()
 	{
 	}
 
-	void Component::LateUpdate(float deltaTime)
+	void Component::LateUpdate()
 	{
 	}
 	void Component::FixedUpdate()
@@ -46,8 +43,8 @@ namespace mulberry
 		return mOwner->GetOwner();
 	}
 
-	 AssetManager* Component::GetSceneAssetManager() const
-	 {
-		 return GetScene()->GetSceneAssetManager();
-	 }	
+	AssetManager *Component::GetSceneAssetManager() const
+	{
+		return GetScene()->GetSceneAssetManager();
+	}
 }

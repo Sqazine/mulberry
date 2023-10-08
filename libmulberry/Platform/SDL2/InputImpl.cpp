@@ -172,6 +172,8 @@ namespace mulberry
         ((SDL2Mouse *)mMouse.get())->mPreButtons = ((SDL2Mouse *)mMouse.get())->mCurButtons;
         ((SDL2Mouse *)mMouse.get())->mPrePos = ((SDL2Mouse *)mMouse.get())->mCurPos;
         ((SDL2Mouse *)mMouse.get())->mMouseScrollWheel = Vec2::ZERO;
+        
+        ProcessEvent();
     }
 
     void InputImpl::PostUpdate()
@@ -183,7 +185,6 @@ namespace mulberry
             ((SDL2Mouse *)mMouse.get())->mCurButtons = SDL_GetRelativeMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
         ((SDL2Mouse *)mMouse.get())->mCurPos = p;
 
-        ProcessEvent();
     }
 
     void InputImpl::ProcessEvent()

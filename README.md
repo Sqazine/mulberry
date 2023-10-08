@@ -1,2 +1,2 @@
-# pe2
+# mulberry
 2D game engine

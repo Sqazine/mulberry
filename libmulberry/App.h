@@ -38,13 +38,13 @@ namespace mulberry
 		const GraphicsConfig& GetGraphicsConfig() const;
 
 		Window *GetWindow() const;
+		Input *GetInput() const;
+		Timer *GetTimer() const;
 
 	private:
-		void ProcessInput();
 		void Update();
 		void Render();
 		void RenderGizmo();
-		void RenderUI();
 		void CleanUp();
 
 		std::unique_ptr<Window> mWindow;

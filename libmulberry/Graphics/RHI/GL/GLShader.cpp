@@ -59,9 +59,15 @@ namespace mulberry
 
 	void GLShaderProgram::SetTexture(std::string_view name, const GLTexture *texture)
 	{
-		glUniform1i(GetUniform(name), mTextureBindingIdx);
-		glActiveTexture(GL_TEXTURE0 + mTextureBindingIdx);
-		mTextureBindingIdx++;
+		auto iter=mActiveTextureSlot.find(name);
+		if(iter==mActiveTextureSlot.end())
+		{
+			mActiveTextureSlot[name]=mTextureBindingIdx++;
+			iter=mActiveTextureSlot.find(name);
+		}
+
+		glUniform1i(GetUniform(name), iter->second);
+		glActiveTexture(GL_TEXTURE0 + iter->second);
 		glBindTexture(GL_TEXTURE_2D, texture->GetHandle());
 	}
 

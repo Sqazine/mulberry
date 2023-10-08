@@ -12,8 +12,8 @@ namespace mulberry
             mGLTexture = std::make_unique<GLTexture>();
             break;
         default:
-            //TODO...
-            //mVKTexture=std::make_unique<VKTexture>();
+            // TODO...
+            // mVKTexture=std::make_unique<VKTexture>();
             break;
         }
     }
@@ -62,6 +62,38 @@ namespace mulberry
         {
         case GraphicsBackend::GL:
             return mGLTexture->GetCreateInfo();
+        default:
+            break;
+        }
+    }
+
+    uint32_t Texture::GetWidth() const
+    {
+        switch (App::GetInstance().GetGraphicsConfig().backend)
+        {
+        case GraphicsBackend::GL:
+            return mGLTexture->GetCreateInfo().data.width;
+        default:
+            break;
+        }
+    }
+    uint32_t Texture::GetHeight() const
+    {
+        switch (App::GetInstance().GetGraphicsConfig().backend)
+        {
+        case GraphicsBackend::GL:
+            return mGLTexture->GetCreateInfo().data.height;
+        default:
+            break;
+        }
+    }
+
+    Vec2 Texture::GetExtent() const
+    {
+        switch (App::GetInstance().GetGraphicsConfig().backend)
+        {
+        case GraphicsBackend::GL:
+            return Vec2(mGLTexture->GetCreateInfo().data.width, mGLTexture->GetCreateInfo().data.height);
         default:
             break;
         }

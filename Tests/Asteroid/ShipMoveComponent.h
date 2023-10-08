@@ -7,11 +7,13 @@ public:
     ~ShipMoveComponent();
 
     void Init() override;
-    void ProcessInput(const mulberry::Input *input) override;
-    void Update(float deltaTime) override;
+    void Update() override;
+
+    void Move();
 private:
-    mulberry::TransformComponent *ownerTransformComponent = nullptr;
-    mulberry::SpriteComponent *ownerSpriteComponent = nullptr;
+    mulberry::TransformComponent *mOwnerTransformComponent = nullptr;
+    mulberry::SpriteComponent *mOwnerSpriteComponent = nullptr;
+    mulberry::CameraComponent *mCameraComponent = nullptr;
 
     std::unique_ptr<mulberry::Texture> movingTexture;
     std::unique_ptr<mulberry::Texture> staticTexture;
@@ -20,7 +22,5 @@ private:
     float rotSpeed = 200;
     bool moveForward = false;
     bool moveBackward = false;
-    bool rotLeft = false;
-    bool rotRight = false;
 };
 

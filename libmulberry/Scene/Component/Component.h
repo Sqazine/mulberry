@@ -12,9 +12,8 @@ namespace mulberry
         virtual ~Component();
 
         virtual void Init();
-        virtual void ProcessInput(const Input *input);
-        virtual void Update(float deltaTime);
-        virtual void LateUpdate(float deltaTime);
+        virtual void Update();
+        virtual void LateUpdate();
         virtual void FixedUpdate();
 
         int32_t GetUpdateOrder() const;

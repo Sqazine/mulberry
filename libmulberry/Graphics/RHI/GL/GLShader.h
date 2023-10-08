@@ -64,6 +64,7 @@ namespace mulberry
 
         std::map<std::string, uint32_t> mActiveAttributes;
         std::map<std::string, uint32_t> mActiveUniforms;
+        std::map<std::string_view, uint32_t> mActiveTextureSlot;
 
         uint32_t mTextureBindingIdx;
 

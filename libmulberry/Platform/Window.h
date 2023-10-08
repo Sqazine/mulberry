@@ -30,7 +30,8 @@ namespace mulberry
 
     protected:
         friend class App;
-        virtual void ProcessEvent() = 0;
+        virtual void PreUpdate() = 0;
+        virtual void PostUpdate() = 0;
         friend class VKAdapter;
         virtual std::vector<const char *> GetVulkanRequiredExtensions() = 0;
         virtual VkSurfaceKHR CreateSurface(VkInstance instance) = 0;

@@ -1,5 +1,6 @@
 #include "Entity.h"
 #include "Logger.h"
+#include "Scene.h"
 namespace mulberry
 {
 
@@ -73,5 +74,10 @@ namespace mulberry
     Scene *Entity::GetOwner() const
     {
         return mOwner;
+    }
+
+    AssetManager *Entity::GetSceneAssetManager() const
+    {
+        return GetOwner()->GetSceneAssetManager();
     }
 }

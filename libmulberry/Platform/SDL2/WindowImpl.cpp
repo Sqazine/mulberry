@@ -110,7 +110,7 @@ namespace mulberry
         return result;
     }
 
-    void WindowImpl::ProcessEvent()
+    void WindowImpl::PreUpdate()
     {
         SDL_Event event;
         SDL_PollEvent(&event);
@@ -132,6 +132,8 @@ namespace mulberry
             case SDL_WINDOWEVENT_CLOSE:
                 mIsWindowCloseButtonClick = true;
                 break;
+            case SDL_WINDOWEVENT_RESIZED:
+                mIsWindowResize = true;
             default:
                 break;
             }
@@ -139,6 +141,14 @@ namespace mulberry
         default:
             break;
         }
+    }
+
+    void WindowImpl::PostUpdate()
+    {
+        mIsWindowCloseButtonClick = false;
+        mIsWindowMaxButtonClick = false;
+        mIsWindowMinButtonClick = false;
+        mIsWindowResize = false;
     }
 
     bool WindowImpl::IsWindowCloseButtonClick() const

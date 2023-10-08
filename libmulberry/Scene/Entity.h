@@ -12,7 +12,7 @@ namespace mulberry
         Entity(std::string_view name);
         ~Entity();
 
-        bool AddComponent(Component* component);
+        bool AddComponent(Component *component);
 
         template <class T, typename... Args>
         T *CreateComponent(Args &&...params);
@@ -33,6 +33,8 @@ namespace mulberry
         bool IsStatic() const;
 
         class Scene *GetOwner() const;
+
+        AssetManager *GetSceneAssetManager() const;
 
     private:
         friend class Scene;

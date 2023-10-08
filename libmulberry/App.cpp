@@ -20,12 +20,9 @@ namespace mulberry
 		while (mState != AppState::EXIT)
 		{
 			mTimer->Update();
-			ProcessInput();
 			Update();
 			GraphicsContext::GetInstance().BeginFrame();
 			Render();
-			RenderGizmo();
-			RenderUI();
 			GraphicsContext::GetInstance().EndFrame();
 		}
 		CleanUp();
@@ -83,6 +80,16 @@ namespace mulberry
 		return mWindow.get();
 	}
 
+	Input *App::GetInput() const
+	{
+		return mInput.get();
+	}
+
+	Timer *App::GetTimer() const
+	{
+		return mTimer.get();
+	}
+
 	void App::Init()
 	{
 
@@ -104,27 +111,21 @@ namespace mulberry
 		mSceneRenderer.Init();
 	}
 
-	void App::ProcessInput()
-	{
-		for (const auto &entity : mScenes[mSceneIdx]->GetAllEntities())
-			for (const auto &comp : entity->GetAllComponents())
-				comp->ProcessInput(mInput.get());
-	}
 	void App::Update()
 	{
 		mInput->PreUpdate();
+		mWindow->PreUpdate();
 
 		for (const auto &entity : mScenes[mSceneIdx]->GetAllEntities())
 		{
 			for (const auto &comp : entity->GetAllComponents())
 			{
-				comp->Update(mTimer->GetDeltaTime());
-				comp->LateUpdate(mTimer->GetDeltaTime());
+				comp->Update();
+				comp->LateUpdate();
 			}
 		}
 
-		mWindow->ProcessEvent();
-
+		mWindow->PostUpdate();
 		mInput->PostUpdate();
 	}
 	void App::Render()
@@ -133,10 +134,6 @@ namespace mulberry
 	}
 
 	void App::RenderGizmo()
-	{
-	}
-
-	void App::RenderUI()
 	{
 	}
 

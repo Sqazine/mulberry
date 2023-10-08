@@ -21,58 +21,79 @@ void ShipMoveComponent::Init()
     textureInfo.filterMode = mulberry::FilterMode::LINEAR;
     staticTexture.reset(new mulberry::Texture(textureInfo));
 
-    if (!ownerSpriteComponent)
-        ownerSpriteComponent = GetOwner()->GetComponent<mulberry::SpriteComponent>();
+    if (!mOwnerSpriteComponent)
+        mOwnerSpriteComponent = GetOwner()->GetComponent<mulberry::SpriteComponent>();
+    mOwnerSpriteComponent->SetSprite(staticTexture.get());
 
-    ownerSpriteComponent->SetSprite(staticTexture.get());
-
-    if (!ownerTransformComponent)
-        ownerTransformComponent = GetOwner()->GetComponent<mulberry::TransformComponent>();
-    ownerTransformComponent->SetRotation(90.0f);
-    ownerTransformComponent->SetPosition(0.0f, (-mulberry::App::GetInstance().GetWindow()->GetSize().y + textureInfo.data.height * ownerTransformComponent->GetScale().y) / 2.0f);
+    if (!mOwnerTransformComponent)
+        mOwnerTransformComponent = GetOwner()->GetComponent<mulberry::TransformComponent>();
+    mOwnerTransformComponent->SetRotation(90.0f);
+    mOwnerTransformComponent->SetPosition(0.0f, (-mulberry::App::GetInstance().GetWindow()->GetSize().y + textureInfo.data.height * mOwnerTransformComponent->GetScale().y) / 2.0f);
 }
 
-void ShipMoveComponent::ProcessInput(const mulberry::Input *input)
+void ShipMoveComponent::Update()
 {
+    Move();
+}
+
+void ShipMoveComponent::Move()
+{
+    float deltaTime = mulberry::App::GetInstance().GetTimer()->GetDeltaTime();
+
+    mCameraComponent = GetOwner()->GetOwner()->GetEntity("Camera")->GetComponent<mulberry::CameraComponent>();
+
     if (mulberry::App::GetInstance().GetWindow()->IsWindowCloseButtonClick())
         mulberry::App::GetInstance().Quit();
 
-    if (input->GetKeyboard()->GetKeyState(mulberry::KeyCode::KEYCODE_W) == mulberry::ButtonState::HOLD)
+    mulberry::Vec2 offset;
+    mulberry::Vec2 newPos;
+
+    if (mulberry::App::GetInstance().GetInput()->GetKeyboard()->GetKeyState(mulberry::KeyCode::KEYCODE_W) == mulberry::ButtonState::HOLD)
+    {
+        offset = mOwnerTransformComponent->GetLocalAxisX() * moveSpeed * deltaTime;
         moveForward = true;
+    }
     else
         moveForward = false;
 
-    if (input->GetKeyboard()->GetKeyState(mulberry::KEYCODE_S) == mulberry::ButtonState::HOLD)
+    if (mulberry::App::GetInstance().GetInput()->GetKeyboard()->GetKeyState(mulberry::KEYCODE_S) == mulberry::ButtonState::HOLD)
+    {
+        offset = -mOwnerTransformComponent->GetLocalAxisX() * moveSpeed * deltaTime;
         moveBackward = true;
+    }
     else
         moveBackward = false;
 
-    if (input->GetKeyboard()->GetKeyState(mulberry::KEYCODE_A) == mulberry::ButtonState::HOLD)
-        rotLeft = true;
-    else
-        rotLeft = false;
+    newPos = mOwnerTransformComponent->GetPosition() + offset;
 
-    if (input->GetKeyboard()->GetKeyState(mulberry::KEYCODE_D) == mulberry::ButtonState::HOLD)
-        rotRight = true;
-    else
-        rotRight = false;
-}
+    auto spriteExtent = mOwnerSpriteComponent->GetSprite()->GetExtent();
 
-void ShipMoveComponent::Update(float deltaTime)
-{
-    if (moveForward)
-        ownerTransformComponent->Translate(ownerTransformComponent->GetLocalAxisX() * moveSpeed * deltaTime);
-    if (moveBackward)
-        ownerTransformComponent->Translate(-ownerTransformComponent->GetLocalAxisX() * moveSpeed * deltaTime);
+    auto extent = mCameraComponent->GetExtent();
 
-    if (rotLeft)
-        ownerTransformComponent->Rotate(rotSpeed * deltaTime);
+    mulberry::Vec2 edge = mulberry::Vec2((extent.x - spriteExtent.x) / 2.0, (extent.y - spriteExtent.y) / 2.0);
 
-    if (rotRight)
-        ownerTransformComponent->Rotate(-rotSpeed * deltaTime);
+    if (newPos.x <= -edge.x)
+        newPos.x = -edge.x;
+
+    if (newPos.x >= edge.x)
+        newPos.x = edge.x;
+
+    if (newPos.y <= -edge.y)
+        newPos.y = -edge.y;
+
+    if (newPos.y >= edge.y)
+        newPos.y = edge.y;
+
+    mOwnerTransformComponent->SetPosition(newPos);
+
+    if (mulberry::App::GetInstance().GetInput()->GetKeyboard()->GetKeyState(mulberry::KEYCODE_A) == mulberry::ButtonState::HOLD)
+        mOwnerTransformComponent->Rotate(rotSpeed * deltaTime);
+
+    if (mulberry::App::GetInstance().GetInput()->GetKeyboard()->GetKeyState(mulberry::KEYCODE_D) == mulberry::ButtonState::HOLD)
+        mOwnerTransformComponent->Rotate(-rotSpeed * deltaTime);
 
     if (moveForward || moveBackward)
-        ownerSpriteComponent->SetSprite(movingTexture.get());
+        mOwnerSpriteComponent->SetSprite(movingTexture.get());
     else
-        ownerSpriteComponent->SetSprite(staticTexture.get());
+        mOwnerSpriteComponent->SetSprite(staticTexture.get());
 }

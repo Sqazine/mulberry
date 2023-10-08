@@ -6,7 +6,7 @@ public:
     AppQuitComponent() = default;
     ~AppQuitComponent() = default;
 
-    void ProcessInput(const mulberry::Input *input) override
+    void Update() override
     {
         if (mulberry::App::GetInstance().GetWindow()->IsWindowCloseButtonClick())
             mulberry::App::GetInstance().Quit();
