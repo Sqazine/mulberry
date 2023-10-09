@@ -48,7 +48,7 @@ namespace mulberry
 
 		std::string output;
 		for (size_t i = 0; i < mExtensions.size(); ++i)
-			output += "		" + std::string(mExtensions[i]) + "\n";
+			output += "\t\t\t" + std::string(mExtensions[i]) + "\n";
 
 		MULBERRY_CORE_INFO("Extensions:\n{}", output.c_str());
 	}

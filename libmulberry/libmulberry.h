@@ -23,3 +23,10 @@
 #include "Scene/Layer.h"
 #include "Scene/Object.h"
 #include "Scene/Tag.h"
+
+#define OGL_USE_DISCRETE_CARD                                              \
+    extern "C"                                                             \
+    {                                                                      \
+        _declspec(dllexport) unsigned long NvOptimusEnablement = 1;        \
+        _declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1; \
+    }

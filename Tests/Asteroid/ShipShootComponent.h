@@ -14,13 +14,7 @@ public:
 
 private:
      mulberry::TransformComponent *mOwnerTransformComponent = nullptr;
-
-    mulberry::Entity *GetLaserEntity();
-    void FlushLasers();
-
-    int8_t FindLaserCacheSlot();
-
-    std::unique_ptr<mulberry::Texture> mLaserTexture;
+       mulberry::CameraComponent *mCameraComponent = nullptr;
 
     struct LaserCache
     {
@@ -29,7 +23,15 @@ private:
         bool laserUsable{false};
     };
 
+    mulberry::Entity *GetLaserEntity();
+    void FlushLasers();
+
+    int8_t FindLaserCacheSlot();
+
+    void FlushLaserEntity(LaserCache& cache);
+
     std::vector<LaserCache> mLaserCaches;
 
+    std::unique_ptr<mulberry::Texture> mLaserTexture;
     float moveSpeed = 500;
 };
