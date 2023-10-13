@@ -94,9 +94,9 @@ namespace mulberry
 	{
 
 #if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
-		mInput = std::make_unique<InputImpl>();
-		mTimer = std::make_unique<TimerImpl>();
-		mWindow = std::make_unique<WindowImpl>();
+		mInput = std::make_unique<SDL2InputImpl>();
+		mTimer = std::make_unique<SDL2TimerImpl>();
+		mWindow = std::make_unique<SDL2WindowImpl>();
 #else
 #error "Not Support Platform,only windows is available now!"
 #endif

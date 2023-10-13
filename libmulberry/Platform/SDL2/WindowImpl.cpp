@@ -3,7 +3,7 @@
 #include "WindowImpl.h"
 namespace mulberry
 {
-    WindowImpl::WindowImpl()
+    SDL2WindowImpl::SDL2WindowImpl()
         : mHandle(nullptr), mIsShown(false),
           mIsWindowCloseButtonClick(false),
           mIsWindowMaxButtonClick(false),
@@ -33,30 +33,30 @@ namespace mulberry
         };
     }
 
-    WindowImpl::~WindowImpl()
+    SDL2WindowImpl::~SDL2WindowImpl()
     {
         if (mHandle)
             SDL_DestroyWindow(mHandle);
         SDL_Quit();
     }
 
-    void WindowImpl::SetTitle(std::string_view str)
+    void SDL2WindowImpl::SetTitle(std::string_view str)
     {
         mTitle = str;
         SDL_SetWindowTitle(mHandle, mTitle.c_str());
     }
 
-    std::string_view WindowImpl::GetTitle() const
+    std::string_view SDL2WindowImpl::GetTitle() const
     {
         return SDL_GetWindowTitle(mHandle);
     }
 
-    void WindowImpl::Resize(const Vec2 &extent)
+    void SDL2WindowImpl::Resize(const Vec2 &extent)
     {
         Resize(extent.x, extent.y);
     }
 
-    void WindowImpl::Resize(uint32_t w, uint32_t h)
+    void SDL2WindowImpl::Resize(uint32_t w, uint32_t h)
     {
         mViewport = {0, 0, w, h};
         SDL_SetWindowSize(mHandle, w, h);
@@ -64,35 +64,35 @@ namespace mulberry
         mIsWindowResize = true;
     }
 
-    Vec2 WindowImpl::GetSize()
+    Vec2 SDL2WindowImpl::GetSize()
     {
         int32_t x, y;
         SDL_GetWindowSize(mHandle, (int *)&x, (int *)&y);
         return Vec2(x, y);
     }
 
-    SDL_Window *WindowImpl::GetHandle()
+    SDL_Window *SDL2WindowImpl::GetHandle()
     {
         return mHandle;
     }
 
-    const Viewport &WindowImpl::GetViewport() const
+    const Viewport &SDL2WindowImpl::GetViewport() const
     {
         return mViewport;
     }
 
-    void WindowImpl::Show()
+    void SDL2WindowImpl::Show()
     {
         SDL_ShowWindow(mHandle);
         mIsShown = true;
     }
-    void WindowImpl::Hide()
+    void SDL2WindowImpl::Hide()
     {
         SDL_HideWindow(mHandle);
         mIsShown = false;
     }
 
-    std::vector<const char *> WindowImpl::GetVulkanRequiredExtensions()
+    std::vector<const char *> SDL2WindowImpl::GetVulkanRequiredExtensions()
     {
         uint32_t extensionCount;
         SDL_Vulkan_GetInstanceExtensions(mHandle, &extensionCount, nullptr);
@@ -101,7 +101,7 @@ namespace mulberry
         return result;
     }
 
-    VkSurfaceKHR WindowImpl::CreateSurface(VkInstance instance)
+    VkSurfaceKHR SDL2WindowImpl::CreateSurface(VkInstance instance)
     {
         VkSurfaceKHR result = VK_NULL_HANDLE;
         SDL_bool flag = SDL_Vulkan_CreateSurface(mHandle, instance, &result);
@@ -110,7 +110,7 @@ namespace mulberry
         return result;
     }
 
-    void WindowImpl::PreUpdate()
+    void SDL2WindowImpl::PreUpdate()
     {
         SDL_Event event;
         SDL_PollEvent(&event);
@@ -143,7 +143,7 @@ namespace mulberry
         }
     }
 
-    void WindowImpl::PostUpdate()
+    void SDL2WindowImpl::PostUpdate()
     {
         mIsWindowCloseButtonClick = false;
         mIsWindowMaxButtonClick = false;
@@ -151,17 +151,17 @@ namespace mulberry
         mIsWindowResize = false;
     }
 
-    bool WindowImpl::IsWindowCloseButtonClick() const
+    bool SDL2WindowImpl::IsWindowCloseButtonClick() const
     {
         return mIsWindowCloseButtonClick;
     }
 
-    bool WindowImpl::IsWindowMaxButtonClick() const
+    bool SDL2WindowImpl::IsWindowMaxButtonClick() const
     {
         return mIsWindowMaxButtonClick;
     }
 
-    bool WindowImpl::IsWindowMinButtonClick() const
+    bool SDL2WindowImpl::IsWindowMinButtonClick() const
     {
         return mIsWindowMinButtonClick;
     }

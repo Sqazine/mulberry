@@ -10,11 +10,11 @@
 #include "Platform/Window.h"
 namespace mulberry
 {
-	class WindowImpl : public Window
+	class SDL2WindowImpl : public Window
 	{
 	public:
-		WindowImpl();
-		~WindowImpl() override;
+		SDL2WindowImpl();
+		~SDL2WindowImpl() override;
 
 		void SetTitle(std::string_view str) override;
 		std::string_view GetTitle() const override;

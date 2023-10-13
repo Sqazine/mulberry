@@ -28,7 +28,7 @@ namespace mulberry
 
 	private:
 #if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
-		GLContextImpl mSDL2GLContextImpl;
+		SDL2GLContextImpl mSDL2GLContextImpl;
 #else
 #error "Unknown platform Timer"
 #endif

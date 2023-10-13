@@ -18,8 +18,6 @@ OGL_USE_DISCRETE_CARD
 int32_t main(int32_t argc, char **argv)
 {
     mulberry::App::GetInstance().SetGraphicsBackend(mulberry::GraphicsBackend::GL);
-    mulberry::App::GetInstance().Init();
-
     mulberry::App::GetInstance().GetWindow()->SetTitle("Sprite");
     mulberry::App::GetInstance().GetWindow()->Resize(1024, 768);
 

@@ -150,23 +150,23 @@ namespace mulberry
         return mIsConnected;
     }
 
-    InputImpl::InputImpl()
+    SDL2InputImpl::SDL2InputImpl()
     {
         mMouse = std::make_unique<SDL2Mouse>();
         mKeyboard = std::make_unique<SDL2Keyboard>();
     }
-    InputImpl::~InputImpl()
+    SDL2InputImpl::~SDL2InputImpl()
     {
     }
 
-    void InputImpl::Init()
+    void SDL2InputImpl::Init()
     {
         ((SDL2Keyboard *)mKeyboard.get())->mCurKeyState = SDL_GetKeyboardState(nullptr);
         ((SDL2Keyboard *)mKeyboard.get())->mPreKeyState = new uint8_t[SDL_NUM_SCANCODES];
         memset(((SDL2Keyboard *)mKeyboard.get())->mPreKeyState, 0, SDL_NUM_SCANCODES);
     }
 
-    void InputImpl::PreUpdate()
+    void SDL2InputImpl::PreUpdate()
     {
         memcpy_s(((SDL2Keyboard *)mKeyboard.get())->mPreKeyState, SDL_NUM_SCANCODES, ((SDL2Keyboard *)mKeyboard.get())->mCurKeyState, SDL_NUM_SCANCODES);
         ((SDL2Mouse *)mMouse.get())->mPreButtons = ((SDL2Mouse *)mMouse.get())->mCurButtons;
@@ -176,7 +176,7 @@ namespace mulberry
         ProcessEvent();
     }
 
-    void InputImpl::PostUpdate()
+    void SDL2InputImpl::PostUpdate()
     {
         Vec2 p = Vec2::ZERO;
         if (!((SDL2Mouse *)mMouse.get())->mIsRelative)
@@ -187,7 +187,7 @@ namespace mulberry
 
     }
 
-    void InputImpl::ProcessEvent()
+    void SDL2InputImpl::ProcessEvent()
     {
         SDL_Event event;
         SDL_PollEvent(&event);

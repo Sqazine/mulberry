@@ -2,20 +2,20 @@
 #include <SDL2/SDL.h>
 namespace mulberry
 {
-	TimerImpl::TimerImpl()
+	SDL2TimerImpl::SDL2TimerImpl()
 	{
 	}
 
-	TimerImpl::~TimerImpl()
+	SDL2TimerImpl::~SDL2TimerImpl()
 	{
 	}
 
-	void TimerImpl::Init()
+	void SDL2TimerImpl::Init()
 	{
 		mStartTick = SDL_GetTicks();
 	}
 
-	void TimerImpl::Update(uint32_t lockFrame)
+	void SDL2TimerImpl::Update(uint32_t lockFrame)
 	{
 		mCurTick = SDL_GetTicks();
 		if (lockFrame > 0)
@@ -27,7 +27,7 @@ namespace mulberry
 			mDeltaTime = 0.05f;
 	}
 
-	float TimerImpl::GetDeltaTime()
+	float SDL2TimerImpl::GetDeltaTime()
 	{
 		return mDeltaTime;
 	}

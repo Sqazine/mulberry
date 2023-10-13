@@ -3,7 +3,7 @@
 #include <vector>
 #include "Math/Vec2.h"
 namespace mulberry{
-class GLContextImpl
+class SDL2GLContextImpl
 	{
 	public:
 		void Init();

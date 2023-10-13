@@ -17,7 +17,7 @@ namespace mulberry
         ButtonState GetKeyState(KeyCode keyCode) const override;
 
     private:
-        friend class InputImpl;
+        friend class SDL2InputImpl;
         const uint8_t *mCurKeyState;
         uint8_t *mPreKeyState;
     };
@@ -37,7 +37,7 @@ namespace mulberry
         bool IsReleativeMode() const override;
 
     private:
-        friend class InputImpl;
+        friend class SDL2InputImpl;
 
         bool mIsRelative;
         Vec2 mCurPos;
@@ -66,7 +66,7 @@ namespace mulberry
         bool IsConnected() const override;
 
     private:
-        friend class InputImpl;
+        friend class SDL2InputImpl;
         uint8_t mCurrentButtons[SDL_CONTROLLER_BUTTON_MAX];
         uint8_t mPreviousButtons[SDL_CONTROLLER_BUTTON_MAX];
         bool mIsConnected;
@@ -78,11 +78,11 @@ namespace mulberry
         Vec2 mRightStickValue;
     };
 
-    class InputImpl : public Input
+    class SDL2InputImpl : public Input
     {
     public:
-        InputImpl();
-        ~InputImpl() override;
+        SDL2InputImpl();
+        ~SDL2InputImpl() override;
 
         void Init() override;
         void PreUpdate() override;
