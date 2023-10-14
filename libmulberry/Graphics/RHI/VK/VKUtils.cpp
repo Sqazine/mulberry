@@ -236,10 +236,21 @@ namespace mulberry
 				auto literal = result.substr(idx, keyword.size());
 				if (literal == keyword)
 				{
-					std::string insertCode = "layout(set=0,binding=" + std::to_string((uniformKeyIdx++)) + ") ";
+					std::string insertCode = "layout(set=0,binding=" + std::to_string((uniformKeyIdx)) + ") ";
 					result.insert(idx, insertCode, 0, insertCode.size());
 
 					idx += insertCode.size() + keyword.size();
+
+					auto uniformDeclName="set0binding"+std::to_string((uniformKeyIdx++)) +" {";
+
+					result.insert(idx,uniformDeclName);
+
+					while(result[idx]!=';')
+					{
+						++idx;
+					}
+
+					result.insert(idx+1,"};");
 				}
 			}
 			else if (c == 'i')
