@@ -3,6 +3,7 @@
 #include <glslang/SPIRV/GlslangToSpv.h>
 #include "Logger.h"
 #include "Graphics/RHI/Shader.h"
+#include "Platform/IO.h"
 namespace mulberry
 {
 	bool HasStencilComponent(VkFormat format)
@@ -284,6 +285,8 @@ namespace mulberry
 		std::string definition = "#define gl_VertexIndex gl_VertexID\n"
 								 "#define gl_InstanceIndex gl_InstanceID\n";
 
-		return header + definition + result;
+		auto content=header + definition + result+"\n";
+
+		return content;
 	}
 }

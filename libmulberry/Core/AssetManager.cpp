@@ -10,6 +10,7 @@
 #include <sstream>
 #include <iostream>
 #include "Logger.h"
+#include "Platform/IO.h"
 namespace mulberry
 {
     AssetManager::AssetManager()
@@ -50,7 +51,7 @@ namespace mulberry
         std::string content = sstream.str();
         file.close();
 
-        mTexts[path.data()] = content;
+        mTexts[path.data()] = IO::LoadText(path);
 
         return mTexts[path.data()];
     }

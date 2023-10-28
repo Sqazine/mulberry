@@ -34,9 +34,15 @@ namespace mulberry
         std::tuple<bool, BlendFunc, BlendFunc> GetBlendState() const;
 
         void Render(const VKIndexBuffer *ibo, PrimitiveRenderType mode);
-		void RenderInstanced(const VKIndexBuffer *ibo, PrimitiveRenderType mode, uint32_t instanceCount);
+        void RenderInstanced(const VKIndexBuffer *ibo, PrimitiveRenderType mode, uint32_t instanceCount);
+
+        const VkPipeline &GetHandle();
+
     private:
+        void Build();
         RasterPipelineConfig mConfig;
+
+        bool mIsDirty;
 
         VkPipeline mHandle;
     };

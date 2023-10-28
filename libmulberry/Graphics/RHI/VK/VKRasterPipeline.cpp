@@ -1,18 +1,21 @@
 #include "VKRasterPipeline.h"
-
+#include "VKContext.h"
+#include "VKDevice.h"
 namespace mulberry
 {
     VKRasterPipeline::VKRasterPipeline()
+        : mIsDirty(true)
     {
     }
 
     VKRasterPipeline::VKRasterPipeline(const RasterPipelineConfig &config)
-        : mConfig(config)
+        : mConfig(config), mIsDirty(true)
     {
     }
 
     VKRasterPipeline::~VKRasterPipeline()
     {
+        vkDestroyPipeline(VKContext::GetInstance().GetDevice()->GetHandle(), mHandle, nullptr);
     }
 
     void VKRasterPipeline::SetBufferClearColor(const Color &color)
@@ -93,5 +96,17 @@ namespace mulberry
     }
     void VKRasterPipeline::RenderInstanced(const VKIndexBuffer *ibo, PrimitiveRenderType mode, uint32_t instanceCount)
     {
+    }
+
+    const VkPipeline &VKRasterPipeline::GetHandle()
+    {
+        if (mHandle == VK_NULL_HANDLE || mIsDirty)
+            Build();
+        return mHandle;
+    }
+
+    void VKRasterPipeline::Build()
+    {
+        VkGraphicsPipelineCreateInfo info{};
     }
 }
