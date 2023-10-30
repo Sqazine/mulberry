@@ -8,8 +8,8 @@ namespace mulberry
     {
     }
 
-    VKRasterPipeline::VKRasterPipeline(const RasterPipelineConfig &config)
-        : mConfig(config), mIsDirty(true)
+    VKRasterPipeline::VKRasterPipeline(const RasterPipelineState &state)
+        : mState(state), mIsDirty(true)
     {
     }
 
@@ -18,83 +18,26 @@ namespace mulberry
         vkDestroyPipeline(VKContext::GetInstance().GetDevice()->GetHandle(), mHandle, nullptr);
     }
 
-    void VKRasterPipeline::SetBufferClearColor(const Color &color)
+    void VKRasterPipeline::SetPSO(const RasterPipelineState &state)
     {
-        mConfig.clearColor = color;
+        mState = state;
     }
 
-    void VKRasterPipeline::ClearColorBuffer()
+    const RasterPipelineState &VKRasterPipeline::GetPSO() const
+    {
+        return mState;
+    }
+
+    RasterPipelineState &VKRasterPipeline::GetPSO()
+    {
+        return mState;
+    }
+
+    void VKRasterPipeline::Render(const VKIndexBuffer *ibo)
     {
     }
 
-    Viewport VKRasterPipeline::GetViewport() const
-    {
-        return mConfig.viewport;
-    }
-
-    void VKRasterPipeline::SetViewport(const Viewport &info)
-    {
-        mConfig.viewport = info;
-    }
-
-    void VKRasterPipeline::SetPointSize(uint32_t size)
-    {
-        mConfig.pointSize = size;
-    }
-    uint32_t VKRasterPipeline::GetPointSize() const
-    {
-        return mConfig.pointSize;
-    }
-
-    void VKRasterPipeline::SetCull(CullType cullType)
-    {
-        mConfig.cullType = cullType;
-    }
-    const CullType &VKRasterPipeline::GetCullType() const
-    {
-        return mConfig.cullType;
-    }
-
-    void VKRasterPipeline::SetDepthTest(DepthTestType depthTest)
-    {
-        mConfig.depthTestType = depthTest;
-    }
-    const DepthTestType &VKRasterPipeline::GetDepthTest() const
-    {
-        return mConfig.depthTestType;
-    }
-
-    void VKRasterPipeline::SetDepthMask(DepthMask depthMask)
-    {
-        mConfig.depthMask = depthMask;
-    }
-    const DepthMask &VKRasterPipeline::GetDepthMask() const
-    {
-        return mConfig.depthMask;
-    }
-
-    void VKRasterPipeline::SetStencilMask(StencilMask stencilMask)
-    {
-        mConfig.stencilMask = stencilMask;
-    }
-    const StencilMask &VKRasterPipeline::GetStencilMask() const
-    {
-        return mConfig.stencilMask;
-    }
-
-    void VKRasterPipeline::SetBlendState(bool isOpen, BlendFunc srcFunc, BlendFunc dstFunc)
-    {
-        mConfig.blendState = {isOpen, srcFunc, dstFunc};
-    }
-    std::tuple<bool, BlendFunc, BlendFunc> VKRasterPipeline::GetBlendState() const
-    {
-        return mConfig.blendState;
-    }
-
-    void VKRasterPipeline::Render(const VKIndexBuffer *ibo, PrimitiveRenderType mode)
-    {
-    }
-    void VKRasterPipeline::RenderInstanced(const VKIndexBuffer *ibo, PrimitiveRenderType mode, uint32_t instanceCount)
+    void VKRasterPipeline::RenderInstanced(const VKIndexBuffer *ibo, uint32_t instanceCount)
     {
     }
 

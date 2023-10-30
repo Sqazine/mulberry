@@ -19,7 +19,7 @@ namespace mulberry
         return maps.find(type)->second;
     }
 
-    uint32_t ToGLPrimitiveType(PrimitiveRenderType type)
+    uint32_t ToGLPrimitiveRenderType(PrimitiveRenderType type)
     {
         const std::unordered_map<PrimitiveRenderType, uint32_t> maps = {
             {PrimitiveRenderType::POINT_LIST, GL_POINTS},
@@ -97,6 +97,7 @@ namespace mulberry
         case Format::RGBA32F:
             return GL_RGBA32F;
         default:
+// TODO
             break;
         }
         return GL_RGBA;
@@ -149,5 +150,109 @@ namespace mulberry
     {
         auto version = GLContext::GetInstance().GetVersion();
         return "#version " + std::to_string((int32_t)version.x) + std::to_string((int32_t)version.y) + "0 core\n" + std::string(source);
+    }
+
+    void ToGLRawPSO(const RasterPipelineState &state)
+    {
+        glViewport(state.viewport.x, state.viewport.y, state.viewport.width, state.viewport.height);
+
+        glPointSize(state.pointSize);
+
+        switch (state.cullType)
+        {
+        case CullType::NONE:
+            glDisable(GL_CULL_FACE);
+            break;
+        case CullType::FRONT:
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_FRONT);
+            break;
+        case CullType::BACK:
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_BACK);
+            break;
+        case CullType::FRONT_AND_BACK:
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_FRONT_AND_BACK);
+            break;
+        default:
+            glDisable(GL_CULL_FACE);
+            break;
+        }
+
+        if (state.depthTest == DepthTest::NONE)
+            glDisable(GL_DEPTH_TEST);
+        else
+            glEnable(GL_DEPTH_TEST);
+
+        switch (state.depthTest)
+        {
+        case DepthTest::ALWAYS:
+            glDepthFunc(GL_ALWAYS);
+            break;
+        case DepthTest::NEVER:
+            glDepthFunc(GL_NEVER);
+            break;
+        case DepthTest::LESS:
+            glDepthFunc(GL_LESS);
+            break;
+        case DepthTest::EQUAL:
+            glDepthFunc(GL_EQUAL);
+            break;
+        case DepthTest::LESS_EQUAL:
+            glDepthFunc(GL_LEQUAL);
+            break;
+        case DepthTest::GREATER:
+            glDepthFunc(GL_GREATER);
+            break;
+        case DepthTest::NOT_EQUAL:
+            glDepthFunc(GL_NOTEQUAL);
+            break;
+        case DepthTest::GREATER_EQUAL:
+            glDepthFunc(GL_GEQUAL);
+            break;
+        default:
+            glDisable(GL_DEPTH_TEST);
+            break;
+        }
+
+        switch (state.depthMask)
+        {
+        case DepthMask::OPEN:
+            glDepthMask(GL_TRUE);
+            break;
+        case DepthMask::CLOSE:
+        default:
+            glDepthMask(GL_FALSE);
+            break;
+        }
+
+        switch (state.stencilMask)
+        {
+        case StencilMask::OPEN:
+            glStencilMask(GL_TRUE);
+            break;
+        case StencilMask::CLOSE:
+        default:
+            glStencilMask(GL_FALSE);
+            break;
+        }
+
+        if (std::get<0>(state.blendState))
+            glEnable(GL_BLEND);
+        else
+            glDisable(GL_BLEND);
+
+        glBlendFunc(ToGLBlendFunc(std::get<1>(state.blendState)), ToGLBlendFunc(std::get<2>(state.blendState)));
+    }
+
+    void ToDefaultGLRawPSO()
+    {
+        glPointSize(1);
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_DEPTH_TEST);
+        glDepthMask(GL_FALSE);
+        glStencilMask(GL_FALSE);
+        glDisable(GL_BLEND);
     }
 }

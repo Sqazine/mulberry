@@ -16,6 +16,6 @@ private:
     mulberry::TransformComponent *mOwnerTransformComponent = nullptr;
     mulberry::SpriteComponent *mOwnerSpriteComponent = nullptr;
 
-    float moveSpeed = 500;
+    float moveSpeed = 1500;
     mulberry::Vec2 moveDir;
 };

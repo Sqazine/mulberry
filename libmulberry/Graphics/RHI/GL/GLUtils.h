@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "Graphics/RHI/RasterPipeline.h"
+#include "Graphics/RHI/RasterPipelineState.h"
 namespace mulberry
 {
      enum class ShaderType;
@@ -10,7 +11,7 @@ namespace mulberry
      enum class Format;
 
      uint32_t ToGLShaderType(ShaderType type);
-     uint32_t ToGLPrimitiveType(PrimitiveRenderType type);
+     uint32_t ToGLPrimitiveRenderType(PrimitiveRenderType type);
 
      uint32_t ToGLWarpMode(WrapMode mode);
      uint32_t ToGLFilterMode(FilterMode mode);
@@ -19,4 +20,7 @@ namespace mulberry
      uint32_t ToGLBlendFunc(BlendFunc mode);
 
      std::string ToGLShaderSourceCode(std::string_view source);
+
+     void ToGLRawPSO(const RasterPipelineState& state);
+     void ToDefaultGLRawPSO();
 }

@@ -11,6 +11,7 @@
 #include "Scene/Component/SpriteComponent.h"
 #include "Scene/Component/CameraComponent.h"
 #include "RasterPipeline.h"
+#include "DrawPass.h"
 namespace mulberry
 {
 	class SceneRenderer
@@ -21,25 +22,19 @@ namespace mulberry
 
 	private:
 		void RenderSprite(const Entity *entity, CameraComponent *camera);
-		void RenderLine(const Entity *entity, CameraComponent *camera);
-		void RenderPoint(const Entity *entity, CameraComponent *camera);
-		void RenderQuad(const Entity *entity, CameraComponent *camera);
-		void RenderCircle(const Entity *entity, CameraComponent *camera);
-
-		void RenderSpriteInstanced(const std::vector<const Entity *> spriteComps, CameraComponent *camera);
-		void RenderLineInstances(const std::vector<const Entity *> entities, CameraComponent *camera);
-		void RenderPointInstanced(const std::vector<const Entity *> entities, CameraComponent *camera);
-		void RenderQuadInstanced(const std::vector<const Entity *> entities, CameraComponent *camera);
-		void RenderCircleInstanced(const std::vector<const Entity *> entities, CameraComponent *camera);
+		void RenderAuxiliary(const Entity *entity, CameraComponent *camera,const Primitive& primitive);
 
 		std::unique_ptr<class GizmoMaterial> mGizmoMaterial;
 
 		std::unique_ptr<Primitive> mLinePrimitive;
-		std::unique_ptr<Primitive> mPointPrimitive;
 		std::unique_ptr<Primitive> mSpritePrimitive;
 		std::unique_ptr<Primitive> mQuadPrimitive;
 		std::unique_ptr<Primitive> mCirclePrimitive;
 
-		std::unique_ptr<RasterPipeline> mRasterPipeline;
+		std::unique_ptr<DrawPass> mDrawPass;
+
+		std::unique_ptr<RasterPipeline> mSpriteRasterPipeline;
+		std::unique_ptr<RasterPipeline> mAuxiliaryRasterPipeline;
+		std::unique_ptr<RasterPipeline> mPointRasterPipeline;
 	};
 }

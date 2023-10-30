@@ -6,41 +6,21 @@ namespace mulberry
     {
     public:
         VKRasterPipeline();
-        VKRasterPipeline(const RasterPipelineConfig &config);
+        VKRasterPipeline(const RasterPipelineState &state);
         ~VKRasterPipeline();
 
-        void SetBufferClearColor(const Color &color);
-        void ClearColorBuffer();
+        void SetPSO(const RasterPipelineState &state);
+        const RasterPipelineState &GetPSO() const;
+        RasterPipelineState &GetPSO();
 
-        Viewport GetViewport() const;
-        void SetViewport(const Viewport &info);
-
-        void SetPointSize(uint32_t size);
-        uint32_t GetPointSize() const;
-
-        void SetCull(CullType cullType);
-        const CullType &GetCullType() const;
-
-        void SetDepthTest(DepthTestType depthTest);
-        const DepthTestType &GetDepthTest() const;
-
-        void SetDepthMask(DepthMask depthMask);
-        const DepthMask &GetDepthMask() const;
-
-        void SetStencilMask(StencilMask stencilMask);
-        const StencilMask &GetStencilMask() const;
-
-        void SetBlendState(bool isOpen, BlendFunc srcFunc, BlendFunc dstFunc);
-        std::tuple<bool, BlendFunc, BlendFunc> GetBlendState() const;
-
-        void Render(const VKIndexBuffer *ibo, PrimitiveRenderType mode);
-        void RenderInstanced(const VKIndexBuffer *ibo, PrimitiveRenderType mode, uint32_t instanceCount);
+        void Render(const VKIndexBuffer *ibo);
+        void RenderInstanced(const VKIndexBuffer *ibo, uint32_t instanceCount);
 
         const VkPipeline &GetHandle();
 
     private:
         void Build();
-        RasterPipelineConfig mConfig;
+        RasterPipelineState mState;
 
         bool mIsDirty;
 

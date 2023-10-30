@@ -11,10 +11,28 @@ namespace mulberry
         mQuadPrimitive = std::make_unique<Primitive>(PrimitiveType::QUAD);
         mSpritePrimitive = std::make_unique<Primitive>(PrimitiveType::SPRITE);
         mLinePrimitive = std::make_unique<Primitive>(PrimitiveType::LINE);
-        mPointPrimitive = std::make_unique<Primitive>(PrimitiveType::POINT);
         mCirclePrimitive = std::make_unique<Primitive>(PrimitiveType::CIRCLE);
 
-        mRasterPipeline = std::make_unique<RasterPipeline>();
+        mDrawPass = std::make_unique<DrawPass>();
+
+        mSpriteRasterPipeline = std::make_unique<RasterPipeline>();
+        mSpriteRasterPipeline->GetPSO().cullType = CullType::BACK;
+        mSpriteRasterPipeline->GetPSO().depthTest = DepthTest::NONE;
+        mSpriteRasterPipeline->GetPSO().blendState = {true, BlendFunc::SRC_ALPHA, BlendFunc::ONE_MINUS_SRC_ALPHA};
+        mSpriteRasterPipeline->GetPSO().primitiveRenderType = PrimitiveRenderType::TRIANGLE_LIST;
+
+        mAuxiliaryRasterPipeline = std::make_unique<RasterPipeline>();
+        mAuxiliaryRasterPipeline->GetPSO().cullType = CullType::BACK;
+        mAuxiliaryRasterPipeline->GetPSO().depthTest = DepthTest::NONE;
+        mAuxiliaryRasterPipeline->GetPSO().blendState = {true, BlendFunc::SRC_ALPHA, BlendFunc::ONE_MINUS_SRC_ALPHA};
+        mAuxiliaryRasterPipeline->GetPSO().primitiveRenderType = PrimitiveRenderType::LINE_LIST;
+
+        mPointRasterPipeline = std::make_unique<RasterPipeline>();
+        mPointRasterPipeline->GetPSO().cullType = CullType::BACK;
+        mPointRasterPipeline->GetPSO().depthTest = DepthTest::NONE;
+        mPointRasterPipeline->GetPSO().blendState = {true, BlendFunc::SRC_ALPHA, BlendFunc::ONE_MINUS_SRC_ALPHA};
+        mPointRasterPipeline->GetPSO().primitiveRenderType = PrimitiveRenderType::POINT_LIST;
+        mPointRasterPipeline->GetPSO().pointSize = 5;
     }
 
     void SceneRenderer::RenderSprite(const Entity *entity, CameraComponent *camera)
@@ -39,7 +57,7 @@ namespace mulberry
         material->GetShaderProgram()->SetVertexBuffer("inPosition", mSpritePrimitive->GetPositionBuffer());
         material->GetShaderProgram()->SetVertexBuffer("inTexcoord", mSpritePrimitive->GetTexcoordBuffer());
 
-        mRasterPipeline->Render(*mSpritePrimitive, PrimitiveRenderType::TRIANGLE_LIST);
+        mSpriteRasterPipeline->Render(*mSpritePrimitive);
 
         material->GetShaderProgram()->ResetVertexBuffer("inTexcoord");
         material->GetShaderProgram()->ResetVertexBuffer("inPosition");
@@ -51,29 +69,31 @@ namespace mulberry
         material->GetShaderProgram()->SetActive(false);
     }
 
-    void SceneRenderer::RenderSpriteInstanced(const std::vector<const Entity *> spriteComps, CameraComponent *camera)
-    {
-        mRasterPipeline->RenderInstanced(*mSpritePrimitive, PrimitiveRenderType::LINE_LIST, spriteComps.size());
-    }
-
-    void SceneRenderer::RenderLine(const Entity *entity, CameraComponent *camera)
+    void SceneRenderer::RenderAuxiliary(const Entity *entity, CameraComponent *camera, const Primitive &primitive)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<RenderComponent>();
 
+        const SpriteMaterial *material = (SpriteMaterial *)spriteComp->GetMaterial();
+
+        // map to sprite size
+        Mat4 mat = transComp->GetModelMat();
+        mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
+
         mGizmoMaterial->GetShaderProgram()->SetActive(true);
 
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", transComp->GetModelMat());
+        mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", mat);
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
         mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
 
         mGizmoMaterial->SetUniformValue();
 
-        mGizmoMaterial->GetShaderProgram()->SetVertexArray(mLinePrimitive->GetVertexArray());
+        mGizmoMaterial->GetShaderProgram()->SetVertexArray(primitive.GetVertexArray());
 
-        mGizmoMaterial->GetShaderProgram()->SetVertexBuffer("inPosition", mLinePrimitive->GetPositionBuffer());
+        mGizmoMaterial->GetShaderProgram()->SetVertexBuffer("inPosition", primitive.GetPositionBuffer());
 
-        mRasterPipeline->Render(*mLinePrimitive, PrimitiveRenderType::LINE_LIST);
+        mAuxiliaryRasterPipeline->Render(primitive);
+        mPointRasterPipeline->Render(primitive);
 
         mGizmoMaterial->GetShaderProgram()->ResetVertexBuffer("inPosition");
 
@@ -82,106 +102,6 @@ namespace mulberry
         mGizmoMaterial->GetShaderProgram()->ResetVertexArray();
 
         mGizmoMaterial->GetShaderProgram()->SetActive(false);
-    }
-    void SceneRenderer::RenderPoint(const Entity *entity, CameraComponent *camera)
-    {
-        auto transComp = entity->GetComponent<TransformComponent>();
-        auto spriteComp = entity->GetComponent<RenderComponent>();
-
-        mGizmoMaterial->GetShaderProgram()->SetActive(true);
-
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", transComp->GetModelMat());
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
-
-        mGizmoMaterial->SetUniformValue();
-
-        mGizmoMaterial->GetShaderProgram()->SetVertexArray(mPointPrimitive->GetVertexArray());
-
-        mGizmoMaterial->GetShaderProgram()->SetVertexBuffer("inPosition", mPointPrimitive->GetPositionBuffer());
-
-        mRasterPipeline->SetPointSize(5);
-        mRasterPipeline->Render(*mPointPrimitive, PrimitiveRenderType::POINT_LIST);
-        mRasterPipeline->SetPointSize(1);
-
-        mGizmoMaterial->GetShaderProgram()->ResetVertexBuffer("inPosition");
-
-        mGizmoMaterial->ResetUniformValue();
-
-        mGizmoMaterial->GetShaderProgram()->ResetVertexArray();
-
-        mGizmoMaterial->GetShaderProgram()->SetActive(false);
-    }
-    void SceneRenderer::RenderQuad(const Entity *entity, CameraComponent *camera)
-    {
-        auto transComp = entity->GetComponent<TransformComponent>();
-        auto spriteComp = entity->GetComponent<SpriteComponent>();
-        const SpriteMaterial *material = (SpriteMaterial *)spriteComp->GetMaterial();
-
-        // map to sprite size
-        Mat4 mat = transComp->GetModelMat();
-        mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
-
-        mGizmoMaterial->GetShaderProgram()->SetActive(true);
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", mat);
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
-
-        mGizmoMaterial->SetUniformValue();
-
-        mGizmoMaterial->GetShaderProgram()->SetVertexArray(mQuadPrimitive->GetVertexArray());
-
-        mGizmoMaterial->GetShaderProgram()->SetVertexBuffer("inPosition", mQuadPrimitive->GetPositionBuffer());
-
-        mRasterPipeline->Render(*mQuadPrimitive, PrimitiveRenderType::LINE_LIST);
-
-        mGizmoMaterial->GetShaderProgram()->ResetVertexBuffer("inPosition");
-
-        mGizmoMaterial->ResetUniformValue();
-
-        mGizmoMaterial->GetShaderProgram()->SetActive(false);
-    }
-    void SceneRenderer::RenderCircle(const Entity *entity, CameraComponent *camera)
-    {
-        auto transComp = entity->GetComponent<TransformComponent>();
-        auto spriteComp = entity->GetComponent<RenderComponent>();
-        const SpriteMaterial *material = (SpriteMaterial *)spriteComp->GetMaterial();
-
-        // map to sprite size
-        Mat4 mat = transComp->GetModelMat();
-        mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
-
-        mGizmoMaterial->GetShaderProgram()->SetActive(true);
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", mat);
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
-
-        mGizmoMaterial->SetUniformValue();
-
-        mGizmoMaterial->GetShaderProgram()->SetVertexArray(mCirclePrimitive->GetVertexArray());
-
-        mGizmoMaterial->GetShaderProgram()->SetVertexBuffer("inPosition", mCirclePrimitive->GetPositionBuffer());
-
-        mRasterPipeline->Render(*mCirclePrimitive, PrimitiveRenderType::LINE_LIST);
-
-        mGizmoMaterial->GetShaderProgram()->ResetVertexBuffer("inPosition");
-
-        mGizmoMaterial->ResetUniformValue();
-
-        mGizmoMaterial->GetShaderProgram()->SetActive(false);
-    }
-
-    void SceneRenderer::RenderLineInstances(const std::vector<const Entity *> entities, CameraComponent *camera)
-    {
-    }
-    void SceneRenderer::RenderPointInstanced(const std::vector<const Entity *> entities, CameraComponent *camera)
-    {
-    }
-    void SceneRenderer::RenderQuadInstanced(const std::vector<const Entity *> entities, CameraComponent *camera)
-    {
-    }
-    void SceneRenderer::RenderCircleInstanced(const std::vector<const Entity *> entities, CameraComponent *camera)
-    {
     }
 
     void SceneRenderer::Render(const Scene *scene)
@@ -201,21 +121,23 @@ namespace mulberry
         }
         for (auto camera : cameraComponents)
         {
-            mRasterPipeline->SetViewport(App::GetInstance().GetWindow()->GetViewport());
+            mSpriteRasterPipeline->GetPSO().viewport = App::GetInstance().GetWindow()->GetViewport();
 
-            mRasterPipeline->SetBufferClearColor(camera->GetClearColor());
+            mDrawPass->SetClearColor(camera->GetClearColor());
+            mDrawPass->IsClearColorBuffer(true);
 
-            mRasterPipeline->ClearColorBuffer();
-
-            mRasterPipeline->SetCull(CullType::BACK);
-
-            mRasterPipeline->SetDepthTest(DepthTestType::NONE);
-
-            mRasterPipeline->SetBlendState(true,BlendFunc::SRC_ALPHA,BlendFunc::ONE_MINUS_SRC_ALPHA);
+            mDrawPass->Begin();
 
             // render sprite
             for (const auto &entity : entitiesWithSpriteComp)
+            {
                 RenderSprite(entity, camera);
+                RenderAuxiliary(entity, camera, *mLinePrimitive);
+                RenderAuxiliary(entity, camera, *mCirclePrimitive);
+                RenderAuxiliary(entity, camera, *mQuadPrimitive);
+            }
+
+            mDrawPass->End();
         }
     }
 }

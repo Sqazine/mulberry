@@ -63,6 +63,7 @@ namespace mulberry
         case GraphicsBackend::GL:
             return mGLShaderProgram->SetActive(isActive);
         default:
+            // TODO
             break;
         }
     }
@@ -75,6 +76,7 @@ namespace mulberry
             return mGLShaderProgram->SetTexture(name, texture->mGLTexture.get());
             break;
         default:
+            // TODO
             break;
         }
     }
@@ -87,6 +89,7 @@ namespace mulberry
             return mGLShaderProgram->SetVertexArray(vertexArray->mGLVertexArray.get());
             break;
         default:
+            // TODO
             break;
         }
     }
@@ -98,6 +101,7 @@ namespace mulberry
             return mGLShaderProgram->ResetVertexArray();
             break;
         default:
+            // TODO
             break;
         }
     }
@@ -110,6 +114,7 @@ namespace mulberry
             return mGLShaderProgram->ResetVertexBuffer(name);
             break;
         default:
+            // TODO
             break;
         }
     }
@@ -121,6 +126,7 @@ namespace mulberry
         case GraphicsBackend::GL:
             return mGLShaderProgram->AttachShader(*shader.mGLShaderModule);
         default:
+            // TODO
             break;
         }
     }
@@ -132,6 +138,7 @@ namespace mulberry
         case GraphicsBackend::GL:
             return mGLShaderProgram->GetAttribute(name);
         default:
+            // TODO
             break;
         }
     }
@@ -142,6 +149,7 @@ namespace mulberry
         case GraphicsBackend::GL:
             return mGLShaderProgram->GetUniform(name);
         default:
+            // TODO
             break;
         }
     }

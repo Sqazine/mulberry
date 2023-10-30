@@ -9,9 +9,6 @@ public:
 
     void Init() override;
     void Update() override;
-
-    void Move();
-
 private:
      mulberry::TransformComponent *mOwnerTransformComponent = nullptr;
        mulberry::CameraComponent *mCameraComponent = nullptr;
@@ -33,5 +30,4 @@ private:
     std::vector<LaserCache> mLaserCaches;
 
     std::unique_ptr<mulberry::Texture> mLaserTexture;
-    float moveSpeed = 500;
 };

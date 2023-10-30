@@ -33,7 +33,7 @@ namespace mulberry
     {
     public:
         GLShaderProgram();
-        GLShaderProgram(const class RasterPipelineConfig &config);
+        GLShaderProgram(const class RasterPipelineState &config);
         ~GLShaderProgram();
 
         void SetActive(bool isActive);
