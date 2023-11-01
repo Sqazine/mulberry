@@ -13,11 +13,16 @@ namespace mulberry
 		const VkPipelineShaderStageCreateInfo &GetStageCreateInfo() const;
 		const VkShaderModule &GetHandle() const;
 
-		const enum ShaderType &Type() const;
+		const ShaderType &Type() const;
 
 	private:
-		enum ShaderType mType;
+		ShaderType mType;
 		VkShaderModule mShaderModule;
 		VkPipelineShaderStageCreateInfo mStageCreateInfo;
+	};
+
+	class VKShaderProgram
+	{
+		
 	};
 }

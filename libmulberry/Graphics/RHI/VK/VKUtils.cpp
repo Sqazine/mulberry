@@ -150,7 +150,7 @@ namespace mulberry
 		shader->setStrings(pTempShaderSrc.data(), static_cast<int>(pTempShaderSrc.size()));
 		shader->setEnvInput(glslang::EShSource::EShSourceGlsl, stage, glslang::EShClient::EShClientVulkan, glslang::EShTargetClientVersion::EShTargetVulkan_1_2);
 		shader->setEnvClient(glslang::EShClient::EShClientVulkan, glslang::EShTargetClientVersion::EShTargetVulkan_1_2);
-		shader->setEnvTarget(glslang::EShTargetLanguage::EShTargetSpv, glslang::EShTargetLanguageVersion::EShTargetSpv_1_4);
+		shader->setEnvTarget(glslang::EShTargetLanguage::EShTargetSpv, glslang::EShTargetLanguageVersion::EShTargetSpv_1_0);
 
 		EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules);
 
@@ -237,21 +237,26 @@ namespace mulberry
 				auto literal = result.substr(idx, keyword.size());
 				if (literal == keyword)
 				{
-					std::string insertCode = "layout(set=0,binding=" + std::to_string((uniformKeyIdx)) + ") ";
+					std::string insertCode = "layout(set=0,binding=" + std::to_string((uniformKeyIdx++)) + ") ";
 					result.insert(idx, insertCode, 0, insertCode.size());
-
 					idx += insertCode.size() + keyword.size();
 
-					auto uniformDeclName="set0binding"+std::to_string((uniformKeyIdx++)) +" {";
-
-					result.insert(idx,uniformDeclName);
-
-					while(result[idx]!=';')
+					std::string samplerkeyword = "sampler";
+					literal = result.substr(idx, samplerkeyword.size());
+					if (literal == samplerkeyword)
 					{
-						++idx;
+						while (result[idx] != ';')
+							++idx;
 					}
+					else
+					{
+						auto uniformDeclName = "set0binding" + std::to_string((uniformKeyIdx - 1)) + " {";
+						result.insert(idx, uniformDeclName);
+						while (result[idx] != ';')
+							++idx;
 
-					result.insert(idx+1,"};");
+						result.insert(idx + 1, "};");
+					}
 				}
 			}
 			else if (c == 'i')
@@ -260,7 +265,7 @@ namespace mulberry
 				auto literal = result.substr(idx, keyword.size());
 				if (literal == keyword)
 				{
-					std::string insertCode = "layout(set=0,location=" + std::to_string((inKeyIdx++)) + ") ";
+					std::string insertCode = "layout(location=" + std::to_string((inKeyIdx++)) + ") ";
 					result.insert(idx, insertCode, 0, insertCode.size());
 
 					idx += insertCode.size() + keyword.size();
@@ -272,7 +277,7 @@ namespace mulberry
 				auto literal = result.substr(idx, keyword.size());
 				if (literal == keyword)
 				{
-					std::string insertCode = "layout(set=0,location=" + std::to_string((outKeyIdx++)) + ") ";
+					std::string insertCode = "layout(location=" + std::to_string((outKeyIdx++)) + ") ";
 					result.insert(idx, insertCode, 0, insertCode.size());
 
 					idx += insertCode.size() + keyword.size();
@@ -285,7 +290,7 @@ namespace mulberry
 		std::string definition = "#define gl_VertexIndex gl_VertexID\n"
 								 "#define gl_InstanceIndex gl_InstanceID\n";
 
-		auto content=header + definition + result+"\n";
+		auto content = header + definition + result + "\n";
 
 		return content;
 	}

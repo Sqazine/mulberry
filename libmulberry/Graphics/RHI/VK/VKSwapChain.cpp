@@ -10,10 +10,56 @@ namespace mulberry
 {
 
 	VKSwapChain::VKSwapChain()
-		: mSwapChainHandle(VK_NULL_HANDLE)
+		: mHandle(VK_NULL_HANDLE),mDevice(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice())
 	{
+		Build();
+	}
+	VKSwapChain::~VKSwapChain()
+	{
+		mSwapChainImageViews.clear();
+		vkDestroySwapchainKHR(mDevice->GetHandle(), mHandle, nullptr);
+		mDevice=nullptr;
+	}
 
-		SwapChainDetails swapChainDetail = VKContext::GetInstance().GetDevice()->GetPhysicalDeviceSpec().swapChainDetails;
+	uint32_t VKSwapChain::GetImageSize() const
+	{
+		return mSwapChainImages.size();
+	}
+
+	const std::vector<std::unique_ptr<VKImageView>> &VKSwapChain::GetImageViews() const
+	{
+		return mSwapChainImageViews;
+	}
+
+	const VkSurfaceFormatKHR VKSwapChain::GetSurfaceFormat() const
+	{
+		return mSwapChainSurfaceFormat;
+	}
+
+	Vec2 VKSwapChain::GetExtent() const
+	{
+		return Vec2(mSwapChainImageExtent.width, mSwapChainImageExtent.height);
+	}
+
+	uint32_t VKSwapChain::AcquireNextImage(const VKSemaphore *semaphore, const VKFence *fence) const
+	{
+		uint32_t imageIndex = 0;
+
+		if (semaphore && fence)
+			VK_CHECK(vkAcquireNextImageKHR(mDevice->GetHandle(), mHandle, UINT64_MAX, semaphore->GetHandle(), fence->GetHandle(), &imageIndex))
+		else if (semaphore && !fence)
+			VK_CHECK(vkAcquireNextImageKHR(mDevice->GetHandle(), mHandle, UINT64_MAX, semaphore->GetHandle(), nullptr, &imageIndex))
+		else if (!semaphore && fence)
+			VK_CHECK(vkAcquireNextImageKHR(mDevice->GetHandle(), mHandle, UINT64_MAX, nullptr, fence->GetHandle(), &imageIndex))
+		else
+			VK_CHECK(vkAcquireNextImageKHR(mDevice->GetHandle(), mHandle, UINT64_MAX, nullptr, nullptr, &imageIndex))
+
+		return imageIndex;
+	}
+
+	void VKSwapChain::Build()
+	{
+		SwapChainDetails swapChainDetail = QuerySwapChainDetails();
 		mSwapChainSurfaceFormat = ChooseSwapChainSurfaceFormat(swapChainDetail.surfaceFormats);
 		mSwapChainPresentMode = ChooseSwapChainPresentMode(swapChainDetail.presentModes);
 		mSwapChainImageExtent = ChooseSwapChainExtent(swapChainDetail.surfaceCapabilities);
@@ -22,7 +68,7 @@ namespace mulberry
 			.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
 			.pNext = nullptr,
 			.flags = 0,
-			.surface = VKContext::GetInstance().GetAdapter()->GetSurface(),
+			.surface = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetAdapter()->GetSurface(),
 			.minImageCount = uint32_t(App::GetInstance().GetGraphicsConfig().useDoubleBuffer ? 2 : 1),
 			.imageFormat = mSwapChainSurfaceFormat.format,
 			.imageColorSpace = mSwapChainSurfaceFormat.colorSpace,
@@ -31,7 +77,7 @@ namespace mulberry
 			.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
 		};
 
-		QueueFamilyIndices indices = VKContext::GetInstance().GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices;
+		QueueFamilyIndices indices = mDevice->GetPhysicalDeviceSpec().queueFamilyIndices;
 		uint32_t queueFamilyIndices[] = {indices.graphicsFamilyIdx.value(), indices.presentFamilyIdx.value()};
 
 		if (indices.graphicsFamilyIdx.value() != indices.presentFamilyIdx.value())
@@ -50,46 +96,38 @@ namespace mulberry
 		createInfo.preTransform = swapChainDetail.surfaceCapabilities.currentTransform;
 		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 		createInfo.presentMode = mSwapChainPresentMode;
-		createInfo.oldSwapchain = VK_NULL_HANDLE;
+		createInfo.oldSwapchain = mHandle == VK_NULL_HANDLE ? mHandle : VK_NULL_HANDLE;
 
-		VK_CHECK(vkCreateSwapchainKHR(VKContext::GetInstance().GetDevice()->GetHandle(), &createInfo, nullptr, &mSwapChainHandle));
+		VK_CHECK(vkCreateSwapchainKHR(mDevice->GetHandle(), &createInfo, nullptr, &mHandle));
 
-		uint32_t count=0;
+		uint32_t count = 0;
 
-		vkGetSwapchainImagesKHR(VKContext::GetInstance().GetDevice()->GetHandle(), mSwapChainHandle, &count, nullptr);
+		vkGetSwapchainImagesKHR(mDevice->GetHandle(), mHandle, &count, nullptr);
 		mSwapChainImages.resize(count);
-		vkGetSwapchainImagesKHR(VKContext::GetInstance().GetDevice()->GetHandle(), mSwapChainHandle, &count, mSwapChainImages.data());
+		vkGetSwapchainImagesKHR(mDevice->GetHandle(), mHandle, &count, mSwapChainImages.data());
 
 		mSwapChainImageViews.resize(count);
 		for (size_t i = 0; i < mSwapChainImageViews.size(); ++i)
-		{
-			VkImageViewCreateInfo imageViewCreateInfo = {};
-			imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-			imageViewCreateInfo.pNext = nullptr;
-			imageViewCreateInfo.flags = 0;
-			imageViewCreateInfo.image = mSwapChainImages[i];
-			imageViewCreateInfo.format = mSwapChainSurfaceFormat.format;
-			imageViewCreateInfo.components = {VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY};
-			imageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			imageViewCreateInfo.subresourceRange.baseMipLevel = 0;
-			imageViewCreateInfo.subresourceRange.levelCount = 1;
-			imageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
-			imageViewCreateInfo.subresourceRange.layerCount = 1;
-
-			VK_CHECK(vkCreateImageView(VKContext::GetInstance().GetDevice()->GetHandle(), &imageViewCreateInfo, nullptr, &mSwapChainImageViews[i]));
-		}
+			mSwapChainImageViews[i] = std::make_unique<VKImageView>(mSwapChainImages[i], mSwapChainSurfaceFormat.format, VK_IMAGE_VIEW_TYPE_2D, ImageAspect::COLOR);
 	}
-	VKSwapChain::~VKSwapChain()
+
+	const VkSwapchainKHR &VKSwapChain::GetHandle() const
 	{
-		for (auto imageView : mSwapChainImageViews)
-			vkDestroyImageView(VKContext::GetInstance().GetDevice()->GetHandle(), imageView, nullptr);
-		vkDestroySwapchainKHR(VKContext::GetInstance().GetDevice()->GetHandle(), mSwapChainHandle, nullptr);
+		return mHandle;
+	}
+
+	void VKSwapChain::ReBuild()
+	{
+		mDevice->WaitIdle();
+		mSwapChainImageViews.clear();
+		vkDestroySwapchainKHR(mDevice->GetHandle(), mHandle, nullptr);
+		Build();
 	}
 
 	VkSurfaceFormatKHR VKSwapChain::ChooseSwapChainSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats)
 	{
 		for (const auto &availableFormat : availableFormats)
-			if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+			if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
 				return availableFormat;
 		return availableFormats[0];
 	}
@@ -109,7 +147,7 @@ namespace mulberry
 			return capabilities.currentExtent;
 		else
 		{
-			auto size=App::GetInstance().GetWindow()->GetSize();
+			auto size = App::GetInstance().GetWindow()->GetSize();
 			VkExtent2D actualExtent =
 				{
 					(uint32_t)size.x,
@@ -121,5 +159,27 @@ namespace mulberry
 
 			return actualExtent;
 		}
+	}
+
+	SwapChainDetails VKSwapChain::QuerySwapChainDetails()
+	{
+		SwapChainDetails result;
+
+		auto surface = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetAdapter()->GetSurface();
+		auto physicalDevice = mDevice->GetPhysicalDeviceSpec().handle;
+
+		uint32_t count = 0;
+		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &count, nullptr);
+		result.surfaceFormats.resize(count);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &count, result.surfaceFormats.data());
+
+		count = 0;
+		vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &count, nullptr);
+		result.presentModes.resize(count);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &count, result.presentModes.data());
+
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &result.surfaceCapabilities);
+
+		return result;
 	}
 }

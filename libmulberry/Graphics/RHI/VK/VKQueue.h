@@ -1,7 +1,7 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include <cstdint>
-#include "VKFence.h"
+#include "VKSyncObject.h"
 
 namespace mulberry
 {

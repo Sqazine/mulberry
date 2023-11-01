@@ -32,6 +32,7 @@ namespace mulberry
 		bool IsWindowMaxButtonClick() const override;
 		bool IsWindowMinButtonClick() const override;
 
+		bool IsResize() const override;
 	private:
 		SDL_Window *mHandle;
 		std::string mTitle = "";

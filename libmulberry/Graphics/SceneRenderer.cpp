@@ -13,8 +13,6 @@ namespace mulberry
         mLinePrimitive = std::make_unique<Primitive>(PrimitiveType::LINE);
         mCirclePrimitive = std::make_unique<Primitive>(PrimitiveType::CIRCLE);
 
-        mDrawPass = std::make_unique<DrawPass>();
-
         mSpriteRasterPipeline = std::make_unique<RasterPipeline>();
         mSpriteRasterPipeline->GetPSO().cullType = CullType::BACK;
         mSpriteRasterPipeline->GetPSO().depthTest = DepthTest::NONE;
@@ -123,10 +121,10 @@ namespace mulberry
         {
             mSpriteRasterPipeline->GetPSO().viewport = App::GetInstance().GetWindow()->GetViewport();
 
-            mDrawPass->SetClearColor(camera->GetClearColor());
-            mDrawPass->IsClearColorBuffer(true);
+            App::GetInstance().GetGraphicsContext()->SetClearColor(camera->GetClearColor());
+            App::GetInstance().GetGraphicsContext()->IsClearColorBuffer(true);
 
-            mDrawPass->Begin();
+            App::GetInstance().GetGraphicsContext()->BeginFrame();
 
             // render sprite
             for (const auto &entity : entitiesWithSpriteComp)
@@ -137,7 +135,7 @@ namespace mulberry
                 RenderAuxiliary(entity, camera, *mQuadPrimitive);
             }
 
-            mDrawPass->End();
+            App::GetInstance().GetGraphicsContext()->EndFrame();
         }
     }
 }

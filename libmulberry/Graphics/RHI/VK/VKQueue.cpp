@@ -3,11 +3,12 @@
 #include "Logger.h"
 #include "VKUtils.h"
 #include "VKContext.h"
+#include "App.h"
 namespace mulberry
 {
 	VKQueue::VKQueue(uint32_t familyIndex)
 	{
-		vkGetDeviceQueue(VKContext::GetInstance().GetDevice()->GetHandle(), familyIndex, 0, &mHandle);
+		vkGetDeviceQueue(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), familyIndex, 0, &mHandle);
 	}
 
 	void VKQueue::WaitIdle() const

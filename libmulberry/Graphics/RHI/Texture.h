@@ -79,6 +79,6 @@ namespace mulberry
     private:
         friend class ShaderProgram;
         std::unique_ptr<class GLTexture> mGLTexture;
-        //std::unique_ptr<class VKTexture> mVKTexture;
+        std::unique_ptr<class VKTexture> mVKTexture;
     };
 }

@@ -20,10 +20,13 @@ namespace mulberry
 		uint32_t GetQueueFamilyIndex() const;
 
 		std::unique_ptr<class VKCommandBuffer> CreatePrimaryCommandBuffer();
+		std::vector<std::unique_ptr<class VKCommandBuffer>> CreatePrimaryCommandBuffers(uint32_t count);
 
 		void SubmitOnce(std::function<void(class VKCommandBuffer *)> func) const;
 
 	private:
+		const class VKDevice *mDevice;
+
 		uint32_t mQueueFamilyIndex;
 		VkCommandPool mCommandPool;
 	};
@@ -36,7 +39,8 @@ namespace mulberry
 
 		const VkCommandBuffer &GetHandle() const;
 
-		void Begin(const VkCommandBufferBeginInfo &beginInfo);
+		void Begin();
+		void BeginOnce();
 		void End();
 
 		void BeginRenderPass(const VkRenderPassBeginInfo &renderPassBeginInfo);
@@ -49,7 +53,7 @@ namespace mulberry
 		void BindPipeline(const VkPipeline &pipeline);
 
 		void DrawIndexed(uint32_t indexCount);
-		
+
 		template <typename T>
 		void BindVertexBuffer(const VKVertexBuffer<T> &vertexBuffer);
 
@@ -59,22 +63,26 @@ namespace mulberry
 
 		void CopyBufferToImage(const VKBuffer *srcBuffer, const VKImage *dstImage, VkImageLayout imgLayout, const VkBufferImageCopy &region);
 
+		void Reset();
+
 	private:
+		const class VKDevice *mDevice;
+
 		VkPipelineBindPoint mBindPoint;
 		VkCommandBufferLevel mLevel;
 		const VKCommandPool &mCommandPool;
-		VkCommandBuffer mCommandBuffer;
+		VkCommandBuffer mHandle;
 	};
 
 	template <typename T>
 	inline void VKCommandBuffer::BindVertexBuffer(const VKVertexBuffer<T> &vertexBuffer)
 	{
 		VkDeviceSize offsets = {0};
-		vkCmdBindVertexBuffers(mCommandBuffer, 0, 1, &vertexBuffer.GetBuffer(), &offsets);
+		vkCmdBindVertexBuffers(mHandle, 0, 1, &vertexBuffer.GetBuffer(), &offsets);
 	}
 
 	inline void VKCommandBuffer::BindIndexBuffer(const VKIndexBuffer &indexBuffer)
 	{
-		vkCmdBindIndexBuffer(mCommandBuffer, indexBuffer.GetHandle(), 0, indexBuffer.GetDataType());
+		vkCmdBindIndexBuffer(mHandle, indexBuffer.GetHandle(), 0, indexBuffer.GetDataType());
 	}
 }

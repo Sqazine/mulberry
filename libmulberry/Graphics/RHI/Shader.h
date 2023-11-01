@@ -5,11 +5,13 @@
 #include "GraphicsContext.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
+#include "Texture.h"
 #include "GL/GLShader.h"
+#include "VK/VKShader.h"
 
 namespace mulberry
 {
-    enum class ShaderType
+    enum ShaderType
     {
         VERTEX,
         FRAGMENT,
@@ -75,7 +77,7 @@ namespace mulberry
         case GraphicsBackend::GL:
             mGLShaderProgram->SetUniformValue<T>(name, value);
         default:
-// TODO
+            // TODO
             break;
         }
     }
@@ -88,7 +90,7 @@ namespace mulberry
         case GraphicsBackend::GL:
             mGLShaderProgram->SetUniformArray<T>(name, valueArray);
         default:
-// TODO
+            // TODO
             break;
         }
     }
@@ -101,7 +103,7 @@ namespace mulberry
         case GraphicsBackend::GL:
             mGLShaderProgram->SetVertexBuffer<T>(name, vertexBuffer->mGLVertexBuffer.get());
         default:
-// TODO
+            // TODO
             break;
         }
     }

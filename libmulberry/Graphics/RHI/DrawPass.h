@@ -2,6 +2,7 @@
 #include <memory>
 #include "Math/Color.h"
 #include "Graphics/RHI/GL/GLDrawPass.h"
+#include "Graphics/RHI/VK/VKDrawPass.h"
 namespace mulberry
 {
     class DrawPass
@@ -18,5 +19,6 @@ namespace mulberry
 
     private:
         std::unique_ptr<GLDrawPass> mGLDrawPass;
+        std::unique_ptr<VKDrawPass> mVKDrawPass;
     };
 }

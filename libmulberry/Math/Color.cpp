@@ -1,4 +1,5 @@
 #include "Color.h"
+#include "MathUtils.h"
 namespace mulberry
 {
     const Color Color::Black(0.0f, 0.0f, 0.0f);
@@ -102,4 +103,11 @@ namespace mulberry
 
         return *this;
     }
+
+    
+        Color Color::ToSRGB() const
+        {
+            return Color(math::Pow(r,2.2),math::Pow(g,2.2),math::Pow(b,2.2),math::Pow(a,2.2));
+        }
+
 }

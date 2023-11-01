@@ -20,10 +20,11 @@ namespace mulberry
 		while (mState != AppState::EXIT)
 		{
 			mTimer->Update();
+			PreUpdate();
 			Update();
-			GraphicsContext::GetInstance().BeginFrame();
 			Render();
-			GraphicsContext::GetInstance().EndFrame();
+			RenderGizmo();
+			PostUpdate();
 		}
 		CleanUp();
 	}
@@ -90,6 +91,11 @@ namespace mulberry
 		return mTimer.get();
 	}
 
+	GraphicsContext *App::GetGraphicsContext() const
+	{
+		return mGraphicsContext.get();
+	}
+
 	void App::Init()
 	{
 
@@ -100,12 +106,12 @@ namespace mulberry
 #else
 #error "Not Support Platform,only windows is available now!"
 #endif
-
 		Logger::GetInstance().Init();
 		mInput->Init();
 		mTimer->Init();
 
-		GraphicsContext::GetInstance().Init();
+		mGraphicsContext = std::make_unique<GraphicsContext>();
+		mGraphicsContext->Init();
 
 		mSceneIdx = 0;
 		mSceneRenderer.Init();
@@ -113,8 +119,17 @@ namespace mulberry
 
 	void App::Update()
 	{
-		mInput->PreUpdate();
-		mWindow->PreUpdate();
+#ifdef _DEBUG
+		static bool isFirst = true;
+		static std::string name;
+		if (isFirst)
+		{
+			name = mWindow->GetTitle();
+			isFirst = false;
+		}
+		auto fps = std::to_string(mTimer->GetFPS());
+		mWindow->SetTitle(name + " FPS = " + fps);
+#endif
 
 		for (const auto &entity : mScenes[mSceneIdx]->GetAllEntities())
 		{
@@ -124,10 +139,8 @@ namespace mulberry
 				comp->LateUpdate();
 			}
 		}
-
-		mWindow->PostUpdate();
-		mInput->PostUpdate();
 	}
+
 	void App::Render()
 	{
 		mSceneRenderer.Render(mScenes[mSceneIdx].get());
@@ -139,6 +152,17 @@ namespace mulberry
 
 	void App::CleanUp()
 	{
-		GraphicsContext::GetInstance().Destroy();
+	}
+
+	void App::PreUpdate()
+	{
+		mInput->PreUpdate();
+		mWindow->PreUpdate();
+	}
+
+	void App::PostUpdate()
+	{
+		mWindow->PostUpdate();
+		mInput->PostUpdate();
 	}
 }

@@ -5,6 +5,7 @@
 #include "VKUtils.h"
 #include "VKDevice.h"
 #include "VKContext.h"
+#include "App.h"
 
 namespace mulberry
 {
@@ -13,7 +14,7 @@ namespace mulberry
 	{
 		auto nativeVkShaderType = ToVkShaderType(type);
 
-		auto sourceCode=ToVKShaderSourceCode(content);
+		auto sourceCode = ToVKShaderSourceCode(content);
 
 		std::vector<uint32_t> pCode = GlslToSpv(nativeVkShaderType, sourceCode.data());
 
@@ -24,7 +25,7 @@ namespace mulberry
 		info.codeSize = pCode.size() * sizeof(uint32_t);
 		info.pCode = pCode.data();
 
-		VK_CHECK(vkCreateShaderModule(VKContext::GetInstance().GetDevice()->GetHandle(), &info, nullptr, &mShaderModule));
+		VK_CHECK(vkCreateShaderModule(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), &info, nullptr, &mShaderModule));
 
 		mStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		mStageCreateInfo.pNext = nullptr;
@@ -37,7 +38,7 @@ namespace mulberry
 
 	VKShaderModule::~VKShaderModule()
 	{
-		vkDestroyShaderModule(VKContext::GetInstance().GetDevice()->GetHandle(), mShaderModule, nullptr);
+		vkDestroyShaderModule(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), mShaderModule, nullptr);
 	}
 
 	const VkPipelineShaderStageCreateInfo &VKShaderModule::GetStageCreateInfo() const

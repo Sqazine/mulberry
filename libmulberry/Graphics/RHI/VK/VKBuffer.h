@@ -9,12 +9,12 @@ namespace mulberry
 	class VKBuffer
 	{
 	public:
-		VKBuffer(VkDeviceSize size,
+		VKBuffer(uint64_t size,
 				 VkBufferUsageFlags usage,
 				 VkMemoryPropertyFlags properties);
 
 		VKBuffer(void *srcData,
-				 VkDeviceSize size,
+				 uint64_t size,
 				 VkBufferUsageFlags usage,
 				 VkMemoryPropertyFlags properties);
 
@@ -22,25 +22,23 @@ namespace mulberry
 
 		const VkBuffer &GetHandle() const;
 		const VkDeviceMemory &GetMemory() const;
-		const VkDeviceSize &GetSize() const;
+		const uint64_t &GetSize() const;
 
 	protected:
 		VkMemoryRequirements GetMemoryRequirements() const;
 
 		VkBuffer mBuffer;
 		VkDeviceMemory mBufferMemory;
-		VkDeviceSize mSize;
+		uint64_t mSize;
 	};
 
 	class VKCpuBuffer : public VKBuffer
 	{
 	public:
-		VKCpuBuffer(VkDeviceSize size,
-					VkBufferUsageFlags usage);
+		VKCpuBuffer(uint64_t size, VkBufferUsageFlags usage);
 
 		template <typename T>
-		VKCpuBuffer(const std::vector<T> &srcData,
-					VkBufferUsageFlags usage);
+		VKCpuBuffer(const std::vector<T> &srcData,VkBufferUsageFlags usage);
 
 		void Fill(size_t size, const void *data);
 		void CopyFrom(class VKCommandBuffer *commandBuffer, VkBufferCopy bufferCopy, const VKCpuBuffer &buffer);
@@ -55,14 +53,11 @@ namespace mulberry
 	class VKGpuBuffer : public VKBuffer
 	{
 	public:
-		VKGpuBuffer(VkDeviceSize size,
-					VkBufferUsageFlags usage);
-
-		VKGpuBuffer(const VKCpuBuffer &srcBuffer,
-					VkBufferUsageFlags usage);
+		VKGpuBuffer(uint64_t size,VkBufferUsageFlags usage);
+		VKGpuBuffer(const VKCpuBuffer &srcBuffer,VkBufferUsageFlags usage);
 
 		void CopyFrom(class VKCommandBuffer *commandBuffer, VkBufferCopy bufferCopy, const VKCpuBuffer &buffer);
-	
-		 void CopyFromStagingBuffer(VkDeviceSize bufferSize, VKCpuBuffer &stagingBuffer);
+
+		void CopyFromStagingBuffer(VkDeviceSize bufferSize, VKCpuBuffer &stagingBuffer);
 	};
 }

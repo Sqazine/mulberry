@@ -33,13 +33,6 @@ namespace mulberry
 		}
 	};
 
-	struct SwapChainDetails
-	{
-		std::vector<VkSurfaceFormatKHR> surfaceFormats;
-		std::vector<VkPresentModeKHR> presentModes;
-		VkSurfaceCapabilitiesKHR surfaceCapabilities;
-	};
-
 	struct PhysicalDeviceSpec
 	{
 		VkPhysicalDevice handle;
@@ -49,7 +42,6 @@ namespace mulberry
 		VkPhysicalDeviceMemoryProperties memoryProps;
 		std::vector<VkQueueFamilyProperties> queueFamilyProps;
 		QueueFamilyIndices queueFamilyIndices;
-		SwapChainDetails swapChainDetails;
 	};
 
 	class VKAdapter : public NonCopyable
@@ -87,7 +79,7 @@ namespace mulberry
 		std::vector<const char *> mRequiredValidationLayers =
 			{
 				"VK_LAYER_KHRONOS_validation",
-				"VK_LAYER_LUNARG_monitor"};
+			};
 
 		VkDebugUtilsMessengerEXT mDebugMessengerHandle;
 #endif

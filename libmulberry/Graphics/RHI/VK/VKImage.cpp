@@ -3,7 +3,7 @@
 #include "VKUtils.h"
 #include "VKContext.h"
 #include "VKCommand.h"
-
+#include "App.h"
 namespace mulberry
 {
     VKImage::VKImage(
@@ -14,7 +14,7 @@ namespace mulberry
         VkImageTiling tiling,
         VkImageUsageFlags usage,
         VkMemoryPropertyFlags properties)
-        : mFormat(format)
+        : mFormat(format),mDevice(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice())
     {
         mImageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         mImageInfo.pNext = nullptr;
@@ -36,27 +36,27 @@ namespace mulberry
 
         mImageLayout = mImageInfo.initialLayout;
 
-        VK_CHECK(vkCreateImage(VKContext::GetInstance().GetDevice()->GetHandle(), &mImageInfo, nullptr, &mImage))
+        VK_CHECK(vkCreateImage(mDevice->GetHandle(), &mImageInfo, nullptr, &mImage))
 
         VkMemoryRequirements memRequirments;
 
-        vkGetImageMemoryRequirements(VKContext::GetInstance().GetDevice()->GetHandle(), mImage, &memRequirments);
+        vkGetImageMemoryRequirements(mDevice->GetHandle(), mImage, &memRequirments);
 
         VkMemoryAllocateInfo allocInfo;
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.pNext = nullptr;
-        allocInfo.memoryTypeIndex = VKContext::GetInstance().GetDevice()->FindMemoryType(memRequirments.memoryTypeBits, properties);
+        allocInfo.memoryTypeIndex = mDevice->FindMemoryType(memRequirments.memoryTypeBits, properties);
         allocInfo.allocationSize = memRequirments.size;
 
-        VK_CHECK(vkAllocateMemory(VKContext::GetInstance().GetDevice()->GetHandle(), &allocInfo, nullptr, &mImageMemory))
+        VK_CHECK(vkAllocateMemory(mDevice->GetHandle(), &allocInfo, nullptr, &mImageMemory))
 
-        vkBindImageMemory(VKContext::GetInstance().GetDevice()->GetHandle(), mImage, mImageMemory, 0);
+        vkBindImageMemory(mDevice->GetHandle(), mImage, mImageMemory, 0);
     }
 
     VKImage::~VKImage()
     {
-        vkFreeMemory(VKContext::GetInstance().GetDevice()->GetHandle(), mImageMemory, nullptr);
-        vkDestroyImage(VKContext::GetInstance().GetDevice()->GetHandle(), mImage, nullptr);
+        vkFreeMemory(mDevice->GetHandle(), mImageMemory, nullptr);
+        vkDestroyImage(mDevice->GetHandle(), mImage, nullptr);
     }
 
     const VkImage &VKImage::GetHandle() const
@@ -85,8 +85,8 @@ namespace mulberry
 
     void VKImage::TransitionToNewLayout(VkImageLayout newLayout)
     {
-        VKContext::GetInstance().GetDevice()->GetGraphicsCommandPool()->SubmitOnce([&](VKCommandBuffer *commandBuffer)
-                                                                   { commandBuffer->TransitionImageNewLayout(this, newLayout); });
+        App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetGraphicsCommandPool()->SubmitOnce([&](VKCommandBuffer *commandBuffer)
+                                                                                   { commandBuffer->TransitionImageNewLayout(this, newLayout); });
 
         mImageLayout = newLayout;
     }

@@ -32,6 +32,8 @@ namespace mulberry
         Color &operator*=(const Color &right);
         Color &operator=(const Color &right);
 
+        Color ToSRGB() const;
+
         static const Color Black;
         static const Color White;
         static const Color Red;

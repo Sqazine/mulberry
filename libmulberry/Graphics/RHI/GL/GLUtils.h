@@ -2,9 +2,10 @@
 #include <cstdint>
 #include "Graphics/RHI/RasterPipeline.h"
 #include "Graphics/RHI/RasterPipelineState.h"
+
 namespace mulberry
 {
-     enum class ShaderType;
+     enum ShaderType;
      enum class PrimitiveRenderType;
      enum class WrapMode;
      enum class FilterMode;

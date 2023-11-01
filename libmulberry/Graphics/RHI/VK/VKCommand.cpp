@@ -6,24 +6,26 @@
 #include "VKAdapter.h"
 #include "VKImage.h"
 #include "Logger.h"
+#include "App.h"
 #include <iostream>
 
 namespace mulberry
 {
 	VKCommandPool::VKCommandPool(uint32_t queueFamilyIndex)
-		: mQueueFamilyIndex(queueFamilyIndex)
+		: mQueueFamilyIndex(queueFamilyIndex), mDevice(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice())
 	{
 		VkCommandPoolCreateInfo poolInfo{};
 		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 		poolInfo.pNext = nullptr;
-		poolInfo.flags = 0;
+		poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 		poolInfo.queueFamilyIndex = mQueueFamilyIndex;
 
-		VK_CHECK(vkCreateCommandPool(VKContext::GetInstance().GetDevice()->GetHandle(), &poolInfo, nullptr, &mCommandPool))
+		VK_CHECK(vkCreateCommandPool(mDevice->GetHandle(), &poolInfo, nullptr, &mCommandPool))
 	}
 	VKCommandPool::~VKCommandPool()
 	{
-		vkDestroyCommandPool(VKContext::GetInstance().GetDevice()->GetHandle(), mCommandPool, nullptr);
+		vkDestroyCommandPool(mDevice->GetHandle(), mCommandPool, nullptr);
+		mDevice = nullptr;
 	}
 
 	const VkCommandPool &VKCommandPool::GetHandle() const
@@ -41,17 +43,19 @@ namespace mulberry
 		return std::move(std::make_unique<VKCommandBuffer>(*this, VK_COMMAND_BUFFER_LEVEL_PRIMARY));
 	}
 
+	std::vector<std::unique_ptr<class VKCommandBuffer>> VKCommandPool::CreatePrimaryCommandBuffers(uint32_t count)
+	{
+		std::vector<std::unique_ptr<VKCommandBuffer>> result(count);
+		for (uint32_t i = 0; i < count; ++i)
+			result[i] = std::move(CreatePrimaryCommandBuffer());
+		return std::move(result);
+	}
+
 	void VKCommandPool::SubmitOnce(std::function<void(VKCommandBuffer *)> func) const
 	{
 		auto commandBuffer = new VKCommandBuffer(*this, VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 
-		VkCommandBufferBeginInfo beginInfo{};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		beginInfo.pNext = nullptr;
-		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-		beginInfo.pInheritanceInfo = nullptr;
-
-		commandBuffer->Begin(beginInfo);
+		commandBuffer->BeginOnce();
 
 		func(commandBuffer);
 
@@ -64,20 +68,20 @@ namespace mulberry
 		submitInfo.pCommandBuffers = &commandBuffer->GetHandle();
 
 		const VKQueue *queue = nullptr;
-		if (mQueueFamilyIndex == VKContext::GetInstance().GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.graphicsFamilyIdx)
-			{
-				queue = VKContext::GetInstance().GetDevice()->GetGraphicsQueue();
-				((VKGraphicsQueue*)queue)->Submit(submitInfo);
-			}
-		else if (mQueueFamilyIndex == VKContext::GetInstance().GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.computeFamilyIdx)
+		if (mQueueFamilyIndex == App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.graphicsFamilyIdx)
 		{
-			queue = VKContext::GetInstance().GetDevice()->GetComputeQueue();
-			((VKComputeQueue*)queue)->Submit(submitInfo);
+			queue = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetGraphicsQueue();
+			((VKGraphicsQueue *)queue)->Submit(submitInfo);
 		}
-		else if (mQueueFamilyIndex == VKContext::GetInstance().GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.transferFamilyIdx)
+		else if (mQueueFamilyIndex == App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.computeFamilyIdx)
 		{
-			queue = VKContext::GetInstance().GetDevice()->GetTransferQueue();
-			((VKTransferQueue*)queue)->Submit(submitInfo);
+			queue = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetComputeQueue();
+			((VKComputeQueue *)queue)->Submit(submitInfo);
+		}
+		else if (mQueueFamilyIndex == App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.transferFamilyIdx)
+		{
+			queue = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetTransferQueue();
+			((VKTransferQueue *)queue)->Submit(submitInfo);
 		}
 
 		queue->WaitIdle();
@@ -87,7 +91,7 @@ namespace mulberry
 	}
 
 	VKCommandBuffer::VKCommandBuffer(const VKCommandPool &commandPool, VkCommandBufferLevel level)
-		: mCommandPool(commandPool), mLevel(level)
+		: mCommandPool(commandPool), mLevel(level), mDevice(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice())
 	{
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -96,52 +100,65 @@ namespace mulberry
 		allocInfo.commandPool = mCommandPool.GetHandle();
 		allocInfo.commandBufferCount = 1;
 
-		VK_CHECK(vkAllocateCommandBuffers(VKContext::GetInstance().GetDevice()->GetHandle(), &allocInfo, &mCommandBuffer));
+		VK_CHECK(vkAllocateCommandBuffers(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), &allocInfo, &mHandle));
 
-		if (mCommandPool.GetQueueFamilyIndex() ==VKContext::GetInstance().GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.graphicsFamilyIdx)
+		if (mCommandPool.GetQueueFamilyIndex() == App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.graphicsFamilyIdx)
 			mBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-		else if (mCommandPool.GetQueueFamilyIndex() == VKContext::GetInstance().GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.computeFamilyIdx)
+		else if (mCommandPool.GetQueueFamilyIndex() == App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.computeFamilyIdx)
 			mBindPoint = VK_PIPELINE_BIND_POINT_COMPUTE;
 		else
-			MULBERRY_CORE_ERROR("Unknown command buffer bind point for queue family index:{}",mCommandPool.GetQueueFamilyIndex());
+			MULBERRY_CORE_ERROR("Unknown command buffer bind point for queue family index:{}", mCommandPool.GetQueueFamilyIndex());
 	}
 
 	VKCommandBuffer::~VKCommandBuffer()
 	{
-		vkFreeCommandBuffers(VKContext::GetInstance().GetDevice()->GetHandle(), mCommandPool.GetHandle(), 1, &mCommandBuffer);
+		vkFreeCommandBuffers(mDevice->GetHandle(), mCommandPool.GetHandle(), 1, &mHandle);
+		mDevice = nullptr;
 	}
 
 	const VkCommandBuffer &VKCommandBuffer::GetHandle() const
 	{
-		return mCommandBuffer;
+		return mHandle;
 	}
 
-	void VKCommandBuffer::Begin(const VkCommandBufferBeginInfo &beginInfo)
+	void VKCommandBuffer::Begin()
 	{
-		vkBeginCommandBuffer(mCommandBuffer, &beginInfo);
+		VkCommandBufferBeginInfo cmdBeginInfo{};
+		cmdBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		VK_CHECK(vkBeginCommandBuffer(mHandle, &cmdBeginInfo));
+	}
+
+	void VKCommandBuffer::BeginOnce()
+	{
+		VkCommandBufferBeginInfo beginInfo{};
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		beginInfo.pNext = nullptr;
+		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+		beginInfo.pInheritanceInfo = nullptr;
+		VK_CHECK(vkBeginCommandBuffer(mHandle, &beginInfo));
 	}
 
 	void VKCommandBuffer::End()
 	{
-		vkEndCommandBuffer(mCommandBuffer);
+		VK_CHECK(vkEndCommandBuffer(mHandle));
 	}
 
 	void VKCommandBuffer::BeginRenderPass(const VkRenderPassBeginInfo &renderPassBeginInfo)
 	{
 		if (mLevel == VK_COMMAND_BUFFER_LEVEL_PRIMARY)
-			vkCmdBeginRenderPass(mCommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+			vkCmdBeginRenderPass(mHandle, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 		else if (mLevel == VK_COMMAND_BUFFER_LEVEL_SECONDARY)
-			vkCmdBeginRenderPass(mCommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+			vkCmdBeginRenderPass(mHandle, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
 	}
 
 	void VKCommandBuffer::EndRenderPass()
 	{
-		vkCmdEndRenderPass(mCommandBuffer);
+		vkCmdEndRenderPass(mHandle);
 	}
 
 	void VKCommandBuffer::BindDescriptorSet(const VkPipelineLayout &layout, const VkDescriptorSet &descriptorSet)
 	{
-		vkCmdBindDescriptorSets(mCommandBuffer, mBindPoint, layout, 0, 1, &descriptorSet, 0, nullptr);
+		vkCmdBindDescriptorSets(mHandle, mBindPoint, layout, 0, 1, &descriptorSet, 0, nullptr);
 	}
 
 	void VKCommandBuffer::BindDescriptorSets(const VkPipelineLayout &layout, const std::vector<VkDescriptorSet> &descriptorSets)
@@ -151,17 +168,17 @@ namespace mulberry
 
 	void VKCommandBuffer::BindDescriptorSets(const VkPipelineLayout &layout, uint32_t count, const VkDescriptorSet *descriptorSets)
 	{
-		vkCmdBindDescriptorSets(mCommandBuffer, mBindPoint, layout, 0, count, descriptorSets, 0, nullptr);
+		vkCmdBindDescriptorSets(mHandle, mBindPoint, layout, 0, count, descriptorSets, 0, nullptr);
 	}
 
 	void VKCommandBuffer::BindPipeline(const VkPipeline &pipeline)
 	{
-		vkCmdBindPipeline(mCommandBuffer, mBindPoint, pipeline);
+		vkCmdBindPipeline(mHandle, mBindPoint, pipeline);
 	}
 
 	void VKCommandBuffer::DrawIndexed(uint32_t indexCount)
 	{
-		vkCmdDrawIndexed(mCommandBuffer, indexCount, 1, 0, 0, 0);
+		vkCmdDrawIndexed(mHandle, indexCount, 1, 0, 0, 0);
 	}
 
 	void VKCommandBuffer::TransitionImageNewLayout(VKImage *image, VkImageLayout newLayout)
@@ -310,7 +327,7 @@ namespace mulberry
 		}
 
 		vkCmdPipelineBarrier(
-			mCommandBuffer,
+			mHandle,
 			sourceStage, destinationStage,
 			0,
 			0, nullptr,
@@ -321,6 +338,11 @@ namespace mulberry
 
 	void VKCommandBuffer::CopyBufferToImage(const VKBuffer *srcBuffer, const VKImage *dstImage, VkImageLayout imgLayout, const VkBufferImageCopy &region)
 	{
-		vkCmdCopyBufferToImage(mCommandBuffer, srcBuffer->GetHandle(), dstImage->GetHandle(), imgLayout, 1, &region);
+		vkCmdCopyBufferToImage(mHandle, srcBuffer->GetHandle(), dstImage->GetHandle(), imgLayout, 1, &region);
+	}
+
+	void VKCommandBuffer::Reset()
+	{
+		vkResetCommandBuffer(mHandle, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
 	}
 }

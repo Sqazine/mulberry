@@ -22,6 +22,7 @@ namespace mulberry
 		const VKGraphicsQueue *GetGraphicsQueue();
 		const VKComputeQueue *GetComputeQueue();
 		const VKTransferQueue *GetTransferQueue();
+		const VKPresentQueue *GetPresentQueue();
 
 		class VKCommandPool *GetGraphicsCommandPool();
 		class VKCommandPool *GetComputeCommandPool();
@@ -38,6 +39,7 @@ namespace mulberry
 		std::unique_ptr<VKGraphicsQueue> mGraphicsQueue;
 		std::unique_ptr<VKComputeQueue> mComputeQueue;
 		std::unique_ptr<VKTransferQueue> mTransferQueue;
+		std::unique_ptr<VKPresentQueue> mPresentQueue;
 
 		std::unique_ptr<class VKCommandPool> mGraphicsCommandPool;
 		std::unique_ptr<class VKCommandPool> mComputeCommandPool;

@@ -137,7 +137,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBits
 		break;
 	}
 
-	MULBERRY_CORE_INFO("{}:{}\n", tags.c_str(), pCallbackData->pMessage);
+	std::cerr << "\033[0m\033[1;31m" << tags << ":" << pCallbackData->pMessage << "\n\033[0m" << std::endl;
 
 	return VK_FALSE;
 }
@@ -223,6 +223,8 @@ namespace mulberry
 #ifdef _DEBUG
 		DestroyDebugUtilsMessengerEXT(mInstanceHandle, mDebugMessengerHandle, nullptr);
 #endif
+		vkDestroySurfaceKHR(mInstanceHandle,mSurface,nullptr);
+
 		vkDestroyInstance(mInstanceHandle, nullptr);
 	}
 	void VKAdapter::CheckInstanceValidationLayerSupport()
@@ -323,18 +325,6 @@ namespace mulberry
 			i++;
 		}
 
-		uint32_t count = 0;
-		vkGetPhysicalDeviceSurfaceFormatsKHR(device, mSurface, &count, nullptr);
-		result.swapChainDetails.surfaceFormats.resize(count);
-		vkGetPhysicalDeviceSurfaceFormatsKHR(device, mSurface, &count, result.swapChainDetails.surfaceFormats.data());
-
-		count = 0;
-		vkGetPhysicalDeviceSurfacePresentModesKHR(device, mSurface, &count, nullptr);
-		result.swapChainDetails.presentModes.resize(count);
-		vkGetPhysicalDeviceSurfacePresentModesKHR(device, mSurface, &count, result.swapChainDetails.presentModes.data());
-
-		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, mSurface, &result.swapChainDetails.surfaceCapabilities);
-
 		return result;
 	}
 	void VKAdapter::PrintInstanceInfo()
@@ -427,7 +417,7 @@ namespace mulberry
 					if (mPhysicalDeviceSpecs[idx].deviceExtensions[i].extensionName == requiredDeviceExt)
 						isSatisfied++;
 				}
-				if (isSatisfied == mRequiredDeviceExtensions.size()-1)
+				if (isSatisfied == mRequiredDeviceExtensions.size() - 1)
 					isFound = true;
 			}
 
@@ -435,6 +425,6 @@ namespace mulberry
 				break;
 		}
 
-		return new VKDevice(mPhysicalDeviceSpecs[idx],mRequiredDeviceExtensions);
+		return new VKDevice(mPhysicalDeviceSpecs[idx], mRequiredDeviceExtensions);
 	}
 }

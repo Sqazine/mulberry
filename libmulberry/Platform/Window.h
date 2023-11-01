@@ -28,6 +28,8 @@ namespace mulberry
         virtual bool IsWindowMaxButtonClick() const = 0;
         virtual bool IsWindowMinButtonClick() const = 0;
 
+        virtual bool IsResize() const = 0;
+
     protected:
         friend class App;
         virtual void PreUpdate() = 0;

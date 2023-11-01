@@ -80,13 +80,20 @@ namespace mulberry
 
 namespace mulberry
 {
+	struct SwapChainDetails
+	{
+		std::vector<VkSurfaceFormatKHR> surfaceFormats;
+		std::vector<VkPresentModeKHR> presentModes;
+		VkSurfaceCapabilitiesKHR surfaceCapabilities;
+	};
+
 	bool HasStencilComponent(VkFormat format);
 
 	std::vector<uint32_t> GlslToSpv(const VkShaderStageFlagBits shaderType, std::string_view shaderSrc);
 
 	uint32_t GetBiggerTwoPower(uint32_t val);
 
-	VkShaderStageFlagBits ToVkShaderType(enum class ShaderType type);
+	VkShaderStageFlagBits ToVkShaderType(enum ShaderType type);
 
 	std::string ToVKShaderSourceCode(std::string_view src);
 }

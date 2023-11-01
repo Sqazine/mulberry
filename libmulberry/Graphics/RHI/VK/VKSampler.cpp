@@ -3,6 +3,7 @@
 #include "Logger.h"
 #include "VKDevice.h"
 #include "VKUtils.h"
+#include "App.h"
 
 namespace mulberry {
 
@@ -16,11 +17,11 @@ namespace mulberry {
 		createInfo.addressModeV = (VkSamplerAddressMode)addressV;
 		createInfo.addressModeW = (VkSamplerAddressMode)addressW;
 
-		VK_CHECK(vkCreateSampler(VKContext::GetInstance().GetDevice()->GetHandle(), &createInfo, nullptr, &mHandle));
+		VK_CHECK(vkCreateSampler(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), &createInfo, nullptr, &mHandle));
 	}
 	VKSampler::~VKSampler()
 	{
-		vkDestroySampler(VKContext::GetInstance().GetDevice()->GetHandle(), mHandle, nullptr);
+		vkDestroySampler(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), mHandle, nullptr);
 	}
 
 	const VkSampler& VKSampler::GetHandle() const

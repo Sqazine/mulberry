@@ -56,13 +56,13 @@ namespace mulberry
 	}
 	VKDevice::~VKDevice()
 	{
+		WaitIdle();
 		mGraphicsQueue.reset(nullptr);
 		mComputeQueue.reset(nullptr);
 		mTransferQueue.reset(nullptr);
 		mComputeCommandPool.reset(nullptr);
 		mGraphicsCommandPool.reset(nullptr);
 		mTransferCommandPool.reset(nullptr);
-		WaitIdle();
 		vkDestroyDevice(mHandle, nullptr);
 	}
 
@@ -100,6 +100,13 @@ namespace mulberry
 		if (mTransferQueue == nullptr)
 			mTransferQueue = std::make_unique<VKTransferQueue>(mPhysicalDeviceSpec.queueFamilyIndices.transferFamilyIdx.value());
 		return mTransferQueue.get();
+	}
+
+	const VKPresentQueue *VKDevice::GetPresentQueue()
+	{
+		if (mPresentQueue == nullptr)
+			mPresentQueue = std::make_unique<VKPresentQueue>(mPhysicalDeviceSpec.queueFamilyIndices.presentFamilyIdx.value());
+		return mPresentQueue.get();
 	}
 
 	VKCommandPool *VKDevice::GetGraphicsCommandPool()

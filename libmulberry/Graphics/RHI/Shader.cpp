@@ -1,6 +1,4 @@
 #include "Shader.h"
-#include "GL/GLShader.h"
-#include "VK/VKShader.h"
 #include "App.h"
 namespace mulberry
 {
@@ -127,7 +125,7 @@ namespace mulberry
             return mGLShaderProgram->AttachShader(*shader.mGLShaderModule);
         default:
             // TODO
-            break;
+            return true;
         }
     }
 
@@ -139,9 +137,10 @@ namespace mulberry
             return mGLShaderProgram->GetAttribute(name);
         default:
             // TODO
-            break;
+            return 0;
         }
     }
+    
     uint32_t ShaderProgram::GetUniform(std::string_view name) const
     {
         switch (mBackend)
@@ -150,7 +149,7 @@ namespace mulberry
             return mGLShaderProgram->GetUniform(name);
         default:
             // TODO
-            break;
+            return 0;
         }
     }
 }

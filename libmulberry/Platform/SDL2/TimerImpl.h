@@ -13,6 +13,8 @@ namespace mulberry
 
 		float GetDeltaTime() override;
 
+		float GetFPS() override;
+
 	private:
 		uint32_t mStartTick;
 		uint32_t mCurTick;

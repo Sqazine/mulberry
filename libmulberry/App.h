@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <SDL2/SDL.h>
+#include "Core/Singleton.h"
 #include "Graphics/RHI/GraphicsContext.h"
 #include "Graphics/SceneRenderer.h"
 #include "Vec2.h"
@@ -35,19 +36,24 @@ namespace mulberry
 		void Quit();
 
 		void SetGraphicsBackend(GraphicsBackend graphicsBackend);
-		const GraphicsConfig& GetGraphicsConfig() const;
+		const GraphicsConfig &GetGraphicsConfig() const;
 
 		Window *GetWindow() const;
 		Input *GetInput() const;
 		Timer *GetTimer() const;
 
+		GraphicsContext *GetGraphicsContext() const;
 	private:
+		void PreUpdate();
 		void Update();
 		void Render();
 		void RenderGizmo();
+		void PostUpdate();
 		void CleanUp();
 
 		std::unique_ptr<Window> mWindow;
+
+		std::unique_ptr<GraphicsContext> mGraphicsContext;
 
 		AppState mState;
 		std::unique_ptr<Input> mInput;

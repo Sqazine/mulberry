@@ -1,6 +1,7 @@
 #include "Texture.h"
 #include "App.h"
 #include "GL/GLTexture.h"
+#include "VK/VKTexture.h"
 
 namespace mulberry
 {
@@ -12,8 +13,7 @@ namespace mulberry
             mGLTexture = std::make_unique<GLTexture>();
             break;
         default:
-            // TODO...
-            // mVKTexture=std::make_unique<VKTexture>();
+            mVKTexture = std::make_unique<VKTexture>();
             break;
         }
     }
@@ -25,13 +25,21 @@ namespace mulberry
             mGLTexture = std::make_unique<GLTexture>(info);
             break;
         default:
-            // TODO
+            mVKTexture = std::make_unique<VKTexture>(info);
             break;
         }
     }
     Texture::~Texture()
     {
-        mGLTexture.reset(nullptr);
+        switch (App::GetInstance().GetGraphicsConfig().backend)
+        {
+        case GraphicsBackend::GL:
+            mGLTexture .reset(nullptr);
+            break;
+        default:
+            mVKTexture.reset(nullptr);
+            break;
+        }   
     }
 
     void Texture::CreateFrom(const TextureInfo &info)
@@ -42,7 +50,7 @@ namespace mulberry
             mGLTexture->CreateFrom(info);
             break;
         default:
-            // TODO
+            mVKTexture->CreateFrom(info);
             break;
         }
     }
@@ -54,7 +62,7 @@ namespace mulberry
             mGLTexture->CreateFromSurface(surface);
             break;
         default:
-            // TODO
+             mVKTexture->CreateFromSurface(surface);
             break;
         }
     }
@@ -66,8 +74,7 @@ namespace mulberry
         case GraphicsBackend::GL:
             return mGLTexture->GetCreateInfo();
         default:
-            // TODO
-            break;
+             return mVKTexture->GetCreateInfo();
         }
     }
 
@@ -78,8 +85,7 @@ namespace mulberry
         case GraphicsBackend::GL:
             return mGLTexture->GetCreateInfo().data.width;
         default:
-            // TODO
-            break;
+            return mVKTexture->GetCreateInfo().data.width;
         }
     }
     uint32_t Texture::GetHeight() const
@@ -89,7 +95,7 @@ namespace mulberry
         case GraphicsBackend::GL:
             return mGLTexture->GetCreateInfo().data.height;
         default:
-            // TODO
+               return mVKTexture->GetCreateInfo().data.height;
             break;
         }
     }
@@ -101,8 +107,7 @@ namespace mulberry
         case GraphicsBackend::GL:
             return Vec2(mGLTexture->GetCreateInfo().data.width, mGLTexture->GetCreateInfo().data.height);
         default:
-            // TODO
-            break;
+            return Vec2(mVKTexture->GetCreateInfo().data.width, mVKTexture->GetCreateInfo().data.height);
         }
     }
 }

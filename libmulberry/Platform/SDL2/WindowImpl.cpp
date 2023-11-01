@@ -7,7 +7,8 @@ namespace mulberry
         : mHandle(nullptr), mIsShown(false),
           mIsWindowCloseButtonClick(false),
           mIsWindowMaxButtonClick(false),
-          mIsWindowMinButtonClick(false)
+          mIsWindowMinButtonClick(false),
+          mTitle("mulberry")
     {
         auto flag = SDL_Init(SDL_INIT_EVERYTHING);
         if (flag < 0)
@@ -166,4 +167,8 @@ namespace mulberry
         return mIsWindowMinButtonClick;
     }
 
+    bool SDL2WindowImpl::IsResize() const
+    {
+        return mIsWindowResize;
+    }
 }

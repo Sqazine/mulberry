@@ -31,8 +31,6 @@ namespace mulberry
 		std::unique_ptr<Primitive> mQuadPrimitive;
 		std::unique_ptr<Primitive> mCirclePrimitive;
 
-		std::unique_ptr<DrawPass> mDrawPass;
-
 		std::unique_ptr<RasterPipeline> mSpriteRasterPipeline;
 		std::unique_ptr<RasterPipeline> mAuxiliaryRasterPipeline;
 		std::unique_ptr<RasterPipeline> mPointRasterPipeline;

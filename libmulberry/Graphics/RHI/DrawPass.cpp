@@ -10,7 +10,7 @@ namespace mulberry
             mGLDrawPass = std::make_unique<GLDrawPass>();
             break;
         default:
-            // TODO
+            mVKDrawPass = std::make_unique<VKDrawPass>();
             break;
         }
     }
@@ -27,7 +27,7 @@ namespace mulberry
             mGLDrawPass->SetClearColor(clearColor);
             break;
         default:
-            // TODO
+            mVKDrawPass->SetClearColor(clearColor);
             break;
         }
     }
@@ -39,7 +39,7 @@ namespace mulberry
             mGLDrawPass->IsClearColorBuffer(isClear);
             break;
         default:
-            // TODO
+            mVKDrawPass->IsClearColorBuffer(isClear);
             break;
         }
     }
@@ -52,7 +52,7 @@ namespace mulberry
             mGLDrawPass->Begin();
             break;
         default:
-            // TODO
+            mVKDrawPass->Begin();
             break;
         }
     }
@@ -64,7 +64,7 @@ namespace mulberry
             mGLDrawPass->End();
             break;
         default:
-            // TODO
+            mVKDrawPass->End();
             break;
         }
     }

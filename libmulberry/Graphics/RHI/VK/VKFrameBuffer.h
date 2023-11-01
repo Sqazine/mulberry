@@ -15,6 +15,8 @@ namespace mulberry
 		const VkFramebuffer &GetHandle() const;
 
 	private:
+		const class VKDevice* mDevice;
+
 		VkFramebuffer mFrameBuffer;
 	};
 }
