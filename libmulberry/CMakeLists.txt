@@ -62,3 +62,5 @@ else ()
     message(STATUS "other platform: ${CMAKE_SYSTEM_NAME}")
     target_compile_definitions(libmulberry PRIVATE PLATFORM_OTHER)
 endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
+
+target_compile_definitions(libmulberry PRIVATE SHOW_FPS_ON_WINDOW_TITLE)

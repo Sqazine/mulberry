@@ -36,7 +36,7 @@ namespace mulberry
 		void Quit();
 
 		void SetGraphicsBackend(GraphicsBackend graphicsBackend);
-		const GraphicsConfig &GetGraphicsConfig() const;
+		GraphicsConfig &GetGraphicsConfig();
 
 		Window *GetWindow() const;
 		Input *GetInput() const;

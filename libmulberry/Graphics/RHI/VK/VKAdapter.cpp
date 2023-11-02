@@ -223,12 +223,13 @@ namespace mulberry
 #ifdef _DEBUG
 		DestroyDebugUtilsMessengerEXT(mInstanceHandle, mDebugMessengerHandle, nullptr);
 #endif
-		vkDestroySurfaceKHR(mInstanceHandle,mSurface,nullptr);
+		vkDestroySurfaceKHR(mInstanceHandle, mSurface, nullptr);
 
 		vkDestroyInstance(mInstanceHandle, nullptr);
 	}
 	void VKAdapter::CheckInstanceValidationLayerSupport()
 	{
+#ifdef _DEBUG
 		uint32_t layerCount;
 		vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 		mInstanceLayerProps.resize(layerCount);
@@ -248,6 +249,7 @@ namespace mulberry
 			if (!layerFound)
 				MULBERRY_CORE_ERROR("Not support vulkan instance validation layer:{}", layerName);
 		}
+#endif
 	}
 	void VKAdapter::CheckInstanceExtensionsSupport()
 	{
@@ -316,7 +318,7 @@ namespace mulberry
 				result.queueFamilyIndices.transferFamilyIdx = i;
 
 			VkBool32 surfaceSupported;
-			VK_CHECK(vkGetPhysicalDeviceSurfaceSupportKHR(result.handle, i, mSurface, &surfaceSupported))
+			VK_CHECK(vkGetPhysicalDeviceSurfaceSupportKHR(result.handle, i, mSurface, &surfaceSupported));
 			if (surfaceSupported)
 				result.queueFamilyIndices.presentFamilyIdx = i;
 

@@ -71,7 +71,7 @@ namespace mulberry
 		AppGlobalConfig::gGraphicsConfig.backend = graphicsBackend;
 	}
 
-	const GraphicsConfig &App::GetGraphicsConfig() const
+	 GraphicsConfig &App::GetGraphicsConfig() 
 	{
 		return AppGlobalConfig::gGraphicsConfig;
 	}
@@ -119,7 +119,7 @@ namespace mulberry
 
 	void App::Update()
 	{
-#ifdef _DEBUG
+#ifdef SHOW_FPS_ON_WINDOW_TITLE
 		static bool isFirst = true;
 		static std::string name;
 		if (isFirst)

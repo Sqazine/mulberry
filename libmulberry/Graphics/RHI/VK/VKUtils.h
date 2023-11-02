@@ -60,7 +60,7 @@ namespace mulberry
 			MULBERRY_CORE_ERROR("[ERROR]:[{}]{} {}\n", GetErrorCode(err), __FILE__, __LINE__); \
 	} while (0);
 #else
-#define VK_CHECK(x) (x)
+#define VK_CHECK(x) (x);
 #endif
 
 #define RESOLVE_VK_INSTANCE_PFN(instance, funcName)                                                 \
