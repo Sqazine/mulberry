@@ -2,8 +2,14 @@
 #include <unordered_map>
 #include <string>
 
+
 namespace mulberry
 {
+	struct ImgData
+	{
+		std::vector<uint8_t> pixels{};
+		uint32_t width = 0, height = 0, channel = 4;
+	};
 
     class AssetManager
     {

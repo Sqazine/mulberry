@@ -27,10 +27,10 @@ namespace mulberry
         mHandle = SDL_CreateWindow(mTitle.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, rect.w / 4, rect.h / 4, windowFlag);
 
         mViewport = Viewport{
-            .x = 0,
-            .y = 0,
-            .width = (uint32_t)rect.w / 4,
-            .height = (uint32_t)rect.h / 4,
+            0,
+             0,
+            (uint32_t)rect.w / 4,
+             (uint32_t)rect.h / 4,
         };
     }
 

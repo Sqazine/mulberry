@@ -5,14 +5,10 @@
 #include <SDL2/SDL.h>
 #include "Math/Color.h"
 #include "Math/Vec2.h"
+#include "Core/AssetManager.h"
+
 namespace mulberry
 {
-    struct ImgData
-    {
-        std::vector<uint8_t> pixels{};
-        uint32_t width = 0, height = 0, channel = 4;
-    };
-
     enum class WrapMode
     {
         REPEAT,

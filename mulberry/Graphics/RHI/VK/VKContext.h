@@ -5,6 +5,7 @@
 #include <mutex>
 #include <vector>
 #include "Math/Color.h"
+#include "VKDrawPass.h"
 
 namespace mulberry
 {
@@ -26,7 +27,14 @@ namespace mulberry
 		void BeginFrame();
 		void EndFrame();
 
+		const VKDrawPass* GetCurDrawPass() const;
+
 	private:
+
+		friend class VKDrawPass;
+
+		const VKDrawPass* mCurDrawPass;
+
 		std::unique_ptr<class VKAdapter >mAdapter;
 		std::unique_ptr<class VKDevice >mDevice;
 		std::unique_ptr<class VKSwapChain >mSwapChain;

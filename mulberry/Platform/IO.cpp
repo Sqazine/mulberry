@@ -1,6 +1,8 @@
 #include "IO.h"
 #include "Core/Logger.h"
+#include <string>
 #include <fstream>
+#include <sstream>
 namespace mulberry::IO
 {
     std::string LoadText(std::string_view path)

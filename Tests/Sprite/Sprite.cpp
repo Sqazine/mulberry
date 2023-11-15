@@ -1,4 +1,4 @@
-#include "libmulberry/libmulberry.h"
+#include "mulberry/mulberry.h"
 
 class AppQuitComponent : public mulberry::Component
 {

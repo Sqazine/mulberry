@@ -31,9 +31,8 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2_ttf CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
-add_library(libmulberry STATIC ${ROOT} ${CORE} ${MATH} ${PLATFORM} ${PLATFORM_SDL2_WRAPPER} ${SCENE} ${COMPONENT} ${GRAPHICS} ${RHI} ${GL} ${VK})
-target_include_directories(libmulberry PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} 
+add_library(mulberry STATIC ${ROOT} ${CORE} ${MATH} ${PLATFORM} ${PLATFORM_SDL2_WRAPPER} ${SCENE} ${COMPONENT} ${GRAPHICS} ${RHI} ${GL} ${VK})
+target_include_directories(mulberry PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} 
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Core
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Math
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Platform
@@ -45,22 +44,22 @@ target_include_directories(libmulberry PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Scene/Component
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Scene
                                           ${VULKAN_ROOT}/Include)
-target_link_libraries(libmulberry PRIVATE  glm::glm SDL2::SDL2 SDL2::SDL2main spdlog::spdlog spdlog::spdlog_header_only glad::glad SDL2_ttf::SDL2_ttf glslang::OSDependent glslang::glslang glslang::MachineIndependent glslang::GenericCodeGen glslang::OGLCompiler glslang::glslang-default-resource-limits glslang::SPVRemapper glslang::SPIRV glslang::HLSL ${VULKAN_ROOT}/Lib/vulkan-1.lib)
+target_link_libraries(mulberry PRIVATE SDL2::SDL2 SDL2::SDL2main spdlog::spdlog spdlog::spdlog_header_only glad::glad SDL2_ttf::SDL2_ttf glslang::OSDependent glslang::glslang glslang::MachineIndependent glslang::GenericCodeGen glslang::OGLCompiler glslang::glslang-default-resource-limits glslang::SPVRemapper glslang::SPIRV glslang::HLSL ${VULKAN_ROOT}/Lib/vulkan-1.lib)
 
 message(STATUS "operation system is ${CMAKE_SYSTEM}")
  
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     message(STATUS "current platform: Linux")
-    target_compile_definitions(libmulberry PRIVATE PLATFORM_LINUX)
+    target_compile_definitions(mulberry PRIVATE PLATFORM_LINUX)
 elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
     message(STATUS "current platform: Windows")
-    target_compile_definitions(libmulberry PRIVATE PLATFORM_WINDOWS)
+    target_compile_definitions(mulberry PRIVATE PLATFORM_WINDOWS)
 elseif (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
     message(STATUS "current platform: FreeBSD")
-    target_compile_definitions(libmulberry PRIVATE PLATFORM_FREEBSD)
+    target_compile_definitions(mulberry PRIVATE PLATFORM_FREEBSD)
 else ()
     message(STATUS "other platform: ${CMAKE_SYSTEM_NAME}")
-    target_compile_definitions(libmulberry PRIVATE PLATFORM_OTHER)
+    target_compile_definitions(mulberry PRIVATE PLATFORM_OTHER)
 endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
-target_compile_definitions(libmulberry PRIVATE SHOW_FPS_ON_WINDOW_TITLE)
+target_compile_definitions(mulberry PRIVATE SHOW_FPS_ON_WINDOW_TITLE)

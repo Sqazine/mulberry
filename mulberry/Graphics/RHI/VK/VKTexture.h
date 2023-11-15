@@ -15,7 +15,7 @@ namespace mulberry
         void CreateFrom(const TextureInfo &info);
         void CreateFromSurface(SDL_Surface *surface);
 
-        uint32_t GetHandle() const;
+       const VKImage* GetHandle() const;
         const TextureInfo &GetCreateInfo() const;
 
     private:

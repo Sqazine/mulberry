@@ -10,10 +10,10 @@ message("VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
 
 project(mulberry LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS off)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/libmulberry)
-add_subdirectory(${CMAKE_SOURCE_DIR}/Tests/Sprite)
-add_subdirectory(${CMAKE_SOURCE_DIR}/Tests/Asteroid)
+add_subdirectory(${CMAKE_SOURCE_DIR}/mulberry)
+add_subdirectory(${CMAKE_SOURCE_DIR}/tests/Sprite)
+add_subdirectory(${CMAKE_SOURCE_DIR}/tests/Asteroid)

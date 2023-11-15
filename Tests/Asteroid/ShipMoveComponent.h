@@ -1,5 +1,5 @@
 #pragma once
-#include "libmulberry/libmulberry.h"
+#include "mulberry/mulberry.h"
 class ShipMoveComponent : public mulberry::Component
 {
 public:

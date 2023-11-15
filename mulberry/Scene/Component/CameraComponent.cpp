@@ -1,8 +1,6 @@
 #include "CameraComponent.h"
 #include "Math/MathUtils.h"
 #include "Entity.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 namespace mulberry
 {
     CameraComponent::CameraComponent(int32_t updateOrder)

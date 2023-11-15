@@ -64,19 +64,19 @@ namespace mulberry
 		mSwapChainPresentMode = ChooseSwapChainPresentMode(swapChainDetail.presentModes);
 		mSwapChainImageExtent = ChooseSwapChainExtent(swapChainDetail.surfaceCapabilities);
 
-		VkSwapchainCreateInfoKHR createInfo{
-			.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
-			.pNext = nullptr,
-			.flags = 0,
-			.surface = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetAdapter()->GetSurface(),
-			.minImageCount = uint32_t(App::GetInstance().GetGraphicsConfig().useDoubleBuffer ? 2 : 1),
-			.imageFormat = mSwapChainSurfaceFormat.format,
-			.imageColorSpace = mSwapChainSurfaceFormat.colorSpace,
-			.imageExtent = mSwapChainImageExtent,
-			.imageArrayLayers = 1,
-			.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-		};
-
+		VkSwapchainCreateInfoKHR createInfo{};
+		
+		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+		createInfo.pNext = nullptr;
+		createInfo.flags = 0;
+		createInfo.surface = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetAdapter()->GetSurface();
+		createInfo.minImageCount = uint32_t(App::GetInstance().GetGraphicsConfig().useDoubleBuffer ? 2 : 1);
+		createInfo.imageFormat = mSwapChainSurfaceFormat.format;
+		createInfo.imageColorSpace = mSwapChainSurfaceFormat.colorSpace;
+		createInfo.imageExtent = mSwapChainImageExtent;
+		createInfo.imageArrayLayers = 1;
+		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+		
 		QueueFamilyIndices indices = mDevice->GetPhysicalDeviceSpec().queueFamilyIndices;
 		uint32_t queueFamilyIndices[] = {indices.graphicsFamilyIdx.value(), indices.presentFamilyIdx.value()};
 

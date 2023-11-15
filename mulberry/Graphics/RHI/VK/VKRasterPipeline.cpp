@@ -2,6 +2,7 @@
 #include "VKContext.h"
 #include "VKDevice.h"
 #include "App.h"
+#include "Logger.h"
 namespace mulberry
 {
     VKRasterPipeline::VKRasterPipeline()
@@ -37,6 +38,7 @@ namespace mulberry
 
     void VKRasterPipeline::Render(const VKIndexBuffer *ibo)
     {
+        
     }
 
     void VKRasterPipeline::RenderInstanced(const VKIndexBuffer *ibo, uint32_t instanceCount)
@@ -53,5 +55,11 @@ namespace mulberry
     void VKRasterPipeline::Build()
     {
         VkGraphicsPipelineCreateInfo info{};
+        info.sType=VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+        info.pNext=nullptr;
+        info.flags=0;
+        info.subpass = 0;
+        
+        VK_CHECK(vkCreateGraphicsPipelines(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), VK_NULL_HANDLE, 1, &info, nullptr, &mHandle));
     }
 }

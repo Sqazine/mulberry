@@ -47,6 +47,8 @@ namespace mulberry
 
     void VKDrawPass::Begin()
     {
+        App::GetInstance().GetGraphicsContext()->GetVKContext()->mCurDrawPass = this;
+
         mInFlightFences[mCurFrameIdx]->Wait();
 
         mSwapChainImageIdx = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->AcquireNextImage(mImageAvailableSemaphores[mCurFrameIdx].get());
@@ -106,9 +108,11 @@ namespace mulberry
         App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetPresentQueue()->Present(presentInfo);
 
         mCurFrameIdx = (mCurFrameIdx + 1) % MAX_FRAMES_IN_FLIGHT;
+
+        App::GetInstance().GetGraphicsContext()->GetVKContext()->mCurDrawPass = this;
     }
 
-    VKCommandBuffer *VKDrawPass::GetCurCommandBuffer()
+    VKCommandBuffer *VKDrawPass::GetCurCommandBuffer() const
     {
         return mCommandBuffers[mCurFrameIdx].get();
     }

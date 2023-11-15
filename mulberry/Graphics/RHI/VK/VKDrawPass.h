@@ -21,10 +21,11 @@ namespace mulberry
         void Begin();
         void End();
 
+        VKCommandBuffer *GetCurCommandBuffer() const;
+
     protected:
         friend class VKContext;
         void ReBuild();
-        VKCommandBuffer *GetCurCommandBuffer();
 
         uint32_t mSwapChainImageIdx;
 

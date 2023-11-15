@@ -67,4 +67,9 @@ namespace mulberry
 	{
 		mDefaultDrawPass->End();
 	}
+
+	const VKDrawPass *VKContext::GetCurDrawPass() const
+	{
+		return mCurDrawPass;
+	}
 }

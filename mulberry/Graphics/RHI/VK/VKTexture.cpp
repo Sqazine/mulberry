@@ -20,9 +20,10 @@ namespace mulberry
     {
     }
 
-    uint32_t VKTexture::GetHandle() const
+    const VKImage* VKTexture::GetHandle() const
     {
-    }
+        return mImage.get();
+    }   
     const TextureInfo &VKTexture::GetCreateInfo() const
     {
         return mInfo;

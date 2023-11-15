@@ -289,18 +289,18 @@ public:
         : mHandle(fmt)
     {
     }
-    VKFormat(const Format &fmt)
+    VKFormat(const VKFormat &fmt)
     {
         mHandle = fmt.mHandle;
     }
-    VKFormat(Format &&fmt)
+    VKFormat(VKFormat &&fmt)
     {
         mHandle = fmt.mHandle;
     }
     ~VKFormat()
     {
     }
-    VKFormat &operator=(const Format &other)
+    VKFormat &operator=(const VKFormat &other)
     {
         mHandle = other.mHandle;
         return *this;
@@ -321,10 +321,10 @@ public:
 
     bool HasStencil()
     {
-        return mHandle == Format::D32_SFLOAT_S8_UINT ||
-               mHandle == Format::D24_UNORM_S8_UINT ||
-               mHandle == Format::D16_UNORM_S8_UINT ||
-               mHandle == Format::S8_UINT;
+        return mHandle == VKFormat::D32_SFLOAT_S8_UINT ||
+               mHandle == VKFormat::D24_UNORM_S8_UINT ||
+               mHandle == VKFormat::D16_UNORM_S8_UINT ||
+               mHandle == VKFormat::S8_UINT;
     }
 
 private:
