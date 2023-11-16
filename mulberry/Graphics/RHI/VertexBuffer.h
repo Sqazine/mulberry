@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "AppGlobalConfig.h"
+#include "AppConfig.h"
 #include "GL/GLVertexBuffer.h"
 #include "VK/VKVertexBuffer.h"
 namespace mulberry
@@ -26,7 +26,7 @@ namespace mulberry
     template <typename T>
     inline VertexBuffer<T>::VertexBuffer()
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLVertexBuffer = std::make_unique<GLVertexBuffer<T>>();
@@ -40,7 +40,7 @@ namespace mulberry
     template <typename T>
     inline VertexBuffer<T>::VertexBuffer(const std::vector<T> &inputArray)
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLVertexBuffer = std::make_unique<GLVertexBuffer<T>>(inputArray);
@@ -54,7 +54,7 @@ namespace mulberry
     template <typename T>
     inline VertexBuffer<T>::~VertexBuffer()
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLVertexBuffer.reset(nullptr);
@@ -68,7 +68,7 @@ namespace mulberry
     template <typename T>
     inline void VertexBuffer<T>::Set(const std::vector<T> &inputArray)
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLVertexBuffer->Set(inputArray);
@@ -82,7 +82,7 @@ namespace mulberry
     template <typename T>
     inline uint32_t VertexBuffer<T>::Size()
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             return mGLVertexBuffer->Size();

@@ -1,5 +1,5 @@
 #pragma once
-#include "AppGlobalConfig.h"
+#include "AppConfig.h"
 #include "GL/GLIndexBuffer.h"
 #include "VK/VKIndexBuffer.h"
 
@@ -24,7 +24,7 @@ namespace mulberry
 
     inline IndexBuffer::IndexBuffer()
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLIndexBuffer = std::make_unique<GLIndexBuffer>();
@@ -38,7 +38,7 @@ namespace mulberry
     template <typename T>
     inline IndexBuffer::IndexBuffer(const std::vector<T> &indices)
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLIndexBuffer = std::make_unique<GLIndexBuffer>(indices);
@@ -51,7 +51,7 @@ namespace mulberry
 
     inline IndexBuffer::~IndexBuffer()
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLIndexBuffer.reset(nullptr);
@@ -65,7 +65,7 @@ namespace mulberry
     template <typename T>
     inline void IndexBuffer::Set(const std::vector<T> &input)
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLIndexBuffer->Set(input);

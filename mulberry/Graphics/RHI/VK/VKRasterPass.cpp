@@ -1,4 +1,4 @@
-#include "VKDrawPass.h"
+#include "VKRasterPass.h"
 #include "VKContext.h"
 #include "VKDevice.h"
 #include "VKSwapChain.h"
@@ -7,7 +7,7 @@
 #include <array>
 namespace mulberry
 {
-    VKDrawPass::VKDrawPass()
+    VKRasterPass::VKRasterPass()
     {
         auto extent = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->GetExtent();
         auto swapChainImageFormat = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->GetSurfaceFormat().format;
@@ -31,23 +31,23 @@ namespace mulberry
             mInFlightFences[i] = std::make_unique<VKFence>(FenceStatus::SIGNALED);
         }
     }
-    VKDrawPass::~VKDrawPass()
+    VKRasterPass::~VKRasterPass()
     {
     }
 
-    void VKDrawPass::SetClearColor(const Color &clearColor)
+    void VKRasterPass::SetClearColor(const Color &clearColor)
     {
         mClearColor = clearColor;
     }
 
-    void VKDrawPass::IsClearColorBuffer(bool isClear)
+    void VKRasterPass::IsClearColorBuffer(bool isClear)
     {
         mIsClearColorBuffer = isClear;
     }
 
-    void VKDrawPass::Begin()
+    void VKRasterPass::Begin()
     {
-        App::GetInstance().GetGraphicsContext()->GetVKContext()->mCurDrawPass = this;
+        App::GetInstance().GetGraphicsContext()->GetVKContext()->mCurRasterPass = this;
 
         mInFlightFences[mCurFrameIdx]->Wait();
 
@@ -76,7 +76,7 @@ namespace mulberry
         GetCurCommandBuffer()->BeginRenderPass(beginInfo);
     }
 
-    void VKDrawPass::End()
+    void VKRasterPass::End()
     {
         GetCurCommandBuffer()->EndRenderPass();
 
@@ -109,15 +109,15 @@ namespace mulberry
 
         mCurFrameIdx = (mCurFrameIdx + 1) % MAX_FRAMES_IN_FLIGHT;
 
-        App::GetInstance().GetGraphicsContext()->GetVKContext()->mCurDrawPass = this;
+        App::GetInstance().GetGraphicsContext()->GetVKContext()->mCurRasterPass = this;
     }
 
-    VKCommandBuffer *VKDrawPass::GetCurCommandBuffer() const
+    VKCommandBuffer *VKRasterPass::GetCurCommandBuffer() const
     {
         return mCommandBuffers[mCurFrameIdx].get();
     }
 
-    void VKDrawPass::ReBuild()
+    void VKRasterPass::ReBuild()
     {
         auto extent = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->GetExtent();
         for (int32_t i = 0; i < mFrameBuffers.size(); ++i)

@@ -6,10 +6,10 @@
 namespace mulberry
 {
 
-	GLShaderModule::GLShaderModule(ShaderType type, std::string_view content)
+	GLShaderModule::GLShaderModule(ShaderStage type, std::string_view content)
 		: mShaderID(-1), mType(type)
 	{
-		mShaderID = glCreateShader(ToGLShaderType(type));
+		mShaderID = glCreateShader(ToGLShaderStage(type));
 		auto sourceCode =ToGLShaderSourceCode(content);
 		auto cSourceCode=sourceCode.c_str();
 		glShaderSource(mShaderID, 1,&cSourceCode, nullptr);
@@ -21,7 +21,7 @@ namespace mulberry
 		glDeleteShader(mShaderID);
 	}
 
-	const ShaderType &GLShaderModule::Type() const
+	const ShaderStage &GLShaderModule::Type() const
 	{
 		return mType;
 	}

@@ -1,15 +1,15 @@
 #pragma once
 #include <memory>
 #include "Math/Color.h"
-#include "Graphics/RHI/GL/GLDrawPass.h"
-#include "Graphics/RHI/VK/VKDrawPass.h"
+#include "Graphics/RHI/GL/GLRasterPass.h"
+#include "Graphics/RHI/VK/VKRasterPass.h"
 namespace mulberry
 {
-    class DrawPass
+    class RasterPass
     {
     public:
-        DrawPass();
-        ~DrawPass();
+        RasterPass();
+        ~RasterPass();
 
         void SetClearColor(const Color &clearColor);
         void IsClearColorBuffer(bool isClear);
@@ -18,7 +18,7 @@ namespace mulberry
         void End();
 
     private:
-        std::unique_ptr<GLDrawPass> mGLDrawPass;
-        std::unique_ptr<VKDrawPass> mVKDrawPass;
+        std::unique_ptr<GLRasterPass> mGLRasterPass;
+        std::unique_ptr<VKRasterPass> mVKRasterPass;
     };
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "AppGlobalConfig.h"
+#include "AppConfig.h"
 #include "GL/GLVertexArray.h"
 namespace mulberry
 {
@@ -17,7 +17,7 @@ namespace mulberry
 
     inline VertexArray::VertexArray()
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLVertexArray = std::make_unique<GLVertexArray>();

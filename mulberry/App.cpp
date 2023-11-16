@@ -2,7 +2,7 @@
 #include "SceneRenderer.h"
 #include "GraphicsContext.h"
 #include "Logger.h"
-#include "AppGlobalConfig.h"
+#include "AppConfig.h"
 
 #if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
 #include "Platform/SDL2/GLContextImpl.h"
@@ -68,12 +68,12 @@ namespace mulberry
 
 	void App::SetGraphicsBackend(GraphicsBackend graphicsBackend)
 	{
-		AppGlobalConfig::gGraphicsConfig.backend = graphicsBackend;
+		AppConfig::graphicsConfig.backend = graphicsBackend;
 	}
 
 	 GraphicsConfig &App::GetGraphicsConfig() 
 	{
-		return AppGlobalConfig::gGraphicsConfig;
+		return AppConfig::graphicsConfig;
 	}
 
 	Window *App::GetWindow() const
@@ -127,7 +127,10 @@ namespace mulberry
 			name = mWindow->GetTitle();
 			isFirst = false;
 		}
-		auto fps = std::to_string(mTimer->GetFPS());
+		static float avgDuration = mTimer->GetDeltaTime();
+		constexpr float alpha = 0.01f;
+		avgDuration = avgDuration * (1 - alpha) + mTimer->GetDeltaTime() * alpha;
+		auto fps=std::to_string(1.0f / avgDuration);
 		mWindow->SetTitle(name + " FPS = " + fps);
 #endif
 

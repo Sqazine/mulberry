@@ -5,7 +5,7 @@
 #include "VKCommand.h"
 #include "Graphics/RHI/GraphicsContext.h"
 #include "App.h"
-#include "VKDrawPass.h"
+#include "VKRasterPass.h"
 namespace mulberry
 {
 	VKContext::VKContext()
@@ -26,7 +26,7 @@ namespace mulberry
 		mDevice.reset(mAdapter->CreateDevice());
 		mSwapChain = std::make_unique<VKSwapChain>();
 
-		mDefaultDrawPass = std::make_unique<VKDrawPass>();
+		mDefaultRasterPass = std::make_unique<VKRasterPass>();
 	}
 
 	VKAdapter *VKContext::GetAdapter() const
@@ -46,11 +46,11 @@ namespace mulberry
 
 	void VKContext::SetClearColor(const Color &clearColor)
 	{
-		mDefaultDrawPass->SetClearColor(clearColor);
+		mDefaultRasterPass->SetClearColor(clearColor);
 	}
 	void VKContext::IsClearColorBuffer(bool isClear)
 	{
-		mDefaultDrawPass->IsClearColorBuffer(isClear);
+		mDefaultRasterPass->IsClearColorBuffer(isClear);
 	}
 
 	void VKContext::BeginFrame()
@@ -58,18 +58,18 @@ namespace mulberry
 		if (App::GetInstance().GetWindow()->IsResize())
 		{
 			mSwapChain->ReBuild();
-			mDefaultDrawPass->ReBuild();
+			mDefaultRasterPass->ReBuild();
 		}
 
-		mDefaultDrawPass->Begin();
+		mDefaultRasterPass->Begin();
 	}
 	void VKContext::EndFrame()
 	{
-		mDefaultDrawPass->End();
+		mDefaultRasterPass->End();
 	}
 
-	const VKDrawPass *VKContext::GetCurDrawPass() const
+	const VKRasterPass *VKContext::GetCurRasterPass() const
 	{
-		return mCurDrawPass;
+		return mCurRasterPass;
 	}
 }

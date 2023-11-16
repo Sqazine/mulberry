@@ -11,7 +11,5 @@ namespace mulberry
     virtual void Update(uint32_t lockFrame = 0) = 0;
 
     virtual float GetDeltaTime() = 0;
-
-    virtual float GetFPS() = 0;
   };
 }

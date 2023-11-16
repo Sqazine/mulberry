@@ -2,7 +2,7 @@
 #include "Math/Color.h"
 namespace mulberry
 {
-    class GLDrawPass
+    class GLRasterPass
     {
     public:
         void SetClearColor(const Color &clearColor);

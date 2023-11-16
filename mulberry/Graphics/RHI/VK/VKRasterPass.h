@@ -9,11 +9,11 @@ namespace mulberry
 {
 #define MAX_FRAMES_IN_FLIGHT 2
 
-    class VKDrawPass
+    class VKRasterPass
     {
     public:
-        VKDrawPass();
-        ~VKDrawPass();
+        VKRasterPass();
+        ~VKRasterPass();
 
         void SetClearColor(const Color &clearColor);
         void IsClearColorBuffer(bool isClear);

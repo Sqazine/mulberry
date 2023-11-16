@@ -2,9 +2,9 @@
 #include "App.h"
 namespace mulberry
 {
-    ShaderModule::ShaderModule(ShaderType type, std::string_view content)
+    ShaderModule::ShaderModule(ShaderStage type, std::string_view content)
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLShaderModule = std::make_unique<GLShaderModule>(type, content);
@@ -16,7 +16,7 @@ namespace mulberry
     }
     ShaderModule::~ShaderModule()
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLShaderModule.reset(nullptr);
@@ -27,9 +27,9 @@ namespace mulberry
         }
     }
 
-    const ShaderType &ShaderModule::Type() const
+    const ShaderStage &ShaderModule::Type() const
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             return mGLShaderModule->Type();
@@ -39,7 +39,7 @@ namespace mulberry
     }
 
     ShaderProgram::ShaderProgram()
-        : mBackend(AppGlobalConfig::gGraphicsConfig.backend)
+        : mBackend(AppConfig::graphicsConfig.backend)
     {
         switch (mBackend)
         {

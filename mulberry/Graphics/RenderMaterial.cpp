@@ -54,8 +54,8 @@ namespace mulberry
     SpriteMaterial::SpriteMaterial()
         : mTiling(1.0), mOffset(0.0)
     {
-        auto vertShader = ShaderModule(ShaderType::VERTEX, spriteVertShader);
-        auto fragShader = ShaderModule(ShaderType::FRAGMENT, spriteFragShader);
+        auto vertShader = ShaderModule(ShaderStage::VERTEX, spriteVertShader);
+        auto fragShader = ShaderModule(ShaderStage::FRAGMENT, spriteFragShader);
         shaderProgram = std::make_unique<ShaderProgram>();
         shaderProgram->AttachShader(vertShader);
         shaderProgram->AttachShader(fragShader);
@@ -109,8 +109,8 @@ namespace mulberry
 
     GizmoMaterial::GizmoMaterial()
     {
-        auto vertShader = ShaderModule(ShaderType::VERTEX, gizmoVertShader);
-        auto fragShader = ShaderModule(ShaderType::FRAGMENT, gizmoFragShader);
+        auto vertShader = ShaderModule(ShaderStage::VERTEX, gizmoVertShader);
+        auto fragShader = ShaderModule(ShaderStage::FRAGMENT, gizmoFragShader);
         shaderProgram = std::make_unique<ShaderProgram>();
         shaderProgram->AttachShader(vertShader);
         shaderProgram->AttachShader(fragShader);

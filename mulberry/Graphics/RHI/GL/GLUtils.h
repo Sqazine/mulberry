@@ -5,13 +5,13 @@
 
 namespace mulberry
 {
-     enum ShaderType;
+     enum ShaderStage;
      enum class PrimitiveRenderType;
      enum class WrapMode;
      enum class FilterMode;
      enum class Format;
 
-     uint32_t ToGLShaderType(ShaderType type);
+     uint32_t ToGLShaderStage(ShaderStage type);
      uint32_t ToGLPrimitiveRenderType(PrimitiveRenderType type);
 
      uint32_t ToGLWarpMode(WrapMode mode);

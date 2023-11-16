@@ -2,7 +2,7 @@
 #include <SDL2/SDL.h>
 #include "RHI/GraphicsContext.h"
 #include "GLContext.h"
-#include "GLDrawPass.h"
+#include "GLRasterPass.h"
 #include "App.h"
 namespace mulberry
 {
@@ -12,7 +12,7 @@ namespace mulberry
 
 	GLContext::~GLContext()
 	{
-		mDefaultDrawPass.reset(nullptr);
+		mDefaultRasterPass.reset(nullptr);
 
 #if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
 		mSDL2GLContextImpl.Destroy();
@@ -29,7 +29,7 @@ namespace mulberry
 #error "Unknown platform GLContext"
 #endif
 
-		mDefaultDrawPass = std::make_unique<GLDrawPass>();
+		mDefaultRasterPass = std::make_unique<GLRasterPass>();
 	}
 
 	Vec2 GLContext::GetVersion()
@@ -43,11 +43,11 @@ namespace mulberry
 
 	void GLContext::SetClearColor(const Color &clearColor)
 	{
-		mDefaultDrawPass->SetClearColor(clearColor);
+		mDefaultRasterPass->SetClearColor(clearColor);
 	}
 	void GLContext::IsClearColorBuffer(bool isClear)
 	{
-		mDefaultDrawPass->IsClearColorBuffer(isClear);
+		mDefaultRasterPass->IsClearColorBuffer(isClear);
 	}
 
 	void GLContext::BeginFrame()
@@ -57,12 +57,12 @@ namespace mulberry
 #else
 #error "Unknown platform GLContext"
 #endif
-		mDefaultDrawPass->Begin();
+		mDefaultRasterPass->Begin();
 	}
 
 	void GLContext::EndFrame()
 	{
-		mDefaultDrawPass->End();
+		mDefaultRasterPass->End();
 
 #if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
 		mSDL2GLContextImpl.EndFrame();

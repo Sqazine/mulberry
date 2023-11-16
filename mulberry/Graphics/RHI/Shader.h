@@ -11,7 +11,7 @@
 
 namespace mulberry
 {
-    enum ShaderType
+    enum ShaderStage
     {
         VERTEX,
         FRAGMENT,
@@ -24,10 +24,10 @@ namespace mulberry
     class ShaderModule
     {
     public:
-        ShaderModule(ShaderType type, std::string_view content);
+        ShaderModule(ShaderStage type, std::string_view content);
         ~ShaderModule();
 
-        const ShaderType &Type() const;
+        const ShaderStage &Type() const;
 
     private:
         friend class ShaderProgram;

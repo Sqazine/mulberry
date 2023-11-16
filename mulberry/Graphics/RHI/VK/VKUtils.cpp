@@ -198,21 +198,21 @@ namespace mulberry
 			return val == 0 ? 1 : val;
 	}
 
-	VkShaderStageFlagBits ToVkShaderType(ShaderType type)
+	VkShaderStageFlagBits ToVkShaderStage(ShaderStage type)
 	{
 		switch (type)
 		{
-		case ShaderType::VERTEX:
+		case ShaderStage::VERTEX:
 			return VK_SHADER_STAGE_VERTEX_BIT;
-		case ShaderType::FRAGMENT:
+		case ShaderStage::FRAGMENT:
 			return VK_SHADER_STAGE_FRAGMENT_BIT;
-		case ShaderType::GEOMETRY:
+		case ShaderStage::GEOMETRY:
 			return VK_SHADER_STAGE_GEOMETRY_BIT;
-		case ShaderType::COMPUTE:
+		case ShaderStage::COMPUTE:
 			return VK_SHADER_STAGE_COMPUTE_BIT;
-		case ShaderType::TESSELLATION_CONTROL:
+		case ShaderStage::TESSELLATION_CONTROL:
 			return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-		case ShaderType::TESSELLATION_EVAL:
+		case ShaderStage::TESSELLATION_EVAL:
 			return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
 		default:
 			return VK_SHADER_STAGE_VERTEX_BIT;

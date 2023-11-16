@@ -11,7 +11,7 @@
 #include "Scene/Component/SpriteComponent.h"
 #include "Scene/Component/CameraComponent.h"
 #include "RasterPipeline.h"
-#include "DrawPass.h"
+#include "RasterPass.h"
 namespace mulberry
 {
 	class SceneRenderer

@@ -1,17 +1,17 @@
-#include "GLDrawPass.h"
+#include "GLRasterPass.h"
 #include <glad/glad.h>
 namespace mulberry
 {
-    void GLDrawPass::SetClearColor(const Color &clearColor)
+    void GLRasterPass::SetClearColor(const Color &clearColor)
     {
         mClearColor = clearColor;
     }
-    void GLDrawPass::IsClearColorBuffer(bool isClear)
+    void GLRasterPass::IsClearColorBuffer(bool isClear)
     {
         mIsClearColorBuffer = isClear;
     }
 
-    void GLDrawPass::Begin()
+    void GLRasterPass::Begin()
     {
         glClearColor(mClearColor.r, mClearColor.g, mClearColor.b, mClearColor.a);
 
@@ -19,7 +19,7 @@ namespace mulberry
             glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    void GLDrawPass::End()
+    void GLRasterPass::End()
     {
     }
 }

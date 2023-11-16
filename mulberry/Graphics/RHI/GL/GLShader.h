@@ -15,10 +15,10 @@ namespace mulberry
     class GLShaderModule
     {
     public:
-        GLShaderModule(enum ShaderType type, std::string_view content);
+        GLShaderModule(enum ShaderStage type, std::string_view content);
         ~GLShaderModule();
 
-        const enum ShaderType &Type() const;
+        const enum ShaderStage &Type() const;
 
     private:
         void VerifyCompile();
@@ -26,7 +26,7 @@ namespace mulberry
         friend class GLShaderProgram;
 
         uint32_t mShaderID;
-        enum ShaderType mType;
+        enum ShaderStage mType;
     };
 
     class GLShaderProgram //shader程序体

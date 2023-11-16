@@ -6,15 +6,15 @@
 #include <unordered_map>
 namespace mulberry
 {
-    uint32_t ToGLShaderType(ShaderType type)
+    uint32_t ToGLShaderStage(ShaderStage type)
     {
-        const std::unordered_map<ShaderType, uint32_t> maps = {
-            {ShaderType::VERTEX, GL_VERTEX_SHADER},
-            {ShaderType::FRAGMENT, GL_FRAGMENT_SHADER},
-            {ShaderType::GEOMETRY, GL_GEOMETRY_SHADER},
-            {ShaderType::TESSELLATION_CONTROL, GL_TESS_CONTROL_SHADER},
-            {ShaderType::TESSELLATION_EVAL, GL_TESS_EVALUATION_SHADER},
-            {ShaderType::COMPUTE, GL_COMPUTE_SHADER},
+        const std::unordered_map<ShaderStage, uint32_t> maps = {
+            {ShaderStage::VERTEX, GL_VERTEX_SHADER},
+            {ShaderStage::FRAGMENT, GL_FRAGMENT_SHADER},
+            {ShaderStage::GEOMETRY, GL_GEOMETRY_SHADER},
+            {ShaderStage::TESSELLATION_CONTROL, GL_TESS_CONTROL_SHADER},
+            {ShaderStage::TESSELLATION_EVAL, GL_TESS_EVALUATION_SHADER},
+            {ShaderStage::COMPUTE, GL_COMPUTE_SHADER},
         };
 
         return maps.find(type)->second;

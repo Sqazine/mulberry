@@ -9,14 +9,14 @@
 
 namespace mulberry
 {
-	VKShaderModule::VKShaderModule(ShaderType type, std::string_view content)
+	VKShaderModule::VKShaderModule(ShaderStage type, std::string_view content)
 		: mType(type)
 	{
-		auto nativeVkShaderType = ToVkShaderType(type);
+		auto nativeVkShaderStage = ToVkShaderStage(type);
 
 		auto sourceCode = ToVKShaderSourceCode(content);
 
-		std::vector<uint32_t> pCode = GlslToSpv(nativeVkShaderType, sourceCode.data());
+		std::vector<uint32_t> pCode = GlslToSpv(nativeVkShaderStage, sourceCode.data());
 
 		VkShaderModuleCreateInfo info;
 		info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -30,7 +30,7 @@ namespace mulberry
 		mStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		mStageCreateInfo.pNext = nullptr;
 		mStageCreateInfo.flags = 0;
-		mStageCreateInfo.stage = nativeVkShaderType;
+		mStageCreateInfo.stage = nativeVkShaderStage;
 		mStageCreateInfo.module = mShaderModule;
 		mStageCreateInfo.pName = "main";
 		mStageCreateInfo.pSpecializationInfo = nullptr;
@@ -51,7 +51,7 @@ namespace mulberry
 		return mShaderModule;
 	}
 
-	const ShaderType &VKShaderModule::Type() const
+	const ShaderStage &VKShaderModule::Type() const
 	{
 		return mType;
 	}

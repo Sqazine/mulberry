@@ -6,7 +6,7 @@ namespace mulberry
 {
     RasterPipeline::RasterPipeline()
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline = std::make_unique<GLRasterPipeline>();
@@ -19,7 +19,7 @@ namespace mulberry
 
     RasterPipeline::RasterPipeline(const RasterPipelineState &config)
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline = std::make_unique<GLRasterPipeline>(config);
@@ -36,7 +36,7 @@ namespace mulberry
 
     void RasterPipeline::SetPSO(const RasterPipelineState &state)
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline->SetPSO(state);
@@ -48,7 +48,7 @@ namespace mulberry
     }
     const RasterPipelineState &RasterPipeline::GetPSO() const
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             return mGLRasterPipeline->GetPSO();
@@ -60,7 +60,7 @@ namespace mulberry
     }
     RasterPipelineState &RasterPipeline::GetPSO()
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             return mGLRasterPipeline->GetPSO();
@@ -73,7 +73,7 @@ namespace mulberry
 
     void RasterPipeline::Render(const Primitive &primitive)
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline->Render(primitive.GetIndexBuffer()->mGLIndexBuffer.get());
@@ -86,7 +86,7 @@ namespace mulberry
 
     void RasterPipeline::RenderInstanced(const Primitive &primitive, uint32_t instanceCount)
     {
-        switch (AppGlobalConfig::gGraphicsConfig.backend)
+        switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
             mGLRasterPipeline->RenderInstanced(primitive.GetIndexBuffer()->mGLIndexBuffer.get(), instanceCount);

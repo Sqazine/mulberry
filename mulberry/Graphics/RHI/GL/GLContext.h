@@ -29,7 +29,7 @@ namespace mulberry
 		void EndFrame();
 
 	private:
-		std::unique_ptr<class GLDrawPass> mDefaultDrawPass;
+		std::unique_ptr<class GLRasterPass> mDefaultRasterPass;
 #if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
 		SDL2GLContextImpl mSDL2GLContextImpl;
 #else

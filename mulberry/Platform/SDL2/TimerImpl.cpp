@@ -31,12 +31,4 @@ namespace mulberry
 	{
 		return mDeltaTime;
 	}
-
-	float SDL2TimerImpl::GetFPS()
-	{
-		static float avgDuration = mDeltaTime;
-		constexpr float alpha = 0.01f;
-		avgDuration = avgDuration * (1 - alpha) + mDeltaTime * alpha;
-		return (1.0f / avgDuration);
-	}
 }

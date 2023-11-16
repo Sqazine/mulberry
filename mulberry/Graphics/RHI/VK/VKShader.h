@@ -7,16 +7,16 @@ namespace mulberry
 	class VKShaderModule
 	{
 	public:
-		VKShaderModule(ShaderType type, std::string_view content);
+		VKShaderModule(ShaderStage type, std::string_view content);
 		~VKShaderModule();
 
 		const VkPipelineShaderStageCreateInfo &GetStageCreateInfo() const;
 		const VkShaderModule &GetHandle() const;
 
-		const ShaderType &Type() const;
+		const ShaderStage &Type() const;
 
 	private:
-		ShaderType mType;
+		ShaderStage mType;
 		VkShaderModule mShaderModule;
 		VkPipelineShaderStageCreateInfo mStageCreateInfo;
 	};
