@@ -73,7 +73,7 @@ namespace mulberry
         Vec2 GetExtent() const;
 
     private:
-        friend class ShaderProgram;
+        friend class ShaderGroup;
         std::unique_ptr<class GLTexture> mGLTexture;
         std::unique_ptr<class VKTexture> mVKTexture;
     };

@@ -9,14 +9,14 @@
 
 namespace mulberry
 {
-	VKShaderModule::VKShaderModule(ShaderStage type, std::string_view content)
+	VKShader::VKShader(ShaderStage type, std::string_view content)
 		: mType(type)
 	{
-		auto nativeVkShaderStage = ToVkShaderStage(type);
+		auto nativeVkShaderModuleStage = ToVkShaderStage(type);
 
 		auto sourceCode = ToVKShaderSourceCode(content);
 
-		std::vector<uint32_t> pCode = GlslToSpv(nativeVkShaderStage, sourceCode.data());
+		std::vector<uint32_t> pCode = GlslToSpv(nativeVkShaderModuleStage, sourceCode.data());
 
 		VkShaderModuleCreateInfo info;
 		info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -25,33 +25,33 @@ namespace mulberry
 		info.codeSize = pCode.size() * sizeof(uint32_t);
 		info.pCode = pCode.data();
 
-		VK_CHECK(vkCreateShaderModule(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), &info, nullptr, &mShaderModule));
+		VK_CHECK(vkCreateShaderModule(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), &info, nullptr, &mShader));
 
 		mStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		mStageCreateInfo.pNext = nullptr;
 		mStageCreateInfo.flags = 0;
-		mStageCreateInfo.stage = nativeVkShaderStage;
-		mStageCreateInfo.module = mShaderModule;
+		mStageCreateInfo.stage = nativeVkShaderModuleStage;
+		mStageCreateInfo.module = mShader;
 		mStageCreateInfo.pName = "main";
 		mStageCreateInfo.pSpecializationInfo = nullptr;
 	}
 
-	VKShaderModule::~VKShaderModule()
+	VKShader::~VKShader()
 	{
-		vkDestroyShaderModule(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), mShaderModule, nullptr);
+		vkDestroyShaderModule(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), mShader, nullptr);
 	}
 
-	const VkPipelineShaderStageCreateInfo &VKShaderModule::GetStageCreateInfo() const
+	const VkPipelineShaderStageCreateInfo &VKShader::GetStageCreateInfo() const
 	{
 		return mStageCreateInfo;
 	}
 
-	const VkShaderModule &VKShaderModule::GetHandle() const
+	const VkShaderModule &VKShader::GetHandle() const
 	{
-		return mShaderModule;
+		return mShader;
 	}
 
-	const ShaderStage &VKShaderModule::Type() const
+	const ShaderStage &VKShader::Type() const
 	{
 		return mType;
 	}

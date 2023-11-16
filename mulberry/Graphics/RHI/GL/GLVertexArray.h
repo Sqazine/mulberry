@@ -12,7 +12,7 @@ namespace mulberry
         ~GLVertexArray();
 
     private:
-        friend class GLShaderProgram;
+        friend class GLShaderGroup;
         uint32_t mVertexArrayID;
     };
 

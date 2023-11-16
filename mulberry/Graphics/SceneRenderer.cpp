@@ -43,28 +43,28 @@ namespace mulberry
         Mat4 mat = transComp->GetModelMat();
         mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
 
-        material->GetShaderProgram()->SetActive(true);
-        material->GetShaderProgram()->SetUniformValue("modelMat", mat);
-        material->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
-        material->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
+        material->GetShaderGroup()->SetActive(true);
+        material->GetShaderGroup()->SetUniformValue("modelMat", mat);
+        material->GetShaderGroup()->SetUniformValue("viewMat", camera->GetViewMat());
+        material->GetShaderGroup()->SetUniformValue("projMat", camera->GetProjMat());
 
         material->SetUniformValue();
 
-        material->GetShaderProgram()->SetVertexArray(mSpritePrimitive->GetVertexArray());
+        material->GetShaderGroup()->SetVertexArray(mSpritePrimitive->GetVertexArray());
 
-        material->GetShaderProgram()->SetVertexBuffer("inPosition", mSpritePrimitive->GetPositionBuffer());
-        material->GetShaderProgram()->SetVertexBuffer("inTexcoord", mSpritePrimitive->GetTexcoordBuffer());
+        material->GetShaderGroup()->SetVertexBuffer("inPosition", mSpritePrimitive->GetPositionBuffer());
+        material->GetShaderGroup()->SetVertexBuffer("inTexcoord", mSpritePrimitive->GetTexcoordBuffer());
 
         mSpriteRasterPipeline->Render(*mSpritePrimitive);
 
-        material->GetShaderProgram()->ResetVertexBuffer("inTexcoord");
-        material->GetShaderProgram()->ResetVertexBuffer("inPosition");
+        material->GetShaderGroup()->ResetVertexBuffer("inTexcoord");
+        material->GetShaderGroup()->ResetVertexBuffer("inPosition");
 
-        material->GetShaderProgram()->ResetVertexArray();
+        material->GetShaderGroup()->ResetVertexArray();
 
         material->ResetUniformValue();
 
-        material->GetShaderProgram()->SetActive(false);
+        material->GetShaderGroup()->SetActive(false);
     }
 
     void SceneRenderer::RenderAuxiliary(const Entity *entity, CameraComponent *camera, const Primitive &primitive)
@@ -78,28 +78,28 @@ namespace mulberry
         Mat4 mat = transComp->GetModelMat();
         mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
 
-        mGizmoMaterial->GetShaderProgram()->SetActive(true);
+        mGizmoMaterial->GetShaderGroup()->SetActive(true);
 
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("modelMat", mat);
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("viewMat", camera->GetViewMat());
-        mGizmoMaterial->GetShaderProgram()->SetUniformValue("projMat", camera->GetProjMat());
+        mGizmoMaterial->GetShaderGroup()->SetUniformValue("modelMat", mat);
+        mGizmoMaterial->GetShaderGroup()->SetUniformValue("viewMat", camera->GetViewMat());
+        mGizmoMaterial->GetShaderGroup()->SetUniformValue("projMat", camera->GetProjMat());
 
         mGizmoMaterial->SetUniformValue();
 
-        mGizmoMaterial->GetShaderProgram()->SetVertexArray(primitive.GetVertexArray());
+        mGizmoMaterial->GetShaderGroup()->SetVertexArray(primitive.GetVertexArray());
 
-        mGizmoMaterial->GetShaderProgram()->SetVertexBuffer("inPosition", primitive.GetPositionBuffer());
+        mGizmoMaterial->GetShaderGroup()->SetVertexBuffer("inPosition", primitive.GetPositionBuffer());
 
         mAuxiliaryRasterPipeline->Render(primitive);
         mPointRasterPipeline->Render(primitive);
 
-        mGizmoMaterial->GetShaderProgram()->ResetVertexBuffer("inPosition");
+        mGizmoMaterial->GetShaderGroup()->ResetVertexBuffer("inPosition");
 
         mGizmoMaterial->ResetUniformValue();
 
-        mGizmoMaterial->GetShaderProgram()->ResetVertexArray();
+        mGizmoMaterial->GetShaderGroup()->ResetVertexArray();
 
-        mGizmoMaterial->GetShaderProgram()->SetActive(false);
+        mGizmoMaterial->GetShaderGroup()->SetActive(false);
     }
 
     void SceneRenderer::Render(const Scene *scene)

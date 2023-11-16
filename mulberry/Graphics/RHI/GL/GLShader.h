@@ -12,29 +12,29 @@
 
 namespace mulberry
 {
-    class GLShaderModule
+    class GLShader
     {
     public:
-        GLShaderModule(enum ShaderStage type, std::string_view content);
-        ~GLShaderModule();
+        GLShader(enum ShaderStage type, std::string_view content);
+        ~GLShader();
 
         const enum ShaderStage &Type() const;
 
     private:
         void VerifyCompile();
 
-        friend class GLShaderProgram;
+        friend class GLShaderGroup;
 
         uint32_t mShaderID;
         enum ShaderStage mType;
     };
 
-    class GLShaderProgram //shader程序体
+    class GLShaderGroup //shader程序体
     {
     public:
-        GLShaderProgram();
-        GLShaderProgram(const class RasterPipelineState &config);
-        ~GLShaderProgram();
+        GLShaderGroup();
+        GLShaderGroup(const class RasterPipelineState &config);
+        ~GLShaderGroup();
 
         void SetActive(bool isActive);
 
@@ -53,7 +53,7 @@ namespace mulberry
         void SetVertexBuffer(std::string_view name, const GLVertexBuffer<T> *vertexBuffer);
         void ResetVertexBuffer(std::string_view name);
 
-        bool AttachShader(const GLShaderModule &shader);
+        bool AttachShader(const GLShader &shader);
 
         uint32_t GetAttribute(std::string_view name) const;
         uint32_t GetUniform(std::string_view name) const;
@@ -73,7 +73,7 @@ namespace mulberry
     };
 
     template <typename T>
-    void GLShaderProgram::SetVertexBuffer(std::string_view name, const GLVertexBuffer<T> *vertexBuffer)
+    void GLShaderGroup::SetVertexBuffer(std::string_view name, const GLVertexBuffer<T> *vertexBuffer)
     {
         auto slot = GetAttribute(name);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->mVertexBufferID);
@@ -84,14 +84,14 @@ namespace mulberry
 
 #define SHADER_PROGRAM_SET_VALUE(type)                                              \
     template <>                                                                     \
-    inline void GLShaderProgram::SetUniformValue(std::string_view name, type value) \
+    inline void GLShaderGroup::SetUniformValue(std::string_view name, type value) \
     {                                                                               \
         GLUniform<type>::Set(GetUniform(name.data()), value);                       \
     }
 
 #define SHADER_PROGRAM_SET_VALUEARRAY(type)                                                                  \
     template <>                                                                                              \
-    inline void GLShaderProgram::SetUniformArray(std::string_view name, const std::vector<type> &valueArray) \
+    inline void GLShaderGroup::SetUniformArray(std::string_view name, const std::vector<type> &valueArray) \
     {                                                                                                        \
         GLUniform<type>::Set(GetUniform(name.data()), valueArray);                                           \
     }

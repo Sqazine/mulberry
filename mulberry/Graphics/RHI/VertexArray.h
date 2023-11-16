@@ -11,7 +11,7 @@ namespace mulberry
         ~VertexArray();
 
     private:
-        friend class ShaderProgram;
+        friend class ShaderGroup;
         std::unique_ptr<GLVertexArray> mGLVertexArray;
     };
 

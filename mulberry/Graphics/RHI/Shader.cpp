@@ -2,101 +2,76 @@
 #include "App.h"
 namespace mulberry
 {
-    ShaderModule::ShaderModule(ShaderStage type, std::string_view content)
+    Shader::Shader(ShaderStage type, std::string_view content)
     {
         switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
-            mGLShaderModule = std::make_unique<GLShaderModule>(type, content);
+            mGLShader = std::make_unique<GLShader>(type, content);
             break;
         default:
-            mVKShaderModule = std::make_unique<VKShaderModule>(type, content);
+            mVKShader = std::make_unique<VKShader>(type, content);
             break;
         }
     }
-    ShaderModule::~ShaderModule()
+    Shader::~Shader()
     {
         switch (AppConfig::graphicsConfig.backend)
         {
         case GraphicsBackend::GL:
-            mGLShaderModule.reset(nullptr);
+            mGLShader.reset(nullptr);
             break;
         default:
-            mVKShaderModule.reset(nullptr);
+            mVKShader.reset(nullptr);
             break;
-        }
-    }
-
-    const ShaderStage &ShaderModule::Type() const
-    {
-        switch (AppConfig::graphicsConfig.backend)
-        {
-        case GraphicsBackend::GL:
-            return mGLShaderModule->Type();
-        default:
-            return mVKShaderModule->Type();
         }
     }
 
-    ShaderProgram::ShaderProgram()
+    const ShaderStage &Shader::Type() const
+    {
+        switch (AppConfig::graphicsConfig.backend)
+        {
+        case GraphicsBackend::GL:
+            return mGLShader->Type();
+        default:
+            return mVKShader->Type();
+        }
+    }
+
+    ShaderGroup::ShaderGroup()
         : mBackend(AppConfig::graphicsConfig.backend)
     {
         switch (mBackend)
         {
         case GraphicsBackend::GL:
-            mGLShaderProgram = std::make_unique<GLShaderProgram>();
+            mGLShaderGroup = std::make_unique<GLShaderGroup>();
         default:
             // TODO...
             break;
         }
     }
-    ShaderProgram::~ShaderProgram()
+    ShaderGroup::~ShaderGroup()
     {
     }
 
-    void ShaderProgram::SetActive(bool isActive)
+    void ShaderGroup::SetActive(bool isActive)
     {
         switch (mBackend)
         {
         case GraphicsBackend::GL:
-            return mGLShaderProgram->SetActive(isActive);
+            return mGLShaderGroup->SetActive(isActive);
         default:
             // TODO
             break;
         }
     }
 
-    void ShaderProgram::SetTexture(std::string_view name, const Texture *texture)
+    void ShaderGroup::SetTexture(std::string_view name, const Texture *texture)
     {
         switch (mBackend)
         {
         case GraphicsBackend::GL:
-            return mGLShaderProgram->SetTexture(name, texture->mGLTexture.get());
-            break;
-        default:
-            // TODO
-            break;
-        }
-    }
-
-    void ShaderProgram::SetVertexArray(const VertexArray *vertexArray)
-    {
-        switch (mBackend)
-        {
-        case GraphicsBackend::GL:
-            return mGLShaderProgram->SetVertexArray(vertexArray->mGLVertexArray.get());
-            break;
-        default:
-            // TODO
-            break;
-        }
-    }
-    void ShaderProgram::ResetVertexArray()
-    {
-        switch (mBackend)
-        {
-        case GraphicsBackend::GL:
-            return mGLShaderProgram->ResetVertexArray();
+            return mGLShaderGroup->SetTexture(name, texture->mGLTexture.get());
             break;
         default:
             // TODO
@@ -104,12 +79,24 @@ namespace mulberry
         }
     }
 
-    void ShaderProgram::ResetVertexBuffer(std::string_view name)
+    void ShaderGroup::SetVertexArray(const VertexArray *vertexArray)
     {
         switch (mBackend)
         {
         case GraphicsBackend::GL:
-            return mGLShaderProgram->ResetVertexBuffer(name);
+            return mGLShaderGroup->SetVertexArray(vertexArray->mGLVertexArray.get());
+            break;
+        default:
+            // TODO
+            break;
+        }
+    }
+    void ShaderGroup::ResetVertexArray()
+    {
+        switch (mBackend)
+        {
+        case GraphicsBackend::GL:
+            return mGLShaderGroup->ResetVertexArray();
             break;
         default:
             // TODO
@@ -117,36 +104,49 @@ namespace mulberry
         }
     }
 
-    bool ShaderProgram::AttachShader(const ShaderModule &shader)
+    void ShaderGroup::ResetVertexBuffer(std::string_view name)
     {
         switch (mBackend)
         {
         case GraphicsBackend::GL:
-            return mGLShaderProgram->AttachShader(*shader.mGLShaderModule);
+            return mGLShaderGroup->ResetVertexBuffer(name);
+            break;
+        default:
+            // TODO
+            break;
+        }
+    }
+
+    bool ShaderGroup::AttachShader(const Shader &shader)
+    {
+        switch (mBackend)
+        {
+        case GraphicsBackend::GL:
+            return mGLShaderGroup->AttachShader(*shader.mGLShader);
         default:
             // TODO
             return true;
         }
     }
 
-    uint32_t ShaderProgram::GetAttribute(std::string_view name) const
+    uint32_t ShaderGroup::GetAttribute(std::string_view name) const
     {
         switch (mBackend)
         {
         case GraphicsBackend::GL:
-            return mGLShaderProgram->GetAttribute(name);
+            return mGLShaderGroup->GetAttribute(name);
         default:
             // TODO
             return 0;
         }
     }
     
-    uint32_t ShaderProgram::GetUniform(std::string_view name) const
+    uint32_t ShaderGroup::GetUniform(std::string_view name) const
     {
         switch (mBackend)
         {
         case GraphicsBackend::GL:
-            return mGLShaderProgram->GetUniform(name);
+            return mGLShaderGroup->GetUniform(name);
         default:
             // TODO
             return 0;

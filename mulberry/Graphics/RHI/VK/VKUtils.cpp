@@ -124,14 +124,14 @@ namespace mulberry
 		return resources;
 	}
 
-	std::vector<uint32_t> GlslToSpv(const VkShaderStageFlagBits shaderType, std::string_view shaderSrc)
+	std::vector<uint32_t> GlslToSpv(const VkShaderStageFlagBits shaderStage, std::string_view shaderSrc)
 	{
 		glslang::InitializeProcess();
 
 		glslang::TProgram program;
 
 		EShLanguage stage;
-		switch (shaderType)
+		switch (shaderStage)
 		{
 		case VK_SHADER_STAGE_VERTEX_BIT:
 			stage = EShLangVertex;

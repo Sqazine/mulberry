@@ -21,26 +21,26 @@ namespace mulberry
         COMPUTE,
     };
 
-    class ShaderModule
+    class Shader
     {
     public:
-        ShaderModule(ShaderStage type, std::string_view content);
-        ~ShaderModule();
+        Shader(ShaderStage type, std::string_view content);
+        ~Shader();
 
         const ShaderStage &Type() const;
 
     private:
-        friend class ShaderProgram;
+        friend class ShaderGroup;
 
-        std::unique_ptr<class GLShaderModule> mGLShaderModule;
-        std::unique_ptr<class VKShaderModule> mVKShaderModule;
+        std::unique_ptr<class GLShader> mGLShader;
+        std::unique_ptr<class VKShader> mVKShader;
     };
 
-    class ShaderProgram
+    class ShaderGroup
     {
     public:
-        ShaderProgram();
-        ~ShaderProgram();
+        ShaderGroup();
+        ~ShaderGroup();
 
         void SetActive(bool isActive);
 
@@ -59,23 +59,23 @@ namespace mulberry
         void SetVertexBuffer(std::string_view name, const VertexBuffer<T> *vertexBuffer);
         void ResetVertexBuffer(std::string_view name);
 
-        bool AttachShader(const ShaderModule &shader);
+        bool AttachShader(const Shader &shader);
 
         uint32_t GetAttribute(std::string_view name) const;
         uint32_t GetUniform(std::string_view name) const;
 
     private:
         GraphicsBackend mBackend;
-        std::unique_ptr<class GLShaderProgram> mGLShaderProgram;
+        std::unique_ptr<class GLShaderGroup> mGLShaderGroup;
     };
 
     template <typename T>
-    inline void ShaderProgram::SetUniformValue(std::string_view name, T value)
+    inline void ShaderGroup::SetUniformValue(std::string_view name, T value)
     {
         switch (mBackend)
         {
         case GraphicsBackend::GL:
-            mGLShaderProgram->SetUniformValue<T>(name, value);
+            mGLShaderGroup->SetUniformValue<T>(name, value);
         default:
             // TODO
             break;
@@ -83,12 +83,12 @@ namespace mulberry
     }
 
     template <typename T>
-    inline void ShaderProgram::SetUniformArray(std::string_view name, const std::vector<T> &valueArray)
+    inline void ShaderGroup::SetUniformArray(std::string_view name, const std::vector<T> &valueArray)
     {
         switch (mBackend)
         {
         case GraphicsBackend::GL:
-            mGLShaderProgram->SetUniformArray<T>(name, valueArray);
+            mGLShaderGroup->SetUniformArray<T>(name, valueArray);
         default:
             // TODO
             break;
@@ -96,12 +96,12 @@ namespace mulberry
     }
 
     template <typename T>
-    inline void ShaderProgram::SetVertexBuffer(std::string_view name, const VertexBuffer<T> *vertexBuffer)
+    inline void ShaderGroup::SetVertexBuffer(std::string_view name, const VertexBuffer<T> *vertexBuffer)
     {
         switch (mBackend)
         {
         case GraphicsBackend::GL:
-            mGLShaderProgram->SetVertexBuffer<T>(name, vertexBuffer->mGLVertexBuffer.get());
+            mGLShaderGroup->SetVertexBuffer<T>(name, vertexBuffer->mGLVertexBuffer.get());
         default:
             // TODO
             break;

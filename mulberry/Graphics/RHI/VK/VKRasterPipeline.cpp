@@ -24,6 +24,7 @@ namespace mulberry
     void VKRasterPipeline::SetPSO(const RasterPipelineState &state)
     {
         mState = state;
+        mIsDirty=true;
     }
 
     const RasterPipelineState &VKRasterPipeline::GetPSO() const
@@ -59,6 +60,7 @@ namespace mulberry
         info.pNext=nullptr;
         info.flags=0;
         info.subpass = 0;
+
         
         VK_CHECK(vkCreateGraphicsPipelines(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), VK_NULL_HANDLE, 1, &info, nullptr, &mHandle));
     }

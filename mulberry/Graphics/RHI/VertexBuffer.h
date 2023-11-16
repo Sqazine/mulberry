@@ -18,7 +18,7 @@ namespace mulberry
         uint32_t Size();
 
     private:
-        friend class ShaderProgram;
+        friend class ShaderGroup;
         std::unique_ptr<GLVertexBuffer<T>> mGLVertexBuffer;
         std::unique_ptr<VKVertexBuffer<T>> mVKVertexBuffer;
     };

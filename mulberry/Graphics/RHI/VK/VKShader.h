@@ -4,11 +4,11 @@
 #include "Graphics/RHI/Shader.h"
 namespace mulberry
 {
-	class VKShaderModule
+	class VKShader
 	{
 	public:
-		VKShaderModule(ShaderStage type, std::string_view content);
-		~VKShaderModule();
+		VKShader(ShaderStage type, std::string_view content);
+		~VKShader();
 
 		const VkPipelineShaderStageCreateInfo &GetStageCreateInfo() const;
 		const VkShaderModule &GetHandle() const;
@@ -17,12 +17,21 @@ namespace mulberry
 
 	private:
 		ShaderStage mType;
-		VkShaderModule mShaderModule;
+		VkShaderModule mShader;
 		VkPipelineShaderStageCreateInfo mStageCreateInfo;
 	};
 
-	class VKShaderProgram
+	class VKShaderGroup
 	{
-		
+	public:
+		void SetVertexShader(VKShader *shader);
+		void SetTessellationControlShader(VKShader *shader);
+		void SetTessellationEvaluationShader(VKShader *shader);
+		void SetGeometryShader(VKShader *shader);
+		void SetFragmentShader(VKShader *shader);
+
+		std::vector<VkPipelineShaderStageCreateInfo> GetShaderStages();
+
+	private:
 	};
 }

@@ -14,11 +14,11 @@ namespace mulberry
         virtual void SetUniformValue() const {}
         virtual void ResetUniformValue() const {}
 
-        void SetShaderProgram(ShaderProgram *program);
-        ShaderProgram *GetShaderProgram() const;
+        void SetShaderGroup(ShaderGroup *program);
+        ShaderGroup *GetShaderGroup() const;
 
     protected:
-        std::unique_ptr<ShaderProgram> shaderProgram;
+        std::unique_ptr<ShaderGroup> shaderProgram;
     };
 
     class SpriteMaterial : public RenderMaterial

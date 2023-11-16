@@ -6,7 +6,7 @@
 namespace mulberry
 {
 
-	GLShaderModule::GLShaderModule(ShaderStage type, std::string_view content)
+	GLShader::GLShader(ShaderStage type, std::string_view content)
 		: mShaderID(-1), mType(type)
 	{
 		mShaderID = glCreateShader(ToGLShaderStage(type));
@@ -16,17 +16,17 @@ namespace mulberry
 		glCompileShader(mShaderID);
 		VerifyCompile();
 	}
-	GLShaderModule::~GLShaderModule()
+	GLShader::~GLShader()
 	{
 		glDeleteShader(mShaderID);
 	}
 
-	const ShaderStage &GLShaderModule::Type() const
+	const ShaderStage &GLShader::Type() const
 	{
 		return mType;
 	}
 
-	void GLShaderModule::VerifyCompile()
+	void GLShader::VerifyCompile()
 	{
 		int32_t status;
 		glGetShaderiv(mShaderID, GL_COMPILE_STATUS, &status);
@@ -39,17 +39,17 @@ namespace mulberry
 		}
 	}
 
-	GLShaderProgram::GLShaderProgram()
+	GLShaderGroup::GLShaderGroup()
 		: mTextureBindingIdx(0)
 	{
 		mProgramID = glCreateProgram();
 	}
-	GLShaderProgram::~GLShaderProgram()
+	GLShaderGroup::~GLShaderGroup()
 	{
 		glDeleteProgram(mProgramID);
 	}
 
-	void GLShaderProgram::SetActive(bool isActive)
+	void GLShaderGroup::SetActive(bool isActive)
 	{
 		if (isActive)
 			glUseProgram(mProgramID);
@@ -57,7 +57,7 @@ namespace mulberry
 			glUseProgram(0);
 	}
 
-	void GLShaderProgram::SetTexture(std::string_view name, const GLTexture *texture)
+	void GLShaderGroup::SetTexture(std::string_view name, const GLTexture *texture)
 	{
 		auto iter=mActiveTextureSlot.find(name);
 		if(iter==mActiveTextureSlot.end())
@@ -71,21 +71,21 @@ namespace mulberry
 		glBindTexture(GL_TEXTURE_2D, texture->GetHandle());
 	}
 
-	void GLShaderProgram::SetVertexArray(const GLVertexArray *vertexArray)
+	void GLShaderGroup::SetVertexArray(const GLVertexArray *vertexArray)
 	{
 		glBindVertexArray(vertexArray->mVertexArrayID);
 	}
-	void GLShaderProgram::ResetVertexArray()
+	void GLShaderGroup::ResetVertexArray()
 	{
 		glBindVertexArray(0);
 	}
 
-	void GLShaderProgram::ResetVertexBuffer(std::string_view name)
+	void GLShaderGroup::ResetVertexBuffer(std::string_view name)
 	{
 		glDisableVertexAttribArray(GetAttribute(name));
 	}
 
-	bool GLShaderProgram::AttachShader(const GLShaderModule &shader)
+	bool GLShaderGroup::AttachShader(const GLShader &shader)
 	{
 		glAttachShader(mProgramID, shader.mShaderID);
 		glLinkProgram(mProgramID);
@@ -101,7 +101,7 @@ namespace mulberry
 		return validFlag;
 	}
 
-	uint32_t GLShaderProgram::GetAttribute(std::string_view name) const
+	uint32_t GLShaderGroup::GetAttribute(std::string_view name) const
 	{
 		auto iter = mActiveAttributes.find(name.data());
 		if (iter == std::end(mActiveAttributes))
@@ -111,7 +111,7 @@ namespace mulberry
 		}
 		return iter->second;
 	}
-	uint32_t GLShaderProgram::GetUniform(std::string_view name) const
+	uint32_t GLShaderGroup::GetUniform(std::string_view name) const
 	{
 		auto iter = mActiveUniforms.find(name.data());
 		if (iter == std::end(mActiveUniforms))
@@ -122,7 +122,7 @@ namespace mulberry
 		return iter->second;
 	}
 
-	void GLShaderProgram::PopulateAttributes()
+	void GLShaderGroup::PopulateAttributes()
 	{
 		mActiveAttributes.clear();
 
@@ -149,7 +149,7 @@ namespace mulberry
 		SetActive(false);
 	}
 
-	void GLShaderProgram::PopulateUniforms()
+	void GLShaderGroup::PopulateUniforms()
 	{
 		mActiveUniforms.clear();
 
@@ -196,7 +196,7 @@ namespace mulberry
 		SetActive(false);
 	}
 
-	bool GLShaderProgram::IsValidProgram()
+	bool GLShaderGroup::IsValidProgram()
 	{
 		int32_t status = GL_TRUE;
 		glGetProgramiv(mProgramID, GL_LINK_STATUS, &status);

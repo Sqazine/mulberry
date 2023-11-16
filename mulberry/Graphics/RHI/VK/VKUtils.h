@@ -89,7 +89,7 @@ namespace mulberry
 
 	bool HasStencilComponent(VkFormat format);
 
-	std::vector<uint32_t> GlslToSpv(const VkShaderStageFlagBits shaderType, std::string_view shaderSrc);
+	std::vector<uint32_t> GlslToSpv(const VkShaderStageFlagBits shaderStage, std::string_view shaderSrc);
 
 	uint32_t GetBiggerTwoPower(uint32_t val);
 

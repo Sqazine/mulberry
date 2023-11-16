@@ -19,12 +19,12 @@ namespace mulberry
 		uint32_t Size();
 
 	protected:
-		friend class GLShaderProgram;
+		friend class GLShaderGroup;
 		uint32_t mVertexBufferID;
 		uint32_t mSize;
 
 	private:
-		friend class GLShaderProgram;
+		friend class GLShaderGroup;
 		void SetAttribPointer(uint32_t slot) const;
 	};
 
