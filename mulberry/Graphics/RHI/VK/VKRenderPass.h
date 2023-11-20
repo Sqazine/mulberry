@@ -14,8 +14,6 @@ namespace mulberry
         const VkRenderPass& GetHandle() const;
 
     private:
-        const class VKDevice* mDevice;
-
         VkRenderPass mRenderPass;
     };
 }

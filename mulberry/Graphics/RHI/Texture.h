@@ -21,10 +21,6 @@ namespace mulberry
     {
         NEAREST,
         LINEAR,
-        TRILINEAR,
-        NEAREST_MIPMAP_NEAREST,
-        NEAREST_MIPMAP_LINEAR,
-        LINEAR_MIPMAP_NEAREST
     };
 
     enum class Format
@@ -49,7 +45,8 @@ namespace mulberry
     {
         WrapMode wrapS = WrapMode::REPEAT;
         WrapMode wrapT = WrapMode::REPEAT;
-        FilterMode filterMode = FilterMode::NEAREST;
+        FilterMode magFilter = FilterMode::NEAREST;
+        FilterMode minFilter = FilterMode::NEAREST;
         Format format = Format::RGBA8;
         Color borderColor = Color::Black;
         ImgData data;

@@ -5,7 +5,7 @@
 
 namespace mulberry
 {
-     enum ShaderStage;
+     enum class ShaderStage;
      enum class PrimitiveRenderType;
      enum class WrapMode;
      enum class FilterMode;

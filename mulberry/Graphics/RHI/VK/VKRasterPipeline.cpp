@@ -18,7 +18,7 @@ namespace mulberry
     VKRasterPipeline::~VKRasterPipeline()
     {
         if(mHandle)
-            vkDestroyPipeline(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), mHandle, nullptr);
+            vkDestroyPipeline(RAW_VK_DEVICE_HANDLE, mHandle, nullptr);
     }
 
     void VKRasterPipeline::SetPSO(const RasterPipelineState &state)
@@ -62,6 +62,6 @@ namespace mulberry
         info.subpass = 0;
 
         
-        VK_CHECK(vkCreateGraphicsPipelines(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), VK_NULL_HANDLE, 1, &info, nullptr, &mHandle));
+        VK_CHECK(vkCreateGraphicsPipelines(RAW_VK_DEVICE_HANDLE, VK_NULL_HANDLE, 1, &info, nullptr, &mHandle));
     }
 }

@@ -210,9 +210,9 @@ namespace mulberry
 			return VK_SHADER_STAGE_GEOMETRY_BIT;
 		case ShaderStage::COMPUTE:
 			return VK_SHADER_STAGE_COMPUTE_BIT;
-		case ShaderStage::TESSELLATION_CONTROL:
+		case ShaderStage::TESS_CTRL:
 			return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-		case ShaderStage::TESSELLATION_EVAL:
+		case ShaderStage::TESS_EVAL:
 			return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
 		default:
 			return VK_SHADER_STAGE_VERTEX_BIT;

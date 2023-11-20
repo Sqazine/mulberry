@@ -17,7 +17,6 @@ namespace mulberry
         void RenderInstanced(const VKIndexBuffer *ibo, uint32_t instanceCount);
 
         const VkPipeline &GetHandle();
-
     private:
         void Build();
         RasterPipelineState mState;

@@ -9,7 +9,6 @@ namespace mulberry
 {
 
 	VKRenderPass::VKRenderPass(const std::vector<VkFormat> &colorformats)
-		: mDevice(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice())
 	{
 		std::vector<VkAttachmentDescription> attachments;
 		std::vector<VkAttachmentReference> colorReferences;
@@ -70,11 +69,10 @@ namespace mulberry
 		renderPassInfo.dependencyCount = dependencies.size();
 		renderPassInfo.pDependencies = dependencies.data();
 
-		VK_CHECK(vkCreateRenderPass(mDevice->GetHandle(), &renderPassInfo, nullptr, &mRenderPass))
+		VK_CHECK(vkCreateRenderPass(RAW_VK_DEVICE_HANDLE, &renderPassInfo, nullptr, &mRenderPass))
 	}
 
 	VKRenderPass::VKRenderPass(VkFormat colorformat)
-		: mDevice(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice())
 	{
 		std::vector<VkAttachmentDescription> attachments;
 		std::vector<VkAttachmentReference> colorReferences;
@@ -133,12 +131,12 @@ namespace mulberry
 		renderPassInfo.dependencyCount = dependencies.size();
 		renderPassInfo.pDependencies = dependencies.data();
 
-		VK_CHECK(vkCreateRenderPass(mDevice->GetHandle(), &renderPassInfo, nullptr, &mRenderPass))
+		VK_CHECK(vkCreateRenderPass(RAW_VK_DEVICE_HANDLE, &renderPassInfo, nullptr, &mRenderPass))
 	}
 
 	VKRenderPass::~VKRenderPass()
 	{
-		vkDestroyRenderPass(mDevice->GetHandle(), mRenderPass, nullptr);
+		vkDestroyRenderPass(RAW_VK_DEVICE_HANDLE, mRenderPass, nullptr);
 	}
 
 	const VkRenderPass &VKRenderPass::GetHandle() const

@@ -14,7 +14,6 @@ namespace mulberry
         const VkImageView &GetHandle() const;
 
     private:
-        const class VKDevice* mDevice;
         VkImageView mImageView;
     };
 }

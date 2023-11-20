@@ -15,10 +15,10 @@ namespace mulberry
     class GLShader
     {
     public:
-        GLShader(enum ShaderStage type, std::string_view content);
+        GLShader(enum class ShaderStage type, std::string_view content);
         ~GLShader();
 
-        const enum ShaderStage &Type() const;
+        const enum class ShaderStage &Type() const;
 
     private:
         void VerifyCompile();
@@ -26,14 +26,14 @@ namespace mulberry
         friend class GLShaderGroup;
 
         uint32_t mShaderID;
-        enum ShaderStage mType;
+        enum class ShaderStage mType;
     };
 
-    class GLShaderGroup //shader程序体
+    class GLShaderGroup
     {
     public:
         GLShaderGroup();
-        GLShaderGroup(const class RasterPipelineState &config);
+        GLShaderGroup(const struct RasterPipelineState &config);
         ~GLShaderGroup();
 
         void SetActive(bool isActive);

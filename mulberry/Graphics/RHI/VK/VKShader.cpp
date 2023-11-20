@@ -25,7 +25,7 @@ namespace mulberry
 		info.codeSize = pCode.size() * sizeof(uint32_t);
 		info.pCode = pCode.data();
 
-		VK_CHECK(vkCreateShaderModule(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), &info, nullptr, &mShader));
+		VK_CHECK(vkCreateShaderModule(RAW_VK_DEVICE_HANDLE, &info, nullptr, &mShader));
 
 		mStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		mStageCreateInfo.pNext = nullptr;
@@ -38,7 +38,7 @@ namespace mulberry
 
 	VKShader::~VKShader()
 	{
-		vkDestroyShaderModule(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), mShader, nullptr);
+		vkDestroyShaderModule(RAW_VK_DEVICE_HANDLE, mShader, nullptr);
 	}
 
 	const VkPipelineShaderStageCreateInfo &VKShader::GetStageCreateInfo() const

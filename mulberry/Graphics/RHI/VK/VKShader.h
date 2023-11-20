@@ -21,7 +21,7 @@ namespace mulberry
 		VkPipelineShaderStageCreateInfo mStageCreateInfo;
 	};
 
-	class VKShaderGroup
+	class VKRasterShaderGroup
 	{
 	public:
 		void SetVertexShader(VKShader *shader);
@@ -33,5 +33,10 @@ namespace mulberry
 		std::vector<VkPipelineShaderStageCreateInfo> GetShaderStages();
 
 	private:
+		std::unique_ptr<VKShader> mVertShader;
+		std::unique_ptr<VKShader> mTesslCtrlShader;
+		std::unique_ptr<VKShader> mTesslEvalShader;
+		std::unique_ptr<VKShader> mGeomShader;
+		std::unique_ptr<VKShader> mFragShader;
 	};
 }

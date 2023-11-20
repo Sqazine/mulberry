@@ -22,10 +22,7 @@ namespace mulberry
         void Reset();
 
         FenceStatus GetStatus() const;
-
     private:
-        const class VKDevice *mDevice;
-
         VkFence mHandle;
         FenceStatus mStatus;
     };
@@ -37,9 +34,7 @@ namespace mulberry
         ~VKSemaphore();
 
         const VkSemaphore &GetHandle() const;
-
     private:
-        const class VKDevice *mDevice;
         VkSemaphore mHandle;
     };
 }

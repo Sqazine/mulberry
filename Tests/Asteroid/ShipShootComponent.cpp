@@ -13,7 +13,8 @@ void ShipShootComponent::Init()
 
     mulberry::TextureInfo textureInfo{};
     textureInfo.data = GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "Laser.png");
-    textureInfo.filterMode = mulberry::FilterMode::LINEAR;
+    textureInfo.minFilter = mulberry::FilterMode::LINEAR;
+    textureInfo.magFilter = mulberry::FilterMode::LINEAR;
     mLaserTexture.reset(new mulberry::Texture(textureInfo));
 
     if (!mOwnerTransformComponent)

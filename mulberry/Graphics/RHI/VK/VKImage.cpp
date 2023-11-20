@@ -14,7 +14,7 @@ namespace mulberry
 		VkImageTiling tiling,
 		VkImageUsageFlags usage,
 		VkMemoryPropertyFlags properties)
-		: mFormat(format), mDevice(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice())
+		: mFormat(format)
 	{
 		mImageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 		mImageInfo.pNext = nullptr;
@@ -36,39 +36,39 @@ namespace mulberry
 
 		mImageLayout = mImageInfo.initialLayout;
 
-		VK_CHECK(vkCreateImage(mDevice->GetHandle(), &mImageInfo, nullptr, &mImage))
+		VK_CHECK(vkCreateImage(RAW_VK_DEVICE_HANDLE, &mImageInfo, nullptr, &mImage))
 
-			VkMemoryRequirements memRequirments;
+		VkMemoryRequirements memRequirments;
 
-		vkGetImageMemoryRequirements(mDevice->GetHandle(), mImage, &memRequirments);
+		vkGetImageMemoryRequirements(RAW_VK_DEVICE_HANDLE, mImage, &memRequirments);
 
 		VkMemoryAllocateInfo allocInfo;
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 		allocInfo.pNext = nullptr;
-		allocInfo.memoryTypeIndex = mDevice->FindMemoryType(memRequirments.memoryTypeBits, properties);
+		allocInfo.memoryTypeIndex = VK_CONTEXT->GetDevice()->FindMemoryType(memRequirments.memoryTypeBits, properties);
 		allocInfo.allocationSize = memRequirments.size;
 
-		VK_CHECK(vkAllocateMemory(mDevice->GetHandle(), &allocInfo, nullptr, &mImageMemory))
+		VK_CHECK(vkAllocateMemory(RAW_VK_DEVICE_HANDLE, &allocInfo, nullptr, &mImageMemory))
 
-			vkBindImageMemory(mDevice->GetHandle(), mImage, mImageMemory, 0);
+		vkBindImageMemory(RAW_VK_DEVICE_HANDLE, mImage, mImageMemory, 0);
 	}
 
 	VKImage::~VKImage()
 	{
-		vkFreeMemory(mDevice->GetHandle(), mImageMemory, nullptr);
-		vkDestroyImage(mDevice->GetHandle(), mImage, nullptr);
+		vkFreeMemory(RAW_VK_DEVICE_HANDLE, mImageMemory, nullptr);
+		vkDestroyImage(RAW_VK_DEVICE_HANDLE, mImage, nullptr);
 	}
 
-	const VkImage& VKImage::GetHandle() const
+	const VkImage &VKImage::GetHandle() const
 	{
 		return mImage;
 	}
-	const VkDeviceMemory& VKImage::GetMemory() const
+	const VkDeviceMemory &VKImage::GetMemory() const
 	{
 		return mImageMemory;
 	}
 
-	const VkFormat& VKImage::GetFormat() const
+	const VkFormat &VKImage::GetFormat() const
 	{
 		return mFormat;
 	}
@@ -78,23 +78,23 @@ namespace mulberry
 		return mImageInfo.mipLevels;
 	}
 
-	const VkImageLayout& VKImage::GetImageLayout() const
+	const VkImageLayout &VKImage::GetImageLayout() const
 	{
 		return mImageLayout;
 	}
 
 	void VKImage::TransitionToNewLayout(VkImageLayout newLayout)
 	{
-		App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetGraphicsCommandPool()->SubmitOnce([&](VKCommandBuffer* commandBuffer)
-			{ commandBuffer->TransitionImageNewLayout(this, newLayout); });
+		App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetGraphicsCommandPool()->SubmitOnce([&](VKCommandBuffer *commandBuffer)
+																												   { commandBuffer->TransitionImageNewLayout(this, newLayout); });
 
 		mImageLayout = newLayout;
 	}
 
-	void VKImage::CopyToBuffer(const ImageAspect& aspect, VKBuffer* buffer)
+	void VKImage::CopyToBuffer(const ImageAspect &aspect, VKBuffer *buffer)
 	{
-		App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetGraphicsCommandPool()->SubmitOnce([&](VKCommandBuffer* cmd)
-			{
+		App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetGraphicsCommandPool()->SubmitOnce([&](VKCommandBuffer *cmd)
+																												   {
 				auto oldLayout = GetImageLayout();
 				cmd->TransitionImageNewLayout(this, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
 
@@ -108,13 +108,12 @@ namespace mulberry
 
 				vkCmdCopyImageToBuffer(cmd->GetHandle(), mImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, buffer->GetHandle(), 1, &copyRegion);
 
-				cmd->TransitionImageNewLayout(this, oldLayout);
-			});
+				cmd->TransitionImageNewLayout(this, oldLayout); });
 	}
-	void* VKImage::MapBuffer(VKBuffer* buffer)
+	void *VKImage::MapBuffer(VKBuffer *buffer)
 	{
-		void* data = nullptr;
-		vkMapMemory(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), buffer->GetMemory(), 0, VK_WHOLE_SIZE, 0, (void**)&data);
+		void *data = nullptr;
+		vkMapMemory(RAW_VK_DEVICE_HANDLE, buffer->GetMemory(), 0, VK_WHOLE_SIZE, 0, (void **)&data);
 		return data;
 	}
 }

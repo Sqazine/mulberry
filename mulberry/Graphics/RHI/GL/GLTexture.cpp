@@ -34,8 +34,8 @@ namespace mulberry
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ToGLWarpMode(mInfo.wrapS));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, ToGLWarpMode(mInfo.wrapT));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ToGLFilterMode(mInfo.filterMode));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ToGLFilterMode(mInfo.filterMode));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ToGLFilterMode(mInfo.minFilter));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ToGLFilterMode(mInfo.magFilter));
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &mInfo.borderColor.values[0]);
 
 		uint32_t internalFormat;
@@ -63,9 +63,6 @@ namespace mulberry
 
 		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, mInfo.data.width, mInfo.data.height, 0, externalFormat, GL_UNSIGNED_BYTE, mInfo.data.pixels.data());
 
-		if (mInfo.filterMode == FilterMode::TRILINEAR)
-			glGenerateTextureMipmap(mTextureID);
-
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
@@ -76,7 +73,8 @@ namespace mulberry
 		info.data.height = surface->h;
 		info.data.pixels = std::vector<uint8_t>((uint8_t *)surface->pixels, (uint8_t *)surface->pixels + (surface->w * surface->h * 4));
 		info.borderColor = Color::Transparent;
-		info.filterMode = FilterMode::LINEAR;
+		info.minFilter = FilterMode::LINEAR;
+		info.magFilter = FilterMode::LINEAR;
 		CreateFrom(info);
 	}
 

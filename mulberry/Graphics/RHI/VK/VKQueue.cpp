@@ -8,7 +8,7 @@ namespace mulberry
 {
 	VKQueue::VKQueue(uint32_t familyIndex)
 	{
-		vkGetDeviceQueue(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), familyIndex, 0, &mHandle);
+		vkGetDeviceQueue(RAW_VK_DEVICE_HANDLE, familyIndex, 0, &mHandle);
 	}
 
 	void VKQueue::WaitIdle() const

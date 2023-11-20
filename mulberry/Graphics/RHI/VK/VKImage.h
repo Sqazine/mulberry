@@ -41,8 +41,6 @@ namespace mulberry
 		std::vector<T> GetRawData(const ImageAspect& aspect);
 
 	protected:
-		const class VKDevice* mDevice;
-
 		VkImageCreateInfo mImageInfo;
 		VkImage mImage;
 		VkFormat mFormat;

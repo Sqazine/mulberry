@@ -9,12 +9,12 @@ namespace mulberry
 {
     VKRasterPass::VKRasterPass()
     {
-        auto extent = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->GetExtent();
-        auto swapChainImageFormat = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->GetSurfaceFormat().format;
-        auto swapChainImageCount = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->GetImageSize();
+        auto extent = VK_CONTEXT->GetSwapChain()->GetExtent();
+        auto swapChainImageFormat = VK_CONTEXT->GetSwapChain()->GetSurfaceFormat().format;
+        auto swapChainImageCount = VK_CONTEXT->GetSwapChain()->GetImageSize();
 
         mRenderPass = std::make_unique<VKRenderPass>(swapChainImageFormat);
-        mCommandBuffers = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetGraphicsCommandPool()->CreatePrimaryCommandBuffers(swapChainImageCount);
+        mCommandBuffers = VK_CONTEXT->GetDevice()->GetGraphicsCommandPool()->CreatePrimaryCommandBuffers(swapChainImageCount);
 
         mFrameBuffers.resize(swapChainImageCount);
 
@@ -47,11 +47,11 @@ namespace mulberry
 
     void VKRasterPass::Begin()
     {
-        App::GetInstance().GetGraphicsContext()->GetVKContext()->mCurRasterPass = this;
+        VK_CONTEXT->mCurRasterPass = this;
 
         mInFlightFences[mCurFrameIdx]->Wait();
 
-        mSwapChainImageIdx = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->AcquireNextImage(mImageAvailableSemaphores[mCurFrameIdx].get());
+        mSwapChainImageIdx = VK_CONTEXT->GetSwapChain()->AcquireNextImage(mImageAvailableSemaphores[mCurFrameIdx].get());
 
         mInFlightFences[mCurFrameIdx]->Reset();
 
@@ -66,8 +66,8 @@ namespace mulberry
         beginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         beginInfo.pNext = nullptr;
         beginInfo.renderArea.offset = {0, 0};
-        beginInfo.renderArea.extent.width = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->GetExtent().x;
-        beginInfo.renderArea.extent.height = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->GetExtent().y;
+        beginInfo.renderArea.extent.width = VK_CONTEXT->GetSwapChain()->GetExtent().x;
+        beginInfo.renderArea.extent.height = VK_CONTEXT->GetSwapChain()->GetExtent().y;
         beginInfo.framebuffer = mFrameBuffers[mCurFrameIdx]->GetHandle();
         beginInfo.clearValueCount = clearValues.size();
         beginInfo.pClearValues = clearValues.data();
@@ -95,21 +95,21 @@ namespace mulberry
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = &mRenderFinishedSemaphores[mCurFrameIdx]->GetHandle();
 
-        App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetGraphicsQueue()->Submit(submitInfo, mInFlightFences[mCurFrameIdx].get());
+        VK_CONTEXT->GetDevice()->GetGraphicsQueue()->Submit(submitInfo, mInFlightFences[mCurFrameIdx].get());
 
         VkPresentInfoKHR presentInfo{};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
         presentInfo.swapchainCount = 1;
-        presentInfo.pSwapchains = &App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->GetHandle();
+        presentInfo.pSwapchains = &VK_CONTEXT->GetSwapChain()->GetHandle();
         presentInfo.waitSemaphoreCount = 1;
         presentInfo.pWaitSemaphores = &mRenderFinishedSemaphores[mCurFrameIdx]->GetHandle();
         presentInfo.pImageIndices = &mSwapChainImageIdx;
 
-        App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetPresentQueue()->Present(presentInfo);
+        VK_CONTEXT->GetDevice()->GetPresentQueue()->Present(presentInfo);
 
         mCurFrameIdx = (mCurFrameIdx + 1) % MAX_FRAMES_IN_FLIGHT;
 
-        App::GetInstance().GetGraphicsContext()->GetVKContext()->mCurRasterPass = this;
+        VK_CONTEXT->mCurRasterPass = this;
     }
 
     VKCommandBuffer *VKRasterPass::GetCurCommandBuffer() const
@@ -119,10 +119,10 @@ namespace mulberry
 
     void VKRasterPass::ReBuild()
     {
-        auto extent = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->GetExtent();
+        auto extent = VK_CONTEXT->GetSwapChain()->GetExtent();
         for (int32_t i = 0; i < mFrameBuffers.size(); ++i)
         {
-            std::vector<const VKImageView *> views = {App::GetInstance().GetGraphicsContext()->GetVKContext()->GetSwapChain()->GetImageViews()[i].get()};
+            std::vector<const VKImageView *> views = {VK_CONTEXT->GetSwapChain()->GetImageViews()[i].get()};
             mFrameBuffers[i] = std::make_unique<VKFrameBuffer>(extent.x, extent.y, mRenderPass.get(), views);
         }
     }

@@ -10,15 +10,14 @@ namespace mulberry
 {
 
 	VKSwapChain::VKSwapChain()
-		: mHandle(VK_NULL_HANDLE),mDevice(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice())
+		: mHandle(VK_NULL_HANDLE)
 	{
 		Build();
 	}
 	VKSwapChain::~VKSwapChain()
 	{
 		mSwapChainImageViews.clear();
-		vkDestroySwapchainKHR(mDevice->GetHandle(), mHandle, nullptr);
-		mDevice=nullptr;
+		vkDestroySwapchainKHR(RAW_VK_DEVICE_HANDLE, mHandle, nullptr);
 	}
 
 	uint32_t VKSwapChain::GetImageSize() const
@@ -46,13 +45,13 @@ namespace mulberry
 		uint32_t imageIndex = 0;
 
 		if (semaphore && fence)
-			VK_CHECK(vkAcquireNextImageKHR(mDevice->GetHandle(), mHandle, UINT64_MAX, semaphore->GetHandle(), fence->GetHandle(), &imageIndex))
+			VK_CHECK(vkAcquireNextImageKHR(RAW_VK_DEVICE_HANDLE, mHandle, UINT64_MAX, semaphore->GetHandle(), fence->GetHandle(), &imageIndex))
 		else if (semaphore && !fence)
-			VK_CHECK(vkAcquireNextImageKHR(mDevice->GetHandle(), mHandle, UINT64_MAX, semaphore->GetHandle(), nullptr, &imageIndex))
+			VK_CHECK(vkAcquireNextImageKHR(RAW_VK_DEVICE_HANDLE, mHandle, UINT64_MAX, semaphore->GetHandle(), nullptr, &imageIndex))
 		else if (!semaphore && fence)
-			VK_CHECK(vkAcquireNextImageKHR(mDevice->GetHandle(), mHandle, UINT64_MAX, nullptr, fence->GetHandle(), &imageIndex))
+			VK_CHECK(vkAcquireNextImageKHR(RAW_VK_DEVICE_HANDLE, mHandle, UINT64_MAX, nullptr, fence->GetHandle(), &imageIndex))
 		else
-			VK_CHECK(vkAcquireNextImageKHR(mDevice->GetHandle(), mHandle, UINT64_MAX, nullptr, nullptr, &imageIndex))
+			VK_CHECK(vkAcquireNextImageKHR(RAW_VK_DEVICE_HANDLE, mHandle, UINT64_MAX, nullptr, nullptr, &imageIndex))
 
 		return imageIndex;
 	}
@@ -77,7 +76,7 @@ namespace mulberry
 		createInfo.imageArrayLayers = 1;
 		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 		
-		QueueFamilyIndices indices = mDevice->GetPhysicalDeviceSpec().queueFamilyIndices;
+		QueueFamilyIndices indices = VK_CONTEXT->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices;
 		uint32_t queueFamilyIndices[] = {indices.graphicsFamilyIdx.value(), indices.presentFamilyIdx.value()};
 
 		if (indices.graphicsFamilyIdx.value() != indices.presentFamilyIdx.value())
@@ -98,13 +97,13 @@ namespace mulberry
 		createInfo.presentMode = mSwapChainPresentMode;
 		createInfo.oldSwapchain = mHandle == VK_NULL_HANDLE ? mHandle : VK_NULL_HANDLE;
 
-		VK_CHECK(vkCreateSwapchainKHR(mDevice->GetHandle(), &createInfo, nullptr, &mHandle));
+		VK_CHECK(vkCreateSwapchainKHR(RAW_VK_DEVICE_HANDLE, &createInfo, nullptr, &mHandle));
 
 		uint32_t count = 0;
 
-		vkGetSwapchainImagesKHR(mDevice->GetHandle(), mHandle, &count, nullptr);
+		vkGetSwapchainImagesKHR(RAW_VK_DEVICE_HANDLE, mHandle, &count, nullptr);
 		mSwapChainImages.resize(count);
-		vkGetSwapchainImagesKHR(mDevice->GetHandle(), mHandle, &count, mSwapChainImages.data());
+		vkGetSwapchainImagesKHR(RAW_VK_DEVICE_HANDLE, mHandle, &count, mSwapChainImages.data());
 
 		mSwapChainImageViews.resize(count);
 		for (size_t i = 0; i < mSwapChainImageViews.size(); ++i)
@@ -118,9 +117,9 @@ namespace mulberry
 
 	void VKSwapChain::ReBuild()
 	{
-		mDevice->WaitIdle();
+		VK_CONTEXT->GetDevice()->WaitIdle();
 		mSwapChainImageViews.clear();
-		vkDestroySwapchainKHR(mDevice->GetHandle(), mHandle, nullptr);
+		vkDestroySwapchainKHR(RAW_VK_DEVICE_HANDLE, mHandle, nullptr);
 		Build();
 	}
 
@@ -166,7 +165,7 @@ namespace mulberry
 		SwapChainDetails result;
 
 		auto surface = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetAdapter()->GetSurface();
-		auto physicalDevice = mDevice->GetPhysicalDeviceSpec().handle;
+		auto physicalDevice = VK_CONTEXT->GetDevice()->GetPhysicalDeviceSpec().handle;
 
 		uint32_t count = 0;
 		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &count, nullptr);

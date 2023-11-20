@@ -26,7 +26,7 @@ namespace mulberry
 		bufferInfo.usage = usage;
 		bufferInfo.sharingMode = sharingMode;
 
-		VK_CHECK(vkCreateBuffer(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), &bufferInfo, nullptr, &mBuffer));
+		VK_CHECK(vkCreateBuffer(RAW_VK_DEVICE_HANDLE, &bufferInfo, nullptr, &mBuffer));
 
 		VkMemoryRequirements memRequirements;
 		memRequirements = GetMemoryRequirements();
@@ -38,20 +38,20 @@ namespace mulberry
 		allocInfo.allocationSize = memRequirements.size;
 		allocInfo.memoryTypeIndex = App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->FindMemoryType(memRequirements.memoryTypeBits, properties);
 
-		VK_CHECK(vkAllocateMemory(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), &allocInfo, nullptr, &mBufferMemory));
+		VK_CHECK(vkAllocateMemory(RAW_VK_DEVICE_HANDLE, &allocInfo, nullptr, &mBufferMemory));
 
-		vkBindBufferMemory(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), mBuffer, mBufferMemory, 0);
+		vkBindBufferMemory(RAW_VK_DEVICE_HANDLE, mBuffer, mBufferMemory, 0);
 	}
 	VKBuffer::~VKBuffer()
 	{
-		vkFreeMemory(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), mBufferMemory, nullptr);
-		vkDestroyBuffer(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), mBuffer, nullptr);
+		vkFreeMemory(RAW_VK_DEVICE_HANDLE, mBufferMemory, nullptr);
+		vkDestroyBuffer(RAW_VK_DEVICE_HANDLE, mBuffer, nullptr);
 	}
 
 	VkMemoryRequirements VKBuffer::GetMemoryRequirements() const
 	{
 		VkMemoryRequirements memRequirements;
-		vkGetBufferMemoryRequirements(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), mBuffer, &memRequirements);
+		vkGetBufferMemoryRequirements(RAW_VK_DEVICE_HANDLE, mBuffer, &memRequirements);
 		return memRequirements;
 	}
 
@@ -77,10 +77,10 @@ namespace mulberry
 	void VKCpuBuffer::Fill(size_t size, const void *data)
 	{
 		void *mappedMemory = nullptr;
-		vkMapMemory(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), mBufferMemory, 0, mSize, 0, &mappedMemory);
+		vkMapMemory(RAW_VK_DEVICE_HANDLE, mBufferMemory, 0, mSize, 0, &mappedMemory);
 		std::memset(mappedMemory, 0, size);
 		std::memcpy(mappedMemory, data, size);
-		vkUnmapMemory(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), mBufferMemory);
+		vkUnmapMemory(RAW_VK_DEVICE_HANDLE, mBufferMemory);
 	}
 
 	void VKCpuBuffer::CopyFrom(VKCommandBuffer *commandBuffer, VkBufferCopy bufferCopy, const VKCpuBuffer &buffer)

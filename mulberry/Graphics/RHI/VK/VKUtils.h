@@ -63,6 +63,9 @@ namespace mulberry
 #define VK_CHECK(x) (x);
 #endif
 
+#define VK_CONTEXT (App::GetInstance().GetGraphicsContext()->GetVKContext())
+#define RAW_VK_DEVICE_HANDLE (VK_CONTEXT->GetDevice()->GetHandle())
+
 #define RESOLVE_VK_INSTANCE_PFN(instance, funcName)                                                 \
 	{                                                                                               \
 		funcName = reinterpret_cast<PFN_##funcName>(vkGetInstanceProcAddr(instance, "" #funcName)); \
@@ -93,7 +96,7 @@ namespace mulberry
 
 	uint32_t GetBiggerTwoPower(uint32_t val);
 
-	VkShaderStageFlagBits ToVkShaderStage(enum ShaderStage type);
+	VkShaderStageFlagBits ToVkShaderStage(enum class ShaderStage type);
 
 	std::string ToVKShaderSourceCode(std::string_view src);
 }

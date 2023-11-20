@@ -7,7 +7,6 @@
 namespace mulberry
 {
 	VKFrameBuffer::VKFrameBuffer(uint32_t width, uint32_t height, const VKRenderPass *renderPass, const std::vector<const VKImageView *> &attachments)
-		: mDevice(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice())
 	{
 		std::vector<VkImageView> attachmentsView(attachments.size());
 
@@ -25,11 +24,10 @@ namespace mulberry
 		createInfo.height = height;
 		createInfo.layers = 1;
 
-		VK_CHECK(vkCreateFramebuffer(mDevice->GetHandle(), &createInfo, nullptr, &mFrameBuffer));
+		VK_CHECK(vkCreateFramebuffer(RAW_VK_DEVICE_HANDLE, &createInfo, nullptr, &mFrameBuffer));
 	}
 
 	VKFrameBuffer::VKFrameBuffer(uint32_t width, uint32_t height, const VKRenderPass *renderPass, const std::vector<VkImageView> &attachments)
-		: mDevice(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice())
 	{
 		VkFramebufferCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -42,12 +40,12 @@ namespace mulberry
 		createInfo.height = height;
 		createInfo.layers = 1;
 
-		VK_CHECK(vkCreateFramebuffer(mDevice->GetHandle(), &createInfo, nullptr, &mFrameBuffer));
+		VK_CHECK(vkCreateFramebuffer(RAW_VK_DEVICE_HANDLE, &createInfo, nullptr, &mFrameBuffer));
 	}
 
 	VKFrameBuffer::~VKFrameBuffer()
 	{
-		vkDestroyFramebuffer(mDevice->GetHandle(), mFrameBuffer, nullptr);
+		vkDestroyFramebuffer(RAW_VK_DEVICE_HANDLE, mFrameBuffer, nullptr);
 	}
 
 	const VkFramebuffer &VKFrameBuffer::GetHandle() const

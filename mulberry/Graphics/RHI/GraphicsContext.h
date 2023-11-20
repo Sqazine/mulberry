@@ -15,7 +15,7 @@ namespace mulberry
 
 		void Init();
 
-		void SetClearColor(const class Color &clearColor);
+		void SetClearColor(const struct Color &clearColor);
 		void IsClearColorBuffer(bool isClear);
 
 		void BeginFrame();

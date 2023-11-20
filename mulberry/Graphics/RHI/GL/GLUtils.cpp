@@ -12,8 +12,8 @@ namespace mulberry
             {ShaderStage::VERTEX, GL_VERTEX_SHADER},
             {ShaderStage::FRAGMENT, GL_FRAGMENT_SHADER},
             {ShaderStage::GEOMETRY, GL_GEOMETRY_SHADER},
-            {ShaderStage::TESSELLATION_CONTROL, GL_TESS_CONTROL_SHADER},
-            {ShaderStage::TESSELLATION_EVAL, GL_TESS_EVALUATION_SHADER},
+            {ShaderStage::TESS_CTRL, GL_TESS_CONTROL_SHADER},
+            {ShaderStage::TESS_EVAL, GL_TESS_EVALUATION_SHADER},
             {ShaderStage::COMPUTE, GL_COMPUTE_SHADER},
         };
 
@@ -58,14 +58,6 @@ namespace mulberry
             return GL_NEAREST;
         case FilterMode::LINEAR:
             return GL_LINEAR;
-        case FilterMode::TRILINEAR:
-            return GL_LINEAR_MIPMAP_LINEAR;
-        case FilterMode::NEAREST_MIPMAP_NEAREST:
-            return GL_NEAREST_MIPMAP_NEAREST;
-        case FilterMode::NEAREST_MIPMAP_LINEAR:
-            return GL_NEAREST_MIPMAP_LINEAR;
-        case FilterMode::LINEAR_MIPMAP_NEAREST:
-            return GL_LINEAR_MIPMAP_NEAREST;
         default:
             return GL_NEAREST;
         }

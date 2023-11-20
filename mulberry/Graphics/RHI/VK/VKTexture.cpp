@@ -1,16 +1,29 @@
 #include "VKTexture.h"
-
+#include "VKDevice.h"
+#include "VKContext.h"
+#include "App.h"
+#include "Logger.h"
 namespace mulberry
 {
     VKTexture::VKTexture()
     {
     }
+
     VKTexture::VKTexture(const TextureInfo &info)
-    :mInfo(info)
+        : mInfo(info)
     {
+        VkSamplerCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+        createInfo.magFilter = ToVkFilter(info.magFilter);
+        createInfo.minFilter = ToVkFilter(info.minFilter);
+        createInfo.addressModeU = ToVkWrapMode(info.wrapS);
+        createInfo.addressModeV = ToVkWrapMode(info.wrapT);
+
+        VK_CHECK(vkCreateSampler(RAW_VK_DEVICE_HANDLE, &createInfo, nullptr, &mSampler));
     }
     VKTexture::~VKTexture()
     {
+        vkDestroySampler(RAW_VK_DEVICE_HANDLE,mSampler,nullptr);
     }
 
     void VKTexture::CreateFrom(const TextureInfo &info)
@@ -20,12 +33,39 @@ namespace mulberry
     {
     }
 
-    const VKImage* VKTexture::GetHandle() const
+    const VKImage *VKTexture::GetHandle() const
     {
         return mImage.get();
-    }   
+    }
     const TextureInfo &VKTexture::GetCreateInfo() const
     {
         return mInfo;
+    }
+
+    VkFilter VKTexture::ToVkFilter(FilterMode mode)
+    {
+        switch (mode)
+        {
+        case FilterMode::LINEAR:
+            return VK_FILTER_LINEAR;
+        default:
+            return VK_FILTER_NEAREST;
+        }
+    }
+    VkSamplerAddressMode VKTexture::ToVkWrapMode(WrapMode mode)
+    {
+        switch (mode)
+        {
+        case WrapMode::REPEAT:
+            return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        case WrapMode::MIRROR_REPEAT:
+            return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+        case WrapMode::CLAMP_TO_EDGE:
+            return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        case WrapMode::CLAMP_TO_BORDER:
+            return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+        default:
+            return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        }
     }
 }

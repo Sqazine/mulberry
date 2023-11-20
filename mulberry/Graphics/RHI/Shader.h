@@ -11,13 +11,13 @@
 
 namespace mulberry
 {
-    enum ShaderStage
+    enum class ShaderStage
     {
         VERTEX,
         FRAGMENT,
         GEOMETRY,
-        TESSELLATION_CONTROL,
-        TESSELLATION_EVAL,
+        TESS_CTRL,
+        TESS_EVAL,
         COMPUTE,
     };
 

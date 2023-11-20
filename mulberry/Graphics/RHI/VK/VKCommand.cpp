@@ -100,7 +100,7 @@ namespace mulberry
 		allocInfo.commandPool = mCommandPool.GetHandle();
 		allocInfo.commandBufferCount = 1;
 
-		VK_CHECK(vkAllocateCommandBuffers(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetHandle(), &allocInfo, &mHandle));
+		VK_CHECK(vkAllocateCommandBuffers(RAW_VK_DEVICE_HANDLE, &allocInfo, &mHandle));
 
 		if (mCommandPool.GetQueueFamilyIndex() == App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.graphicsFamilyIdx)
 			mBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;

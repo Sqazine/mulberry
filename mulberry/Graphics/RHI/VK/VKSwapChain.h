@@ -24,8 +24,6 @@ namespace mulberry
 
 		uint32_t AcquireNextImage(const VKSemaphore *semaphore = nullptr, const VKFence *fence = nullptr) const;
 	private:
-		const class VKDevice* mDevice;
-
 		void Build();
 
 		SwapChainDetails QuerySwapChainDetails();

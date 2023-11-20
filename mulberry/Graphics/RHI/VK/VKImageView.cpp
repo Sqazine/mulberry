@@ -17,7 +17,6 @@ namespace mulberry
     {
     }
     VKImageView::VKImageView(const VkImage &image, VkFormat format, VkImageViewType viewType, ImageAspect aspect, uint32_t mipLevels)
-        : mDevice(App::GetInstance().GetGraphicsContext()->GetVKContext()->GetDevice())
     {
         VkImageViewCreateInfo info{};
         info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -36,13 +35,12 @@ namespace mulberry
         info.subresourceRange.baseMipLevel = 0;
         info.subresourceRange.levelCount = mipLevels;
 
-        VK_CHECK(vkCreateImageView(mDevice->GetHandle(), &info, nullptr, &mImageView));
+        VK_CHECK(vkCreateImageView(RAW_VK_DEVICE_HANDLE, &info, nullptr, &mImageView));
     }
 
     VKImageView::~VKImageView()
     {
-        vkDestroyImageView(mDevice->GetHandle(), mImageView, nullptr);
-        mDevice = nullptr;
+        vkDestroyImageView(RAW_VK_DEVICE_HANDLE, mImageView, nullptr);
     }
 
     const VkImageView &VKImageView::GetHandle() const
