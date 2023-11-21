@@ -13,16 +13,19 @@ namespace mulberry
 		~VKSwapChain();
 
 		Vec2 GetExtent() const;
-		uint32_t GetImageSize() const;
 
-		const std::vector<std::unique_ptr<VKImageView>> &GetImageViews() const;
+		const std::vector<std::vector<VKImageView*>>& GetImageViews() const;
 		const VkSurfaceFormatKHR GetSurfaceFormat() const;
 
 		const VkSwapchainKHR &GetHandle() const;
 
 		void ReBuild();
 
-		uint32_t AcquireNextImage(const VKSemaphore *semaphore = nullptr, const VKFence *fence = nullptr) const;
+		void AcquireNextImage(const VKSemaphore *semaphore = nullptr, const VKFence *fence = nullptr);
+		uint32_t GetNextImageIdx() const;
+
+		void Present(const VKSemaphore *waitSemaphore);
+
 	private:
 		void Build();
 
@@ -32,12 +35,16 @@ namespace mulberry
 		VkPresentModeKHR ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
 		VkExtent2D ChooseSwapChainExtent(const VkSurfaceCapabilitiesKHR &capabilities);
 
+		void DeleteImageViews();
+
 		VkSwapchainKHR mHandle;
 
 		std::vector<VkImage> mSwapChainImages;
-		std::vector<std::unique_ptr<VKImageView>> mSwapChainImageViews;
+		std::vector<std::vector<VKImageView*>> mSwapChainImageViews;
 		VkSurfaceFormatKHR mSwapChainSurfaceFormat;
 		VkExtent2D mSwapChainImageExtent;
 		VkPresentModeKHR mSwapChainPresentMode;
+
+		uint32_t mNextImageIdx;
 	};
 }

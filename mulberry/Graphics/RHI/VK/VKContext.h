@@ -29,11 +29,15 @@ namespace mulberry
 
 		const VKRasterPass* GetCurRasterPass() const;
 
+		size_t GetCurFrameIdx() const;
+
 	private:
 
 		friend class VKRasterPass;
 
 		const VKRasterPass* mCurRasterPass;
+
+		size_t mCurFrameIdx = 0;
 
 		std::unique_ptr<class VKAdapter >mAdapter;
 		std::unique_ptr<class VKDevice >mDevice;

@@ -6,7 +6,7 @@
 
 namespace mulberry
 {
-	VKFrameBuffer::VKFrameBuffer(uint32_t width, uint32_t height, const VKRenderPass *renderPass, const std::vector<const VKImageView *> &attachments)
+	VKFrameBuffer::VKFrameBuffer(uint32_t width, uint32_t height, const VKRenderPass *renderPass, const std::vector<VKImageView *> &attachments)
 	{
 		std::vector<VkImageView> attachmentsView(attachments.size());
 
@@ -27,21 +27,6 @@ namespace mulberry
 		VK_CHECK(vkCreateFramebuffer(RAW_VK_DEVICE_HANDLE, &createInfo, nullptr, &mFrameBuffer));
 	}
 
-	VKFrameBuffer::VKFrameBuffer(uint32_t width, uint32_t height, const VKRenderPass *renderPass, const std::vector<VkImageView> &attachments)
-	{
-		VkFramebufferCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		createInfo.pNext = nullptr;
-		createInfo.flags = 0;
-		createInfo.renderPass = renderPass->GetHandle();
-		createInfo.attachmentCount = attachments.size();
-		createInfo.pAttachments = attachments.data();
-		createInfo.width = width;
-		createInfo.height = height;
-		createInfo.layers = 1;
-
-		VK_CHECK(vkCreateFramebuffer(RAW_VK_DEVICE_HANDLE, &createInfo, nullptr, &mFrameBuffer));
-	}
 
 	VKFrameBuffer::~VKFrameBuffer()
 	{

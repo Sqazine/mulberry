@@ -3,34 +3,38 @@
 #include "VKDevice.h"
 #include "VKSwapChain.h"
 #include "Math/MathUtils.h"
+#include "VKUtils.h"
 #include "App.h"
 #include <array>
+#include "Graphics/RHI/Texture.h"
 namespace mulberry
 {
-    VKRasterPass::VKRasterPass()
+    VKRasterPass::VKRasterPass(const Vec2 &extent, Format format, const std::vector<std::vector<VKImageView *>> &viewLists)
+        : VKRasterPass(extent, ToVkFormat(format), viewLists)
     {
-        auto extent = VK_CONTEXT->GetSwapChain()->GetExtent();
-        auto swapChainImageFormat = VK_CONTEXT->GetSwapChain()->GetSurfaceFormat().format;
-        auto swapChainImageCount = VK_CONTEXT->GetSwapChain()->GetImageSize();
+    }
 
-        mRenderPass = std::make_unique<VKRenderPass>(swapChainImageFormat);
-        mCommandBuffers = VK_CONTEXT->GetDevice()->GetGraphicsCommandPool()->CreatePrimaryCommandBuffers(swapChainImageCount);
+    VKRasterPass::VKRasterPass(const Vec2 &extent, VkFormat format, const std::vector<std::vector<VKImageView *>> &viewLists)
+    {
+        mRenderPass = std::make_unique<VKRenderPass>(format);
+        mCommandBuffers = VK_CONTEXT->GetDevice()->GetGraphicsCommandPool()->CreatePrimaryCommandBuffers(viewLists.size());
 
-        mFrameBuffers.resize(swapChainImageCount);
+        mFrameBuffers.resize(viewLists.size());
 
-        ReBuild();
+        ReBuild(extent, viewLists);
 
-        mImageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-        mRenderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-        mInFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+        mWaitSemaphores.resize(viewLists.size());
+        mSignalSemaphores.resize(viewLists.size());
+        mInFlightFences.resize(viewLists.size());
 
-        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
+        for (size_t i = 0; i < viewLists.size(); ++i)
         {
-            mImageAvailableSemaphores[i] = std::make_unique<VKSemaphore>();
-            mRenderFinishedSemaphores[i] = std::make_unique<VKSemaphore>();
+            mWaitSemaphores[i] = std::make_unique<VKSemaphore>();
+            mSignalSemaphores[i] = std::make_unique<VKSemaphore>();
             mInFlightFences[i] = std::make_unique<VKFence>(FenceStatus::SIGNALED);
         }
     }
+
     VKRasterPass::~VKRasterPass()
     {
     }
@@ -45,19 +49,25 @@ namespace mulberry
         mIsClearColorBuffer = isClear;
     }
 
+    VKSemaphore *VKRasterPass::GetWaitSemaphore() const
+    {
+        return mWaitSemaphores[VK_CONTEXT->GetCurFrameIdx()].get();
+    }
+    VKSemaphore *VKRasterPass::GetSignalSemaphore() const
+    {
+        return mSignalSemaphores[VK_CONTEXT->GetCurFrameIdx()].get();
+    }
+
     void VKRasterPass::Begin()
     {
         VK_CONTEXT->mCurRasterPass = this;
 
-        mInFlightFences[mCurFrameIdx]->Wait();
+        mInFlightFences[VK_CONTEXT->GetCurFrameIdx()]->Wait();
+        mInFlightFences[VK_CONTEXT->GetCurFrameIdx()]->Reset();
 
-        mSwapChainImageIdx = VK_CONTEXT->GetSwapChain()->AcquireNextImage(mImageAvailableSemaphores[mCurFrameIdx].get());
+        GetCommandBuffer()->Reset();
 
-        mInFlightFences[mCurFrameIdx]->Reset();
-
-        GetCurCommandBuffer()->Reset();
-
-        GetCurCommandBuffer()->Begin();
+        GetCommandBuffer()->Begin();
 
         std::array<VkClearValue, 1> clearValues{};
         clearValues[0] = {{{mClearColor.r, mClearColor.g, mClearColor.b, mClearColor.a}}};
@@ -66,21 +76,21 @@ namespace mulberry
         beginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         beginInfo.pNext = nullptr;
         beginInfo.renderArea.offset = {0, 0};
-        beginInfo.renderArea.extent.width = VK_CONTEXT->GetSwapChain()->GetExtent().x;
-        beginInfo.renderArea.extent.height = VK_CONTEXT->GetSwapChain()->GetExtent().y;
-        beginInfo.framebuffer = mFrameBuffers[mCurFrameIdx]->GetHandle();
+        beginInfo.renderArea.extent.width = (uint32_t)mExtent.x;
+        beginInfo.renderArea.extent.height = (uint32_t)mExtent.y;
+        beginInfo.framebuffer = mFrameBuffers[VK_CONTEXT->GetCurFrameIdx()]->GetHandle();
         beginInfo.clearValueCount = clearValues.size();
         beginInfo.pClearValues = clearValues.data();
         beginInfo.renderPass = mRenderPass->GetHandle();
 
-        GetCurCommandBuffer()->BeginRenderPass(beginInfo);
+        GetCommandBuffer()->BeginRenderPass(beginInfo);
     }
 
     void VKRasterPass::End()
     {
-        GetCurCommandBuffer()->EndRenderPass();
+        GetCommandBuffer()->EndRenderPass();
 
-        GetCurCommandBuffer()->End();
+        GetCommandBuffer()->End();
 
         VkPipelineStageFlags waitStageMasks[] = {
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
@@ -88,42 +98,27 @@ namespace mulberry
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &GetCurCommandBuffer()->GetHandle();
+        submitInfo.pCommandBuffers = &GetCommandBuffer()->GetHandle();
         submitInfo.waitSemaphoreCount = 1;
-        submitInfo.pWaitSemaphores = &mImageAvailableSemaphores[mCurFrameIdx]->GetHandle();
+        submitInfo.pWaitSemaphores = &mWaitSemaphores[VK_CONTEXT->GetCurFrameIdx()]->GetHandle();
         submitInfo.pWaitDstStageMask = waitStageMasks;
         submitInfo.signalSemaphoreCount = 1;
-        submitInfo.pSignalSemaphores = &mRenderFinishedSemaphores[mCurFrameIdx]->GetHandle();
+        submitInfo.pSignalSemaphores = &mSignalSemaphores[VK_CONTEXT->GetCurFrameIdx()]->GetHandle();
 
-        VK_CONTEXT->GetDevice()->GetGraphicsQueue()->Submit(submitInfo, mInFlightFences[mCurFrameIdx].get());
+        VK_CONTEXT->GetDevice()->GetGraphicsQueue()->Submit(submitInfo, mInFlightFences[VK_CONTEXT->GetCurFrameIdx()].get());
 
-        VkPresentInfoKHR presentInfo{};
-        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-        presentInfo.swapchainCount = 1;
-        presentInfo.pSwapchains = &VK_CONTEXT->GetSwapChain()->GetHandle();
-        presentInfo.waitSemaphoreCount = 1;
-        presentInfo.pWaitSemaphores = &mRenderFinishedSemaphores[mCurFrameIdx]->GetHandle();
-        presentInfo.pImageIndices = &mSwapChainImageIdx;
-
-        VK_CONTEXT->GetDevice()->GetPresentQueue()->Present(presentInfo);
-
-        mCurFrameIdx = (mCurFrameIdx + 1) % MAX_FRAMES_IN_FLIGHT;
-
-        VK_CONTEXT->mCurRasterPass = this;
+        VK_CONTEXT->mCurRasterPass = nullptr;
     }
 
-    VKCommandBuffer *VKRasterPass::GetCurCommandBuffer() const
+    VKCommandBuffer *VKRasterPass::GetCommandBuffer() const
     {
-        return mCommandBuffers[mCurFrameIdx].get();
+        return mCommandBuffers[VK_CONTEXT->GetCurFrameIdx()].get();
     }
 
-    void VKRasterPass::ReBuild()
+    void VKRasterPass::ReBuild(const Vec2 &extent, const std::vector<std::vector<VKImageView *>> &viewLists)
     {
-        auto extent = VK_CONTEXT->GetSwapChain()->GetExtent();
+        mExtent = extent;
         for (int32_t i = 0; i < mFrameBuffers.size(); ++i)
-        {
-            std::vector<const VKImageView *> views = {VK_CONTEXT->GetSwapChain()->GetImageViews()[i].get()};
-            mFrameBuffers[i] = std::make_unique<VKFrameBuffer>(extent.x, extent.y, mRenderPass.get(), views);
-        }
+            mFrameBuffers[i] = std::make_unique<VKFrameBuffer>(extent.x, extent.y, mRenderPass.get(), viewLists[i]);
     }
 }

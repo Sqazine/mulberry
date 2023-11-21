@@ -98,5 +98,8 @@ namespace mulberry
 
 	VkShaderStageFlagBits ToVkShaderStage(enum class ShaderStage type);
 
+	VkFormat ToVkFormat(enum class Format format);
+
 	std::string ToVKShaderSourceCode(std::string_view src);
+
 }

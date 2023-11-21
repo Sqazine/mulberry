@@ -10,22 +10,19 @@ namespace mulberry
 {
 
 	VKSwapChain::VKSwapChain()
-		: mHandle(VK_NULL_HANDLE)
+		: mHandle(VK_NULL_HANDLE), mNextImageIdx(0)
 	{
 		Build();
 	}
+
 	VKSwapChain::~VKSwapChain()
 	{
-		mSwapChainImageViews.clear();
+		DeleteImageViews();
+
 		vkDestroySwapchainKHR(RAW_VK_DEVICE_HANDLE, mHandle, nullptr);
 	}
 
-	uint32_t VKSwapChain::GetImageSize() const
-	{
-		return mSwapChainImages.size();
-	}
-
-	const std::vector<std::unique_ptr<VKImageView>> &VKSwapChain::GetImageViews() const
+	const std::vector<std::vector<VKImageView *>> &VKSwapChain::GetImageViews() const
 	{
 		return mSwapChainImageViews;
 	}
@@ -40,20 +37,35 @@ namespace mulberry
 		return Vec2(mSwapChainImageExtent.width, mSwapChainImageExtent.height);
 	}
 
-	uint32_t VKSwapChain::AcquireNextImage(const VKSemaphore *semaphore, const VKFence *fence) const
+	void VKSwapChain::AcquireNextImage(const VKSemaphore *semaphore, const VKFence *fence)
 	{
-		uint32_t imageIndex = 0;
 
 		if (semaphore && fence)
-			VK_CHECK(vkAcquireNextImageKHR(RAW_VK_DEVICE_HANDLE, mHandle, UINT64_MAX, semaphore->GetHandle(), fence->GetHandle(), &imageIndex))
+			VK_CHECK(vkAcquireNextImageKHR(RAW_VK_DEVICE_HANDLE, mHandle, UINT64_MAX, semaphore->GetHandle(), fence->GetHandle(), &mNextImageIdx))
 		else if (semaphore && !fence)
-			VK_CHECK(vkAcquireNextImageKHR(RAW_VK_DEVICE_HANDLE, mHandle, UINT64_MAX, semaphore->GetHandle(), nullptr, &imageIndex))
+			VK_CHECK(vkAcquireNextImageKHR(RAW_VK_DEVICE_HANDLE, mHandle, UINT64_MAX, semaphore->GetHandle(), nullptr, &mNextImageIdx))
 		else if (!semaphore && fence)
-			VK_CHECK(vkAcquireNextImageKHR(RAW_VK_DEVICE_HANDLE, mHandle, UINT64_MAX, nullptr, fence->GetHandle(), &imageIndex))
+			VK_CHECK(vkAcquireNextImageKHR(RAW_VK_DEVICE_HANDLE, mHandle, UINT64_MAX, nullptr, fence->GetHandle(), &mNextImageIdx))
 		else
-			VK_CHECK(vkAcquireNextImageKHR(RAW_VK_DEVICE_HANDLE, mHandle, UINT64_MAX, nullptr, nullptr, &imageIndex))
+			VK_CHECK(vkAcquireNextImageKHR(RAW_VK_DEVICE_HANDLE, mHandle, UINT64_MAX, nullptr, nullptr, &mNextImageIdx))
+	}
 
-		return imageIndex;
+	uint32_t VKSwapChain::GetNextImageIdx() const
+	{
+		return mNextImageIdx;
+	}
+
+	void VKSwapChain::Present(const VKSemaphore *waitSemaphore)
+	{
+		VkPresentInfoKHR presentInfo{};
+		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+		presentInfo.swapchainCount = 1;
+		presentInfo.pSwapchains = &VK_CONTEXT->GetSwapChain()->GetHandle();
+		presentInfo.waitSemaphoreCount = 1;
+		presentInfo.pWaitSemaphores = &waitSemaphore->GetHandle();
+		presentInfo.pImageIndices = &mNextImageIdx;
+
+		VK_CONTEXT->GetDevice()->GetPresentQueue()->Present(presentInfo);
 	}
 
 	void VKSwapChain::Build()
@@ -64,7 +76,7 @@ namespace mulberry
 		mSwapChainImageExtent = ChooseSwapChainExtent(swapChainDetail.surfaceCapabilities);
 
 		VkSwapchainCreateInfoKHR createInfo{};
-		
+
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 		createInfo.pNext = nullptr;
 		createInfo.flags = 0;
@@ -75,7 +87,7 @@ namespace mulberry
 		createInfo.imageExtent = mSwapChainImageExtent;
 		createInfo.imageArrayLayers = 1;
 		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-		
+
 		QueueFamilyIndices indices = VK_CONTEXT->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices;
 		uint32_t queueFamilyIndices[] = {indices.graphicsFamilyIdx.value(), indices.presentFamilyIdx.value()};
 
@@ -107,7 +119,7 @@ namespace mulberry
 
 		mSwapChainImageViews.resize(count);
 		for (size_t i = 0; i < mSwapChainImageViews.size(); ++i)
-			mSwapChainImageViews[i] = std::make_unique<VKImageView>(mSwapChainImages[i], mSwapChainSurfaceFormat.format, VK_IMAGE_VIEW_TYPE_2D, ImageAspect::COLOR);
+			mSwapChainImageViews[i] = {new VKImageView(mSwapChainImages[i], mSwapChainSurfaceFormat.format, VK_IMAGE_VIEW_TYPE_2D, ImageAspect::COLOR)};
 	}
 
 	const VkSwapchainKHR &VKSwapChain::GetHandle() const
@@ -118,7 +130,9 @@ namespace mulberry
 	void VKSwapChain::ReBuild()
 	{
 		VK_CONTEXT->GetDevice()->WaitIdle();
-		mSwapChainImageViews.clear();
+
+		DeleteImageViews();
+
 		vkDestroySwapchainKHR(RAW_VK_DEVICE_HANDLE, mHandle, nullptr);
 		Build();
 	}
@@ -159,6 +173,18 @@ namespace mulberry
 			return actualExtent;
 		}
 	}
+
+			void VKSwapChain::DeleteImageViews()
+			{
+				for (size_t i = 0; i < mSwapChainImageViews.size(); ++i)
+			for (size_t j = 0; j < mSwapChainImageViews[i].size(); ++j)
+			{
+				delete mSwapChainImageViews[i][j];
+				mSwapChainImageViews[i][j] = nullptr;
+			}
+
+		std::vector<std::vector<VKImageView *>>().swap(mSwapChainImageViews);
+			}
 
 	SwapChainDetails VKSwapChain::QuerySwapChainDetails()
 	{

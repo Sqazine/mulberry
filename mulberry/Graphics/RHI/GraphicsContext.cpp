@@ -20,15 +20,6 @@ namespace mulberry
 
 	GraphicsContext::~GraphicsContext()
 	{
-		switch (App::GetInstance().GetGraphicsConfig().backend)
-		{
-		case GraphicsBackend::GL:
-			mGLContext.reset(nullptr);
-			break;
-		default:
-			mVKContext.reset(nullptr);
-			break;
-		}
 	}
 
 	void GraphicsContext::Init()

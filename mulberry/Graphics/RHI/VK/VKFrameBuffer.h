@@ -8,8 +8,7 @@ namespace mulberry
 	class VKFrameBuffer
 	{
 	public:
-		VKFrameBuffer(uint32_t width, uint32_t height, const VKRenderPass *renderPass, const std::vector<const VKImageView *> &attachments);
-		VKFrameBuffer(uint32_t width, uint32_t height, const VKRenderPass *renderPass, const std::vector<VkImageView> &attachments);
+		VKFrameBuffer(uint32_t width, uint32_t height, const VKRenderPass *renderPass, const std::vector<VKImageView *> &attachments);
 		~VKFrameBuffer();
 
 		const VkFramebuffer &GetHandle() const;

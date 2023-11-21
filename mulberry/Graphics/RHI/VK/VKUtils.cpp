@@ -3,6 +3,7 @@
 #include <glslang/SPIRV/GlslangToSpv.h>
 #include "Logger.h"
 #include "Graphics/RHI/Shader.h"
+#include "Graphics/RHI/Texture.h"
 #include "Platform/IO.h"
 namespace mulberry
 {
@@ -216,6 +217,39 @@ namespace mulberry
 			return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
 		default:
 			return VK_SHADER_STAGE_VERTEX_BIT;
+		}
+	}
+
+	VkFormat ToVkFormat(Format format)
+	{
+		switch (format)
+		{
+		case Format::R8:
+			return VK_FORMAT_R8_UNORM;
+		case Format::RG8:
+			return VK_FORMAT_R8G8_UNORM;
+		case Format::RGB8:
+			return VK_FORMAT_R8G8B8_UNORM;
+		case Format::RGBA8:
+			return VK_FORMAT_R8G8B8A8_UNORM;
+		case Format::R16F:
+			return VK_FORMAT_R16_SFLOAT;
+		case Format::RG16F:
+			return VK_FORMAT_R16G16_SFLOAT;
+		case Format::RGB16F:
+			return VK_FORMAT_R16G16B16_SFLOAT;
+		case Format::RGBA16F:
+			return VK_FORMAT_R16G16B16A16_SFLOAT;
+		case Format::R32F:
+			return VK_FORMAT_R32_SFLOAT;
+		case Format::RG32F:
+			return VK_FORMAT_R32G32_SFLOAT;
+		case Format::RGB32F:
+			return VK_FORMAT_R32G32B32_SFLOAT;
+		case Format::RGBA32F:
+			return VK_FORMAT_R32G32B32A32_SFLOAT;
+		default:
+			break;
 		}
 	}
 

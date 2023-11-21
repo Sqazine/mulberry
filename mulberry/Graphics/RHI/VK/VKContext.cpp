@@ -26,7 +26,9 @@ namespace mulberry
 		mDevice.reset(mAdapter->CreateDevice());
 		mSwapChain = std::make_unique<VKSwapChain>();
 
-		mDefaultRasterPass = std::make_unique<VKRasterPass>();
+		mDefaultRasterPass = std::make_unique<VKRasterPass>(mSwapChain->GetExtent(),
+															mSwapChain->GetSurfaceFormat().format,
+															mSwapChain->GetImageViews());
 	}
 
 	VKAdapter *VKContext::GetAdapter() const
@@ -48,6 +50,7 @@ namespace mulberry
 	{
 		mDefaultRasterPass->SetClearColor(clearColor);
 	}
+
 	void VKContext::IsClearColorBuffer(bool isClear)
 	{
 		mDefaultRasterPass->IsClearColorBuffer(isClear);
@@ -58,18 +61,27 @@ namespace mulberry
 		if (App::GetInstance().GetWindow()->IsResize())
 		{
 			mSwapChain->ReBuild();
-			mDefaultRasterPass->ReBuild();
+			mDefaultRasterPass->ReBuild(mSwapChain->GetExtent(), mSwapChain->GetImageViews());
 		}
 
+		VK_CONTEXT->GetSwapChain()->AcquireNextImage(mDefaultRasterPass->GetWaitSemaphore());
 		mDefaultRasterPass->Begin();
 	}
+
 	void VKContext::EndFrame()
 	{
 		mDefaultRasterPass->End();
+		VK_CONTEXT->GetSwapChain()->Present(mDefaultRasterPass->GetSignalSemaphore());
+		mCurFrameIdx = (mCurFrameIdx + 1) % VK_CONTEXT->GetSwapChain()->GetImageViews().size();
 	}
 
 	const VKRasterPass *VKContext::GetCurRasterPass() const
 	{
 		return mCurRasterPass;
+	}
+
+	size_t VKContext::GetCurFrameIdx() const
+	{
+		return mCurFrameIdx;
 	}
 }
