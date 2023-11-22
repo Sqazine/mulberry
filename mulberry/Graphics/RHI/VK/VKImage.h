@@ -24,6 +24,8 @@ namespace mulberry
 			VkImageUsageFlags usage,
 			VkMemoryPropertyFlags properties);
 
+		VKImage(VkImage rawImage,VkFormat format);
+
 		virtual ~VKImage();
 
 		const VkImage& GetHandle() const;
@@ -32,8 +34,6 @@ namespace mulberry
 		uint32_t GetMipLevel() const;
 
 		const VkImageLayout& GetImageLayout() const;
-
-		virtual VkImageViewType GetViewType() const = 0;
 
 		void TransitionToNewLayout(VkImageLayout newLayout);
 
@@ -45,6 +45,8 @@ namespace mulberry
 		VkImage mImage;
 		VkFormat mFormat;
 		VkDeviceMemory mImageMemory;
+
+		bool mIsSwapChainImage;
 
 		friend class VKCommandBuffer;
 

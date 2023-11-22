@@ -1,4 +1,5 @@
 #pragma once
+#include <vulkan/vulkan.h>
 #include "Texture.h"
 #include "Math/Color.h"
 #include "VKImage.h"
@@ -9,6 +10,7 @@ namespace mulberry
     {
     public:
         VKTexture();
+        VKTexture(VkImage rawImage, VkFormat format);
         VKTexture(const TextureInfo &info);
         ~VKTexture();
 
@@ -16,7 +18,9 @@ namespace mulberry
         void CreateFromSurface(SDL_Surface *surface);
 
         const VKImage *GetHandle() const;
+        const VKImageView *GetView() const;
         const TextureInfo &GetCreateInfo() const;
+
     private:
         VkFilter ToVkFilter(FilterMode mode);
         VkSamplerAddressMode ToVkWrapMode(WrapMode mode);
@@ -24,7 +28,7 @@ namespace mulberry
         std::unique_ptr<VKImage> mImage;
         std::unique_ptr<VKImageView> mImageView;
 
-        VkSampler mSampler;
+        VkSampler mSampler{VK_NULL_HANDLE};
 
         TextureInfo mInfo;
     };

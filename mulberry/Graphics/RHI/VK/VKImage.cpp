@@ -14,7 +14,7 @@ namespace mulberry
 		VkImageTiling tiling,
 		VkImageUsageFlags usage,
 		VkMemoryPropertyFlags properties)
-		: mFormat(format)
+		: mFormat(format), mIsSwapChainImage(false)
 	{
 		mImageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 		mImageInfo.pNext = nullptr;
@@ -53,10 +53,18 @@ namespace mulberry
 		vkBindImageMemory(RAW_VK_DEVICE_HANDLE, mImage, mImageMemory, 0);
 	}
 
+	VKImage::VKImage(VkImage rawImage, VkFormat format)
+		: mImage(rawImage), mFormat(format), mImageLayout(VK_IMAGE_LAYOUT_UNDEFINED), mIsSwapChainImage(true)
+	{
+	}
+
 	VKImage::~VKImage()
 	{
-		vkFreeMemory(RAW_VK_DEVICE_HANDLE, mImageMemory, nullptr);
-		vkDestroyImage(RAW_VK_DEVICE_HANDLE, mImage, nullptr);
+		if (!mIsSwapChainImage)
+		{
+			vkFreeMemory(RAW_VK_DEVICE_HANDLE, mImageMemory, nullptr);
+			vkDestroyImage(RAW_VK_DEVICE_HANDLE, mImage, nullptr);
+		}
 	}
 
 	const VkImage &VKImage::GetHandle() const

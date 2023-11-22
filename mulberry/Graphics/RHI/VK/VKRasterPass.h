@@ -11,8 +11,8 @@ namespace mulberry
     class VKRasterPass
     {
     public:
-        VKRasterPass(const Vec2 &extent, enum class Format format, const std::vector<std::vector<VKImageView *>> &viewLists);
-        VKRasterPass(const Vec2 &extent, VkFormat format, const std::vector<std::vector<VKImageView *>> &viewLists);
+        VKRasterPass(const Vec2 &extent, enum class Format format, const std::vector<std::vector<const VKTexture *>> &textureLists);
+        VKRasterPass(const Vec2 &extent, VkFormat format, const std::vector<std::vector<const VKTexture *>> &textureLists);
         ~VKRasterPass();
 
         void SetClearColor(const Color &clearColor);
@@ -29,7 +29,7 @@ namespace mulberry
         VKCommandBuffer *GetCommandBuffer() const;
 
     private:
-        void ReBuild(const Vec2 &extent, const std::vector<std::vector<VKImageView *>> &viewLists);
+        void ReBuild(const Vec2 &extent, const std::vector<std::vector<const VKTexture *>> &textureLists);
 
         Vec2 mExtent;
 

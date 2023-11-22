@@ -28,7 +28,7 @@ namespace mulberry
 
 		mDefaultRasterPass = std::make_unique<VKRasterPass>(mSwapChain->GetExtent(),
 															mSwapChain->GetSurfaceFormat().format,
-															mSwapChain->GetImageViews());
+															mSwapChain->GetTextures());
 	}
 
 	VKAdapter *VKContext::GetAdapter() const
@@ -61,7 +61,7 @@ namespace mulberry
 		if (App::GetInstance().GetWindow()->IsResize())
 		{
 			mSwapChain->ReBuild();
-			mDefaultRasterPass->ReBuild(mSwapChain->GetExtent(), mSwapChain->GetImageViews());
+			mDefaultRasterPass->ReBuild(mSwapChain->GetExtent(), mSwapChain->GetTextures());
 		}
 
 		VK_CONTEXT->GetSwapChain()->AcquireNextImage(mDefaultRasterPass->GetWaitSemaphore());
@@ -72,7 +72,7 @@ namespace mulberry
 	{
 		mDefaultRasterPass->End();
 		VK_CONTEXT->GetSwapChain()->Present(mDefaultRasterPass->GetSignalSemaphore());
-		mCurFrameIdx = (mCurFrameIdx + 1) % VK_CONTEXT->GetSwapChain()->GetImageViews().size();
+		mCurFrameIdx = (mCurFrameIdx + 1) % VK_CONTEXT->GetSwapChain()->GetTextures().size();
 	}
 
 	const VKRasterPass *VKContext::GetCurRasterPass() const

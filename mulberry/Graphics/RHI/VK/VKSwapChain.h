@@ -4,6 +4,7 @@
 #include "VKImage.h"
 #include "VKImageView.h"
 #include "VKSyncObject.h"
+#include "VKTexture.h"
 namespace mulberry
 {
 	class VKSwapChain
@@ -14,7 +15,7 @@ namespace mulberry
 
 		Vec2 GetExtent() const;
 
-		const std::vector<std::vector<VKImageView*>>& GetImageViews() const;
+		const std::vector<std::vector<const VKTexture*>>& GetTextures() const;
 		const VkSurfaceFormatKHR GetSurfaceFormat() const;
 
 		const VkSwapchainKHR &GetHandle() const;
@@ -39,8 +40,8 @@ namespace mulberry
 
 		VkSwapchainKHR mHandle;
 
-		std::vector<VkImage> mSwapChainImages;
-		std::vector<std::vector<VKImageView*>> mSwapChainImageViews;
+		std::vector<std::vector<const VKTexture*>> mSwapChainTextures;
+
 		VkSurfaceFormatKHR mSwapChainSurfaceFormat;
 		VkExtent2D mSwapChainImageExtent;
 		VkPresentModeKHR mSwapChainPresentMode;

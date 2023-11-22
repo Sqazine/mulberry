@@ -22,9 +22,9 @@ namespace mulberry
 		vkDestroySwapchainKHR(RAW_VK_DEVICE_HANDLE, mHandle, nullptr);
 	}
 
-	const std::vector<std::vector<VKImageView *>> &VKSwapChain::GetImageViews() const
+	const std::vector<std::vector<const VKTexture *>> &VKSwapChain::GetTextures() const
 	{
-		return mSwapChainImageViews;
+		return mSwapChainTextures;
 	}
 
 	const VkSurfaceFormatKHR VKSwapChain::GetSurfaceFormat() const
@@ -112,14 +112,13 @@ namespace mulberry
 		VK_CHECK(vkCreateSwapchainKHR(RAW_VK_DEVICE_HANDLE, &createInfo, nullptr, &mHandle));
 
 		uint32_t count = 0;
-
 		vkGetSwapchainImagesKHR(RAW_VK_DEVICE_HANDLE, mHandle, &count, nullptr);
-		mSwapChainImages.resize(count);
-		vkGetSwapchainImagesKHR(RAW_VK_DEVICE_HANDLE, mHandle, &count, mSwapChainImages.data());
+		std::vector<VkImage> rawImages(count);
+		vkGetSwapchainImagesKHR(RAW_VK_DEVICE_HANDLE, mHandle, &count, rawImages.data());
 
-		mSwapChainImageViews.resize(count);
-		for (size_t i = 0; i < mSwapChainImageViews.size(); ++i)
-			mSwapChainImageViews[i] = {new VKImageView(mSwapChainImages[i], mSwapChainSurfaceFormat.format, VK_IMAGE_VIEW_TYPE_2D, ImageAspect::COLOR)};
+		mSwapChainTextures.resize(count);
+		for (size_t i = 0; i < rawImages.size(); ++i)
+			mSwapChainTextures[i] = {new VKTexture(rawImages[i], mSwapChainSurfaceFormat.format)};
 	}
 
 	const VkSwapchainKHR &VKSwapChain::GetHandle() const
@@ -174,17 +173,17 @@ namespace mulberry
 		}
 	}
 
-			void VKSwapChain::DeleteImageViews()
+	void VKSwapChain::DeleteImageViews()
+	{
+		for (size_t i = 0; i < mSwapChainTextures.size(); ++i)
+			for (size_t j = 0; j < mSwapChainTextures[i].size(); ++j)
 			{
-				for (size_t i = 0; i < mSwapChainImageViews.size(); ++i)
-			for (size_t j = 0; j < mSwapChainImageViews[i].size(); ++j)
-			{
-				delete mSwapChainImageViews[i][j];
-				mSwapChainImageViews[i][j] = nullptr;
+				delete mSwapChainTextures[i][j];
+				mSwapChainTextures[i][j] = nullptr;
 			}
 
-		std::vector<std::vector<VKImageView *>>().swap(mSwapChainImageViews);
-			}
+		std::vector<std::vector<const VKTexture *>>().swap(mSwapChainTextures);
+	}
 
 	SwapChainDetails VKSwapChain::QuerySwapChainDetails()
 	{

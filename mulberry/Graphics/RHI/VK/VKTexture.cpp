@@ -6,6 +6,12 @@
 namespace mulberry
 {
     VKTexture::VKTexture()
+    
+    {
+    }
+
+    VKTexture::VKTexture(VkImage rawImage, VkFormat format)
+        : mImage(std::make_unique<VKImage>(rawImage, format)), mImageView(std::make_unique<VKImageView>(rawImage, format, VK_IMAGE_VIEW_TYPE_2D, ImageAspect::COLOR))
     {
     }
 
@@ -23,7 +29,8 @@ namespace mulberry
     }
     VKTexture::~VKTexture()
     {
-        vkDestroySampler(RAW_VK_DEVICE_HANDLE,mSampler,nullptr);
+        if (mSampler)
+            vkDestroySampler(RAW_VK_DEVICE_HANDLE, mSampler, nullptr);
     }
 
     void VKTexture::CreateFrom(const TextureInfo &info)
@@ -37,6 +44,12 @@ namespace mulberry
     {
         return mImage.get();
     }
+
+    const VKImageView *VKTexture::GetView() const
+    {
+        return mImageView.get();
+    }
+
     const TextureInfo &VKTexture::GetCreateInfo() const
     {
         return mInfo;

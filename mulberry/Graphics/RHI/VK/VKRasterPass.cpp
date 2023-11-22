@@ -9,25 +9,25 @@
 #include "Graphics/RHI/Texture.h"
 namespace mulberry
 {
-    VKRasterPass::VKRasterPass(const Vec2 &extent, Format format, const std::vector<std::vector<VKImageView *>> &viewLists)
-        : VKRasterPass(extent, ToVkFormat(format), viewLists)
+    VKRasterPass::VKRasterPass(const Vec2 &extent, Format format, const std::vector<std::vector<const VKTexture *>> &textureLists)
+        : VKRasterPass(extent, ToVkFormat(format), textureLists)
     {
     }
 
-    VKRasterPass::VKRasterPass(const Vec2 &extent, VkFormat format, const std::vector<std::vector<VKImageView *>> &viewLists)
+    VKRasterPass::VKRasterPass(const Vec2 &extent, VkFormat format, const std::vector<std::vector<const VKTexture *>> &textureLists)
     {
         mRenderPass = std::make_unique<VKRenderPass>(format);
-        mCommandBuffers = VK_CONTEXT->GetDevice()->GetGraphicsCommandPool()->CreatePrimaryCommandBuffers(viewLists.size());
+        mCommandBuffers = VK_CONTEXT->GetDevice()->GetGraphicsCommandPool()->CreatePrimaryCommandBuffers(textureLists.size());
 
-        mFrameBuffers.resize(viewLists.size());
+        mFrameBuffers.resize(textureLists.size());
 
-        ReBuild(extent, viewLists);
+        ReBuild(extent, textureLists);
 
-        mWaitSemaphores.resize(viewLists.size());
-        mSignalSemaphores.resize(viewLists.size());
-        mInFlightFences.resize(viewLists.size());
+        mWaitSemaphores.resize(textureLists.size());
+        mSignalSemaphores.resize(textureLists.size());
+        mInFlightFences.resize(textureLists.size());
 
-        for (size_t i = 0; i < viewLists.size(); ++i)
+        for (size_t i = 0; i < textureLists.size(); ++i)
         {
             mWaitSemaphores[i] = std::make_unique<VKSemaphore>();
             mSignalSemaphores[i] = std::make_unique<VKSemaphore>();
@@ -115,10 +115,10 @@ namespace mulberry
         return mCommandBuffers[VK_CONTEXT->GetCurFrameIdx()].get();
     }
 
-    void VKRasterPass::ReBuild(const Vec2 &extent, const std::vector<std::vector<VKImageView *>> &viewLists)
+    void VKRasterPass::ReBuild(const Vec2 &extent, const std::vector<std::vector<const VKTexture *>> &textureLists)
     {
         mExtent = extent;
         for (int32_t i = 0; i < mFrameBuffers.size(); ++i)
-            mFrameBuffers[i] = std::make_unique<VKFrameBuffer>(extent.x, extent.y, mRenderPass.get(), viewLists[i]);
+            mFrameBuffers[i] = std::make_unique<VKFrameBuffer>(extent.x, extent.y, mRenderPass.get(), textureLists[i]);
     }
 }

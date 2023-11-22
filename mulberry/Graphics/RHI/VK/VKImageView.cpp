@@ -9,11 +9,11 @@ namespace mulberry
 {
 
     VKImageView::VKImageView(const VKImage *image)
-        : VKImageView(image->GetHandle(), image->GetFormat(), image->GetViewType(), ImageAspect::COLOR, image->GetMipLevel())
+        : VKImageView(image->GetHandle(), image->GetFormat(), VK_IMAGE_VIEW_TYPE_2D, ImageAspect::COLOR, image->GetMipLevel())
     {
     }
     VKImageView::VKImageView(const VKImage *image, ImageAspect aspect)
-        : VKImageView(image->GetHandle(), image->GetFormat(), image->GetViewType(), aspect, image->GetMipLevel())
+        : VKImageView(image->GetHandle(), image->GetFormat(), VK_IMAGE_VIEW_TYPE_2D, aspect, image->GetMipLevel())
     {
     }
     VKImageView::VKImageView(const VkImage &image, VkFormat format, VkImageViewType viewType, ImageAspect aspect, uint32_t mipLevels)
