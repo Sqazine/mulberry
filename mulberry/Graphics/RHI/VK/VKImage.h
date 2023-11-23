@@ -19,46 +19,47 @@ namespace mulberry
 			uint32_t width,
 			uint32_t height,
 			VkFormat format,
-			VkImageType type,
 			VkImageTiling tiling,
 			VkImageUsageFlags usage,
 			VkMemoryPropertyFlags properties);
 
-		VKImage(VkImage rawImage,VkFormat format);
+		VKImage(VkImage rawImage, VkFormat format);
 
 		virtual ~VKImage();
 
-		const VkImage& GetHandle() const;
-		const VkDeviceMemory& GetMemory() const;
-		const VkFormat& GetFormat() const;
+		const VkImage &GetHandle() const;
+		const VkDeviceMemory &GetMemory() const;
+		const VkFormat &GetFormat() const;
+		const VkImageView& GetView() const;
 		uint32_t GetMipLevel() const;
 
-		const VkImageLayout& GetImageLayout() const;
+		const VkImageLayout &GetImageLayout() const;
 
 		void TransitionToNewLayout(VkImageLayout newLayout);
 
 		template <typename T>
-		std::vector<T> GetRawData(const ImageAspect& aspect);
+		std::vector<T> GetRawData(const ImageAspect &aspect);
 
 	protected:
+		friend class VKCommandBuffer;
+		VkImageLayout mImageLayout;
+
 		VkImageCreateInfo mImageInfo;
 		VkImage mImage;
+		VkImageView mImageView;
 		VkFormat mFormat;
 		VkDeviceMemory mImageMemory;
 
 		bool mIsSwapChainImage;
-
-		friend class VKCommandBuffer;
-
-		VkImageLayout mImageLayout;
-
 	private:
-		void CopyToBuffer(const ImageAspect& aspect,VKBuffer* buffer);
-		void* MapBuffer(VKBuffer* buffer);
+		void CreateView();
+
+		void CopyToBuffer(const ImageAspect &aspect, VKBuffer *buffer);
+		void *MapBuffer(VKBuffer *buffer);
 	};
 
 	template <typename T>
-	std::vector<T> VKImage::GetRawData(const ImageAspect& aspect)
+	std::vector<T> VKImage::GetRawData(const ImageAspect &aspect)
 	{
 		auto srcImg = this;
 
@@ -68,7 +69,7 @@ namespace mulberry
 
 		std::vector<T> result(mImageInfo.extent.width * mImageInfo.extent.height);
 
-		T* data = MapBuffer(stagingBuffer.get());
+		T *data = MapBuffer(stagingBuffer.get());
 
 		for (int32_t i = 0; i < mImageInfo.extent.width * mImageInfo.extent.height; ++i)
 			result[i] = data[i];

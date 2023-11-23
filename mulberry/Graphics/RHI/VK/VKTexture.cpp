@@ -6,12 +6,11 @@
 namespace mulberry
 {
     VKTexture::VKTexture()
-    
     {
     }
 
     VKTexture::VKTexture(VkImage rawImage, VkFormat format)
-        : mImage(std::make_unique<VKImage>(rawImage, format)), mImageView(std::make_unique<VKImageView>(rawImage, format, VK_IMAGE_VIEW_TYPE_2D, ImageAspect::COLOR))
+        : mImage(std::make_unique<VKImage>(rawImage, format))
     {
     }
 
@@ -40,14 +39,9 @@ namespace mulberry
     {
     }
 
-    const VKImage *VKTexture::GetHandle() const
+    const VKImage *VKTexture::GetImage() const
     {
         return mImage.get();
-    }
-
-    const VKImageView *VKTexture::GetView() const
-    {
-        return mImageView.get();
     }
 
     const TextureInfo &VKTexture::GetCreateInfo() const

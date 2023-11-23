@@ -26,11 +26,6 @@ source_group("Graphics/RHI" FILES ${RHI})
 source_group("Graphics/RHI/GL" FILES ${GL})
 source_group("Graphics/RHI/VK" FILES ${VK})
 
-find_package(glslang CONFIG REQUIRED)
-find_package(SDL2 CONFIG REQUIRED)
-find_package(SDL2_ttf CONFIG REQUIRED)
-find_package(glad CONFIG REQUIRED)
-find_package(spdlog CONFIG REQUIRED)
 add_library(mulberry STATIC ${ROOT} ${CORE} ${MATH} ${PLATFORM} ${PLATFORM_SDL2_WRAPPER} ${SCENE} ${COMPONENT} ${GRAPHICS} ${RHI} ${GL} ${VK})
 target_include_directories(mulberry PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} 
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Core
@@ -43,23 +38,13 @@ target_include_directories(mulberry PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Graphics/RHI
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Scene/Component
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Scene
-                                          ${VULKAN_ROOT}/Include)
-target_link_libraries(mulberry PRIVATE SDL2::SDL2 SDL2::SDL2main spdlog::spdlog spdlog::spdlog_header_only glad::glad SDL2_ttf::SDL2_ttf glslang::OSDependent glslang::glslang glslang::MachineIndependent glslang::GenericCodeGen glslang::OGLCompiler glslang::glslang-default-resource-limits glslang::SPVRemapper glslang::SPIRV glslang::HLSL ${VULKAN_ROOT}/Lib/vulkan-1.lib)
+                                          ${VULKAN_ROOT}/Include
+                                          ${THIRD_PARTY_DIR}
+                                          ${SDL_INC_DIR}
+                                          ${SDL_TTF_INC_DIR}
+                                          )
 
-message(STATUS "operation system is ${CMAKE_SYSTEM}")
- 
-if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-    message(STATUS "current platform: Linux")
-    target_compile_definitions(mulberry PRIVATE PLATFORM_LINUX)
-elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    message(STATUS "current platform: Windows")
-    target_compile_definitions(mulberry PRIVATE PLATFORM_WINDOWS)
-elseif (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-    message(STATUS "current platform: FreeBSD")
-    target_compile_definitions(mulberry PRIVATE PLATFORM_FREEBSD)
-else ()
-    message(STATUS "other platform: ${CMAKE_SYSTEM_NAME}")
-    target_compile_definitions(mulberry PRIVATE PLATFORM_OTHER)
-endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
+target_link_libraries(mulberry PRIVATE SDL2 SDL2main stb_image stb_image_write glad spdlog::spdlog spdlog::spdlog_header_only SDL2_ttf OSDependent glslang MachineIndependent GenericCodeGen OGLCompiler glslang-default-resource-limits SPVRemapper SPIRV HLSL ${VULKAN_ROOT}/Lib/vulkan-1.lib)
 
 target_compile_definitions(mulberry PRIVATE SHOW_FPS_ON_WINDOW_TITLE)
+target_compile_definitions(mulberry PRIVATE ${CURRENT_PLATFORM})

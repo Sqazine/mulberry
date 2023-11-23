@@ -3,7 +3,7 @@
 #include "Texture.h"
 #include "Math/Color.h"
 #include "VKImage.h"
-#include "VKImageView.h"
+
 namespace mulberry
 {
     class VKTexture
@@ -17,8 +17,7 @@ namespace mulberry
         void CreateFrom(const TextureInfo &info);
         void CreateFromSurface(SDL_Surface *surface);
 
-        const VKImage *GetHandle() const;
-        const VKImageView *GetView() const;
+        const VKImage *GetImage() const;
         const TextureInfo &GetCreateInfo() const;
 
     private:
@@ -26,7 +25,6 @@ namespace mulberry
         VkSamplerAddressMode ToVkWrapMode(WrapMode mode);
 
         std::unique_ptr<VKImage> mImage;
-        std::unique_ptr<VKImageView> mImageView;
 
         VkSampler mSampler{VK_NULL_HANDLE};
 

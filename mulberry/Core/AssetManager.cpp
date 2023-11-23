@@ -2,10 +2,7 @@
 
 #include "AssetManager.h"
 #include "Graphics/RHI/Texture.h"
-#ifndef STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-#endif
-#include <stb_image.h>
+#include <stb/stb_image.h>
 #include <fstream>
 #include <sstream>
 #include <iostream>

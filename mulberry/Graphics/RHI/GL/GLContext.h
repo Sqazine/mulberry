@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <string_view>
 #include <mutex>
 #include "Vec2.h"

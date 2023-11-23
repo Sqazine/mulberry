@@ -3,7 +3,6 @@
 #include "ShipShootComponent.h"
 
 OGL_USE_DISCRETE_CARD
-#undef main
 int main(int argc, char **argv)
 {
 

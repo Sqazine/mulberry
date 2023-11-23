@@ -10,7 +10,6 @@ namespace mulberry
 		uint32_t width,
 		uint32_t height,
 		VkFormat format,
-		VkImageType type,
 		VkImageTiling tiling,
 		VkImageUsageFlags usage,
 		VkMemoryPropertyFlags properties)
@@ -19,7 +18,7 @@ namespace mulberry
 		mImageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 		mImageInfo.pNext = nullptr;
 		mImageInfo.flags = 0;
-		mImageInfo.imageType = type;
+		mImageInfo.imageType = VK_IMAGE_TYPE_2D;
 		mImageInfo.extent.width = width;
 		mImageInfo.extent.height = height;
 		mImageInfo.extent.depth = 1;
@@ -51,15 +50,19 @@ namespace mulberry
 		VK_CHECK(vkAllocateMemory(RAW_VK_DEVICE_HANDLE, &allocInfo, nullptr, &mImageMemory))
 
 		vkBindImageMemory(RAW_VK_DEVICE_HANDLE, mImage, mImageMemory, 0);
+
+		CreateView();
 	}
 
 	VKImage::VKImage(VkImage rawImage, VkFormat format)
 		: mImage(rawImage), mFormat(format), mImageLayout(VK_IMAGE_LAYOUT_UNDEFINED), mIsSwapChainImage(true)
 	{
+		CreateView();
 	}
 
 	VKImage::~VKImage()
 	{
+		vkDestroyImageView(RAW_VK_DEVICE_HANDLE, mImageView, nullptr);
 		if (!mIsSwapChainImage)
 		{
 			vkFreeMemory(RAW_VK_DEVICE_HANDLE, mImageMemory, nullptr);
@@ -79,6 +82,11 @@ namespace mulberry
 	const VkFormat &VKImage::GetFormat() const
 	{
 		return mFormat;
+	}
+
+	const VkImageView &VKImage::GetView() const
+	{
+		return mImageView;
 	}
 
 	uint32_t VKImage::GetMipLevel() const
@@ -118,10 +126,33 @@ namespace mulberry
 
 				cmd->TransitionImageNewLayout(this, oldLayout); });
 	}
+
 	void *VKImage::MapBuffer(VKBuffer *buffer)
 	{
 		void *data = nullptr;
 		vkMapMemory(RAW_VK_DEVICE_HANDLE, buffer->GetMemory(), 0, VK_WHOLE_SIZE, 0, (void **)&data);
 		return data;
+	}
+
+	void VKImage::CreateView()
+	{
+		VkImageViewCreateInfo info{};
+		info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		info.pNext = nullptr;
+		info.flags = 0;
+		info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+		info.format = mFormat;
+		info.image = mImage;
+		info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+		info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+		info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+		info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+		info.subresourceRange.aspectMask = (VkImageAspectFlags)ImageAspect::COLOR;
+		info.subresourceRange.baseArrayLayer = 0;
+		info.subresourceRange.layerCount = 1;
+		info.subresourceRange.baseMipLevel = 0;
+		info.subresourceRange.levelCount = 1;
+
+		VK_CHECK(vkCreateImageView(RAW_VK_DEVICE_HANDLE, &info, nullptr, &mImageView));
 	}
 }

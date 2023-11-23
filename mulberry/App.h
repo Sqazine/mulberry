@@ -3,7 +3,7 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "Core/Singleton.h"
 #include "Graphics/RHI/GraphicsContext.h"
 #include "Graphics/SceneRenderer.h"

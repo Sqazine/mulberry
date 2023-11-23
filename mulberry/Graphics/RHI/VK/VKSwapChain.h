@@ -2,7 +2,6 @@
 #include <vector>
 #include <vulkan/vulkan.h>
 #include "VKImage.h"
-#include "VKImageView.h"
 #include "VKSyncObject.h"
 #include "VKTexture.h"
 namespace mulberry

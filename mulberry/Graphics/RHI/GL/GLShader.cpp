@@ -1,5 +1,4 @@
 #include "GLShader.h"
-#include <GL/glcorearb.h>
 #include "GLUniform.h"
 #include "Graphics/RHI/Shader.h"
 #include "Core/Logger.h"

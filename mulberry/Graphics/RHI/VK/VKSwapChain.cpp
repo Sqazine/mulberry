@@ -1,5 +1,5 @@
 #include "VKSwapChain.h"
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <algorithm>
 #include "VKContext.h"
 #include "VKDevice.h"

@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <string_view>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <SDL2/SDL_vulkan.h>
 #include "Vec2.h"
 #include "Logger.h"

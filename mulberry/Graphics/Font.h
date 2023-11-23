@@ -1,6 +1,6 @@
 #pragma once
 #include <unordered_map>
-#include <SDL2/SDL_ttf.h>
+#include <SDL_ttf.h>
 #include <memory>
 #include <string>
 #include "Math/Color.h"

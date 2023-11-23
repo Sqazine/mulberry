@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <string>
 #include <glad/glad.h>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <vector>
 #include "Math/Color.h"
 #include "Texture.h"

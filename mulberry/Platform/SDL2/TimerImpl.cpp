@@ -1,5 +1,5 @@
 #include "TimerImpl.h"
-#include <SDL2/SDL.h>
+#include <SDL.h>
 namespace mulberry
 {
 	SDL2TimerImpl::SDL2TimerImpl()

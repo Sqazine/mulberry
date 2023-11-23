@@ -11,7 +11,7 @@ namespace mulberry
 		std::vector<VkImageView> attachmentsView(attachments.size());
 
 		for (int i = 0; i < attachmentsView.size(); ++i)
-			attachmentsView[i] = attachments[i]->GetView()->GetHandle();
+			attachmentsView[i] = attachments[i]->GetImage()->GetView();
 
 		VkFramebufferCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;

@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <memory>
 #include "Vec2.h"
 #include "Platform/Input.h"

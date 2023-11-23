@@ -2,7 +2,7 @@
 #include <vector>
 #include <cstdint>
 #include <memory>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "Math/Color.h"
 #include "Math/Vec2.h"
 #include "Core/AssetManager.h"
