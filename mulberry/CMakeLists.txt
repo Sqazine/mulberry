@@ -46,8 +46,7 @@ target_include_directories(mulberry PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 
 target_link_libraries(mulberry PRIVATE SDL2
                                      SDL2main 
-                                     stb_image 
-                                     stb_image_write 
+                                     stb
                                      glad 
                                      spdlog::spdlog 
                                      spdlog::spdlog_header_only 

@@ -1,6 +1,6 @@
-add_library(stb_image STATIC stb_image.h stb_image.cpp)
-add_library(stb_image_write STATIC stb_image_write.h stb_image_write.cpp)
+file(GLOB SRC "*.h" "*.cpp")
+
+add_library(stb STATIC ${SRC})
 if(MSVC)
-    target_compile_options(stb_image PRIVATE "/wd4251;")
-    target_compile_options(stb_image_write PRIVATE "/wd4251;")
+    target_compile_options(stb PRIVATE "/wd4251;")
 endif()
