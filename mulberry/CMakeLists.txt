@@ -44,23 +44,23 @@ target_include_directories(mulberry PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
                                           ${SDL_TTF_INC_DIR}
                                           )
 
-target_link_libraries(mulberry PRIVATE SDL2
-                                     SDL2main 
-                                     stb
-                                     glad 
-                                     spdlog::spdlog 
-                                     spdlog::spdlog_header_only 
-                                     SDL2_ttf 
-                                     OSDependent 
-                                     glslang 
-                                     MachineIndependent 
-                                     GenericCodeGen 
-                                     OGLCompiler 
-                                     glslang-default-resource-limits 
-                                     SPVRemapper 
-                                     SPIRV 
-                                     HLSL 
-                                     ${VULKAN_ROOT}/Lib/vulkan-1.lib)
-
+target_link_libraries(mulberry PRIVATE  SDL2-static
+                                        SDL2main 
+                                        stb
+                                        glad 
+                                        spdlog::spdlog 
+                                        spdlog::spdlog_header_only 
+                                        SDL2_ttf 
+                                        OSDependent 
+                                        glslang 
+                                        MachineIndependent 
+                                        GenericCodeGen 
+                                        OGLCompiler 
+                                        glslang-default-resource-limits 
+                                        SPVRemapper 
+                                        SPIRV 
+                                        HLSL 
+                                        ${VULKAN_ROOT}/Lib/vulkan-1.lib)
+                                        
 target_compile_definitions(mulberry PRIVATE SHOW_FPS_ON_WINDOW_TITLE)
 target_compile_definitions(mulberry PRIVATE ${CURRENT_PLATFORM})

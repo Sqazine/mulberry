@@ -24,7 +24,7 @@ int32_t main(int32_t argc, char **argv)
 
     mulberry::Scene *scene = mulberry::App::GetInstance().CreateScene("Sprite");
     mulberry::TextureInfo textureInfo{};
-    textureInfo.data = scene->GetSceneAssetManager()->LoadImgData(std::string(RESOURCES_DIR) + "awesomeface.png");
+    textureInfo.data = scene->GetSceneAssetManager()->LoadImgData("Assets/awesomeface.png");
 
     auto texture = std::make_unique<mulberry::Texture>(textureInfo);
 

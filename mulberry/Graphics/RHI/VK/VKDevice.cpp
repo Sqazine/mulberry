@@ -13,30 +13,22 @@ namespace mulberry
 	{
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 
+		const float queuePriorities = 1.0f;
+		VkDeviceQueueCreateInfo info = {};
+		info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+		info.pNext = nullptr;
+		info.flags = 0;
+		info.pQueuePriorities = &queuePriorities;
+		info.queueCount = 1;
 		if (mPhysicalDeviceSpec.queueFamilyIndices.IsSameFamilyIndex())
 		{
-			const float queuePriorities[3]{1, 1, 1};
-			VkDeviceQueueCreateInfo info = {};
-			info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-			info.pNext = nullptr;
-			info.flags = 0;
-			info.pQueuePriorities = queuePriorities;
-			info.queueCount = 3;
 			info.queueFamilyIndex = mPhysicalDeviceSpec.queueFamilyIndices.graphicsFamilyIdx.value();
 			queueCreateInfos.emplace_back(info);
 		}
 		else
 		{
-			const float queuePriorities = 1.0f;
-
 			for (auto idx : mPhysicalDeviceSpec.queueFamilyIndices.IndexArray())
 			{
-				VkDeviceQueueCreateInfo info = {};
-				info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-				info.pNext = nullptr;
-				info.flags = 0;
-				info.pQueuePriorities = &queuePriorities;
-				info.queueCount = 1;
 				info.queueFamilyIndex = idx;
 				queueCreateInfos.emplace_back(info);
 			}

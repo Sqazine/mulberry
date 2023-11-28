@@ -54,7 +54,7 @@ namespace mulberry
 
     void SDL2WindowImpl::Resize(const Vec2 &extent)
     {
-        Resize(extent.x, extent.y);
+        Resize(static_cast<uint32_t>(extent.x), static_cast<uint32_t>(extent.y));
     }
 
     void SDL2WindowImpl::Resize(uint32_t w, uint32_t h)
@@ -68,8 +68,8 @@ namespace mulberry
     Vec2 SDL2WindowImpl::GetSize()
     {
         int32_t x, y;
-        SDL_GetWindowSize(mHandle, (int *)&x, (int *)&y);
-        return Vec2(x, y);
+        SDL_GetWindowSize(mHandle, &x, &y);
+        return Vec2(static_cast<float>(x), static_cast<float>(y));
     }
 
     SDL_Window *SDL2WindowImpl::GetHandle()

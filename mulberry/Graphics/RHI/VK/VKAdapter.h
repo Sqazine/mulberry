@@ -69,11 +69,11 @@ namespace mulberry
 
 		PhysicalDeviceSpec EnumPhysicalDeviceSpecForHandle(VkPhysicalDevice device);
 
-		std::vector<const char *> mRequiredInstanceExtensions;
+		std::vector<const char *> mRequiredInstanceExtensions{};
 
-		VkInstance mInstanceHandle;
-		std::vector<VkLayerProperties> mInstanceLayerProps;
-		std::vector<VkExtensionProperties> mInstanceExtensionProps;
+		VkInstance mInstanceHandle{VK_NULL_HANDLE};
+		std::vector<VkLayerProperties> mInstanceLayerProps{};
+		std::vector<VkExtensionProperties> mInstanceExtensionProps{};
 
 #ifdef _DEBUG
 		std::vector<const char *> mRequiredValidationLayers =
@@ -89,6 +89,6 @@ namespace mulberry
 
 		std::vector<PhysicalDeviceSpec> mPhysicalDeviceSpecs;
 
-		VkSurfaceKHR mSurface;
+		VkSurfaceKHR mSurface{VK_NULL_HANDLE};
 	};
 }

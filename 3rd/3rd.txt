@@ -19,3 +19,7 @@ url: https://github.com/nothings/stb.git
 name: SDL_ttf
 url: https://github.com/libsdl-org/SDL_ttf.git
 version: 2.0.15
+
+namespace: freetype
+url: https://github.com/freetype/freetype
+version: 2.9.1

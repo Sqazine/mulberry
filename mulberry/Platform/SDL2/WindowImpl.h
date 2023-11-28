@@ -2,7 +2,7 @@
 #include <string>
 #include <string_view>
 #include <SDL.h>
-#include <SDL2/SDL_vulkan.h>
+#include <SDL_vulkan.h>
 #include "Vec2.h"
 #include "Logger.h"
 #include "Graphics/RHI/VK/VKAdapter.h"
