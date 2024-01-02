@@ -5,8 +5,6 @@
 #include <SDL_vulkan.h>
 #include "Vec2.h"
 #include "Logger.h"
-#include "Graphics/RHI/VK/VKAdapter.h"
-#include "Graphics/RHI/RasterPipeline.h"
 #include "Platform/Window.h"
 namespace mulberry
 {
@@ -33,6 +31,12 @@ namespace mulberry
 		bool IsWindowMinButtonClick() const override;
 
 		bool IsResize() const override;
+
+		std::vector<const char *> GetVulkanRequiredExtensions() override;
+		VkSurfaceKHR CreateSurface(VkInstance instance) override;
+	protected:
+		void PreUpdate() override;
+		void PostUpdate() override;
 	private:
 		SDL_Window *mHandle;
 		std::string mTitle = "";
@@ -46,11 +50,6 @@ namespace mulberry
 		bool mIsWindowMinButtonClick;
 		bool mIsWindowResize;
 
-	protected:
-		void PreUpdate() override;
-		void PostUpdate() override;
-		std::vector<const char *> GetVulkanRequiredExtensions() override;
-		VkSurfaceKHR CreateSurface(VkInstance instance) override;
 	};
 
 }

@@ -3,8 +3,7 @@
 #include <mutex>
 #include "Vec2.h"
 #include "GraphicsConfig.h"
-#include "Graphics/RHI/GL/GLContext.h"
-#include "Graphics/RHI/VK/VKContext.h"
+#include "Graphics/RHI/VK/Context.h"
 namespace mulberry
 {
 	class GraphicsContext
@@ -21,11 +20,8 @@ namespace mulberry
 		void BeginFrame();
 		void EndFrame();
 
-		GLContext* GetGLContext() const;
-		VKContext* GetVKContext() const;
-
+		vk::Context* GetVKContextImpl() const;
 	private:
-		std::unique_ptr<GLContext> mGLContext;
-		std::unique_ptr<VKContext> mVKContext;
+		std::unique_ptr<vk::Context> mVKContextImpl;
 	};
 }

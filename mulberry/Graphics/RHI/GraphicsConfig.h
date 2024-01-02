@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Enum.h"
 namespace mulberry
 {
     enum class GraphicsBackend
@@ -8,22 +8,11 @@ namespace mulberry
         VK,
     };
 
-    enum class MsaaLevel
-    {
-        NONE,
-        X2,
-        X4,
-        X8,
-        X16,
-        X32,
-        X64,
-    };
-
     struct GraphicsConfig
     {
-        GraphicsBackend backend = GraphicsBackend::GL;
+        GraphicsBackend backend = GraphicsBackend::VK;
         bool useVSync = false;
         bool useDoubleBuffer = true;
-        MsaaLevel msaaLevel = MsaaLevel::NONE;
+        SampleCount msaaSample = SampleCount::X2;
     };
 }

@@ -1,71 +1,37 @@
-// #include "RasterPass.h"
-// #include "App.h"
-// namespace mulberry
-// {
-//     RasterPass::RasterPass(const Vec2 &extent, Format format, uint32_t imageCount)
-//     {
-//         switch (AppConfig::graphicsConfig.backend)
-//         {
-//         case GraphicsBackend::GL:
-//             mGLRasterPass = std::make_unique<GLRasterPass>();
-//             break;
-//         default:
-//             mVKRasterPass = std::make_unique<VKRasterPass>(extent, format, imageCount);
-//             break;
-//         }
-//     }
+#include "RasterPass.h"
+#include "App.h"
+namespace mulberry
+{
+	RasterPass::RasterPass(const Vec2& extent, Format format, const std::vector<Texture*>& textureLists)
+	{
+		GRAPHICS_RHI_IMPL_SWITCHER({
+			std::vector<vk::Texture*> rawVkTextureImpls(textureLists.size());
+			for (int32_t i = 0; i < textureLists.size(); ++i)
+				rawVkTextureImpls[i] = textureLists[i]->mVKTextureImpl.get();
 
-//     RasterPass::~RasterPass()
-//     {
-//     }
+			mVKRasterPassImpl = std::make_unique<vk::RasterPass>(extent,format, rawVkTextureImpls); })
+	}
 
-//     void RasterPass::SetClearColor(const Color &clearColor)
-//     {
-//         switch (AppConfig::graphicsConfig.backend)
-//         {
-//         case GraphicsBackend::GL:
-//             mGLRasterPass->SetClearColor(clearColor);
-//             break;
-//         default:
-//             mVKRasterPass->SetClearColor(clearColor);
-//             break;
-//         }
-//     }
-//     void RasterPass::IsClearColorBuffer(bool isClear)
-//     {
-//         switch (AppConfig::graphicsConfig.backend)
-//         {
-//         case GraphicsBackend::GL:
-//             mGLRasterPass->IsClearColorBuffer(isClear);
-//             break;
-//         default:
-//             mVKRasterPass->IsClearColorBuffer(isClear);
-//             break;
-//         }
-//     }
+	RasterPass::~RasterPass()
+	{
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKRasterPassImpl.reset(nullptr))
+	}
 
-//     void RasterPass::Begin()
-//     {
-//         switch (AppConfig::graphicsConfig.backend)
-//         {
-//         case GraphicsBackend::GL:
-//             mGLRasterPass->Begin();
-//             break;
-//         default:
-//             mVKRasterPass->Begin();
-//             break;
-//         }
-//     }
-//     void RasterPass::End()
-//     {
-//         switch (AppConfig::graphicsConfig.backend)
-//         {
-//         case GraphicsBackend::GL:
-//             mGLRasterPass->End();
-//             break;
-//         default:
-//             mVKRasterPass->End();
-//             break;
-//         }
-//     }
-// }
+	void RasterPass::SetClearColor(const Color& clearColor)
+	{
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKRasterPassImpl->SetClearColor(clearColor))
+	}
+	void RasterPass::IsClearColorBuffer(bool isClear)
+	{
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKRasterPassImpl->IsClearColorBuffer(isClear))
+	}
+
+	void RasterPass::Begin()
+	{
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKRasterPassImpl->Begin())
+	}
+	void RasterPass::End()
+	{
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKRasterPassImpl->End())
+	}
+}

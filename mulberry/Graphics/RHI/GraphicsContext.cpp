@@ -1,97 +1,45 @@
 #include "GraphicsContext.h"
 #include "App.h"
-#include "GL/GLContext.h"
-#include "VK/VKContext.h"
+#include "Utils.h"
+#include "Graphics/RHI/VK/Context.h"
 #include "Math/Color.h"
 namespace mulberry
 {
 	GraphicsContext::GraphicsContext()
 	{
-		switch (App::GetInstance().GetGraphicsConfig().backend)
-		{
-		case GraphicsBackend::GL:
-			mGLContext = std::make_unique<GLContext>();
-			break;
-		default:
-			mVKContext = std::make_unique<VKContext>();
-			break;
-		}
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl = std::make_unique<vk::Context>())
 	}
 
 	GraphicsContext::~GraphicsContext()
 	{
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl.reset(nullptr));
 	}
 
 	void GraphicsContext::Init()
 	{
-		switch (App::GetInstance().GetGraphicsConfig().backend)
-		{
-		case GraphicsBackend::GL:
-			mGLContext->Init();
-			break;
-		default:
-			mVKContext->Init();
-			break;
-		}
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->Init());
 	}
 
 	void GraphicsContext::SetClearColor(const Color &clearColor)
 	{
-		switch (App::GetInstance().GetGraphicsConfig().backend)
-		{
-		case GraphicsBackend::GL:
-			mGLContext->SetClearColor(clearColor);
-			break;
-		default:
-			mVKContext->SetClearColor(clearColor);
-			break;
-		}
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->SetClearColor(clearColor));
 	}
 	void GraphicsContext::IsClearColorBuffer(bool isClear)
 	{
-		switch (App::GetInstance().GetGraphicsConfig().backend)
-		{
-		case GraphicsBackend::GL:
-			mGLContext->IsClearColorBuffer(isClear);
-			break;
-		default:
-			mVKContext->IsClearColorBuffer(isClear);
-			break;
-		}
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->IsClearColorBuffer(isClear));
 	}
 
 	void GraphicsContext::BeginFrame()
 	{
-		switch (App::GetInstance().GetGraphicsConfig().backend)
-		{
-		case GraphicsBackend::GL:
-			mGLContext->BeginFrame();
-			break;
-		default:
-			mVKContext->BeginFrame();
-			break;
-		}
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->BeginFrame())
 	}
 	void GraphicsContext::EndFrame()
 	{
-		switch (App::GetInstance().GetGraphicsConfig().backend)
-		{
-		case GraphicsBackend::GL:
-			mGLContext->EndFrame();
-			break;
-		default:
-			mVKContext->EndFrame();
-			break;
-		}
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->EndFrame())
 	}
 
-	GLContext *GraphicsContext::GetGLContext() const
+	vk::Context *GraphicsContext::GetVKContextImpl() const
 	{
-		return mGLContext.get();
-	}
-
-	VKContext *GraphicsContext::GetVKContext() const
-	{
-		return mVKContext.get();
+		return mVKContextImpl.get();
 	}
 }

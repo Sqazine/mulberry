@@ -1,12 +1,11 @@
-#include "mulberry/mulberry.h"
+#include "mulberry.h"
 #include "ShipMoveComponent.h"
 #include "ShipShootComponent.h"
 
-OGL_USE_DISCRETE_CARD
 int main(int argc, char **argv)
 {
 
-    mulberry::App::GetInstance().SetGraphicsBackend(mulberry::GraphicsBackend::GL);
+    mulberry::App::GetInstance().SetGraphicsBackend(mulberry::GraphicsBackend::VK);
     mulberry::App::GetInstance().Init();
 
     mulberry::App::GetInstance().GetWindow()->SetTitle("Asteroid");

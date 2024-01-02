@@ -54,4 +54,19 @@ namespace mulberry
             result.emplace_back(e.get());
         return result;
     }
+    void Scene::Init()
+    {
+    }
+    void Scene::Update()
+    {
+    }
+    void Scene::Render()
+    {
+    }
+    void Scene::RenderGizmo()
+    {
+    }
+    void Scene::CleanUp()
+    {
+    }
 }

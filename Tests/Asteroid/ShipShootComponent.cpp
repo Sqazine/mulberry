@@ -11,11 +11,11 @@ void ShipShootComponent::Init()
 {
     RequiredComponent<mulberry::TransformComponent>();
 
-    mulberry::TextureInfo textureInfo{};
+   /* mulberry::TextureInfo textureInfo{};
     textureInfo.data = GetSceneAssetManager()->LoadImgData("Assets/Laser.png");
     textureInfo.minFilter = mulberry::FilterMode::LINEAR;
     textureInfo.magFilter = mulberry::FilterMode::LINEAR;
-    mLaserTexture.reset(new mulberry::Texture(textureInfo));
+    mLaserTexture.reset(new mulberry::Texture(textureInfo));*/
 
     if (!mOwnerTransformComponent)
         mOwnerTransformComponent = GetOwner()->GetComponent<mulberry::TransformComponent>();

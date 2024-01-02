@@ -11,7 +11,7 @@
 #include "Math/Mat4.h"
 #include "Vec2.h"
 #include "Graphics/Font.h"
-#include "Graphics/Primitive.h"
+#include "Graphics/PrimitiveGeometry.h"
 #include "Graphics/RenderMaterial.h"
 #include "Graphics/SceneRenderer.h"
 #include "Scene/Component/CameraComponent.h"
@@ -23,10 +23,3 @@
 #include "Scene/Layer.h"
 #include "Scene/Object.h"
 #include "Scene/Tag.h"
-
-#define OGL_USE_DISCRETE_CARD                                              \
-    extern "C"                                                             \
-    {                                                                      \
-        _declspec(dllexport) unsigned long NvOptimusEnablement = 1;        \
-        _declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1; \
-    }

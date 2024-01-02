@@ -5,7 +5,6 @@
 #include "AppConfig.h"
 
 #if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
-#include "Platform/SDL2/GLContextImpl.h"
 #include "Platform/SDL2/InputImpl.h"
 #include "Platform/SDL2/TimerImpl.h"
 #include "Platform/SDL2/WindowImpl.h"
@@ -155,6 +154,10 @@ namespace mulberry
 
 	void App::CleanUp()
 	{
+		for (const auto& scene : mScenes)
+		{
+			scene->CleanUp();
+		}
 	}
 
 	void App::PreUpdate()

@@ -24,11 +24,11 @@ namespace mulberry
 
     private:
         friend class App;
-        void Init();
-        void Update();
-        void Render();
-        void RenderGizmo();
-        void CleanUp();
+		virtual void Init();
+		virtual void Update();
+		virtual void Render();
+		virtual void RenderGizmo();
+		virtual void CleanUp();
 
         friend class SceneRenderer;
         std::vector<std::unique_ptr<Entity>> mEntities;

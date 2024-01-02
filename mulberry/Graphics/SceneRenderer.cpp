@@ -1,5 +1,5 @@
 #include "SceneRenderer.h"
-#include "RasterPipeline.h"
+#include "Pipeline.h"
 #include "App.h"
 #include "RenderMaterial.h"
 namespace mulberry
@@ -8,29 +8,29 @@ namespace mulberry
     {
         mGizmoMaterial = std::make_unique<GizmoMaterial>();
 
-        mQuadPrimitive = std::make_unique<Primitive>(PrimitiveType::QUAD);
-        mSpritePrimitive = std::make_unique<Primitive>(PrimitiveType::SPRITE);
-        mLinePrimitive = std::make_unique<Primitive>(PrimitiveType::LINE);
-        mCirclePrimitive = std::make_unique<Primitive>(PrimitiveType::CIRCLE);
+        mQuadPrimitive = std::make_unique<PrimitiveGeometry>(PrimitiveGeometryType::QUAD);
+        mSpritePrimitive = std::make_unique<PrimitiveGeometry>(PrimitiveGeometryType::SPRITE);
+        mLinePrimitive = std::make_unique<PrimitiveGeometry>(PrimitiveGeometryType::LINE);
+        mCirclePrimitive = std::make_unique<PrimitiveGeometry>(PrimitiveGeometryType::CIRCLE);
 
-        mSpriteRasterPipeline = std::make_unique<RasterPipeline>();
-        mSpriteRasterPipeline->GetPSO().cullType = CullType::BACK;
-        mSpriteRasterPipeline->GetPSO().depthTest = DepthTest::NONE;
-        mSpriteRasterPipeline->GetPSO().blendState = {true, BlendFunc::SRC_ALPHA, BlendFunc::ONE_MINUS_SRC_ALPHA};
-        mSpriteRasterPipeline->GetPSO().primitiveRenderType = PrimitiveRenderType::TRIANGLE_LIST;
+		/*  mSpriteRasterPipeline = std::make_unique<RasterPipeline>();
+		  mSpriteRasterPipeline->GetPSO().cullType = CullType::BACK;
+		  mSpriteRasterPipeline->GetPSO().depthTest = DepthTest::NONE;
+		  mSpriteRasterPipeline->GetPSO().blendState = {true, BlendFunc::SRC_ALPHA, BlendFunc::ONE_MINUS_SRC_ALPHA};
+		  mSpriteRasterPipeline->GetPSO().primitiveRenderType = PrimitiveRenderType::TRIANGLE_LIST;
 
-        mAuxiliaryRasterPipeline = std::make_unique<RasterPipeline>();
-        mAuxiliaryRasterPipeline->GetPSO().cullType = CullType::BACK;
-        mAuxiliaryRasterPipeline->GetPSO().depthTest = DepthTest::NONE;
-        mAuxiliaryRasterPipeline->GetPSO().blendState = {true, BlendFunc::SRC_ALPHA, BlendFunc::ONE_MINUS_SRC_ALPHA};
-        mAuxiliaryRasterPipeline->GetPSO().primitiveRenderType = PrimitiveRenderType::LINE_LIST;
+		  mAuxiliaryRasterPipeline = std::make_unique<RasterPipeline>();
+		  mAuxiliaryRasterPipeline->GetPSO().cullType = CullType::BACK;
+		  mAuxiliaryRasterPipeline->GetPSO().depthTest = DepthTest::NONE;
+		  mAuxiliaryRasterPipeline->GetPSO().blendState = {true, BlendFunc::SRC_ALPHA, BlendFunc::ONE_MINUS_SRC_ALPHA};
+		  mAuxiliaryRasterPipeline->GetPSO().primitiveRenderType = PrimitiveRenderType::LINE_LIST;
 
-        mPointRasterPipeline = std::make_unique<RasterPipeline>();
-        mPointRasterPipeline->GetPSO().cullType = CullType::BACK;
-        mPointRasterPipeline->GetPSO().depthTest = DepthTest::NONE;
-        mPointRasterPipeline->GetPSO().blendState = {true, BlendFunc::SRC_ALPHA, BlendFunc::ONE_MINUS_SRC_ALPHA};
-        mPointRasterPipeline->GetPSO().primitiveRenderType = PrimitiveRenderType::POINT_LIST;
-        mPointRasterPipeline->GetPSO().pointSize = 5;
+		  mPointRasterPipeline = std::make_unique<RasterPipeline>();
+		  mPointRasterPipeline->GetPSO().cullType = CullType::BACK;
+		  mPointRasterPipeline->GetPSO().depthTest = DepthTest::NONE;
+		  mPointRasterPipeline->GetPSO().blendState = {true, BlendFunc::SRC_ALPHA, BlendFunc::ONE_MINUS_SRC_ALPHA};
+		  mPointRasterPipeline->GetPSO().primitiveRenderType = PrimitiveRenderType::POINT_LIST;
+		  mPointRasterPipeline->GetPSO().pointSize = 5;*/
     }
 
     void SceneRenderer::RenderSprite(const Entity *entity, CameraComponent *camera)
@@ -41,9 +41,9 @@ namespace mulberry
 
         // map to sprite size
         Mat4 mat = transComp->GetModelMat();
-        mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
+      //  mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
 
-        material->GetShaderGroup()->SetActive(true);
+      /*  material->GetShaderGroup()->SetActive(true);
         material->GetShaderGroup()->SetUniformValue("modelMat", mat);
         material->GetShaderGroup()->SetUniformValue("viewMat", camera->GetViewMat());
         material->GetShaderGroup()->SetUniformValue("projMat", camera->GetProjMat());
@@ -64,10 +64,10 @@ namespace mulberry
 
         material->ResetUniformValue();
 
-        material->GetShaderGroup()->SetActive(false);
+        material->GetShaderGroup()->SetActive(false);*/
     }
 
-    void SceneRenderer::RenderAuxiliary(const Entity *entity, CameraComponent *camera, const Primitive &primitive)
+    void SceneRenderer::RenderAuxiliary(const Entity *entity, CameraComponent *camera, const PrimitiveGeometry &primitive)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<RenderComponent>();
@@ -75,7 +75,7 @@ namespace mulberry
         const SpriteMaterial *material = (SpriteMaterial *)spriteComp->GetMaterial();
 
         // map to sprite size
-        Mat4 mat = transComp->GetModelMat();
+       /* Mat4 mat = transComp->GetModelMat();
         mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
 
         mGizmoMaterial->GetShaderGroup()->SetActive(true);
@@ -99,7 +99,7 @@ namespace mulberry
 
         mGizmoMaterial->GetShaderGroup()->ResetVertexArray();
 
-        mGizmoMaterial->GetShaderGroup()->SetActive(false);
+        mGizmoMaterial->GetShaderGroup()->SetActive(false);*/
     }
 
     void SceneRenderer::Render(const Scene *scene)
@@ -119,7 +119,7 @@ namespace mulberry
         }
         for (auto camera : cameraComponents)
         {
-            mSpriteRasterPipeline->GetPSO().viewport = App::GetInstance().GetWindow()->GetViewport();
+           // mSpriteRasterPipeline->GetPSO().viewport = App::GetInstance().GetWindow()->GetViewport();
 
             App::GetInstance().GetGraphicsContext()->SetClearColor(camera->GetClearColor());
             App::GetInstance().GetGraphicsContext()->IsClearColorBuffer(true);

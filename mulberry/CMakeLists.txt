@@ -1,7 +1,3 @@
-set(VULKAN_ROOT "$ENV{VULKAN_SDK}" CACHE STRING "")
-message(STATUS ${VULKAN_ROOT})
-
-
 file(GLOB ROOT "*.h" "*.cpp")
 file(GLOB CORE "Core/*.h" "Core/*.cpp")
 file(GLOB MATH "Math/*.h" "Math/*.cpp")
@@ -11,7 +7,6 @@ file(GLOB SCENE "Scene/*.h" "Scene/*.cpp")
 file(GLOB COMPONENT "Scene/Component/*.h" "Scene/Component/*.cpp")
 file(GLOB GRAPHICS "Graphics/*.h" "Graphics/*.cpp")
 file(GLOB RHI "Graphics/RHI/*.h" "Graphics/RHI/*.cpp")
-file(GLOB GL "Graphics/RHI/GL/*.h" "Graphics/RHI/GL/*.cpp")
 file(GLOB VK "Graphics/RHI/VK/*.h" "Graphics/RHI/VK/*.cpp")
 
 source_group("" FILES ${ROOT})
@@ -23,32 +18,37 @@ source_group("Scene" FILES ${SCENE})
 source_group("Scene/Component" FILES ${COMPONENT})
 source_group("Graphics" FILES ${GRAPHICS})
 source_group("Graphics/RHI" FILES ${RHI})
-source_group("Graphics/RHI/GL" FILES ${GL})
 source_group("Graphics/RHI/VK" FILES ${VK})
 
-add_library(mulberry STATIC ${ROOT} ${CORE} ${MATH} ${PLATFORM} ${PLATFORM_SDL2_WRAPPER} ${SCENE} ${COMPONENT} ${GRAPHICS} ${RHI} ${GL} ${VK})
+add_library(mulberry STATIC ${ROOT} ${CORE} ${MATH} ${PLATFORM} ${PLATFORM_SDL2_WRAPPER} ${SCENE} ${COMPONENT} ${GRAPHICS} ${RHI} ${VK})
 target_include_directories(mulberry PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} 
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Core
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Math
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Platform
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Platform/SDL2
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Graphics
-                                          ${CMAKE_CURRENT_SOURCE_DIR}/Graphics/RHI/GL
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Graphics/RHI/VK
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Graphics/RHI
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Scene/Component
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Scene
                                           ${VULKAN_ROOT}/Include
-                                          ${THIRD_PARTY_DIR}
-                                          ${SDL_INC_DIR}
+                                          ${FREETYPE_INC_DIR}
                                           ${SDL_TTF_INC_DIR}
+                                          ${SDL_INC_DIR}
+                                          ${STB_INC_DIR}
+                                          ${SPDLOG_INC_DIR}
+                                          ${THIRD_PARTY_DIR}
                                           )
+
+find_library(vulkan_1
+             vulkan-1.lib
+             PATHS ${VULKAN_ROOT}/Lib)
+                             
 
 target_link_libraries(mulberry PRIVATE  SDL2-static
                                         SDL2main 
                                         stb
-                                        glad 
-                                        spdlog::spdlog 
+                                        spdlog::spdlog
                                         spdlog::spdlog_header_only 
                                         SDL2_ttf 
                                         OSDependent 
@@ -60,7 +60,7 @@ target_link_libraries(mulberry PRIVATE  SDL2-static
                                         SPVRemapper 
                                         SPIRV 
                                         HLSL 
-                                        ${VULKAN_ROOT}/Lib/vulkan-1.lib)
+                                        ${vulkan_1})
                                         
 target_compile_definitions(mulberry PRIVATE SHOW_FPS_ON_WINDOW_TITLE)
 target_compile_definitions(mulberry PRIVATE ${CURRENT_PLATFORM})

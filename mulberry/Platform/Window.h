@@ -3,7 +3,8 @@
 #include <cstdint>
 #include <string_view>
 #include "Math/Vec2.h"
-#include "Graphics/RHI/RasterPipeline.h"
+#include "Graphics/RHI/Pipeline.h"
+#include "Graphics/Viewport.h"
 
 namespace mulberry
 {
@@ -30,12 +31,12 @@ namespace mulberry
 
         virtual bool IsResize() const = 0;
 
+		virtual std::vector<const char*> GetVulkanRequiredExtensions() = 0;
+		virtual VkSurfaceKHR CreateSurface(VkInstance instance) = 0;
     protected:
         friend class App;
         virtual void PreUpdate() = 0;
         virtual void PostUpdate() = 0;
-        friend class VKAdapter;
-        virtual std::vector<const char *> GetVulkanRequiredExtensions() = 0;
-        virtual VkSurfaceKHR CreateSurface(VkInstance instance) = 0;
+
     };
 }

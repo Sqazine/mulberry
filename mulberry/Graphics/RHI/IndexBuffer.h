@@ -1,7 +1,7 @@
 #pragma once
+#include "Utils.h"
 #include "AppConfig.h"
-#include "GL/GLIndexBuffer.h"
-#include "VK/VKIndexBuffer.h"
+#include "VK/Buffer.h"
 
 namespace mulberry
 {
@@ -18,21 +18,12 @@ namespace mulberry
 
     private:
         friend class RasterPipeline;
-        std::unique_ptr<GLIndexBuffer> mGLIndexBuffer;
-        std::unique_ptr<VKIndexBuffer> mVKIndexBuffer;
+        std::unique_ptr<vk::IndexBuffer> mVKIndexBufferImpl;
     };
 
     inline IndexBuffer::IndexBuffer()
     {
-        switch (AppConfig::graphicsConfig.backend)
-        {
-        case GraphicsBackend::GL:
-            mGLIndexBuffer = std::make_unique<GLIndexBuffer>();
-            break;
-        default:
-            mVKIndexBuffer = std::make_unique<VKIndexBuffer>();
-            break;
-        }
+        GRAPHICS_RHI_IMPL_SWITCHER(mVKIndexBufferImpl=std::make_unique<vk::IndexBuffer>());
     }
 
     template <typename T>
@@ -40,11 +31,11 @@ namespace mulberry
     {
         switch (AppConfig::graphicsConfig.backend)
         {
-        case GraphicsBackend::GL:
+        case GraphicsBackend::VK:
             mGLIndexBuffer = std::make_unique<GLIndexBuffer>(indices);
             break;
         default:
-            mVKIndexBuffer = std::make_unique<VKIndexBuffer>(indices);
+            mIndexBuffer = std::make_unique<IndexBuffer>(indices);
             break;
         }
     }
@@ -53,11 +44,11 @@ namespace mulberry
     {
         switch (AppConfig::graphicsConfig.backend)
         {
-        case GraphicsBackend::GL:
+        case GraphicsBackend::VK:
             mGLIndexBuffer.reset(nullptr);
             break;
         default:
-            mVKIndexBuffer.reset(nullptr);
+            mIndexBuffer.reset(nullptr);
             break;
         }
     }
@@ -67,11 +58,11 @@ namespace mulberry
     {
         switch (AppConfig::graphicsConfig.backend)
         {
-        case GraphicsBackend::GL:
+        case GraphicsBackend::VK:
             mGLIndexBuffer->Set(input);
             break;
         default:
-            mVKIndexBuffer->Set(input);
+            mIndexBuffer->Set(input);
             break;
         }
     }

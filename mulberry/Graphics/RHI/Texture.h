@@ -6,72 +6,25 @@
 #include "Math/Color.h"
 #include "Math/Vec2.h"
 #include "Core/AssetManager.h"
+#include "Format.h"
+#include "Enum.h"
+#include "Graphics/RHI/VK/Texture.h"
 
 namespace mulberry
 {
-    enum class WrapMode
-    {
-        REPEAT,
-        MIRROR_REPEAT,
-        CLAMP_TO_EDGE,
-        CLAMP_TO_BORDER,
-    };
-
-    enum class FilterMode
-    {
-        NEAREST,
-        LINEAR,
-    };
-
-    enum class Format
-    {
-        R8,
-        RG8,
-        RGB8,
-        RGBA8,
-
-        R16F,
-        RG16F,
-        RGB16F,
-        RGBA16F,
-
-        R32F,
-        RG32F,
-        RGB32F,
-        RGBA32F,
-    };
-
-    struct TextureInfo
-    {
-        WrapMode wrapS = WrapMode::REPEAT;
-        WrapMode wrapT = WrapMode::REPEAT;
-        FilterMode magFilter = FilterMode::NEAREST;
-        FilterMode minFilter = FilterMode::NEAREST;
-        Format format = Format::RGBA8;
-        Color borderColor = Color::Black;
-        ImgData data;
-    };
-
     struct Texture
     {
     public:
         Texture();
-        Texture(const TextureInfo &info);
         ~Texture();
-
-        void CreateFrom(const TextureInfo &info);
-        void CreateFromSurface(SDL_Surface *surface);
-
-        const TextureInfo &GetCreateInfo() const;
 
         uint32_t GetWidth() const;
         uint32_t GetHeight() const;
 
         Vec2 GetExtent() const;
-
     private:
-        friend class ShaderGroup;
-        std::unique_ptr<class GLTexture> mGLTexture;
-        std::unique_ptr<class VKTexture> mVKTexture;
+        friend class RasterShaderGroup;
+        friend class RasterPass;
+        std::unique_ptr<vk::Texture> mVKTextureImpl;
     };
 }

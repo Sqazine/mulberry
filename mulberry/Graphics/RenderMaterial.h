@@ -3,6 +3,7 @@
 #include "Math/Vec2.h"
 #include "Graphics/RHI/Shader.h"
 #include "Graphics/RHI/Texture.h"
+#include "Graphics/RHI/Pipeline.h"
 namespace mulberry
 {
     class RenderMaterial
@@ -13,12 +14,8 @@ namespace mulberry
 
         virtual void SetUniformValue() const {}
         virtual void ResetUniformValue() const {}
-
-        void SetShaderGroup(ShaderGroup *program);
-        ShaderGroup *GetShaderGroup() const;
-
     protected:
-        std::unique_ptr<ShaderGroup> shaderProgram;
+        std::unique_ptr<RasterPipeline> mRasterPipeline;
     };
 
     class SpriteMaterial : public RenderMaterial

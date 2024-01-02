@@ -55,7 +55,7 @@ namespace mulberry
             if (surf != nullptr)
             {
                 texture = std::make_unique<Texture>();
-                texture->CreateFromSurface(surf);
+                //texture->CreateFromSurface(surf);
                 SDL_FreeSurface(surf);
             }
         }

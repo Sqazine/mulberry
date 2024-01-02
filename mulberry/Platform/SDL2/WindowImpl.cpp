@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "App.h"
 #include "WindowImpl.h"
+#include "Graphics/Viewport.h"
 namespace mulberry
 {
     SDL2WindowImpl::SDL2WindowImpl()
@@ -19,19 +20,14 @@ namespace mulberry
 
         uint32_t windowFlag = SDL_WINDOW_HIDDEN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
 
-        if (App::GetInstance().GetGraphicsConfig().backend == GraphicsBackend::GL)
-            windowFlag |= SDL_WINDOW_OPENGL;
-        else
+        if (App::GetInstance().GetGraphicsConfig().backend == GraphicsBackend::VK)
             windowFlag |= SDL_WINDOW_VULKAN;
+        else
+            windowFlag |= SDL_WINDOW_OPENGL;
 
-        mHandle = SDL_CreateWindow(mTitle.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, rect.w / 4, rect.h / 4, windowFlag);
+        mHandle = SDL_CreateWindow(mTitle.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, rect.w * 0.75, rect.h * 0.75, windowFlag);
 
-        mViewport = Viewport{
-            0,
-             0,
-            (uint32_t)rect.w / 4,
-             (uint32_t)rect.h / 4,
-        };
+        mViewport = Viewport(0, 0,(uint32_t)rect.w * 0.75, (uint32_t)rect.w * 0.75);
     }
 
     SDL2WindowImpl::~SDL2WindowImpl()
@@ -59,7 +55,7 @@ namespace mulberry
 
     void SDL2WindowImpl::Resize(uint32_t w, uint32_t h)
     {
-        mViewport = {0, 0, w, h};
+        mViewport = Viewport(0, 0, w, h);
         SDL_SetWindowSize(mHandle, w, h);
         SDL_SetWindowPosition(mHandle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
         mIsWindowResize = true;

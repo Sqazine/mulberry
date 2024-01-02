@@ -41,24 +41,11 @@ namespace mulberry
                                         "	outColor=vec4(0.0,1.0,0.0,1.0);\n"
                                         "}";
 
-    void RenderMaterial::SetShaderGroup(ShaderGroup *program)
-    {
-        shaderProgram.reset(program);
-    }
-
-    ShaderGroup *RenderMaterial::GetShaderGroup() const
-    {
-        return shaderProgram.get();
-    }
-
     SpriteMaterial::SpriteMaterial()
         : mTiling(1.0), mOffset(0.0)
     {
         auto vertShader = Shader(ShaderStage::VERTEX, spriteVertShader);
         auto fragShader = Shader(ShaderStage::FRAGMENT, spriteFragShader);
-        shaderProgram = std::make_unique<ShaderGroup>();
-        shaderProgram->AttachShader(vertShader);
-        shaderProgram->AttachShader(fragShader);
     }
     
     SpriteMaterial::~SpriteMaterial()
@@ -97,9 +84,9 @@ namespace mulberry
 
     void SpriteMaterial::SetUniformValue() const
     {
-        shaderProgram->SetTexture("sprite",mSprite);
+        /*shaderProgram->SetTexture("sprite",mSprite);
         shaderProgram->SetUniformValue("tiling", mTiling);
-        shaderProgram->SetUniformValue("offset", mOffset);
+        shaderProgram->SetUniformValue("offset", mOffset);*/
     }
 
     void SpriteMaterial::ResetUniformValue() const
@@ -111,9 +98,9 @@ namespace mulberry
     {
         auto vertShader = Shader(ShaderStage::VERTEX, gizmoVertShader);
         auto fragShader = Shader(ShaderStage::FRAGMENT, gizmoFragShader);
-        shaderProgram = std::make_unique<ShaderGroup>();
-        shaderProgram->AttachShader(vertShader);
-        shaderProgram->AttachShader(fragShader);
+		/*  shaderProgram = std::make_unique<ShaderGroup>();
+		  shaderProgram->AttachShader(vertShader);
+		  shaderProgram->AttachShader(fragShader);*/
     }
 
     GizmoMaterial::~GizmoMaterial()

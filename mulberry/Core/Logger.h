@@ -1,10 +1,12 @@
 #pragma once
 #include <memory>
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
+#include <string>
+#include <string_view>
 #include <string>
 #include <string_view>
 #include "Singleton.h"
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 namespace mulberry
 {
 	class Logger : public Singleton<Logger>
@@ -24,7 +26,7 @@ namespace mulberry
 #define MULBERRY_CORE_ERROR(...)                                               \
 	do                                                                         \
 	{                                                                          \
-		spdlog::error("{},{}:", __FILE__, __LINE__);                           \
+		spdlog::error("{},{}, {}:", __FILE__, __LINE__, __FUNCTION__);         \
 		::mulberry::Logger::GetInstance().GetCoreLogger()->error(__VA_ARGS__); \
 		abort();                                                               \
 	} while (false);

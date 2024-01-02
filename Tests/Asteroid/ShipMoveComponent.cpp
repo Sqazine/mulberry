@@ -11,7 +11,7 @@ void ShipMoveComponent::Init()
 {
     RequiredComponent<mulberry::TransformComponent>();
 
-    mulberry::TextureInfo textureInfo{};
+  /*  mulberry::TextureInfo textureInfo{};
     textureInfo.data = GetSceneAssetManager()->LoadImgData("Assets/ShipWithThrust.png");
     textureInfo.minFilter = mulberry::FilterMode::LINEAR;
     textureInfo.magFilter = mulberry::FilterMode::LINEAR;
@@ -21,16 +21,17 @@ void ShipMoveComponent::Init()
     textureInfo.data = GetSceneAssetManager()->LoadImgData("Assets/Ship.png");
     textureInfo.minFilter = mulberry::FilterMode::LINEAR;
     textureInfo.magFilter = mulberry::FilterMode::LINEAR;
-    staticTexture.reset(new mulberry::Texture(textureInfo));
+    staticTexture.reset(new mulberry::Texture(textureInfo));*/
 
-    if (!mOwnerSpriteComponent)
-        mOwnerSpriteComponent = GetOwner()->GetComponent<mulberry::SpriteComponent>();
-    mOwnerSpriteComponent->SetSprite(staticTexture.get());
+	if (!mOwnerSpriteComponent)
+		mOwnerSpriteComponent = GetOwner()->GetComponent<mulberry::SpriteComponent>();
+	mOwnerSpriteComponent->SetSprite(staticTexture.get());
 
-    if (!mOwnerTransformComponent)
-        mOwnerTransformComponent = GetOwner()->GetComponent<mulberry::TransformComponent>();
-    mOwnerTransformComponent->SetRotation(90.0f);
-    mOwnerTransformComponent->SetPosition(0.0f, (-mulberry::App::GetInstance().GetWindow()->GetSize().y + textureInfo.data.height * mOwnerTransformComponent->GetScale().y) / 2.0f);
+	if (!mOwnerTransformComponent)
+		mOwnerTransformComponent = GetOwner()->GetComponent<mulberry::TransformComponent>();
+	mOwnerTransformComponent->SetRotation(90.0f);
+	//mOwnerTransformComponent->SetPosition(0.0f, (-mulberry::App::GetInstance().GetWindow()->GetSize().y + textureInfo.data.height * mOwnerTransformComponent->GetScale().y) / 2.0f);
+	mOwnerTransformComponent->SetPosition(0.0f, (-mulberry::App::GetInstance().GetWindow()->GetSize().y + mOwnerTransformComponent->GetScale().y) / 2.0f);
 }
 
 void ShipMoveComponent::Update()

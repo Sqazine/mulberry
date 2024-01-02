@@ -23,3 +23,6 @@ version: 2.0.15
 namespace: freetype
 url: https://github.com/freetype/freetype
 version: 2.9.1
+
+name: spirv-reflect
+version: 1.2.136
