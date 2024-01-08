@@ -2,8 +2,8 @@
 #include "Logger.h"
 #include "Utils.h"
 #include "Context.h"
-#include "CommandBuffer.h"
-#include "CommandPool.h"
+
+#include "Command.h"
 namespace mulberry::vk
 {
 	Image::Image(
@@ -13,10 +13,8 @@ namespace mulberry::vk
 		ImageTiling tiling,
 		ImageUsage usage,
 		MemoryProperty properties)
-		: mFormat(format), mIsSwapChainImage(false)
+		: mFormat(format), mIsSwapChainImage(false), mLayout(ImageLayout::UNDEFINED)
 	{
-		mImageLayout = ImageLayout::UNDEFINED;
-
 		mImageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 		mImageInfo.pNext = nullptr;
 		mImageInfo.flags = 0;
@@ -28,55 +26,52 @@ namespace mulberry::vk
 		mImageInfo.arrayLayers = 1;
 		mImageInfo.format = mFormat.ToVkHandle();
 		mImageInfo.tiling = IMAGE_TILING_CAST(tiling);
-		mImageInfo.initialLayout = IMAGE_LAYOUT_CAST(mImageLayout);
+		mImageInfo.initialLayout = IMAGE_LAYOUT_CAST(mLayout);
 		mImageInfo.usage = IMAGE_USAGE_CAST(usage);
 		mImageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		mImageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 		mImageInfo.queueFamilyIndexCount = 0;
 		mImageInfo.pQueueFamilyIndices = nullptr;
 
-		VK_CHECK(vkCreateImage(mDevice.GetHandle(), &mImageInfo, nullptr, &mImage))
+		VK_CHECK(vkCreateImage(mDevice.GetHandle(), &mImageInfo, nullptr, &mHandle))
 
 		VkMemoryRequirements memRequirments;
-
-		vkGetImageMemoryRequirements(mDevice.GetHandle(), mImage, &memRequirments);
-
-		VkMemoryAllocateInfo allocInfo;
+		vkGetImageMemoryRequirements(mDevice.GetHandle(), mHandle, &memRequirments);
+		VkMemoryAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		allocInfo.pNext = nullptr;
 		allocInfo.memoryTypeIndex = mDevice.FindMemoryType(memRequirments.memoryTypeBits, properties);
 		allocInfo.allocationSize = memRequirments.size;
-
-		VK_CHECK(vkAllocateMemory(mDevice.GetHandle(), &allocInfo, nullptr, &mImageMemory))
-
-		vkBindImageMemory(mDevice.GetHandle(), mImage, mImageMemory, 0);
+		VK_CHECK(vkAllocateMemory(mDevice.GetHandle(), &allocInfo, nullptr, &mMemory))
+		vkBindImageMemory(mDevice.GetHandle(), mHandle, mMemory, 0);
 
 		CreateView();
 	}
 
-	Image::Image(VkImage rawImage, Format format)
-		: mImage(rawImage), mFormat(format), mImageLayout(ImageLayout::UNDEFINED), mIsSwapChainImage(true)
+	Image::Image(const Vec2 &extent, VkImage rawImage, Format format)
+		: mHandle(rawImage), mFormat(format), mIsSwapChainImage(true)
 	{
+		mImageInfo.extent.width = extent.x;
+		mImageInfo.extent.height = extent.y;
 		CreateView();
 	}
 
 	Image::~Image()
 	{
-		vkDestroyImageView(mDevice.GetHandle(), mImageView, nullptr);
+		vkDestroyImageView(mDevice.GetHandle(), mView, nullptr);
 		if (!mIsSwapChainImage)
 		{
-			vkFreeMemory(mDevice.GetHandle(), mImageMemory, nullptr);
-			vkDestroyImage(mDevice.GetHandle(), mImage, nullptr);
+			vkFreeMemory(mDevice.GetHandle(), mMemory, nullptr);
+			vkDestroyImage(mDevice.GetHandle(), mHandle, nullptr);
 		}
 	}
 
 	const VkImage &Image::GetHandle() const
 	{
-		return mImage;
+		return mHandle;
 	}
 	const VkDeviceMemory &Image::GetMemory() const
 	{
-		return mImageMemory;
+		return mMemory;
 	}
 
 	const Format &Image::GetFormat() const
@@ -86,7 +81,7 @@ namespace mulberry::vk
 
 	const VkImageView &Image::GetView() const
 	{
-		return mImageView;
+		return mView;
 	}
 
 	uint32_t Image::GetMipLevel() const
@@ -96,7 +91,7 @@ namespace mulberry::vk
 
 	const ImageLayout &Image::GetImageLayout() const
 	{
-		return mImageLayout;
+		return mLayout;
 	}
 
 	void Image::TransitionToNewLayout(ImageLayout newLayout)
@@ -106,17 +101,7 @@ namespace mulberry::vk
 		cmd->ExecuteImmediately([&]()
 								{ cmd->TransitionImageNewLayout(this, newLayout); });
 
-		mImageLayout = newLayout;
-	}
-
-	uint32_t Image::GetWidth() const
-	{
-		return mImageInfo.extent.width;
-	}
-
-	uint32_t Image::GetHeight() const
-	{
-		return mImageInfo.extent.height;
+		mLayout = newLayout;
 	}
 
 	Vec2 Image::GetExtent() const
@@ -129,30 +114,31 @@ namespace mulberry::vk
 		auto cmd = mDevice.GetTransferCommandPool()->CreatePrimaryCommandBuffer();
 		cmd->ExecuteImmediately([&]()
 								{
-			auto oldLayout = GetImageLayout();
-			cmd->TransitionImageNewLayout(this,ImageLayout::TRANSFER_SRC_OPTIMAL);
+									auto oldLayout = GetImageLayout();
+									cmd->TransitionImageNewLayout(this, ImageLayout::TRANSFER_SRC_OPTIMAL);
 
-			VkBufferImageCopy copyRegion{};
-			copyRegion.bufferOffset = 0;
-			copyRegion.bufferRowLength = 0;
-			copyRegion.bufferImageHeight = 0;
-			copyRegion.imageExtent = { mImageInfo.extent.width, mImageInfo.extent.height, 1 };
-			copyRegion.imageOffset = { 0, 0, 0 };
+									VkBufferImageCopy copyRegion{};
+									copyRegion.bufferOffset = 0;
+									copyRegion.bufferRowLength = 0;
+									copyRegion.bufferImageHeight = 0;
+									copyRegion.imageExtent = {mImageInfo.extent.width, mImageInfo.extent.height, 1};
+									copyRegion.imageOffset = {0, 0, 0};
 
-			ImageAspect aspect = ImageAspect::NONE;
+									ImageAspect aspect = ImageAspect::NONE;
 
-			if (mFormat.HasDepth())
-				aspect = ImageAspect::DEPTH;
-			else if (mFormat.HasStencil())
-				aspect = ImageAspect::STENCIL;
-			else
-				aspect = ImageAspect::COLOR;
+									if (mFormat.HasDepth())
+										aspect = ImageAspect::DEPTH;
+									else if (mFormat.HasStencil())
+										aspect = ImageAspect::STENCIL;
+									else
+										aspect = ImageAspect::COLOR;
 
-			copyRegion.imageSubresource = { IMAGE_ASPECT_CAST(aspect), 0, 0, 1};
+									copyRegion.imageSubresource = {IMAGE_ASPECT_CAST(aspect), 0, 0, 1};
 
-			vkCmdCopyImageToBuffer(cmd->GetHandle(), mImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, buffer->GetHandle(), 1, &copyRegion);
+									vkCmdCopyImageToBuffer(cmd->GetHandle(), mHandle, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, buffer->GetHandle(), 1, &copyRegion);
 
-			cmd->TransitionImageNewLayout(this, oldLayout); });
+									cmd->TransitionImageNewLayout(this, oldLayout);
+								});
 	}
 
 	void *Image::MapBuffer(Buffer *buffer)
@@ -170,7 +156,7 @@ namespace mulberry::vk
 		info.flags = 0;
 		info.viewType = VK_IMAGE_VIEW_TYPE_2D;
 		info.format = mFormat.ToVkHandle();
-		info.image = mImage;
+		info.image = mHandle;
 		info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
 		info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
 		info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -181,6 +167,17 @@ namespace mulberry::vk
 		info.subresourceRange.baseMipLevel = 0;
 		info.subresourceRange.levelCount = 1;
 
-		VK_CHECK(vkCreateImageView(mDevice.GetHandle(), &info, nullptr, &mImageView));
+		VK_CHECK(vkCreateImageView(mDevice.GetHandle(), &info, nullptr, &mView));
+	}
+	void GpuImage::UploadDataFrom(uint64_t bufferSize, CpuBuffer* stagingBuffer, ImageLayout oldLayout, ImageLayout newLayout)
+	{
+		auto cmd = mDevice.GetTransferCommandPool()->CreatePrimaryCommandBuffer();
+
+		cmd->ExecuteImmediately([&]()
+			{
+				cmd->ImageBarrier(mHandle, GetFormat(), oldLayout, ImageLayout::TRANSFER_DST_OPTIMAL);
+				cmd->CopyImageFromBuffer(this, stagingBuffer);
+				cmd->ImageBarrier(mHandle, GetFormat(), ImageLayout::TRANSFER_DST_OPTIMAL, newLayout);
+			});
 	}
 }

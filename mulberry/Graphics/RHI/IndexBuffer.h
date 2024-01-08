@@ -29,41 +29,17 @@ namespace mulberry
     template <typename T>
     inline IndexBuffer::IndexBuffer(const std::vector<T> &indices)
     {
-        switch (AppConfig::graphicsConfig.backend)
-        {
-        case GraphicsBackend::VK:
-            mGLIndexBuffer = std::make_unique<GLIndexBuffer>(indices);
-            break;
-        default:
-            mIndexBuffer = std::make_unique<IndexBuffer>(indices);
-            break;
-        }
+        GRAPHICS_RHI_IMPL_SWITCHER(mVKIndexBufferImpl=std::make_unique<vk::IndexBuffer>(indices));
     }
 
     inline IndexBuffer::~IndexBuffer()
     {
-        switch (AppConfig::graphicsConfig.backend)
-        {
-        case GraphicsBackend::VK:
-            mGLIndexBuffer.reset(nullptr);
-            break;
-        default:
-            mIndexBuffer.reset(nullptr);
-            break;
-        }
+        GRAPHICS_RHI_IMPL_SWITCHER(mVKIndexBufferImpl.reset(nullptr));
     }
 
     template <typename T>
     inline void IndexBuffer::Set(const std::vector<T> &input)
     {
-        switch (AppConfig::graphicsConfig.backend)
-        {
-        case GraphicsBackend::VK:
-            mGLIndexBuffer->Set(input);
-            break;
-        default:
-            mIndexBuffer->Set(input);
-            break;
-        }
+        GRAPHICS_RHI_IMPL_SWITCHER(mVKIndexBufferImpl->Set(input));
     }
 };

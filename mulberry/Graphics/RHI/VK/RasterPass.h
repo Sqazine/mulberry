@@ -2,8 +2,7 @@
 #include <vector>
 #include <memory>
 #include "Object.h"
-#include "CommandBuffer.h"
-#include "CommandPool.h"
+#include "Command.h"
 #include "RenderPass.h"
 #include "FrameBuffer.h"
 #include "Math/Color.h"
@@ -16,7 +15,7 @@ namespace mulberry::vk
     class RasterPass:public Object
     {
     public:
-        RasterPass(const Vec2 &extent, Format format, std::vector<Texture *> &textureLists);
+        RasterPass(Format format, std::vector<Texture *> &textureLists);
         virtual ~RasterPass();
 
         void SetClearColor(const Color &clearColor);
@@ -31,8 +30,10 @@ namespace mulberry::vk
         Semaphore *GetSignalSemaphore() const;
         RasterCommandBuffer *GetCommandBuffer() const;
 
+        uint32_t GetCurFrameIdx() const;
+
     private:
-        void ReBuild(const Vec2 &extent, std::vector<Texture *> &textureLists);
+        void ReBuild(std::vector<Texture *> &textureLists);
 
         Vec2 mExtent;
 

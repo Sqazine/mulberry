@@ -16,7 +16,6 @@ namespace mulberry
         ~Shader();
 
         const ShaderStage &Type() const;
-
     private:
         friend class RasterShaderGroup;
         std::unique_ptr<class vk::Shader> mVKShaderImpl;

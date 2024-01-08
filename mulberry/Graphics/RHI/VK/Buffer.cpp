@@ -2,8 +2,8 @@
 #include "Buffer.h"
 #include "Utils.h"
 #include "Device.h"
-#include "CommandBuffer.h"
-#include "CommandPool.h"
+
+#include "Command.h"
 #include "Context.h"
 #include "Adapter.h"
 #include "Device.h"
@@ -30,13 +30,11 @@ namespace mulberry::vk
 		VK_CHECK(vkCreateBuffer(mDevice.GetHandle(), &bufferInfo, nullptr, &mBuffer));
 
 		VkMemoryRequirements memRequirements;
-		memRequirements = GetMemoryRequirements();
-
+		vkGetBufferMemoryRequirements(mDevice.GetHandle(), mBuffer, &memRequirements);
 		VkMemoryAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		allocInfo.allocationSize = memRequirements.size;
 		allocInfo.memoryTypeIndex = mDevice.FindMemoryType(memRequirements.memoryTypeBits, properties);
-
+		allocInfo.allocationSize = memRequirements.size;
 		VK_CHECK(vkAllocateMemory(mDevice.GetHandle(), &allocInfo, nullptr, &mBufferMemory));
 		vkBindBufferMemory(mDevice.GetHandle(), mBuffer, mBufferMemory, 0);
 	}
@@ -45,13 +43,6 @@ namespace mulberry::vk
 	{
 		vkFreeMemory(mDevice.GetHandle(), mBufferMemory, nullptr);
 		vkDestroyBuffer(mDevice.GetHandle(), mBuffer, nullptr);
-	}
-
-	VkMemoryRequirements Buffer::GetMemoryRequirements() const
-	{
-		VkMemoryRequirements memRequirements;
-		vkGetBufferMemoryRequirements(mDevice.GetHandle(), mBuffer, &memRequirements);
-		return memRequirements;
 	}
 
 	const VkBuffer &Buffer::GetHandle() const

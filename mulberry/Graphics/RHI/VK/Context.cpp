@@ -2,8 +2,8 @@
 #include <iostream>
 #include "Device.h"
 #include "SwapChain.h"
-#include "CommandPool.h"
-#include "CommandBuffer.h"
+#include "Command.h"
+
 #include "Graphics/RHI/GraphicsContext.h"
 #include "RasterPass.h"
 #include "App.h"
@@ -27,9 +27,7 @@ namespace mulberry::vk
 		mDevice.reset(mAdapter->CreateDevice());
 		mSwapChain = std::make_unique<SwapChain>();
 
-		mDefaultRasterPass = std::make_unique<RasterPass>(mSwapChain->GetExtent(),
-			mSwapChain->GetSurfaceFormat().format,
-			mSwapChain->GetTextures());
+		mDefaultRasterPass = std::make_unique<RasterPass>(mSwapChain->GetSurfaceFormat().format, mSwapChain->GetTextures());
 	}
 
 	Adapter *Context::GetAdapter() const
@@ -38,7 +36,7 @@ namespace mulberry::vk
 	}
 
 	Device *Context::GetDevice() const
-	{	
+	{
 		return mDevice.get();
 	}
 
@@ -62,7 +60,7 @@ namespace mulberry::vk
 		if (App::GetInstance().GetWindow()->IsResize())
 		{
 			mSwapChain->ReBuild();
-			mDefaultRasterPass->ReBuild(mSwapChain->GetExtent(), mSwapChain->GetTextures());
+			mDefaultRasterPass->ReBuild(mSwapChain->GetTextures());
 		}
 
 		mSwapChain->AcquireNextImage(mDefaultRasterPass->GetWaitSemaphore());

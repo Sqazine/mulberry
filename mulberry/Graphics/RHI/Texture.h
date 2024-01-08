@@ -8,7 +8,7 @@
 #include "Core/AssetManager.h"
 #include "Format.h"
 #include "Enum.h"
-#include "Graphics/RHI/VK/Texture.h"
+#include "VK/Texture.h"
 
 namespace mulberry
 {
@@ -18,10 +18,37 @@ namespace mulberry
         Texture();
         ~Texture();
 
-        uint32_t GetWidth() const;
-        uint32_t GetHeight() const;
+        Texture &SetImageData(const ImageData &data);
+        Texture &SetMagFilter(FilterMode filter);
+        Texture &SetMinFilter(FilterMode filter);
+        Texture &SetWrapU(WrapMode address);
+        Texture &SetWrapV(WrapMode address);
+        Texture &SetWrapW(WrapMode address);
+        Texture &SetAnisotropyLevel(float level);
+        Texture &SetBorderColor(BorderColor borderColor);
+        Texture &SetMipMapMode(MipMapMode mipmapMode);
+        Texture &SetMipMapBias(float bias);
+        Texture &SetMinMipMapLevel(float level);
+        Texture &SetMaxMipMapLevel(float level);
+
+        const FilterMode &GetMagFilter() const;
+        const FilterMode &GetMinFilter() const;
+        const WrapMode &GetWrapModeU() const;
+        const WrapMode &GetWrapModeV() const;
+        const WrapMode &GetWrapModeW() const;
+
+        float GetMaxAnisotropyLevel() const;
+
+        const BorderColor &GetBorderColor() const;
+
+        const MipMapMode &GetMipMapMode() const;
+
+        float GetMipMapBias() const;
+        float GetMinMipMapLevel() const;
+        float GetMaxMipMapLevel() const;
 
         Vec2 GetExtent() const;
+
     private:
         friend class RasterShaderGroup;
         friend class RasterPass;

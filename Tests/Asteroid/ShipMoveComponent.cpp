@@ -12,13 +12,13 @@ void ShipMoveComponent::Init()
     RequiredComponent<mulberry::TransformComponent>();
 
   /*  mulberry::TextureInfo textureInfo{};
-    textureInfo.data = GetSceneAssetManager()->LoadImgData("Assets/ShipWithThrust.png");
+    textureInfo.data = GetSceneAssetManager()->LoadImageData("Assets/ShipWithThrust.png");
     textureInfo.minFilter = mulberry::FilterMode::LINEAR;
     textureInfo.magFilter = mulberry::FilterMode::LINEAR;
     movingTexture.reset(new mulberry::Texture(textureInfo));
 
     textureInfo = {};
-    textureInfo.data = GetSceneAssetManager()->LoadImgData("Assets/Ship.png");
+    textureInfo.data = GetSceneAssetManager()->LoadImageData("Assets/Ship.png");
     textureInfo.minFilter = mulberry::FilterMode::LINEAR;
     textureInfo.magFilter = mulberry::FilterMode::LINEAR;
     staticTexture.reset(new mulberry::Texture(textureInfo));*/

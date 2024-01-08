@@ -1,15 +1,23 @@
-#include "CommandBuffer.h"
+
+#include "Command.h"
 #include "Device.h"
 #include "Utils.h"
 #include <iostream>
-#include "CommandPool.h"
-#include "DescriptorSet.h"
+#include "Descriptor.h"
 #include "Image.h"
 #include "App.h"
 #include "Context.h"
 
 namespace mulberry::vk
 {
+	#define COMMAND_POOL_DEF(name, queueIdx)                              \
+    name##CommandPool::name##CommandPool() : CommandPool<name##CommandBuffer>(queueIdx) {} \
+    name##CommandPool::~name##CommandPool() {}
+
+	COMMAND_POOL_DEF(Raster, VK_CONTEXT->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.graphicsFamilyIdx.value())
+	COMMAND_POOL_DEF(Compute, VK_CONTEXT->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.computeFamilyIdx.value())
+	COMMAND_POOL_DEF(Transfer, VK_CONTEXT->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.transferFamilyIdx.value())
+
 	CommandBuffer::CommandBuffer(VkCommandPool cmdPool, VkCommandBufferLevel level)
 		: mRelatedCmdPoolHandle(cmdPool)
 	{
@@ -157,14 +165,9 @@ namespace mulberry::vk
 		vkCmdPipelineBarrier(mHandle, PIPELINE_STAGE_CAST(srcStage), PIPELINE_STAGE_CAST(dstStage), dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
 	}
 
-	void CommandBuffer::CopyImage(VkImage srcImage, ImageLayout srcImageLayout, VkImage dstImage, ImageLayout dstImageLayout, const std::vector<VkImageCopy> &copyRegions)
+	void CommandBuffer::CopyImage(Image* dstImage,Image* srcImage, const std::vector<VkImageCopy> &copyRegions)
 	{
-		vkCmdCopyImage(mHandle, srcImage, IMAGE_LAYOUT_CAST(srcImageLayout), dstImage, IMAGE_LAYOUT_CAST(dstImageLayout), copyRegions.size(), copyRegions.data());
-	}
-
-	void CommandBuffer::CopyImage(VkImage srcImage, ImageLayout srcImageLayout, VkImage dstImage, ImageLayout dstImageLayout, const VkImageCopy &copyRegion)
-	{
-		vkCmdCopyImage(mHandle, srcImage, IMAGE_LAYOUT_CAST(srcImageLayout), dstImage, IMAGE_LAYOUT_CAST(dstImageLayout), 1, &copyRegion);
+		vkCmdCopyImage(mHandle, srcImage->GetHandle(), IMAGE_LAYOUT_CAST(srcImage->GetImageLayout()), dstImage->GetHandle(), IMAGE_LAYOUT_CAST(dstImage->GetImageLayout()), copyRegions.size(), copyRegions.data());
 	}
 
 	void CommandBuffer::CopyBuffer(const Buffer &dst, const Buffer &src, VkBufferCopy bufferCopy)
@@ -183,7 +186,7 @@ namespace mulberry::vk
 		region.imageSubresource.baseArrayLayer = 0;
 		region.imageSubresource.layerCount = 1;
 		region.imageOffset = {0, 0, 0};
-		region.imageExtent = {dst->GetWidth(), dst->GetHeight(), 1};
+		region.imageExtent = {(uint32_t)dst->GetExtent().x, (uint32_t)dst->GetExtent().y, 1};
 
 		vkCmdCopyBufferToImage(mHandle, src->GetHandle(), dst->GetHandle(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 	}

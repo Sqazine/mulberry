@@ -12,7 +12,7 @@ namespace mulberry
     {
         GraphicsBackend backend = GraphicsBackend::VK;
         bool useVSync = false;
-        bool useDoubleBuffer = true;
+        bool useDoubleBuffer = false;
         SampleCount msaaSample = SampleCount::X2;
     };
 }

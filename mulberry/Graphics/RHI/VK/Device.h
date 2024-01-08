@@ -7,8 +7,8 @@
 #include "Utils.h"
 #include "Queue.h"
 #include "Adapter.h"
-#include "CommandPool.h"
-#include "CommandBuffer.h"
+#include "Command.h"
+
 #include "../Enum.h"
 
 namespace mulberry::vk

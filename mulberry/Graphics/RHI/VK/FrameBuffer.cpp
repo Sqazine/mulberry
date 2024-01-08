@@ -5,8 +5,8 @@
 
 namespace mulberry::vk
 {
-	FrameBuffer::FrameBuffer(uint32_t width, uint32_t height, const RenderPass *renderPass,const Texture * attachments)
-		:mHandle(VK_NULL_HANDLE)
+	FrameBuffer::FrameBuffer(uint32_t width, uint32_t height, const RenderPass *renderPass,Texture * attachments)
+		:mExtent(width,height), mHandle(VK_NULL_HANDLE)
 	{
 		VkFramebufferCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -33,4 +33,8 @@ namespace mulberry::vk
 		return mHandle;
 	}
 
+	const Vec2& FrameBuffer::GetExtent() const
+	{
+		return mExtent;
+	}
 }

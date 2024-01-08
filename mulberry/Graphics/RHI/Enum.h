@@ -3,7 +3,8 @@
 #include <vulkan/vulkan.h>
 #include <type_traits>
 
-namespace mulberry {
+namespace mulberry
+{
 
 #define ENUM_CLASS_OP(CastName, EnumName, RawEnum)                   \
     inline EnumName operator|(EnumName lhs, EnumName rhs)            \
@@ -47,9 +48,9 @@ namespace mulberry {
     };
 
 #define BUFFER_USAGE_CAST(t) (static_cast<VkBufferUsageFlags>(std::underlying_type<BufferUsage>::type(t)))
-    ENUM_CLASS_OP(BUFFER_USAGE_CAST, BufferUsage, VkBufferUsageFlags)
+    ENUM_CLASS_OP(BUFFER_USAGE_CAST, BufferUsage, VkBufferUsageFlags);
 
-        enum class MemoryProperty : uint64_t
+    enum class MemoryProperty : uint64_t
     {
 #define ITEM(x) x = VK_MEMORY_PROPERTY_##x##_BIT
         ITEM(DEVICE_LOCAL),
@@ -62,9 +63,9 @@ namespace mulberry {
     };
 
 #define MEMORY_PROPERTY_CAST(t) (static_cast<VkMemoryPropertyFlags>(std::underlying_type<MemoryProperty>::type(t)))
-    ENUM_CLASS_OP(MEMORY_PROPERTY_CAST, MemoryProperty, VkMemoryPropertyFlags)
+    ENUM_CLASS_OP(MEMORY_PROPERTY_CAST, MemoryProperty, VkMemoryPropertyFlags);
 
-        enum class DescriptorType : uint64_t
+    enum class DescriptorType : uint64_t
     {
 #define ITEM(x) x = VK_DESCRIPTOR_TYPE_##x
         ITEM(SAMPLER),
@@ -87,9 +88,9 @@ namespace mulberry {
 #undef ITEM
     };
 #define DESCRIPTOR_TYPE_CAST(t) (static_cast<VkDescriptorType>(std::underlying_type<DescriptorType>::type(t)))
-    ENUM_CLASS_OP(DESCRIPTOR_TYPE_CAST, DescriptorType, VkDescriptorType)
+    ENUM_CLASS_OP(DESCRIPTOR_TYPE_CAST, DescriptorType, VkDescriptorType);
 
-        enum class ImageUsage : uint64_t
+    enum class ImageUsage : uint64_t
     {
 #define ITEM(x) x = VK_IMAGE_USAGE_##x##_BIT
 #define ITEM_KHR(x) x = VK_IMAGE_USAGE_##x##_BIT_KHR
@@ -108,7 +109,7 @@ namespace mulberry {
 #define IMAGE_USAGE_CAST(t) (static_cast<VkImageUsageFlags>(std::underlying_type<ImageUsage>::type(t)))
     ENUM_CLASS_OP(IMAGE_USAGE_CAST, ImageUsage, VkImageUsageFlags)
 
-        enum class ImageLayout : uint64_t
+    enum class ImageLayout : uint64_t
     {
 #define ITEM(x) x = VK_IMAGE_LAYOUT_##x
         ITEM(UNDEFINED),
@@ -133,9 +134,9 @@ namespace mulberry {
     };
 
 #define IMAGE_LAYOUT_CAST(t) (static_cast<VkImageLayout>(std::underlying_type<ImageLayout>::type(t)))
-    ENUM_CLASS_OP(IMAGE_LAYOUT_CAST, ImageLayout, VkImageLayout)
+    ENUM_CLASS_OP(IMAGE_LAYOUT_CAST, ImageLayout, VkImageLayout);
 
-        enum class ImageAspect : uint64_t
+    enum class ImageAspect : uint64_t
     {
 #define ITEM(x) x = VK_IMAGE_ASPECT_##x
 #define ITEM_BIT(x) x = VK_IMAGE_ASPECT_##x##_BIT
@@ -148,9 +149,9 @@ namespace mulberry {
     };
 
 #define IMAGE_ASPECT_CAST(imageAspect) (static_cast<VkImageAspectFlags>(std::underlying_type<ImageAspect>::type(imageAspect)))
-    ENUM_CLASS_OP(IMAGE_ASPECT_CAST, ImageAspect, VkImageAspectFlags)
+    ENUM_CLASS_OP(IMAGE_ASPECT_CAST, ImageAspect, VkImageAspectFlags);
 
-        enum class ImageTiling : uint64_t
+    enum class ImageTiling : uint64_t
     {
 #define ITEM(x) x = VK_IMAGE_TILING_##x
         ITEM(OPTIMAL),
@@ -158,9 +159,9 @@ namespace mulberry {
 #undef ITEM
     };
 #define IMAGE_TILING_CAST(imageTiling) (static_cast<VkImageTiling>(std::underlying_type<ImageTiling>::type(imageTiling)))
-    ENUM_CLASS_OP(IMAGE_TILING_CAST, ImageTiling, VkImageTiling)
+    ENUM_CLASS_OP(IMAGE_TILING_CAST, ImageTiling, VkImageTiling);
 
-        enum class PipelineStage : uint64_t
+    enum class PipelineStage : uint64_t
     {
 #define ITEM_NO_POSTFIX(x) VK_PIPELINE_STAGE_##x
 #define ITEM(x) x = VK_PIPELINE_STAGE_##x##_BIT
@@ -208,9 +209,9 @@ namespace mulberry {
 #undef ITEM_KHR
     };
 #define PIPELINE_STAGE_CAST(pielineStage) (static_cast<VkPipelineStageFlagBits>(std::underlying_type<PipelineStage>::type(pielineStage)))
-    ENUM_CLASS_OP(PIPELINE_STAGE_CAST, PipelineStage, VkPipelineStageFlagBits)
+    ENUM_CLASS_OP(PIPELINE_STAGE_CAST, PipelineStage, VkPipelineStageFlagBits);
 
-        enum class SampleCount : uint64_t
+    enum class SampleCount : uint64_t
     {
         X1 = VK_SAMPLE_COUNT_1_BIT,
         X2 = VK_SAMPLE_COUNT_2_BIT,
@@ -283,9 +284,9 @@ namespace mulberry {
 #undef ITEM
     };
 #define FILTER_MODE_CAST(filterMode) (static_cast<VkFilter>(std::underlying_type<FilterMode>::type(filterMode)))
-    ENUM_CLASS_OP(FILTER_MODE_CAST, FilterMode, VkFilter)
+    ENUM_CLASS_OP(FILTER_MODE_CAST, FilterMode, VkFilter);
 
-        enum class WrapMode : uint64_t
+    enum class WrapMode : uint64_t
     {
 #define ITEM(x) x = VK_SAMPLER_ADDRESS_MODE_##x
 
@@ -298,9 +299,9 @@ namespace mulberry {
 #undef ITEM
     };
 #define WRAP_MODE_CAST(addressMode) (static_cast<VkSamplerAddressMode>(std::underlying_type<WrapMode>::type(addressMode)))
-    ENUM_CLASS_OP(WRAP_MODE_CAST, WrapMode, VkSamplerAddressMode)
+    ENUM_CLASS_OP(WRAP_MODE_CAST, WrapMode, VkSamplerAddressMode);
 
-        enum class MipMapMode : uint64_t
+    enum class MipMapMode : uint64_t
     {
 #define ITEM(x) x = VK_SAMPLER_MIPMAP_MODE_##x
 
@@ -310,9 +311,9 @@ namespace mulberry {
 #undef ITEM
     };
 #define MIPMAP_MODE_CAST(mipmapMode) (static_cast<VkSamplerMipmapMode>(std::underlying_type<MipMapMode>::type(mipmapMode)))
-    ENUM_CLASS_OP(MIPMAP_MODE_CAST, MipMapMode, VkSamplerMipmapMode)
+    ENUM_CLASS_OP(MIPMAP_MODE_CAST, MipMapMode, VkSamplerMipmapMode);
 
-        enum class BorderColor : uint64_t
+    enum class BorderColor : uint64_t
     {
 #define ITEM(x) x = VK_BORDER_COLOR_##x
 
@@ -351,9 +352,9 @@ namespace mulberry {
 
     };
 #define SHADER_STAGE_CAST(shaderStage) (static_cast<VkShaderStageFlagBits>(std::underlying_type<ShaderStage>::type(shaderStage)))
-    ENUM_CLASS_OP(SHADER_STAGE_CAST, ShaderStage, VkShaderStageFlagBits)
+    ENUM_CLASS_OP(SHADER_STAGE_CAST, ShaderStage, VkShaderStageFlagBits);
 
-        enum class Access : uint64_t
+    enum class Access : uint64_t
     {
 #define ITEM(x) x = VK_ACCESS_##x
 #define ITEM_BIT(x) x = VK_ACCESS_##x##_BIT
@@ -390,9 +391,9 @@ namespace mulberry {
 #undef ITEM_KHR
     };
 #define ACCESS_CAST(access) (static_cast<VkAccessFlagBits>(std::underlying_type<Access>::type(access)))
-    ENUM_CLASS_OP(ACCESS_CAST, Access, VkAccessFlagBits)
+    ENUM_CLASS_OP(ACCESS_CAST, Access, VkAccessFlagBits);
 
-        enum class AttachmentLoad : uint64_t
+    enum class AttachmentLoad : uint64_t
     {
 #define ITEM(x) x = VK_ATTACHMENT_LOAD_OP_##x
         ITEM(LOAD),
@@ -401,9 +402,9 @@ namespace mulberry {
 #undef ITEM
     };
 #define ATTACHMENT_LOAD_CAST(load) (static_cast<VkAttachmentLoadOp>(std::underlying_type<AttachmentLoad>::type(load)))
-    ENUM_CLASS_OP(ATTACHMENT_LOAD_CAST, AttachmentLoad, VkAttachmentLoadOp)
+    ENUM_CLASS_OP(ATTACHMENT_LOAD_CAST, AttachmentLoad, VkAttachmentLoadOp);
 
-        enum class AttachmentStore : uint64_t
+    enum class AttachmentStore : uint64_t
     {
 #define ITEM(x) x = VK_ATTACHMENT_STORE_OP_##x
         ITEM(STORE),
@@ -411,9 +412,9 @@ namespace mulberry {
 #undef ITEM
     };
 #define ATTACHMENT_STORE_CAST(store) (static_cast<VkAttachmentStoreOp>(std::underlying_type<AttachmentStore>::type(store)))
-    ENUM_CLASS_OP(ATTACHMENT_STORE_CAST, AttachmentStore, VkAttachmentStoreOp)
+    ENUM_CLASS_OP(ATTACHMENT_STORE_CAST, AttachmentStore, VkAttachmentStoreOp);
 
-        enum class BlendFactor : uint64_t
+    enum class BlendFactor : uint64_t
     {
 #define ITEM(x) x = VK_BLEND_FACTOR_##x
         ITEM(ZERO),
@@ -443,9 +444,9 @@ namespace mulberry {
 #undef ITEM
     };
 #define BLEND_FACTOR_CAST(t) (static_cast<VkBlendFactor>(std::underlying_type<BlendFactor>::type(t)))
-    ENUM_CLASS_OP(BLEND_FACTOR_CAST, BlendFactor, VkBlendFactor)
+    ENUM_CLASS_OP(BLEND_FACTOR_CAST, BlendFactor, VkBlendFactor);
 
-        enum class CompareOp :uint64_t
+    enum class CompareOp : uint64_t
     {
 #define ITEM(x) VK_COMPARE_OP_##x
 
@@ -461,6 +462,6 @@ namespace mulberry {
 #undef ITEM
     };
 #define COMPARE_OP_CAST(t) (static_cast<VkCompareOp>(std::underlying_type<CompareOp>::type(t)))
-    ENUM_CLASS_OP(COMPARE_OP_CAST, CompareOp, VkCompareOp)
-        using DepthTest = CompareOp;
+    ENUM_CLASS_OP(COMPARE_OP_CAST, CompareOp, VkCompareOp);
+    using DepthTest = CompareOp;
 }

@@ -8,12 +8,14 @@ namespace mulberry::vk
 	class FrameBuffer : public Object
 	{
 	public:
-		FrameBuffer(uint32_t width, uint32_t height, const RenderPass *renderPass, const Texture *attachments);
+		FrameBuffer(uint32_t width, uint32_t height, const RenderPass *renderPass, Texture *attachments);
 		~FrameBuffer();
 
 		const VkFramebuffer &GetHandle() const;
 
+		const Vec2& GetExtent() const;
 	private:
+		Vec2 mExtent;
 		VkFramebuffer mHandle;
 	};
 }

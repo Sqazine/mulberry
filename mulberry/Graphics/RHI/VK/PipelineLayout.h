@@ -2,7 +2,7 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 #include "Object.h"
-#include "DescriptorSetLayout.h"
+#include "Descriptor.h"
 
 namespace mulberry::vk
 {

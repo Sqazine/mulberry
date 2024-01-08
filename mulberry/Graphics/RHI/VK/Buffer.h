@@ -19,8 +19,6 @@ namespace mulberry::vk
 		const uint64_t &GetSize() const;
 
 	protected:
-		VkMemoryRequirements GetMemoryRequirements() const;
-
 		VkBuffer mBuffer;
 		VkDeviceMemory mBufferMemory;
 		uint64_t mSize;

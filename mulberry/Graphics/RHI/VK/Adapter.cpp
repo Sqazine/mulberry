@@ -202,7 +202,7 @@ namespace mulberry::vk
 #ifdef _DEBUG
 		createInfo.enabledLayerCount = mRequiredValidationLayers.size();
 		createInfo.ppEnabledLayerNames = mRequiredValidationLayers.data();
-		createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT *)&debugCreateInfo;
+		createInfo.pNext = &debugCreateInfo;
 #else
 		createInfo.enabledLayerCount = 0;
 		createInfo.ppEnabledLayerNames = nullptr;

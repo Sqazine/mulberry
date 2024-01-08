@@ -25,9 +25,25 @@ namespace mulberry
         else
             windowFlag |= SDL_WINDOW_OPENGL;
 
-        mHandle = SDL_CreateWindow(mTitle.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, rect.w * 0.75, rect.h * 0.75, windowFlag);
+        auto aspect = 4.0 / 3.0;
 
-        mViewport = Viewport(0, 0,(uint32_t)rect.w * 0.75, (uint32_t)rect.w * 0.75);
+        int32_t actualWidth;
+        int32_t actualHeight;
+
+        if (rect.w > rect.h)
+        {
+            actualHeight = rect.h * 0.75;
+            actualWidth = actualHeight * aspect;
+        }
+        else
+        {
+            actualWidth = rect.w * 0.75;
+            actualHeight = actualWidth / aspect;
+        }
+
+        mHandle = SDL_CreateWindow(mTitle.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, actualWidth, actualHeight, windowFlag);
+
+        mViewport = Viewport(0, 0,(uint32_t)actualWidth, (uint32_t)actualHeight);
     }
 
     SDL2WindowImpl::~SDL2WindowImpl()

@@ -1,11 +1,76 @@
-#include "DescriptorSet.h"
+#include "Descriptor.h"
 #include "Device.h"
-#include "DescriptorPool.h"
-#include "Texture.h"
 #include "Logger.h"
-
+#include "Texture.h"
 namespace mulberry::vk
 {
+    DescriptorSetLayout::DescriptorSetLayout()
+        : mHandle(VK_NULL_HANDLE)
+    {
+    }
+
+    DescriptorSetLayout::DescriptorSetLayout(const std::vector<DescriptorBinding> &setLayoutBindings)
+        : mHandle(VK_NULL_HANDLE)
+    {
+        for (const auto &binding : setLayoutBindings)
+            mBindings.emplace_back(binding);
+    }
+
+    DescriptorSetLayout::~DescriptorSetLayout()
+    {
+        vkDestroyDescriptorSetLayout(mDevice.GetHandle(), mHandle, nullptr);
+    }
+
+    DescriptorSetLayout &DescriptorSetLayout::AddLayoutBinding(const DescriptorBinding &binding)
+    {
+        mBindings.emplace_back(binding);
+        return *this;
+    }
+
+    DescriptorSetLayout &DescriptorSetLayout::AddLayoutBinding(uint32_t binding, uint32_t count, DescriptorType type, ShaderStage shaderStage)
+    {
+        mBindings.emplace_back(binding, count, type, shaderStage);
+        return *this;
+    }
+
+    const VkDescriptorSetLayout &DescriptorSetLayout::GetHandle()
+    {
+        if (mHandle == VK_NULL_HANDLE)
+            Build();
+        return mHandle;
+    }
+
+    VkDescriptorSetLayoutBinding DescriptorSetLayout::GetVkLayoutBinding(uint32_t i)
+    {
+        return mBindings[i].ToVkDescriptorBinding();
+    }
+
+    const DescriptorBinding &DescriptorSetLayout::GetLayoutBinding(uint32_t i) const
+    {
+        return mBindings[i];
+    }
+
+    uint32_t DescriptorSetLayout::GetBindingCount() const
+    {
+        return mBindings.size();
+    }
+
+    void DescriptorSetLayout::Build()
+    {
+        std::vector<VkDescriptorSetLayoutBinding> rawDescLayouts(mBindings.size());
+
+        for (int32_t i = 0; i < mBindings.size(); ++i)
+            rawDescLayouts[i] = mBindings[i].ToVkDescriptorBinding();
+
+        VkDescriptorSetLayoutCreateInfo descriptorSetLayoutInfo{};
+        descriptorSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        descriptorSetLayoutInfo.pNext = nullptr;
+        descriptorSetLayoutInfo.flags = 0;
+        descriptorSetLayoutInfo.bindingCount = rawDescLayouts.size();
+        descriptorSetLayoutInfo.pBindings = rawDescLayouts.data();
+
+        VK_CHECK(vkCreateDescriptorSetLayout(mDevice.GetHandle(), &descriptorSetLayoutInfo, nullptr, &mHandle));
+    }
 
     DescriptorSet::DescriptorSet(DescriptorPool *descPool, DescriptorSetLayout *descLayout)
         : mHandle(VK_NULL_HANDLE), mDescriptorLayout(descLayout), mDescriptorPool(descPool)
@@ -162,4 +227,118 @@ namespace mulberry::vk
         mASInfoCache.clear();
     }
 
+    DescriptorPool::DescriptorPool()
+        : mHandle(VK_NULL_HANDLE)
+    {
+    }
+    DescriptorPool::~DescriptorPool()
+    {
+        mDescriptorSetCache.clear();
+        vkDestroyDescriptorPool(mDevice.GetHandle(), mHandle, nullptr);
+    }
+
+    void DescriptorPool::AddPoolDesc(DescriptorType type, uint32_t count)
+    {
+        auto iter = mPoolDescs.find(type);
+        if (iter != mPoolDescs.end())
+            mPoolDescs[type] += count;
+        else
+            mPoolDescs[type] = count;
+    }
+
+    const VkDescriptorPool &DescriptorPool::GetHandle()
+    {
+        if (mHandle == VK_NULL_HANDLE)
+            Build();
+        return mHandle;
+    }
+
+    DescriptorSet *DescriptorPool::AllocateDescriptorSet(DescriptorSetLayout *descLayout)
+    {
+        mDescriptorSetCache.emplace_back(std::move(std::make_unique<DescriptorSet>(this, descLayout)));
+        return mDescriptorSetCache.back().get();
+    }
+
+    std::vector<DescriptorSet *> DescriptorPool::AllocateDescriptorSets(DescriptorSetLayout *descLayout, uint32_t count)
+    {
+        std::vector<DescriptorSet *> result(count);
+        for (int32_t i = 0; i < count; ++i)
+            result[i] = AllocateDescriptorSet(descLayout);
+        return result;
+    }
+
+    void DescriptorPool::Build()
+    {
+        std::vector<VkDescriptorPoolSize> poolSizes;
+        for (const auto &poolDesc : mPoolDescs)
+        {
+            VkDescriptorPoolSize poolSize{};
+            poolSize.type = DESCRIPTOR_TYPE_CAST(poolDesc.first);
+            poolSize.descriptorCount = poolDesc.second;
+            poolSizes.emplace_back(poolSize);
+        }
+
+        VkDescriptorPoolCreateInfo poolInfo{};
+        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        poolInfo.pNext = nullptr;
+        poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+        poolInfo.maxSets = 256;
+        poolInfo.poolSizeCount = poolSizes.size();
+        poolInfo.pPoolSizes = poolSizes.data();
+
+        VK_CHECK(vkCreateDescriptorPool(mDevice.GetHandle(), &poolInfo, nullptr, &mHandle));
+    }
+
+    DescriptorTable::DescriptorTable()
+        : mDescriptorPool(std::make_unique<DescriptorPool>()), mDescriptorLayout(std::make_unique<DescriptorSetLayout>())
+    {
+    }
+
+    DescriptorTable::~DescriptorTable()
+    {
+    }
+
+    DescriptorTable &DescriptorTable::AddLayoutBinding(const DescriptorBinding &binding)
+    {
+        mDescriptorPool->AddPoolDesc(binding.type, binding.count);
+        mDescriptorLayout->AddLayoutBinding(binding);
+        return *this;
+    }
+
+    DescriptorTable &DescriptorTable::AddLayoutBinding(uint32_t binding, uint32_t count, DescriptorType type, ShaderStage shaderStage)
+    {
+        mDescriptorPool->AddPoolDesc(type, count);
+        mDescriptorLayout->AddLayoutBinding(binding, count, type, shaderStage);
+        return *this;
+    }
+
+    DescriptorSet *DescriptorTable::AllocateDescriptorSet()
+    {
+        return mDescriptorPool->AllocateDescriptorSet(mDescriptorLayout.get());
+    }
+
+    std::vector<DescriptorSet *> DescriptorTable::AllocateDescriptorSets(uint32_t count)
+    {
+        return mDescriptorPool->AllocateDescriptorSets(mDescriptorLayout.get(), count);
+    }
+
+    DescriptorSetLayout *DescriptorTable::GetLayout()
+    {
+        return mDescriptorLayout.get();
+    }
+
+    DescriptorPool *DescriptorTable::GetPool()
+    {
+        return mDescriptorPool.get();
+    }
+
+    DescriptorBinding DescriptorTable::GetLayoutBinding(uint32_t i)
+    {
+        return mDescriptorLayout->GetLayoutBinding(i);
+    }
+
+    uint32_t DescriptorTable::GetBindingCount() const
+    {
+        return mDescriptorLayout->GetBindingCount();
+    }
 }

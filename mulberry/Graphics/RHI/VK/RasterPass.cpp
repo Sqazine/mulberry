@@ -8,14 +8,14 @@
 #include <array>
 namespace mulberry::vk
 {
-    RasterPass::RasterPass(const Vec2 &extent, Format format,std::vector<Texture *> &textureLists)
+    RasterPass::RasterPass(Format format, std::vector<Texture *> &textureLists)
     {
         mRenderPass = std::make_unique<RenderPass>(format);
         mRasterCommandBuffers = mDevice.GetRasterCommandPool()->CreatePrimaryCommandBuffers(textureLists.size());
 
         mFrameBuffers.resize(textureLists.size());
 
-        ReBuild(extent, textureLists);
+        ReBuild(textureLists);
 
         mWaitSemaphores.resize(textureLists.size());
         mSignalSemaphores.resize(textureLists.size());
@@ -45,19 +45,19 @@ namespace mulberry::vk
 
     Semaphore *RasterPass::GetWaitSemaphore() const
     {
-        return mWaitSemaphores[VK_CONTEXT->GetCurFrameIdx()].get();
+        return mWaitSemaphores[GetCurFrameIdx()].get();
     }
     Semaphore *RasterPass::GetSignalSemaphore() const
     {
-        return mSignalSemaphores[VK_CONTEXT->GetCurFrameIdx()].get();
+        return mSignalSemaphores[GetCurFrameIdx()].get();
     }
 
     void RasterPass::Begin()
     {
         VK_CONTEXT->mCurRasterPass = this;
 
-        mInFlightFences[VK_CONTEXT->GetCurFrameIdx()]->Wait();
-        mInFlightFences[VK_CONTEXT->GetCurFrameIdx()]->Reset();
+        mInFlightFences[GetCurFrameIdx()]->Wait();
+        mInFlightFences[GetCurFrameIdx()]->Reset();
 
         GetCommandBuffer()->Reset();
 
@@ -68,10 +68,10 @@ namespace mulberry::vk
 
         VkRect2D renderArea = {};
         renderArea.offset = {0, 0};
-        renderArea.extent.width = (uint32_t)mExtent.x;
-        renderArea.extent.height = (uint32_t)mExtent.y;
+        renderArea.extent.width = (uint32_t)mFrameBuffers[GetCurFrameIdx()]->GetExtent().x;
+        renderArea.extent.height = (uint32_t)mFrameBuffers[GetCurFrameIdx()]->GetExtent().y;
 
-        GetCommandBuffer()->BeginRenderPass(mRenderPass->GetHandle(), mFrameBuffers[VK_CONTEXT->GetCurFrameIdx()]->GetHandle(), renderArea, clearValues, VK_SUBPASS_CONTENTS_INLINE);
+        GetCommandBuffer()->BeginRenderPass(mRenderPass->GetHandle(), mFrameBuffers[GetCurFrameIdx()]->GetHandle(), renderArea, clearValues, VK_SUBPASS_CONTENTS_INLINE);
     }
 
     void RasterPass::End()
@@ -88,25 +88,29 @@ namespace mulberry::vk
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &GetCommandBuffer()->GetHandle();
         submitInfo.waitSemaphoreCount = 1;
-        submitInfo.pWaitSemaphores = &mWaitSemaphores[VK_CONTEXT->GetCurFrameIdx()]->GetHandle();
+        submitInfo.pWaitSemaphores = &mWaitSemaphores[GetCurFrameIdx()]->GetHandle();
         submitInfo.pWaitDstStageMask = waitStageMasks;
         submitInfo.signalSemaphoreCount = 1;
-        submitInfo.pSignalSemaphores = &mSignalSemaphores[VK_CONTEXT->GetCurFrameIdx()]->GetHandle();
+        submitInfo.pSignalSemaphores = &mSignalSemaphores[GetCurFrameIdx()]->GetHandle();
 
-        VK_CONTEXT->GetDevice()->GetRasterQueue()->Submit(submitInfo, mInFlightFences[VK_CONTEXT->GetCurFrameIdx()].get());
+        VK_CONTEXT->GetDevice()->GetRasterQueue()->Submit(submitInfo, mInFlightFences[GetCurFrameIdx()].get());
 
         VK_CONTEXT->mCurRasterPass = nullptr;
     }
 
     RasterCommandBuffer *RasterPass::GetCommandBuffer() const
     {
-        return mRasterCommandBuffers[VK_CONTEXT->GetCurFrameIdx()].get();
+        return mRasterCommandBuffers[GetCurFrameIdx()].get();
     }
 
-    void RasterPass::ReBuild(const Vec2 &extent, std::vector<Texture *> &textureLists)
+    uint32_t RasterPass::GetCurFrameIdx() const
     {
-        mExtent = extent;
+        return VK_CONTEXT->GetCurFrameIdx();
+    }
+
+    void RasterPass::ReBuild(std::vector<Texture *> &textureLists)
+    {
         for (int32_t i = 0; i < mFrameBuffers.size(); ++i)
-            mFrameBuffers[i] = std::make_unique<FrameBuffer>(extent.x, extent.y, mRenderPass.get(), textureLists[i]);
+            mFrameBuffers[i] = std::make_unique<FrameBuffer>(textureLists[i]->GetImage()->GetExtent().x, textureLists[i]->GetImage()->GetExtent().y, mRenderPass.get(), textureLists[i]);
     }
 }

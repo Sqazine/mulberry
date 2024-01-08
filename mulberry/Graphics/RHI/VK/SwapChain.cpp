@@ -75,13 +75,16 @@ namespace mulberry::vk
 		mSwapChainPresentMode = ChooseSwapChainPresentMode(swapChainDetail.presentModes);
 		mSwapChainImageExtent = ChooseSwapChainExtent(swapChainDetail.surfaceCapabilities);
 
-		VkSwapchainCreateInfoKHR createInfo{};
+		uint32_t imageCount=swapChainDetail.surfaceCapabilities.minImageCount + 1;
+		if (swapChainDetail.surfaceCapabilities.maxImageCount > 0 && imageCount > swapChainDetail.surfaceCapabilities.maxImageCount) 
+    		imageCount = swapChainDetail.surfaceCapabilities.maxImageCount;
 
+		VkSwapchainCreateInfoKHR createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 		createInfo.pNext = nullptr;
 		createInfo.flags = 0;
 		createInfo.surface = VK_CONTEXT->GetAdapter()->GetSurface();
-		createInfo.minImageCount = uint32_t(App::GetInstance().GetGraphicsConfig().useDoubleBuffer ? 2 : 1);
+		createInfo.minImageCount = imageCount;
 		createInfo.imageFormat = mSwapChainSurfaceFormat.format;
 		createInfo.imageColorSpace = mSwapChainSurfaceFormat.colorSpace;
 		createInfo.imageExtent = mSwapChainImageExtent;
@@ -118,7 +121,7 @@ namespace mulberry::vk
 
 		mSwapChainTextures.resize(count);
 		for (size_t i = 0; i < rawImages.size(); ++i)
-			mSwapChainTextures[i] = new Texture(rawImages[i], mSwapChainSurfaceFormat.format);
+			mSwapChainTextures[i] = new Texture(GetExtent(), rawImages[i], mSwapChainSurfaceFormat.format);
 	}
 
 	const VkSwapchainKHR &SwapChain::GetHandle() const

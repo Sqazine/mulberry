@@ -18,8 +18,7 @@ namespace mulberry::vk
 			ImageUsage usage,
 			MemoryProperty properties);
 
-		Image(VkImage rawImage, Format format);
-
+		Image(const Vec2& extent, VkImage rawImage, Format format);
 		virtual ~Image();
 
 		const VkImage &GetHandle() const;
@@ -35,19 +34,16 @@ namespace mulberry::vk
 		template <typename T>
 		std::vector<T> GetRawData();
 
-		uint32_t GetWidth() const;
-		uint32_t GetHeight() const;
-
 		Vec2 GetExtent() const;
 	protected:
 		friend class CommandBuffer;
-		ImageLayout mImageLayout;
+		ImageLayout mLayout;
 
 		VkImageCreateInfo mImageInfo;
-		VkImage mImage;
-		VkImageView mImageView;
+		VkImage mHandle;
+		VkImageView mView;
 		Format mFormat;
-		VkDeviceMemory mImageMemory;
+		VkDeviceMemory mMemory;
 
 		bool mIsSwapChainImage;
 
@@ -76,4 +72,20 @@ namespace mulberry::vk
 
 		return result;
 	}
+
+	class CpuImage : public Image
+	{
+	public:
+		CpuImage(uint32_t width, uint32_t height, Format format, ImageTiling tiling, ImageUsage usage);
+		~CpuImage() override;
+	};
+
+	class GpuImage : public Image
+	{
+	public:
+		GpuImage(class Device& device, uint32_t width, uint32_t height, Format format, ImageTiling tiling, ImageUsage usage);
+		~GpuImage() override;
+
+		void UploadDataFrom(uint64_t bufferSize, CpuBuffer* stagingBuffer, ImageLayout oldLayout, ImageLayout newLayout);
+	};
 }

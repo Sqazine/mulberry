@@ -2,14 +2,17 @@
 #include "App.h"
 namespace mulberry
 {
-    Shader::Shader(ShaderStage type, std::string_view content){
-        GRAPHICS_RHI_IMPL_SWITCHER(mVKShaderImpl = std::make_unique<vk::Shader>(type, content))} Shader::~Shader()
+    Shader::Shader(ShaderStage type, std::string_view content)
     {
-        GRAPHICS_RHI_IMPL_SWITCHER(mVKShaderImpl.reset(nullptr))
+        GRAPHICS_RHI_IMPL_SWITCHER(mVKShaderImpl = std::make_unique<vk::Shader>(type, content));
+    }
+    Shader::~Shader()
+    {
+        GRAPHICS_RHI_IMPL_SWITCHER(mVKShaderImpl.reset(nullptr));
     }
 
     const ShaderStage &Shader::Type() const
     {
-        GRAPHICS_RHI_IMPL_SWITCHER(mVKShaderImpl->Type());
+        GRAPHICS_RHI_IMPL_SWITCHER(return mVKShaderImpl->Type());
     }
 }

@@ -1,8 +1,8 @@
 #include "Device.h"
 #include <iostream>
 #include "Context.h"
-#include "CommandBuffer.h"
-#include "CommandPool.h"
+
+#include "Command.h"
 #include "Utils.h"
 #include "Logger.h"
 

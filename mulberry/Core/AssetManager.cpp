@@ -18,17 +18,17 @@ namespace mulberry
     {
     }
 
-    const ImgData &AssetManager::LoadImgData(const std::string &filePath)
+    const ImageData &AssetManager::LoadImageData(const std::string &filePath)
     {
-        auto iter = mImgDatas.find(filePath);
-        if (iter != mImgDatas.end())
+        auto iter = mImageDatas.find(filePath);
+        if (iter != mImageDatas.end())
             return iter->second;
-        ImgData tmp;
+        ImageData tmp;
         stbi_set_flip_vertically_on_load(true);
         uint8_t *data = stbi_load(filePath.c_str(), (int32_t *)&tmp.width, (int32_t *)&tmp.height, (int32_t*)&tmp.channel, STBI_default);
         tmp.pixels = std::vector<uint8_t>(data, data + (tmp.width * tmp.height * 4));
-        mImgDatas[filePath] = tmp;
-        return mImgDatas[filePath];
+        mImageDatas[filePath] = tmp;
+        return mImageDatas[filePath];
     }
 
     const std::string &AssetManager::LoadText(std::string_view path)
