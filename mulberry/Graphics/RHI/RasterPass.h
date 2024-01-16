@@ -9,7 +9,7 @@ namespace mulberry
     class RasterPass
     {
     public:
-        RasterPass(Format format, const std::vector<Texture*>& textureLists);
+        RasterPass(const std::vector<Texture*>& textureLists);
         ~RasterPass();
 
         void SetClearColor(const Color &clearColor);

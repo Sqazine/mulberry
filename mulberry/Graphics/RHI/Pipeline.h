@@ -13,4 +13,13 @@ namespace mulberry
     private:
         std::unique_ptr<vk::RasterPipeline> mVKRasterPipelineImpl;
     };
+
+      class ComputePipeline
+    {
+    public:
+        ComputePipeline();
+        ~ComputePipeline();
+    private:
+        std::unique_ptr<vk::ComputePipeline> mVKComputePipelineImpl;
+    };
 }

@@ -9,7 +9,7 @@ namespace mulberry::vk
 	{
 		std::vector<VkAttachmentDescription> attachments;
 		std::vector<VkAttachmentReference> colorReferences;
-	
+
 		VkAttachmentDescription colorAttachment{};
 		colorAttachment.flags = 0;
 		colorAttachment.format = colorformat.ToVkHandle();
@@ -28,7 +28,6 @@ namespace mulberry::vk
 		colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
 		colorReferences.emplace_back(colorAttachmentRef);
-		
 
 		VkSubpassDescription subpass{};
 		subpass.flags = 0;
@@ -45,10 +44,10 @@ namespace mulberry::vk
 		VkSubpassDependency colorDependency{};
 		colorDependency.srcSubpass = VK_SUBPASS_EXTERNAL;
 		colorDependency.dstSubpass = 0;
-		colorDependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-		colorDependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+		colorDependency.srcStageMask = PIPELINE_STAGE_CAST(PipelineStage::COLOR_ATTACHMENT_OUTPUT | PipelineStage::LATE_FRAGMENT_TESTS);
+		colorDependency.dstStageMask = PIPELINE_STAGE_CAST(PipelineStage::COLOR_ATTACHMENT_OUTPUT | PipelineStage::LATE_FRAGMENT_TESTS);
 		colorDependency.srcAccessMask = 0;
-		colorDependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+		colorDependency.dstAccessMask = ACCESS_CAST(Access::COLOR_ATTACHMENT_WRITE | Access::DEPTH_STENCIL_ATTACHMENT_WRITE);
 
 		std::vector<VkSubpassDependency> dependencies = {
 			colorDependency,

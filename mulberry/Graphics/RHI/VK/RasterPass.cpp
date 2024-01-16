@@ -8,9 +8,9 @@
 #include <array>
 namespace mulberry::vk
 {
-    RasterPass::RasterPass(Format format, std::vector<Texture *> &textureLists)
+    RasterPass::RasterPass(std::vector<Texture *> &textureLists)
     {
-        mRenderPass = std::make_unique<RenderPass>(format);
+        mRenderPass = std::make_unique<RenderPass>(textureLists[0]->GetImage()->GetFormat());
         mRasterCommandBuffers = mDevice.GetRasterCommandPool()->CreatePrimaryCommandBuffers(textureLists.size());
 
         mFrameBuffers.resize(textureLists.size());

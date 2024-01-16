@@ -2,22 +2,22 @@
 #include "App.h"
 namespace mulberry
 {
-	RasterPass::RasterPass(Format format, const std::vector<Texture*>& textureLists)
-	{
-		GRAPHICS_RHI_IMPL_SWITCHER({
-			std::vector<vk::Texture*> rawVkTextureImpls(textureLists.size());
-			for (int32_t i = 0; i < textureLists.size(); ++i)
-				rawVkTextureImpls[i] = textureLists[i]->mVKTextureImpl.get();
+	RasterPass::RasterPass(const std::vector<Texture *> &textureLists){
+		GRAPHICS_RHI_IMPL_SWITCHER(
+			{
+				std::vector<vk::Texture *> rawVkTextureImpls(textureLists.size());
+				for (int32_t i = 0; i < textureLists.size(); ++i)
+					rawVkTextureImpls[i] = textureLists[i]->mVKTextureImpl.get();
 
-			mVKRasterPassImpl = std::make_unique<vk::RasterPass>(format, rawVkTextureImpls); })
-	}
+				mVKRasterPassImpl = std::make_unique<vk::RasterPass>(rawVkTextureImpls);
+			})}
 
 	RasterPass::~RasterPass()
 	{
 		GRAPHICS_RHI_IMPL_SWITCHER(mVKRasterPassImpl.reset(nullptr))
 	}
 
-	void RasterPass::SetClearColor(const Color& clearColor)
+	void RasterPass::SetClearColor(const Color &clearColor)
 	{
 		GRAPHICS_RHI_IMPL_SWITCHER(mVKRasterPassImpl->SetClearColor(clearColor))
 	}

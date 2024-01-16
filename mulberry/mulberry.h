@@ -12,7 +12,7 @@
 #include "Vec2.h"
 #include "Graphics/Font.h"
 #include "Graphics/PrimitiveGeometry.h"
-#include "Graphics/RenderMaterial.h"
+#include "Graphics/Material.h"
 #include "Graphics/SceneRenderer.h"
 #include "Scene/Component/CameraComponent.h"
 #include "Scene/Component/Component.h"

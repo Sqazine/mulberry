@@ -4,6 +4,58 @@
 
 namespace mulberry::vk
 {
+    PipelineLayout::PipelineLayout()
+        : mHandle(VK_NULL_HANDLE)
+    {
+    }
+
+    PipelineLayout::~PipelineLayout()
+    {
+        if (mHandle)
+            vkDestroyPipelineLayout(mDevice.GetHandle(), mHandle, nullptr);
+    }
+
+    PipelineLayout &PipelineLayout::AddDescriptorSetLayout(DescriptorSetLayout *descriptorSetLayout)
+    {
+        mDescriptorSetLayoutCache.emplace_back(descriptorSetLayout);
+
+        return *this;
+    }
+
+    PipelineLayout &PipelineLayout::SetDescriptorSetLayouts(const std::vector<DescriptorSetLayout *> &descriptorSetLayouts)
+    {
+        mDescriptorSetLayoutCache = descriptorSetLayouts;
+
+        return *this;
+    }
+
+    const VkPipelineLayout &PipelineLayout::GetHandle()
+    {
+        if (mHandle == VK_NULL_HANDLE)
+            Build();
+        return mHandle;
+    }
+
+    void PipelineLayout::Build()
+    {
+        std::vector<VkDescriptorSetLayout> rawLayout(mDescriptorSetLayoutCache.size());
+
+        for (int32_t i = 0; i < rawLayout.size(); ++i)
+            rawLayout[i] = mDescriptorSetLayoutCache[i]->GetHandle();
+
+        VkPipelineLayoutCreateInfo info = {};
+        info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+        info.pNext = nullptr;
+        info.flags = 0;
+        info.setLayoutCount = rawLayout.size();
+        info.pSetLayouts = rawLayout.data();
+        info.pushConstantRangeCount = 0;
+        info.pPushConstantRanges = nullptr;
+
+        VK_CHECK(vkCreatePipelineLayout(mDevice.GetHandle(), &info, nullptr, &mHandle));
+
+        mDescriptorSetLayoutCache.clear();
+    }
 
     Pipeline::Pipeline()
         : mLayout(nullptr), mHandle(VK_NULL_HANDLE)
@@ -12,7 +64,7 @@ namespace mulberry::vk
     Pipeline::~Pipeline()
     {
         if (mHandle)
-        vkDestroyPipeline(mDevice.GetHandle(), mHandle, nullptr);
+            vkDestroyPipeline(mDevice.GetHandle(), mHandle, nullptr);
     }
 
     const VkPipeline &Pipeline::GetHandle()
@@ -242,7 +294,7 @@ namespace mulberry::vk
         multiSampleStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
         multiSampleStateInfo.pNext = nullptr;
         multiSampleStateInfo.flags = 0;
-        multiSampleStateInfo.rasterizationSamples = SAMPLE_COUNT(mSampleCount);
+        multiSampleStateInfo.rasterizationSamples = SAMPLE_COUNT_CAST(mSampleCount);
         multiSampleStateInfo.alphaToCoverageEnable = mIsAlphaToCoverageEnable ? VK_TRUE : VK_FALSE;
         multiSampleStateInfo.alphaToOneEnable = mIsAlphaToOneEnableEnable ? VK_TRUE : VK_FALSE;
         multiSampleStateInfo.sampleShadingEnable = mMinSampleShading == 0 ? VK_FALSE : VK_TRUE;

@@ -27,7 +27,7 @@ namespace mulberry::vk
 		mDevice.reset(mAdapter->CreateDevice());
 		mSwapChain = std::make_unique<SwapChain>();
 
-		mDefaultRasterPass = std::make_unique<RasterPass>(mSwapChain->GetSurfaceFormat().format, mSwapChain->GetTextures());
+		mDefaultRasterPass = std::make_unique<RasterPass>(mSwapChain->GetTextures());
 	}
 
 	Adapter *Context::GetAdapter() const
@@ -70,8 +70,15 @@ namespace mulberry::vk
 	void Context::EndFrame()
 	{
 		mDefaultRasterPass->End();
-		mSwapChain->Present(mDefaultRasterPass->GetSignalSemaphore());
+		auto result = mSwapChain->Present(mDefaultRasterPass->GetSignalSemaphore());
 		mCurFrameIdx = (mCurFrameIdx + 1) % mSwapChain->GetTextures().size();
+
+		if (result != VK_SUCCESS)
+		{
+			mSwapChain->ReBuild();
+			mDefaultRasterPass->ReBuild(mSwapChain->GetTextures());
+			mCurFrameIdx = 0;
+		}
 	}
 
 	const RasterPass *Context::GetCurRasterPass() const

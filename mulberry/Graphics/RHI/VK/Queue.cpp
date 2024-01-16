@@ -50,8 +50,8 @@ namespace mulberry::vk
 	{
 	}
 
-	void PresentQueue::Present(const VkPresentInfoKHR &info) const
+	VkResult PresentQueue::Present(const VkPresentInfoKHR &info) const
 	{
-		VK_CHECK(vkQueuePresentKHR(mHandle, &info))
+		return vkQueuePresentKHR(mHandle, &info);
 	}
 }

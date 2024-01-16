@@ -6,19 +6,31 @@
 #include "Graphics/RHI/Pipeline.h"
 namespace mulberry
 {
-    class RenderMaterial
+    class RasterMaterial
     {
     public:
-        RenderMaterial() {}
-        virtual ~RenderMaterial() {}
+        RasterMaterial() {}
+        virtual ~RasterMaterial() {}
 
-        virtual void SetUniformValue() const {}
-        virtual void ResetUniformValue() const {}
+        virtual void SetDefaultUniformValue() const {}
+
     protected:
         std::unique_ptr<RasterPipeline> mRasterPipeline;
     };
 
-    class SpriteMaterial : public RenderMaterial
+    class ComputeMaterial
+    {
+    public:
+        ComputeMaterial() {}
+        virtual ~ComputeMaterial() {}
+
+        virtual void SetDefaultUniformValue() const {}
+
+    protected:
+        std::unique_ptr<ComputePipeline> mComputePipeline;
+    };
+
+    class SpriteMaterial : public RasterMaterial
     {
     public:
         SpriteMaterial();
@@ -33,8 +45,7 @@ namespace mulberry
         void SetOffSet(const Vec2 &o);
         const Vec2 &GetOffset() const;
 
-        void SetUniformValue() const override;
-        void ResetUniformValue() const override;
+        void SetDefaultUniformValue() const override;
 
     private:
         Texture *mSprite;
@@ -42,7 +53,7 @@ namespace mulberry
         Vec2 mOffset;
     };
 
-    class GizmoMaterial : public RenderMaterial
+    class GizmoMaterial : public RasterMaterial
     {
     public:
         GizmoMaterial();

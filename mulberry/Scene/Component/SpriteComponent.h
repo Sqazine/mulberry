@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 #include <memory>
-#include "Graphics/RenderMaterial.h"
+#include "Graphics/Material.h"
 #include "Graphics/RHI/Texture.h"
 #include "RenderComponent.h"
 namespace mulberry
@@ -23,5 +23,4 @@ namespace mulberry
         void SetOffset(const Vec2 &o);
         const Vec2 &GetOffset() const;
     };
-
 }

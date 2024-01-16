@@ -5,11 +5,21 @@ namespace mulberry
 {
     RasterPipeline::RasterPipeline()
     {
-        GRAPHICS_RHI_IMPL_SWITCHER(mVKRasterPipelineImpl=std::make_unique<vk::RasterPipeline>())
+        GRAPHICS_RHI_IMPL_SWITCHER(mVKRasterPipelineImpl = std::make_unique<vk::RasterPipeline>());
     }
 
     RasterPipeline::~RasterPipeline()
     {
-        GRAPHICS_RHI_IMPL_SWITCHER(mVKRasterPipelineImpl.reset(nullptr))
+        GRAPHICS_RHI_IMPL_SWITCHER(mVKRasterPipelineImpl.reset(nullptr));
+    }
+
+    ComputePipeline::ComputePipeline()
+    {
+        GRAPHICS_RHI_IMPL_SWITCHER(mVKComputePipelineImpl = std::make_unique<vk::ComputePipeline>());
+    }
+    
+    ComputePipeline::~ComputePipeline()
+    {
+        GRAPHICS_RHI_IMPL_SWITCHER(mVKComputePipelineImpl.reset(nullptr));
     }
 }

@@ -221,7 +221,7 @@ namespace mulberry
         X32 = VK_SAMPLE_COUNT_32_BIT,
         X64 = VK_SAMPLE_COUNT_64_BIT,
     };
-#define SAMPLE_COUNT(sampleCount) (static_cast<VkSampleCountFlagBits>(std::underlying_type<SampleCount>::type(sampleCount)))
+#define SAMPLE_COUNT_CAST(sampleCount) (static_cast<VkSampleCountFlagBits>(std::underlying_type<SampleCount>::type(sampleCount)))
 
     enum class PrimitiveTopology : uint64_t
     {

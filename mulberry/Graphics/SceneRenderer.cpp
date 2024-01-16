@@ -1,7 +1,7 @@
 #include "SceneRenderer.h"
 #include "Pipeline.h"
 #include "App.h"
-#include "RenderMaterial.h"
+#include "Material.h"
 namespace mulberry
 {
     void SceneRenderer::Init()
@@ -44,11 +44,11 @@ namespace mulberry
       //  mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
 
       /*  material->GetShaderGroup()->SetActive(true);
-        material->GetShaderGroup()->SetUniformValue("modelMat", mat);
-        material->GetShaderGroup()->SetUniformValue("viewMat", camera->GetViewMat());
-        material->GetShaderGroup()->SetUniformValue("projMat", camera->GetProjMat());
+        material->GetShaderGroup()->SetDefaultUniformValue("modelMat", mat);
+        material->GetShaderGroup()->SetDefaultUniformValue("viewMat", camera->GetViewMat());
+        material->GetShaderGroup()->SetDefaultUniformValue("projMat", camera->GetProjMat());
 
-        material->SetUniformValue();
+        material->SetDefaultUniformValue();
 
         material->GetShaderGroup()->SetVertexArray(mSpritePrimitive->GetVertexArray());
 
@@ -80,11 +80,11 @@ namespace mulberry
 
         mGizmoMaterial->GetShaderGroup()->SetActive(true);
 
-        mGizmoMaterial->GetShaderGroup()->SetUniformValue("modelMat", mat);
-        mGizmoMaterial->GetShaderGroup()->SetUniformValue("viewMat", camera->GetViewMat());
-        mGizmoMaterial->GetShaderGroup()->SetUniformValue("projMat", camera->GetProjMat());
+        mGizmoMaterial->GetShaderGroup()->SetDefaultUniformValue("modelMat", mat);
+        mGizmoMaterial->GetShaderGroup()->SetDefaultUniformValue("viewMat", camera->GetViewMat());
+        mGizmoMaterial->GetShaderGroup()->SetDefaultUniformValue("projMat", camera->GetProjMat());
 
-        mGizmoMaterial->SetUniformValue();
+        mGizmoMaterial->SetDefaultUniformValue();
 
         mGizmoMaterial->GetShaderGroup()->SetVertexArray(primitive.GetVertexArray());
 

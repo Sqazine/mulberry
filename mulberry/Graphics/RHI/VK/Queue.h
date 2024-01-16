@@ -5,16 +5,14 @@
 
 namespace mulberry::vk
 {
-	class Queue:public Object
+	class Queue : public Object
 	{
 	public:
 		Queue(uint32_t familyIndex);
 		virtual ~Queue();
 
 		void WaitIdle() const;
-
 		const VkQueue &GetHandle() const;
-
 	protected:
 		VkQueue mHandle;
 	};
@@ -37,6 +35,6 @@ namespace mulberry::vk
 		PresentQueue(uint32_t familyIndex);
 		~PresentQueue() override;
 
-		void Present(const VkPresentInfoKHR &info) const;
+		VkResult Present(const VkPresentInfoKHR &info) const;
 	};
 }

@@ -3,7 +3,6 @@
 #include <memory>
 #include "Object.h"
 #include "Command.h"
-#include "RenderPass.h"
 #include "FrameBuffer.h"
 #include "Math/Color.h"
 #include "Math/Vec2.h"
@@ -15,7 +14,7 @@ namespace mulberry::vk
     class RasterPass:public Object
     {
     public:
-        RasterPass(Format format, std::vector<Texture *> &textureLists);
+        RasterPass(std::vector<Texture *> &textureLists);
         virtual ~RasterPass();
 
         void SetClearColor(const Color &clearColor);
@@ -34,8 +33,6 @@ namespace mulberry::vk
 
     private:
         void ReBuild(std::vector<Texture *> &textureLists);
-
-        Vec2 mExtent;
 
         std::unique_ptr<RenderPass> mRenderPass;
         std::vector<std::unique_ptr<FrameBuffer>> mFrameBuffers;

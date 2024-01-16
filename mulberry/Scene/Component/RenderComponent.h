@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 #include <memory>
-#include "Graphics/RenderMaterial.h"
+#include "Graphics/Material.h"
 #include "Graphics/RHI/Texture.h"
 namespace mulberry
 {
@@ -12,13 +12,12 @@ namespace mulberry
 		~RenderComponent();
 
 		void Init() override;
-
 	protected:
 
 		friend class SceneRenderer;
 
-		void SetMaterial(RenderMaterial *mat);
-		const RenderMaterial *GetMaterial() const;
-		std::unique_ptr<RenderMaterial> material;
+		void SetMaterial(RasterMaterial *mat);
+		const RasterMaterial *GetMaterial() const;
+		std::unique_ptr<RasterMaterial> material;
 	};
 }

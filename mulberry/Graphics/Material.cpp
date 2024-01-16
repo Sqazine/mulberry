@@ -1,4 +1,4 @@
-#include "RenderMaterial.h"
+#include "Material.h"
 #include <string>
 #include "Shader.h"
 namespace mulberry
@@ -82,16 +82,11 @@ namespace mulberry
         return mOffset;
     }
 
-    void SpriteMaterial::SetUniformValue() const
+    void SpriteMaterial::SetDefaultUniformValue() const
     {
         /*shaderProgram->SetTexture("sprite",mSprite);
-        shaderProgram->SetUniformValue("tiling", mTiling);
-        shaderProgram->SetUniformValue("offset", mOffset);*/
-    }
-
-    void SpriteMaterial::ResetUniformValue() const
-    {
-       
+        shaderProgram->SetDefaultUniformValue("tiling", mTiling);
+        shaderProgram->SetDefaultUniformValue("offset", mOffset);*/
     }
 
     GizmoMaterial::GizmoMaterial()

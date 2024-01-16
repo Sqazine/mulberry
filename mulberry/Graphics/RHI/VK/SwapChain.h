@@ -24,7 +24,7 @@ namespace mulberry::vk
 		void AcquireNextImage(const Semaphore *semaphore = nullptr, const Fence *fence = nullptr);
 		uint32_t GetNextImageIdx() const;
 
-		void Present(const Semaphore *waitSemaphore);
+		VkResult Present(const Semaphore *waitSemaphore);
 
 	private:
 		void Build();

@@ -18,7 +18,6 @@ namespace mulberry
 		mWindow->Show();
 		while (mState != AppState::EXIT)
 		{
-			mTimer->Update();
 			PreUpdate();
 			Update();
 			Render();
@@ -70,7 +69,7 @@ namespace mulberry
 		AppConfig::graphicsConfig.backend = graphicsBackend;
 	}
 
-	 GraphicsConfig &App::GetGraphicsConfig() 
+	GraphicsConfig &App::GetGraphicsConfig()
 	{
 		return AppConfig::graphicsConfig;
 	}
@@ -118,6 +117,10 @@ namespace mulberry
 
 	void App::Update()
 	{
+		if(!AppConfig::graphicsConfig.useVSync)
+			mTimer->Update(AppConfig::graphicsConfig.frameRate);
+		else
+			mTimer->Update();
 #ifdef SHOW_FPS_ON_WINDOW_TITLE
 		static bool isFirst = true;
 		static std::string name;
@@ -129,7 +132,7 @@ namespace mulberry
 		static float avgDuration = mTimer->GetDeltaTime();
 		constexpr float alpha = 0.01f;
 		avgDuration = avgDuration * (1 - alpha) + mTimer->GetDeltaTime() * alpha;
-		auto fps=std::to_string(1.0f / avgDuration);
+		auto fps = std::to_string(1.0f / avgDuration);
 		mWindow->SetTitle(name + " FPS = " + fps);
 #endif
 
@@ -154,10 +157,8 @@ namespace mulberry
 
 	void App::CleanUp()
 	{
-		for (const auto& scene : mScenes)
-		{
+		for (const auto &scene : mScenes)
 			scene->CleanUp();
-		}
 	}
 
 	void App::PreUpdate()

@@ -6,6 +6,7 @@
 #include "Logger.h"
 #include "Texture.h"
 #include "App.h"
+#include "AppConfig.h"
 #include "Context.h"
 namespace mulberry::vk
 {
@@ -55,7 +56,7 @@ namespace mulberry::vk
 		return mNextImageIdx;
 	}
 
-	void SwapChain::Present(const Semaphore *waitSemaphore)
+	VkResult SwapChain::Present(const Semaphore *waitSemaphore)
 	{
 		VkPresentInfoKHR presentInfo{};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -65,7 +66,7 @@ namespace mulberry::vk
 		presentInfo.pWaitSemaphores = &waitSemaphore->GetHandle();
 		presentInfo.pImageIndices = &mNextImageIdx;
 
-		mDevice.GetPresentQueue()->Present(presentInfo);
+		return mDevice.GetPresentQueue()->Present(presentInfo);
 	}
 
 	void SwapChain::Build()
@@ -75,9 +76,9 @@ namespace mulberry::vk
 		mSwapChainPresentMode = ChooseSwapChainPresentMode(swapChainDetail.presentModes);
 		mSwapChainImageExtent = ChooseSwapChainExtent(swapChainDetail.surfaceCapabilities);
 
-		uint32_t imageCount=swapChainDetail.surfaceCapabilities.minImageCount + 1;
-		if (swapChainDetail.surfaceCapabilities.maxImageCount > 0 && imageCount > swapChainDetail.surfaceCapabilities.maxImageCount) 
-    		imageCount = swapChainDetail.surfaceCapabilities.maxImageCount;
+		uint32_t imageCount = swapChainDetail.surfaceCapabilities.minImageCount + 1;
+		if (swapChainDetail.surfaceCapabilities.maxImageCount > 0 && imageCount > swapChainDetail.surfaceCapabilities.maxImageCount)
+			imageCount = swapChainDetail.surfaceCapabilities.maxImageCount;
 
 		VkSwapchainCreateInfoKHR createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -134,7 +135,6 @@ namespace mulberry::vk
 		VK_CONTEXT->GetDevice()->WaitIdle();
 
 		DeleteImageViews();
-
 		vkDestroySwapchainKHR(mDevice.GetHandle(), mHandle, nullptr);
 		Build();
 	}
@@ -150,10 +150,14 @@ namespace mulberry::vk
 	VkPresentModeKHR SwapChain::ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes)
 	{
 		for (const auto &availablePresentMode : availablePresentModes)
+			if (AppConfig::graphicsConfig.useVSync && availablePresentMode == VK_PRESENT_MODE_FIFO_KHR)
+				return availablePresentMode;
+
+		for (const auto &availablePresentMode : availablePresentModes)
 			if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR)
 				return availablePresentMode;
 
-		return VK_PRESENT_MODE_FIFO_KHR;
+		return VK_PRESENT_MODE_IMMEDIATE_KHR;
 	}
 
 	VkExtent2D SwapChain::ChooseSwapChainExtent(const VkSurfaceCapabilitiesKHR &capabilities)
@@ -179,10 +183,10 @@ namespace mulberry::vk
 	void SwapChain::DeleteImageViews()
 	{
 		for (size_t i = 0; i < mSwapChainTextures.size(); ++i)
-			{
-				delete mSwapChainTextures[i];
-				mSwapChainTextures[i] = nullptr;
-			}
+		{
+			delete mSwapChainTextures[i];
+			mSwapChainTextures[i] = nullptr;
+		}
 
 		std::vector<Texture *>().swap(mSwapChainTextures);
 	}

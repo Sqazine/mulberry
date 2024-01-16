@@ -12,6 +12,7 @@ namespace mulberry
     {
         GraphicsBackend backend = GraphicsBackend::VK;
         bool useVSync = false;
+        float frameRate = 120;
         bool useDoubleBuffer = false;
         SampleCount msaaSample = SampleCount::X2;
     };

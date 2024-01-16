@@ -2,14 +2,32 @@
 #include <vulkan/vulkan.h>
 #include "Object.h"
 #include "Shader.h"
-#include "PipelineLayout.h"
 #include "Math/Vec2.h"
 #include "Format.h"
 #include "Enum.h"
+#include "Descriptor.h"
 
 namespace mulberry::vk
 {
-    class Pipeline:public Object
+    class PipelineLayout : public Object
+    {
+    public:
+        PipelineLayout();
+        ~PipelineLayout();
+
+        PipelineLayout &AddDescriptorSetLayout(DescriptorSetLayout *descriptorSetLayout);
+        PipelineLayout &SetDescriptorSetLayouts(const std::vector<DescriptorSetLayout *> &descriptorSetLayouts);
+
+        const VkPipelineLayout &GetHandle();
+
+    private:
+        void Build();
+
+        std::vector<DescriptorSetLayout *> mDescriptorSetLayoutCache;
+
+        VkPipelineLayout mHandle;
+    };
+    class Pipeline : public Object
     {
     public:
         Pipeline();
@@ -17,6 +35,7 @@ namespace mulberry::vk
 
         const VkPipeline &GetHandle();
         PipelineLayout *GetLayout() const;
+
     protected:
         virtual void Build() = 0;
 
@@ -112,6 +131,7 @@ namespace mulberry::vk
 
         ComputePipeline &SetShader(Shader *shader);
         ComputePipeline &SetPipelineLayout(PipelineLayout *layout);
+
     private:
         void Build() override;
 
