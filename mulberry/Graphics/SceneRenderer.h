@@ -28,8 +28,8 @@ namespace mulberry
 		std::unique_ptr<PrimitiveGeometry> mQuadPrimitive;
 		std::unique_ptr<PrimitiveGeometry> mCirclePrimitive;
 
-		std::unique_ptr<RasterPipeline> mSpriteRasterPipeline;
-		std::unique_ptr<RasterPipeline> mAuxiliaryRasterPipeline;
-		std::unique_ptr<RasterPipeline> mPointRasterPipeline;
+		std::unique_ptr<rhi::RasterPipeline> mSpriteRasterPipeline;
+		std::unique_ptr<rhi::RasterPipeline> mAuxiliaryRasterPipeline;
+		std::unique_ptr<rhi::RasterPipeline> mPointRasterPipeline;
 	};
 }

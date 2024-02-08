@@ -1,9 +1,9 @@
 #pragma once
 #include <cstdint>
-#include "Math/Color.h"
+#include "Color.h"
 #include "Graphics/PrimitiveGeometry.h"
 #include "Graphics/RHI/VK/Pipeline.h"
-namespace mulberry
+namespace mulberry::rhi
 {
     class RasterPipeline
     {

@@ -10,7 +10,7 @@
 #include "SwapChain.h"
 #include "Buffer.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 
 	template <typename T>

@@ -8,7 +8,7 @@
 #include "Adapter.h"
 #include "Device.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	Buffer::Buffer(uint64_t size,
 				   BufferUsage usage,

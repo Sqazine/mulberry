@@ -6,7 +6,7 @@
 #include "Utils.h"
 #include "Logger.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	Device::Device(const PhysicalDeviceSpec &physicalDeviceSpec, const std::vector<const char *> &requiredDeviceExts)
 		: mPhysicalDeviceSpec(physicalDeviceSpec)

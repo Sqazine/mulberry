@@ -3,7 +3,7 @@
 #include "Utils.h"
 #include "AppConfig.h"
 #include "RHI/VK/Buffer.h"
-namespace mulberry
+namespace mulberry::rhi
 {
     class VertexBuffer
     {

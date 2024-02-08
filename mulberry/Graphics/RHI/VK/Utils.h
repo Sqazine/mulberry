@@ -4,8 +4,11 @@
 #include <iostream>
 #include <cassert>
 #include "Queue.h"
-
-namespace mulberry
+#include "Enum.h"
+#include "Format.h"
+#include "RHI/Enum.h"
+#include "Graphics/Viewport.h"
+namespace mulberry::rhi
 {
 	inline const char *GetErrorCode(const VkResult result)
 	{
@@ -88,7 +91,7 @@ namespace mulberry
 	return *this;
 }
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	struct SwapChainDetails
 	{
@@ -99,7 +102,17 @@ namespace mulberry::vk
 
 	std::vector<uint32_t> GlslToSpv(const VkShaderStageFlagBits shaderStage, std::string_view shaderSrc);
 
-	uint32_t GetBiggerTwoPower(uint32_t val);
-
 	std::string ToShaderSourceCode(std::string_view src);
+
+	VkSampleCountFlagBits ToVkSampleCount(rhi::SampleCount count);
+	VkFrontFace ToVkFrontFace(rhi::FrontFace frontFace);
+	VkCullModeFlagBits ToVkCullMode(rhi::CullMode cullMode);
+	VkFilter ToVkFilterMode(rhi::FilterMode filterMode);
+	VkSamplerAddressMode ToVkWrapMode(rhi::WrapMode wrapMode);
+	VkSamplerMipmapMode ToVkMipMapMode(rhi::MipMapMode mipmapMode);
+	VkBorderColor ToVkBorderColor(rhi::BorderColor borderColor);
+	VkShaderStageFlagBits ToVkShaderStage(rhi::ShaderStage shaderStage);
+	VkViewport ToVkViewPort(const mulberry::Viewport &viewport);
+	VkPrimitiveTopology ToVkPrimitiveTopology(rhi::PrimitiveTopology primTopo);
+	VkPolygonMode ToVkPolygonMode(rhi::PolygonMode polyMode);
 }

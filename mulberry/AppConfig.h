@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphics/RHI/GraphicsConfig.h"
+#include "Graphics/GraphicsConfig.h"
 namespace mulberry::AppConfig
 {
     inline GraphicsConfig graphicsConfig;

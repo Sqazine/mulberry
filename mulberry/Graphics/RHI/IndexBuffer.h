@@ -3,7 +3,7 @@
 #include "AppConfig.h"
 #include "VK/Buffer.h"
 
-namespace mulberry
+namespace mulberry::rhi
 {
     class IndexBuffer
     {

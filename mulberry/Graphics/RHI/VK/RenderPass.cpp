@@ -3,7 +3,7 @@
 #include "Utils.h"
 #include "Device.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	RenderPass::RenderPass(Format colorformat)
 	{

@@ -1,5 +1,5 @@
 #pragma once
-#include "Enum.h"
+#include "RHI/Enum.h"
 namespace mulberry
 {
     enum class GraphicsBackend
@@ -14,6 +14,6 @@ namespace mulberry
         bool useVSync = false;
         float frameRate = 120;
         bool useDoubleBuffer = false;
-        SampleCount msaaSample = SampleCount::X2;
+        rhi::SampleCount msaaSample = rhi::SampleCount::X2;
     };
 }

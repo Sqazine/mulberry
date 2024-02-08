@@ -3,14 +3,14 @@
 #include <cstdint>
 #include <memory>
 #include <SDL.h>
-#include "Math/Color.h"
+#include "Color.h"
 #include "Math/Vec2.h"
 #include "Core/AssetManager.h"
 #include "Format.h"
 #include "Enum.h"
 #include "VK/Texture.h"
 
-namespace mulberry
+namespace mulberry::rhi
 {
     struct Texture
     {

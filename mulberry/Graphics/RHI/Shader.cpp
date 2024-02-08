@@ -1,6 +1,6 @@
 #include "Shader.h"
 #include "App.h"
-namespace mulberry
+namespace mulberry::rhi
 {
     Shader::Shader(ShaderStage type, std::string_view content)
     {

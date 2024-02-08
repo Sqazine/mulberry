@@ -1,12 +1,12 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include "Core/AssetManager.h"
-#include "Math/Color.h"
-#include "../Format.h"
+#include "Color.h"
+#include "RHI/Format.h"
 #include "Image.h"
 #include "Sampler.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
     class Texture
     {

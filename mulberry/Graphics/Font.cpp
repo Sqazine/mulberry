@@ -38,9 +38,9 @@ namespace mulberry
             TTF_CloseFont(font.second);
     }
 
-    std::unique_ptr<Texture> Font::RenderText(const std::string &text, const Color &color, int32_t pointSize)
+    std::unique_ptr<rhi::Texture> Font::RenderText(const std::string &text, const Color &color, int32_t pointSize)
     {
-        std::unique_ptr<Texture> texture = nullptr;
+        std::unique_ptr<rhi::Texture> texture = nullptr;
         SDL_Color sdlColor;
         sdlColor.r = static_cast<uint8_t>(color.r * 255);
         sdlColor.g = static_cast<uint8_t>(color.g * 255);
@@ -54,7 +54,7 @@ namespace mulberry
             SDL_Surface *surf = TTF_RenderText_Blended(font, text.c_str(), sdlColor);
             if (surf != nullptr)
             {
-                texture = std::make_unique<Texture>();
+                texture = std::make_unique<rhi::Texture>();
                 //texture->CreateFromSurface(surf);
                 SDL_FreeSurface(surf);
             }

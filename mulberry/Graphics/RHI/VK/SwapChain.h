@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include "SyncObject.h"
 #include "Math/Vec2.h"
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	class SwapChain:public Object
 	{

@@ -2,8 +2,8 @@
 #include "App.h"
 #include "Utils.h"
 #include "Graphics/RHI/VK/Context.h"
-#include "Math/Color.h"
-namespace mulberry
+#include "Color.h"
+namespace mulberry::rhi
 {
 	GraphicsContext::GraphicsContext()
 	{
@@ -24,6 +24,7 @@ namespace mulberry
 	{
 		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->SetClearColor(clearColor));
 	}
+	
 	void GraphicsContext::IsClearColorBuffer(bool isClear)
 	{
 		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->IsClearColorBuffer(isClear));

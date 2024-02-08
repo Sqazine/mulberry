@@ -3,7 +3,7 @@
 #include <cstdint>
 #include "SyncObject.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	class Queue : public Object
 	{

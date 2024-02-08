@@ -6,7 +6,7 @@
 #include "Object.h"
 #include "../Enum.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
     class DescriptorSet : public Object
     {
@@ -53,7 +53,7 @@ namespace mulberry::vk
             tmp.binding = bindingPoint;
             tmp.descriptorCount = count;
             tmp.descriptorType = DESCRIPTOR_TYPE_CAST(type);
-            tmp.stageFlags = SHADER_STAGE_CAST(shaderStage);
+            tmp.stageFlags = ToVkShaderStage(shaderStage);
             tmp.pImmutableSamplers = VK_NULL_HANDLE;
             return tmp;
         }

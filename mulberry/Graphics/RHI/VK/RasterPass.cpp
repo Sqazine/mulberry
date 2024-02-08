@@ -6,7 +6,7 @@
 #include "App.h"
 #include "Context.h"
 #include <array>
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
     RasterPass::RasterPass(std::vector<Texture *> &textureLists)
     {

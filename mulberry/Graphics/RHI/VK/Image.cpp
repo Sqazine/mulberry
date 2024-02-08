@@ -4,7 +4,7 @@
 #include "Context.h"
 
 #include "Command.h"
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	Image::Image(
 		uint32_t width,

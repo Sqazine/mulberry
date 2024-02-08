@@ -8,7 +8,7 @@
 #include "Context.h"
 #include "Pipeline.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	#define COMMAND_POOL_DEF(name, queueIdx)                              \
     name##CommandPool::name##CommandPool() : CommandPool<name##CommandBuffer>(queueIdx) {} \

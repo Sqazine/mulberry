@@ -1,4 +1,4 @@
-#include "Context.h"
+#include "GraphicsContext.h"
 #include <iostream>
 #include "Device.h"
 #include "SwapChain.h"
@@ -9,14 +9,14 @@
 #include "App.h"
 namespace mulberry::rhi::vk
 {
-	Context::Context()
+	GraphicsContext::GraphicsContext()
 	{
 	}
-	Context::~Context()
+	GraphicsContext::~GraphicsContext()
 	{
 	}
 
-	void Context::Init()
+	void GraphicsContext::Init()
 	{
 		mAdapter = std::make_unique<Adapter>();
 
@@ -30,32 +30,22 @@ namespace mulberry::rhi::vk
 		mDefaultRasterPass = std::make_unique<RasterPass>(mSwapChain->GetTextures());
 	}
 
-	Adapter *Context::GetAdapter() const
+	Adapter *GraphicsContext::GetAdapter() const
 	{
 		return mAdapter.get();
 	}
 
-	Device *Context::GetDevice() const
+	Device *GraphicsContext::GetDevice() const
 	{
 		return mDevice.get();
 	}
 
-	SwapChain *Context::GetSwapChain() const
+	SwapChain *GraphicsContext::GetSwapChain() const
 	{
 		return mSwapChain.get();
 	}
 
-	void Context::SetClearColor(const Color &clearColor)
-	{
-		mDefaultRasterPass->SetClearColor(clearColor);
-	}
-
-	void Context::IsClearColorBuffer(bool isClear)
-	{
-		mDefaultRasterPass->IsClearColorBuffer(isClear);
-	}
-
-	void Context::BeginFrame()
+	void GraphicsContext::BeginFrame()
 	{
 		if (App::GetInstance().GetWindow()->IsResize())
 		{
@@ -64,12 +54,10 @@ namespace mulberry::rhi::vk
 		}
 
 		mSwapChain->AcquireNextImage(mDefaultRasterPass->GetWaitSemaphore());
-		mDefaultRasterPass->Begin();
 	}
 
-	void Context::EndFrame()
+	void GraphicsContext::EndFrame()
 	{
-		mDefaultRasterPass->End();
 		auto result = mSwapChain->Present(mDefaultRasterPass->GetSignalSemaphore());
 		mCurFrameIdx = (mCurFrameIdx + 1) % mSwapChain->GetTextures().size();
 
@@ -81,12 +69,12 @@ namespace mulberry::rhi::vk
 		}
 	}
 
-	const RasterPass *Context::GetCurRasterPass() const
+	const RasterPass *GraphicsContext::GetDefaultRasterPass() const
 	{
-		return mCurRasterPass;
+		return mDefaultRasterPass.get();
 	}
 
-	size_t Context::GetCurFrameIdx() const
+	size_t GraphicsContext::GetCurFrameIdx() const
 	{
 		return mCurFrameIdx;
 	}

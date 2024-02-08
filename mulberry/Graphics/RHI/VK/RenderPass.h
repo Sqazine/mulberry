@@ -5,7 +5,7 @@
 #include "../Enum.h"
 #include "Object.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
     class RenderPass:public Object
     {

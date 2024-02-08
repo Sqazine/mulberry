@@ -1,10 +1,10 @@
 #pragma once
 #include <memory>
 #include <vector>
-#include "Math/Color.h"
+#include "Color.h"
 #include "Graphics/RHI/VK/RasterPass.h"
 #include "Texture.h"
-namespace mulberry
+namespace mulberry::rhi
 {
     class RasterPass
     {

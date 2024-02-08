@@ -3,7 +3,7 @@
 #include "Utils.h"
 #include "Logger.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	FrameBuffer::FrameBuffer(uint32_t width, uint32_t height, const RenderPass *renderPass,Texture * attachments)
 		:mExtent(width,height), mHandle(VK_NULL_HANDLE)

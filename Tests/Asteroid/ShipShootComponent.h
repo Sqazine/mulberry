@@ -29,5 +29,5 @@ private:
 
     std::vector<LaserCache> mLaserCaches;
 
-    std::unique_ptr<mulberry::Texture> mLaserTexture;
+    std::unique_ptr<mulberry::rhi::Texture> mLaserTexture;
 };

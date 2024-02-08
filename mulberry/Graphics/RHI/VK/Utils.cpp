@@ -4,7 +4,7 @@
 #include "Logger.h"
 #include "Platform/IO.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	static TBuiltInResource InitResources() noexcept
 	{
@@ -175,21 +175,6 @@ namespace mulberry::vk
 		return result;
 	}
 
-	uint32_t GetBiggerTwoPower(uint32_t val)
-	{
-		if (val & (val - 1))
-		{
-			val |= val >> 1;
-			val |= val >> 2;
-			val |= val >> 4;
-			val |= val >> 8;
-			val |= val >> 16;
-			return val + 1;
-		}
-		else
-			return val == 0 ? 1 : val;
-	}
-
 	std::string ToShaderSourceCode(std::string_view src)
 	{
 		std::string result = src.data();
@@ -265,4 +250,198 @@ namespace mulberry::vk
 
 		return content;
 	}
+
+	VkSampleCountFlagBits ToVkSampleCount(mulberry::rhi::SampleCount count)
+	{
+		switch (count)
+		{
+		case mulberry::rhi::SampleCount::X1:
+			return VK_SAMPLE_COUNT_1_BIT;
+		case mulberry::rhi::SampleCount::X2:
+			return VK_SAMPLE_COUNT_2_BIT;
+		case mulberry::rhi::SampleCount::X4:
+			return VK_SAMPLE_COUNT_4_BIT;
+		case mulberry::rhi::SampleCount::X8:
+			return VK_SAMPLE_COUNT_8_BIT;
+		case mulberry::rhi::SampleCount::X16:
+			return VK_SAMPLE_COUNT_16_BIT;
+		case mulberry::rhi::SampleCount::X32:
+			return VK_SAMPLE_COUNT_32_BIT;
+		case mulberry::rhi::SampleCount::X64:
+			return VK_SAMPLE_COUNT_64_BIT;
+		default:
+			return VK_SAMPLE_COUNT_1_BIT;
+		}
+	}
+
+	VkFrontFace ToVkFrontFace(mulberry::rhi::FrontFace frontFace)
+	{
+		switch (frontFace)
+		{
+		case mulberry::rhi::FrontFace::CW:
+			return VK_FRONT_FACE_CLOCKWISE;
+		case mulberry::rhi::FrontFace::CCW:
+			return VK_FRONT_FACE_COUNTER_CLOCKWISE;
+		default:
+			return VK_FRONT_FACE_CLOCKWISE;
+		}
+	}
+
+	VkCullModeFlagBits ToVkCullMode(mulberry::rhi::CullMode cullMode)
+	{
+		switch (cullMode)
+		{
+		case mulberry::rhi::CullMode::NONE:
+			return VK_CULL_MODE_NONE;
+		case mulberry::rhi::CullMode::FRONT:
+			return VK_CULL_MODE_FRONT_BIT;
+		case mulberry::rhi::CullMode::BACK:
+			return VK_CULL_MODE_BACK_BIT;
+		case mulberry::rhi::CullMode::BOTH:
+			return VK_CULL_MODE_FRONT_AND_BACK;
+		default:
+			return VK_CULL_MODE_NONE;
+		}
+	}
+
+	VkFilter ToVkFilterMode(rhi::FilterMode filterMode)
+	{
+		switch (filterMode)
+		{
+		case mulberry::rhi::FilterMode::NEAREST:
+			return VK_FILTER_NEAREST;
+		case mulberry::rhi::FilterMode::LINEAR:
+			return VK_FILTER_LINEAR;
+		default:
+			return VK_FILTER_NEAREST;
+		}
+	}
+
+	VkSamplerAddressMode ToVkWrapMode(rhi::WrapMode wrapMode)
+	{
+		switch (wrapMode)
+		{
+		case WrapMode::REPEAT:
+			return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+		case WrapMode::MIRRORED_REPEAT:
+			return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+		case WrapMode::CLAMP_TO_EDGE:
+			return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+		case WrapMode::CLAMP_TO_BORDER:
+			return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+		default:
+			return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+		}
+	}
+
+	VkSamplerMipmapMode ToVkMipMapMode(rhi::MipMapMode mipmapMode)
+	{
+		switch (mipmapMode)
+		{
+		case MipMapMode::NEAREST:
+			return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+		case MipMapMode::LINEAR:
+			return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+		default:
+			return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+		}
+	}
+
+	VkBorderColor ToVkBorderColor(rhi::BorderColor borderColor)
+	{
+		switch (borderColor)
+		{
+		case BorderColor::FLOAT_TRANSPARENT_BLACK:
+			return VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
+		case BorderColor::INT_TRANSPARENT_BLACK:
+			return VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
+		case BorderColor::FLOAT_OPAQUE_BLACK:
+			return VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
+		case BorderColor::INT_OPAQUE_BLACK:
+			return VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+		case BorderColor::FLOAT_OPAQUE_WHITE:
+			return VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+		case BorderColor::INT_OPAQUE_WHITE:
+			return VK_BORDER_COLOR_INT_OPAQUE_WHITE;
+		default:
+			return VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
+		}
+	}
+
+	VkShaderStageFlagBits ToVkShaderStage(rhi::ShaderStage shaderStage)
+	{
+		VkShaderStageFlags result = 0;
+		if ((shaderStage & rhi::ShaderStage::VERTEX) == ShaderStage::VERTEX)
+			result |= VK_SHADER_STAGE_VERTEX_BIT;
+		if ((shaderStage & rhi::ShaderStage::FRAGMENT) == ShaderStage::FRAGMENT)
+			result |= VK_SHADER_STAGE_FRAGMENT_BIT;
+		if ((shaderStage & rhi::ShaderStage::GEOMETRY) == ShaderStage::GEOMETRY)
+			result |= VK_SHADER_STAGE_GEOMETRY_BIT;
+		if ((shaderStage & rhi::ShaderStage::TESSELLATION_CONTROL) == ShaderStage::TESSELLATION_CONTROL)
+			result |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+		if ((shaderStage & rhi::ShaderStage::TESSELLATION_EVALUATION) == ShaderStage::TESSELLATION_EVALUATION)
+			result |= VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+		if ((shaderStage & rhi::ShaderStage::ALL_GRAPHICS) == ShaderStage::ALL_GRAPHICS)
+			result |= VK_SHADER_STAGE_ALL_GRAPHICS;
+		if ((shaderStage & rhi::ShaderStage::ALL) == ShaderStage::ALL)
+			result |= VK_SHADER_STAGE_ALL;
+		return (VkShaderStageFlagBits)result;
+	}
+
+	VkViewport ToVkViewPort(const mulberry::Viewport &viewport)
+	{
+		VkViewport result;
+		result.x = viewport.x;
+		result.y = viewport.y;
+		result.width = viewport.width;
+		result.height = viewport.height;
+		result.minDepth = 0.0f;
+		result.maxDepth = 1.0f;
+		return result;
+	}
+
+	VkPrimitiveTopology ToVkPrimitiveTopology(rhi::PrimitiveTopology primTopo)
+	{
+		switch (primTopo)
+		{
+		case PrimitiveTopology::POINT_LIST:
+			return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+		case PrimitiveTopology::LINE_LIST:
+			return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+		case PrimitiveTopology::LINE_STRIP:
+			return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+		case PrimitiveTopology::TRIANGLE_LIST:
+			return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		case PrimitiveTopology::TRIANGLE_STRIP:
+			return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		case PrimitiveTopology::TRIANGLE_FAN:
+			return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN;
+		case PrimitiveTopology::LINE_LIST_WITH_ADJACENCY:
+			return VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY;
+		case PrimitiveTopology::LINE_STRIP_WITH_ADJACENCY:
+			return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY;
+		case PrimitiveTopology::TRIANGLE_LIST_WITH_ADJACENCY:
+			return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		case PrimitiveTopology::TRIANGLE_STRIP_WITH_ADJACENCY:
+			return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY;
+		default:
+			return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		}
+	}
+
+	VkPolygonMode ToVkPolygonMode(rhi::PolygonMode polyMode)
+	{
+		switch (polyMode)
+		{
+		case PolygonMode::FILL:
+			return VK_POLYGON_MODE_FILL;
+		case PolygonMode::LINE:
+			return VK_POLYGON_MODE_LINE;
+		case PolygonMode::POINT:
+			return VK_POLYGON_MODE_POINT;
+		default:
+			return VK_POLYGON_MODE_FILL;
+		}
+	}
+
 }

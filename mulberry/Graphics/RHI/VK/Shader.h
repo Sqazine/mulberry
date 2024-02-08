@@ -5,7 +5,7 @@
 #include <vector>
 #include "Object.h"
 #include "../Enum.h"
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	class Shader:public Object
 	{

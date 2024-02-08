@@ -11,7 +11,7 @@
 
 #include "../Enum.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	class Device : public NonCopyable
 	{

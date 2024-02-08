@@ -4,7 +4,7 @@
 #include "Context.h"
 #include "Utils.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
     Object::Object()
         : mDevice(*VK_DEVICE)

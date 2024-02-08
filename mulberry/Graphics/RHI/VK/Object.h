@@ -1,6 +1,6 @@
 #pragma once
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
     class Object
     {

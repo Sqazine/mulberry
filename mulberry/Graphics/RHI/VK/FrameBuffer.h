@@ -3,7 +3,7 @@
 #include "RenderPass.h"
 #include "Texture.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	class FrameBuffer : public Object
 	{

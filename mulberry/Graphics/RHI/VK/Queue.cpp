@@ -3,7 +3,7 @@
 #include "Logger.h"
 #include "Utils.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	Queue::Queue(uint32_t familyIndex)
 	{

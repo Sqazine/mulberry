@@ -7,7 +7,7 @@
 #include "Texture.h"
 #include "VK/Shader.h"
 
-namespace mulberry
+namespace mulberry::rhi
 {
     class Shader
     {

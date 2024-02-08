@@ -1,6 +1,6 @@
 #include "RasterPass.h"
 #include "App.h"
-namespace mulberry
+namespace mulberry::rhi
 {
 	RasterPass::RasterPass(const std::vector<Texture *> &textureLists){
 		GRAPHICS_RHI_IMPL_SWITCHER(

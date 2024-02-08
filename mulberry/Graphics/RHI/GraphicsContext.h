@@ -4,7 +4,7 @@
 #include "Vec2.h"
 #include "GraphicsConfig.h"
 #include "Graphics/RHI/VK/Context.h"
-namespace mulberry
+namespace mulberry::rhi
 {
 	class GraphicsContext
 	{

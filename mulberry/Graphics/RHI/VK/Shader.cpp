@@ -5,14 +5,14 @@
 #include "Utils.h"
 #include "Device.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	Shader::Shader(ShaderStage type, std::string_view content)
 		: mType(type)
 	{
 		auto sourceCode = ToShaderSourceCode(content);
 
-		std::vector<uint32_t> pCode = GlslToSpv(SHADER_STAGE_CAST(type), sourceCode.data());
+		std::vector<uint32_t> pCode = GlslToSpv(ToVkShaderStage(type), sourceCode.data());
 
 		VkShaderModuleCreateInfo info;
 		info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -26,7 +26,7 @@ namespace mulberry::vk
 		mStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		mStageCreateInfo.pNext = nullptr;
 		mStageCreateInfo.flags = 0;
-		mStageCreateInfo.stage = SHADER_STAGE_CAST(type);
+		mStageCreateInfo.stage = ToVkShaderStage(type);
 		mStageCreateInfo.module = mShader;
 		mStageCreateInfo.pName = "main";
 		mStageCreateInfo.pSpecializationInfo = nullptr;

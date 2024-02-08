@@ -6,7 +6,7 @@
 #include "Vec2.h"
 #include "Enum.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	class Buffer : public Object
 	{

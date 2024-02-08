@@ -2,7 +2,7 @@
 #include "Device.h"
 #include "Logger.h"
 #include "Texture.h"
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
     DescriptorSetLayout::DescriptorSetLayout()
         : mHandle(VK_NULL_HANDLE)

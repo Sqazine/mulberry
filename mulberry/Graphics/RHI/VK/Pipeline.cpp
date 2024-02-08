@@ -2,7 +2,7 @@
 #include "Device.h"
 #include "Logger.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
     PipelineLayout::PipelineLayout()
         : mHandle(VK_NULL_HANDLE)
@@ -263,7 +263,7 @@ namespace mulberry::vk
         inputAssemblyStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
         inputAssemblyStateInfo.pNext = nullptr;
         inputAssemblyStateInfo.flags = 0;
-        inputAssemblyStateInfo.topology = PRIMITIVE_TOPOLOGY_CAST(mPrimitiveTopology);
+        inputAssemblyStateInfo.topology = ToVkPrimitiveTopology(mPrimitiveTopology);
         inputAssemblyStateInfo.primitiveRestartEnable = mIsPrimitiveRestartEnable;
 
         VkPipelineViewportStateCreateInfo viewportStateInfo = {};
@@ -279,8 +279,8 @@ namespace mulberry::vk
         rasterizationStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
         rasterizationStateInfo.pNext = nullptr;
         rasterizationStateInfo.flags = 0;
-        rasterizationStateInfo.polygonMode = POLYGON_MODE_CAST(mPolygonMode);
-        rasterizationStateInfo.frontFace = FRONT_FACE_CAST(mFrontFace);
+        rasterizationStateInfo.polygonMode = ToVkPolygonMode(mPolygonMode);
+        rasterizationStateInfo.frontFace = ToVkFrontFace(mFrontFace);
         rasterizationStateInfo.lineWidth = mLineWidth;
         rasterizationStateInfo.rasterizerDiscardEnable = mRasterDiscardEnable;
         rasterizationStateInfo.depthBiasEnable = mDepthBiasEnable;
@@ -288,13 +288,13 @@ namespace mulberry::vk
         rasterizationStateInfo.depthBiasClamp = mDepthBiasClamp;
         rasterizationStateInfo.depthBiasConstantFactor = mDepthBiasConstantFactor;
         rasterizationStateInfo.depthBiasSlopeFactor = mDepthBiasSlopeFactor;
-        rasterizationStateInfo.cullMode = CULL_MODE_CAST(mCullMode);
+        rasterizationStateInfo.cullMode = ToVkCullMode(mCullMode);
 
         VkPipelineMultisampleStateCreateInfo multiSampleStateInfo = {};
         multiSampleStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
         multiSampleStateInfo.pNext = nullptr;
         multiSampleStateInfo.flags = 0;
-        multiSampleStateInfo.rasterizationSamples = SAMPLE_COUNT_CAST(mSampleCount);
+        multiSampleStateInfo.rasterizationSamples = ToVkSampleCount(mSampleCount);
         multiSampleStateInfo.alphaToCoverageEnable = mIsAlphaToCoverageEnable ? VK_TRUE : VK_FALSE;
         multiSampleStateInfo.alphaToOneEnable = mIsAlphaToOneEnableEnable ? VK_TRUE : VK_FALSE;
         multiSampleStateInfo.sampleShadingEnable = mMinSampleShading == 0 ? VK_FALSE : VK_TRUE;

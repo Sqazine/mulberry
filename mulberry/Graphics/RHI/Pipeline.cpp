@@ -1,7 +1,7 @@
 #include "Pipeline.h"
 #include "App.h"
 #include "VK/Pipeline.h"
-namespace mulberry
+namespace mulberry::rhi
 {
     RasterPipeline::RasterPipeline()
     {

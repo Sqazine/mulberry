@@ -7,7 +7,7 @@
 #include "Enum.h"
 #include "Descriptor.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
     class PipelineLayout : public Object
     {

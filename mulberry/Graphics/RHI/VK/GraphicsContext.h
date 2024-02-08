@@ -9,11 +9,11 @@
 
 namespace mulberry::rhi::vk
 {
-	class Context
+	class GraphicsContext
 	{
 	public:
-		Context();
-		~Context();
+		GraphicsContext();
+		~GraphicsContext();
 
 		void Init();
 
@@ -21,27 +21,21 @@ namespace mulberry::rhi::vk
 		class Device *GetDevice() const;
 		class SwapChain *GetSwapChain() const;
 
-		void SetClearColor(const Color &clearColor);
-		void IsClearColorBuffer(bool isClear);
-
 		void BeginFrame();
 		void EndFrame();
 
-		const RasterPass* GetCurRasterPass() const;
+		const RasterPass *GetDefaultRasterPass() const;
 
 		size_t GetCurFrameIdx() const;
 
 	private:
-
 		friend class RasterPass;
-
-		const RasterPass* mCurRasterPass;
 
 		size_t mCurFrameIdx = 0;
 
-		std::unique_ptr<class Adapter >mAdapter;
-		std::unique_ptr<class Device >mDevice;
-		std::unique_ptr<class SwapChain >mSwapChain;
+		std::unique_ptr<class Adapter> mAdapter;
+		std::unique_ptr<class Device> mDevice;
+		std::unique_ptr<class SwapChain> mSwapChain;
 
 		std::unique_ptr<class RasterPass> mDefaultRasterPass;
 	};

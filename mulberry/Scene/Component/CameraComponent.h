@@ -2,7 +2,7 @@
 #include "Component.h"
 #include "Math/Mat4.h"
 #include "Vec2.h"
-#include "Math/Color.h"
+#include "Color.h"
 #include "TransformComponent.h"
 namespace mulberry
 {

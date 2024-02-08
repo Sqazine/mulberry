@@ -44,20 +44,20 @@ namespace mulberry
     SpriteMaterial::SpriteMaterial()
         : mTiling(1.0), mOffset(0.0)
     {
-        auto vertShader = Shader(ShaderStage::VERTEX, spriteVertShader);
-        auto fragShader = Shader(ShaderStage::FRAGMENT, spriteFragShader);
+        auto vertShader = rhi::Shader(rhi::ShaderStage::VERTEX, spriteVertShader);
+        auto fragShader = rhi::Shader(rhi::ShaderStage::FRAGMENT, spriteFragShader);
     }
-    
+
     SpriteMaterial::~SpriteMaterial()
     {
     }
 
-    void SpriteMaterial::SetSprite(Texture *sprite)
+    void SpriteMaterial::SetSprite(rhi::Texture *sprite)
     {
         this->mSprite = sprite;
     }
 
-    const Texture *SpriteMaterial::GetSprite() const
+    const rhi::Texture *SpriteMaterial::GetSprite() const
     {
         return mSprite;
     }
@@ -76,7 +76,7 @@ namespace mulberry
     {
         mOffset = o;
     }
-    
+
     const Vec2 &SpriteMaterial::GetOffset() const
     {
         return mOffset;
@@ -91,11 +91,11 @@ namespace mulberry
 
     GizmoMaterial::GizmoMaterial()
     {
-        auto vertShader = Shader(ShaderStage::VERTEX, gizmoVertShader);
-        auto fragShader = Shader(ShaderStage::FRAGMENT, gizmoFragShader);
-		/*  shaderProgram = std::make_unique<ShaderGroup>();
-		  shaderProgram->AttachShader(vertShader);
-		  shaderProgram->AttachShader(fragShader);*/
+        auto vertShader = rhi::Shader(rhi::ShaderStage::VERTEX, gizmoVertShader);
+        auto fragShader = rhi::Shader(rhi::ShaderStage::FRAGMENT, gizmoFragShader);
+        /*  shaderProgram = std::make_unique<ShaderGroup>();
+          shaderProgram->AttachShader(vertShader);
+          shaderProgram->AttachShader(fragShader);*/
     }
 
     GizmoMaterial::~GizmoMaterial()

@@ -15,7 +15,7 @@ namespace mulberry
         virtual void SetDefaultUniformValue() const {}
 
     protected:
-        std::unique_ptr<RasterPipeline> mRasterPipeline;
+        std::unique_ptr<rhi::RasterPipeline> mRasterPipeline;
     };
 
     class ComputeMaterial
@@ -27,7 +27,7 @@ namespace mulberry
         virtual void SetDefaultUniformValue() const {}
 
     protected:
-        std::unique_ptr<ComputePipeline> mComputePipeline;
+        std::unique_ptr<rhi::ComputePipeline> mComputePipeline;
     };
 
     class SpriteMaterial : public RasterMaterial
@@ -36,8 +36,8 @@ namespace mulberry
         SpriteMaterial();
         ~SpriteMaterial() override;
 
-        void SetSprite(Texture *sprite);
-        const Texture *GetSprite() const;
+        void SetSprite(rhi::Texture *sprite);
+        const rhi::Texture *GetSprite() const;
 
         void SetTiling(const Vec2 &t);
         const Vec2 &GetTiling() const;
@@ -48,7 +48,7 @@ namespace mulberry
         void SetDefaultUniformValue() const override;
 
     private:
-        Texture *mSprite;
+        rhi::Texture *mSprite;
         Vec2 mTiling;
         Vec2 mOffset;
     };

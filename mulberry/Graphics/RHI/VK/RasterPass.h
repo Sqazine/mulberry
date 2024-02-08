@@ -4,12 +4,12 @@
 #include "Object.h"
 #include "Command.h"
 #include "FrameBuffer.h"
-#include "Math/Color.h"
+#include "Color.h"
 #include "Math/Vec2.h"
 #include "Enum.h"
 #include "Format.h"
 #include "Texture.h"
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
     class RasterPass:public Object
     {
@@ -32,6 +32,9 @@ namespace mulberry::vk
         uint32_t GetCurFrameIdx() const;
 
     private:
+
+        friend class GraphicsContext;
+
         void ReBuild(std::vector<Texture *> &textureLists);
 
         std::unique_ptr<RenderPass> mRenderPass;

@@ -15,8 +15,8 @@ private:
     mulberry::SpriteComponent *mOwnerSpriteComponent = nullptr;
     mulberry::CameraComponent *mCameraComponent = nullptr;
 
-    std::unique_ptr<mulberry::Texture> movingTexture;
-    std::unique_ptr<mulberry::Texture> staticTexture;
+    std::unique_ptr<mulberry::rhi::Texture> movingTexture;
+    std::unique_ptr<mulberry::rhi::Texture> staticTexture;
 
     float moveSpeed = 500;
     float rotSpeed = 200;

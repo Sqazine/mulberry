@@ -2,10 +2,11 @@
 #include <cstdint>
 #include <type_traits>
 #include <vulkan/vulkan.h>
+#include "RHI/Enum.h"
 #include "Enum.h"
 #include "Object.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
     class Sampler:public Object
     {
@@ -15,29 +16,29 @@ namespace mulberry::vk
 
         const VkSampler &GetHandle();
 
-        Sampler &SetMagFilter(FilterMode filter);
-        Sampler &SetMinFilter(FilterMode filter);
-        Sampler &SetWrapU(WrapMode address);
-        Sampler &SetWrapV(WrapMode address);
-        Sampler &SetWrapW(WrapMode address);
+        Sampler &SetMagFilter(rhi::FilterMode filter);
+        Sampler &SetMinFilter(rhi::FilterMode filter);
+        Sampler &SetWrapU(rhi::WrapMode address);
+        Sampler &SetWrapV(rhi::WrapMode address);
+        Sampler &SetWrapW(rhi::WrapMode address);
         Sampler &SetAnisotropyLevel(float level);
-        Sampler &SetBorderColor(BorderColor borderColor);
-        Sampler &SetMipMapMode(MipMapMode mipmapMode);
+        Sampler &SetBorderColor(rhi::BorderColor borderColor);
+        Sampler &SetMipMapMode(rhi::MipMapMode mipmapMode);
         Sampler &SetMipMapBias(float bias);
         Sampler &SetMinMipMapLevel(float level);
         Sampler &SetMaxMipMapLevel(float level);
 
-        const FilterMode &GetMagFilter() const;
-        const FilterMode &GetMinFilter() const;
-        const WrapMode &GetWrapModeU() const;
-        const WrapMode &GetWrapModeV() const;
-        const WrapMode &GetWrapModeW() const;
+        const rhi::FilterMode &GetMagFilter() const;
+        const rhi::FilterMode &GetMinFilter() const;
+        const rhi::WrapMode &GetWrapModeU() const;
+        const rhi::WrapMode &GetWrapModeV() const;
+        const rhi::WrapMode &GetWrapModeW() const;
 
         float GetMaxAnisotropyLevel() const;
 
-        const BorderColor &GetBorderColor() const;
+        const rhi::BorderColor &GetBorderColor() const;
 
-        const MipMapMode &GetMipMapMode() const;
+        const rhi::MipMapMode &GetMipMapMode() const;
 
         float GetMipMapBias() const;
         float GetMinMipMapLevel() const;
@@ -50,11 +51,11 @@ namespace mulberry::vk
 
         bool mIsDirty{true};
 
-        FilterMode mMagFilter{FilterMode::LINEAR};
-        FilterMode mMinFilter{FilterMode::LINEAR};
-        WrapMode mWrapU{WrapMode::REPEAT};
-        WrapMode mWrapV{WrapMode::REPEAT};
-        WrapMode mWrapW{WrapMode::REPEAT};
+        rhi::FilterMode mMagFilter{FilterMode::LINEAR};
+        rhi::FilterMode mMinFilter{FilterMode::LINEAR};
+        rhi::WrapMode mWrapU{WrapMode::REPEAT};
+        rhi::WrapMode mWrapV{WrapMode::REPEAT};
+        rhi::WrapMode mWrapW{WrapMode::REPEAT};
 
         float mMaxAnisotropyLevel{0};
 

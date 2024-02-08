@@ -14,8 +14,8 @@ namespace mulberry
 
         void Init() override;
 
-        void SetSprite(Texture *texture);
-        const Texture *GetSprite() const;
+        void SetSprite(rhi::Texture *texture);
+        const rhi::Texture *GetSprite() const;
 
         void SetTiling(const Vec2 &t);
         const Vec2 &GetTiling() const;

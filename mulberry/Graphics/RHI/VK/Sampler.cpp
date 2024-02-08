@@ -2,11 +2,12 @@
 #include "Device.h"
 #include "Utils.h"
 #include "Logger.h"
+#include "Utils.h"
 
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
     Sampler::Sampler()
-        :mHandle(VK_NULL_HANDLE)
+        : mHandle(VK_NULL_HANDLE)
     {
     }
 
@@ -23,23 +24,23 @@ namespace mulberry::vk
         return mHandle;
     }
 
-    Sampler &Sampler::SetMagFilter(FilterMode filter)
+    Sampler &Sampler::SetMagFilter(rhi::FilterMode filter)
     {
         SET(mMagFilter, filter);
     }
-    Sampler &Sampler::SetMinFilter(FilterMode filter)
+    Sampler &Sampler::SetMinFilter(rhi::FilterMode filter)
     {
         SET(mMinFilter, filter);
     }
-    Sampler &Sampler::SetWrapU(WrapMode address)
+    Sampler &Sampler::SetWrapU(rhi::WrapMode address)
     {
         SET(mWrapU, address);
     }
-    Sampler &Sampler::SetWrapV(WrapMode address)
+    Sampler &Sampler::SetWrapV(rhi::WrapMode address)
     {
         SET(mWrapV, address);
     }
-    Sampler &Sampler::SetWrapW(WrapMode address)
+    Sampler &Sampler::SetWrapW(rhi::WrapMode address)
     {
         SET(mWrapW, address);
     }
@@ -68,23 +69,23 @@ namespace mulberry::vk
         SET(mMaxMipMapLevel, level);
     }
 
-    const FilterMode &Sampler::GetMagFilter() const
+    const rhi::FilterMode &Sampler::GetMagFilter() const
     {
         return mMagFilter;
     }
-    const FilterMode &Sampler::GetMinFilter() const
+    const rhi::FilterMode &Sampler::GetMinFilter() const
     {
         return mMinFilter;
     }
-    const WrapMode &Sampler::GetWrapModeU() const
+    const rhi::WrapMode &Sampler::GetWrapModeU() const
     {
         return mWrapU;
     }
-    const WrapMode &Sampler::GetWrapModeV() const
+    const rhi::WrapMode &Sampler::GetWrapModeV() const
     {
         return mWrapV;
     }
-    const WrapMode &Sampler::GetWrapModeW() const
+    const rhi::WrapMode &Sampler::GetWrapModeW() const
     {
         return mWrapW;
     }
@@ -121,18 +122,18 @@ namespace mulberry::vk
     {
         VkSamplerCreateInfo info{};
         info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        info.magFilter = FILTER_MODE_CAST(mMagFilter);
-        info.minFilter = FILTER_MODE_CAST(mMinFilter);
-        info.addressModeU = WRAP_MODE_CAST(mWrapU);
-        info.addressModeV = WRAP_MODE_CAST(mWrapV);
-        info.addressModeW = WRAP_MODE_CAST(mWrapW);
+        info.magFilter = ToVkFilterMode(mMagFilter);
+        info.minFilter = ToVkFilterMode(mMinFilter);
+        info.addressModeU = ToVkWrapMode(mWrapU);
+        info.addressModeV = ToVkWrapMode(mWrapV);
+        info.addressModeW = ToVkWrapMode(mWrapW);
         info.anisotropyEnable = mMaxAnisotropyLevel > 0 ? VK_TRUE : VK_FALSE;
         info.maxAnisotropy = mMaxAnisotropyLevel;
-        info.borderColor = BORDER_COLOR_CAST(mBorderColor);
+        info.borderColor = ToVkBorderColor(mBorderColor);
         info.unnormalizedCoordinates = VK_FALSE;
         info.compareEnable = VK_FALSE;
         info.compareOp = VK_COMPARE_OP_ALWAYS;
-        info.mipmapMode = MIPMAP_MODE_CAST(mMipMapMode);
+        info.mipmapMode = ToVkMipMapMode(mMipMapMode);
         info.mipLodBias = mMipMapBias;
         info.minLod = mMinMipMapLevel;
         info.maxLod = mMaxMipMapLevel;

@@ -8,7 +8,7 @@
 #include "App.h"
 #include "AppConfig.h"
 #include "Context.h"
-namespace mulberry::vk
+namespace mulberry::rhi::vk
 {
 	SwapChain::SwapChain()
 		: mHandle(VK_NULL_HANDLE), mNextImageIdx(0)
