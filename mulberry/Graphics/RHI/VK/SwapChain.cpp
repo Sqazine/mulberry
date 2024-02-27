@@ -7,7 +7,7 @@
 #include "Texture.h"
 #include "App.h"
 #include "AppConfig.h"
-#include "Context.h"
+#include "GraphicsContext.h"
 namespace mulberry::rhi::vk
 {
 	SwapChain::SwapChain()
@@ -40,7 +40,6 @@ namespace mulberry::rhi::vk
 
 	void SwapChain::AcquireNextImage(const Semaphore *semaphore, const Fence *fence)
 	{
-
 		if (semaphore && fence)
 			VK_CHECK(vkAcquireNextImageKHR(mDevice.GetHandle(), mHandle, UINT64_MAX, semaphore->GetHandle(), fence->GetHandle(), &mNextImageIdx))
 		else if (semaphore && !fence)

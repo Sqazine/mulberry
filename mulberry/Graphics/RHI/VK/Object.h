@@ -8,7 +8,7 @@ namespace mulberry::rhi::vk
         Object();
         ~Object();
 
-        class Device& GetRelatedDevice();
+        class Device& GetDevice();
     protected:
         class Device &mDevice;
     };

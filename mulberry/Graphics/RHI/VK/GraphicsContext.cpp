@@ -3,13 +3,12 @@
 #include "Device.h"
 #include "SwapChain.h"
 #include "Command.h"
-
-#include "Graphics/RHI/GraphicsContext.h"
 #include "RasterPass.h"
 #include "App.h"
 namespace mulberry::rhi::vk
 {
 	GraphicsContext::GraphicsContext()
+		: mCurFrameIdx(0)
 	{
 	}
 	GraphicsContext::~GraphicsContext()
@@ -45,21 +44,38 @@ namespace mulberry::rhi::vk
 		return mSwapChain.get();
 	}
 
+	void GraphicsContext::SetClearColor(const Color &clearColor)
+	{
+		mDefaultRasterPass->SetClearColor(clearColor);
+	}
+
+	void GraphicsContext::IsClearColorBuffer(bool isClear)
+	{
+		mDefaultRasterPass->IsClearColorBuffer(isClear);
+	}
+
 	void GraphicsContext::BeginFrame()
 	{
 		if (App::GetInstance().GetWindow()->IsResize())
 		{
 			mSwapChain->ReBuild();
 			mDefaultRasterPass->ReBuild(mSwapChain->GetTextures());
+			mCurFrameIdx = 0;
 		}
 
 		mSwapChain->AcquireNextImage(mDefaultRasterPass->GetWaitSemaphore());
+
+		mDefaultRasterPass->Begin();
 	}
 
 	void GraphicsContext::EndFrame()
 	{
+		mDefaultRasterPass->End();
+
 		auto result = mSwapChain->Present(mDefaultRasterPass->GetSignalSemaphore());
-		mCurFrameIdx = (mCurFrameIdx + 1) % mSwapChain->GetTextures().size();
+		mDevice->GetPresentQueue()->WaitIdle();
+		
+		mCurFrameIdx = (mCurFrameIdx + 1) % ((int32_t)mSwapChain->GetTextures().size());
 
 		if (result != VK_SUCCESS)
 		{

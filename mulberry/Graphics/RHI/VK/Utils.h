@@ -66,7 +66,7 @@ namespace mulberry::rhi
 #define VK_CHECK(x) (x);
 #endif
 
-#define VK_CONTEXT (App::GetInstance().GetGraphicsContext()->GetVKContextImpl())
+#define VK_CONTEXT (App::GetInstance().GetGraphicsContext()->GetVKGraphicsContextImpl())
 #define VK_DEVICE (VK_CONTEXT->GetDevice())
 
 #define RESOLVE_VK_INSTANCE_PFN(instance, funcName)                                                 \

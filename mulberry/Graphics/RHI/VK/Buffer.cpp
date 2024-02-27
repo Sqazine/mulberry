@@ -2,9 +2,8 @@
 #include "Buffer.h"
 #include "Utils.h"
 #include "Device.h"
-
 #include "Command.h"
-#include "Context.h"
+#include "GraphicsContext.h"
 #include "Adapter.h"
 #include "Device.h"
 

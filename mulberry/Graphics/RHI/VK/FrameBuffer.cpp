@@ -1,5 +1,5 @@
 #include "FrameBuffer.h"
-#include "Context.h"
+#include "GraphicsContext.h"
 #include "Utils.h"
 #include "Logger.h"
 

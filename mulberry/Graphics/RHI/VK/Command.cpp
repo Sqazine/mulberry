@@ -5,7 +5,7 @@
 #include "Descriptor.h"
 #include "Image.h"
 #include "App.h"
-#include "Context.h"
+#include "GraphicsContext.h"
 #include "Pipeline.h"
 
 namespace mulberry::rhi::vk
@@ -333,29 +333,7 @@ namespace mulberry::rhi::vk
 				fence->Wait();
 		}
 	}
-
-	void RasterCommandBuffer::Present(const std::vector<SwapChain *> swapChains, uint32_t imageIndex, const std::vector<Semaphore *> waitSemaphores) const
-	{
-		std::vector<VkSwapchainKHR> rawSwapChains(swapChains.size());
-		for (size_t i = 0; i < swapChains.size(); ++i)
-			rawSwapChains[i] = swapChains[i]->GetHandle();
-
-		std::vector<VkSemaphore> rawWait(waitSemaphores.size());
-
-		for (size_t i = 0; i < rawWait.size(); ++i)
-			rawWait[i] = waitSemaphores[i]->GetHandle();
-
-		VkPresentInfoKHR presentInfo{};
-		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-		presentInfo.waitSemaphoreCount = rawWait.size();
-		presentInfo.pWaitSemaphores = rawWait.data();
-		presentInfo.swapchainCount = rawSwapChains.size();
-		presentInfo.pSwapchains = rawSwapChains.data();
-		presentInfo.pImageIndices = &imageIndex;
-
-		mDevice.GetPresentQueue()->Present(presentInfo);
-	}
-
+	
 	ComputeCommandBuffer::ComputeCommandBuffer(VkCommandBufferLevel level)
 		: CommandBuffer(VK_CONTEXT->GetDevice()->GetComputeCommandPool()->GetHandle(), level)
 	{

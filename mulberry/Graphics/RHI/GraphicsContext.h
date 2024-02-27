@@ -3,7 +3,7 @@
 #include <mutex>
 #include "Vec2.h"
 #include "GraphicsConfig.h"
-#include "Graphics/RHI/VK/Context.h"
+#include "Graphics/RHI/VK/GRaphicsContext.h"
 namespace mulberry::rhi
 {
 	class GraphicsContext
@@ -20,8 +20,8 @@ namespace mulberry::rhi
 		void BeginFrame();
 		void EndFrame();
 
-		vk::Context* GetVKContextImpl() const;
+		vk::GraphicsContext* GetVKGraphicsContextImpl() const;
 	private:
-		std::unique_ptr<vk::Context> mVKContextImpl;
+		std::unique_ptr<vk::GraphicsContext> mVKContextImpl;
 	};
 }

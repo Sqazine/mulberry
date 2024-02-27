@@ -1,7 +1,7 @@
 #include "Object.h"
 #include "App.h"
 #include "Device.h"
-#include "Context.h"
+#include "GraphicsContext.h"
 #include "Utils.h"
 
 namespace mulberry::rhi::vk
@@ -15,7 +15,7 @@ namespace mulberry::rhi::vk
     {
     }
 
-    Device &Object::GetRelatedDevice()
+    Device &Object::GetDevice()
     {
         return mDevice;
     }

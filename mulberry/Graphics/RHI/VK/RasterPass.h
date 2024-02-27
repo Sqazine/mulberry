@@ -32,7 +32,6 @@ namespace mulberry::rhi::vk
         uint32_t GetCurFrameIdx() const;
 
     private:
-
         friend class GraphicsContext;
 
         void ReBuild(std::vector<Texture *> &textureLists);

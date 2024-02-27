@@ -1,13 +1,13 @@
 #include "GraphicsContext.h"
 #include "App.h"
 #include "Utils.h"
-#include "Graphics/RHI/VK/Context.h"
+#include "Graphics/RHI/VK/GraphicsContext.h"
 #include "Color.h"
 namespace mulberry::rhi
 {
 	GraphicsContext::GraphicsContext()
 	{
-		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl = std::make_unique<vk::Context>())
+		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl = std::make_unique<vk::GraphicsContext>())
 	}
 
 	GraphicsContext::~GraphicsContext()
@@ -39,7 +39,7 @@ namespace mulberry::rhi
 		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->EndFrame())
 	}
 
-	vk::Context *GraphicsContext::GetVKContextImpl() const
+	vk::GraphicsContext *GraphicsContext::GetVKGraphicsContextImpl() const
 	{
 		return mVKContextImpl.get();
 	}

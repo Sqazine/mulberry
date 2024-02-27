@@ -4,24 +4,27 @@
 #include "Math/MathUtils.h"
 #include "Utils.h"
 #include "App.h"
-#include "Context.h"
+#include "GRaphicsContext.h"
 #include <array>
 namespace mulberry::rhi::vk
 {
     RasterPass::RasterPass(std::vector<Texture *> &textureLists)
     {
         mRenderPass = std::make_unique<RenderPass>(textureLists[0]->GetImage()->GetFormat());
-        mRasterCommandBuffers = mDevice.GetRasterCommandPool()->CreatePrimaryCommandBuffers(textureLists.size());
 
         mFrameBuffers.resize(textureLists.size());
 
         ReBuild(textureLists);
 
-        mWaitSemaphores.resize(textureLists.size());
-        mSignalSemaphores.resize(textureLists.size());
-        mInFlightFences.resize(textureLists.size());
+        auto size = (int32_t)textureLists.size();
 
-        for (size_t i = 0; i < textureLists.size(); ++i)
+        mRasterCommandBuffers = mDevice.GetRasterCommandPool()->CreatePrimaryCommandBuffers(size);
+       
+        mWaitSemaphores.resize(size);
+        mSignalSemaphores.resize(size);
+        mInFlightFences.resize(size);
+
+        for (size_t i = 0; i < size; ++i)
         {
             mWaitSemaphores[i] = std::make_unique<Semaphore>();
             mSignalSemaphores[i] = std::make_unique<Semaphore>();
@@ -54,8 +57,6 @@ namespace mulberry::rhi::vk
 
     void RasterPass::Begin()
     {
-        VK_CONTEXT->mCurRasterPass = this;
-
         mInFlightFences[GetCurFrameIdx()]->Wait();
         mInFlightFences[GetCurFrameIdx()]->Reset();
 
@@ -88,14 +89,12 @@ namespace mulberry::rhi::vk
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &GetCommandBuffer()->GetHandle();
         submitInfo.waitSemaphoreCount = 1;
-        submitInfo.pWaitSemaphores = &mWaitSemaphores[GetCurFrameIdx()]->GetHandle();
+        submitInfo.pWaitSemaphores = &GetWaitSemaphore()->GetHandle();
         submitInfo.pWaitDstStageMask = waitStageMasks;
         submitInfo.signalSemaphoreCount = 1;
-        submitInfo.pSignalSemaphores = &mSignalSemaphores[GetCurFrameIdx()]->GetHandle();
+        submitInfo.pSignalSemaphores = &GetSignalSemaphore()->GetHandle();
 
         VK_CONTEXT->GetDevice()->GetRasterQueue()->Submit(submitInfo, mInFlightFences[GetCurFrameIdx()].get());
-
-        VK_CONTEXT->mCurRasterPass = nullptr;
     }
 
     RasterCommandBuffer *RasterPass::GetCommandBuffer() const

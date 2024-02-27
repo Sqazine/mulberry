@@ -82,12 +82,12 @@ namespace mulberry::rhi::vk
         descriptorSetAllocInfo.descriptorPool = descPool->GetHandle();
         descriptorSetAllocInfo.descriptorSetCount = 1;
 
-        VK_CHECK(vkAllocateDescriptorSets(mDescriptorPool->GetRelatedDevice().GetHandle(), &descriptorSetAllocInfo, &mHandle));
+        VK_CHECK(vkAllocateDescriptorSets(mDescriptorPool->GetDevice().GetHandle(), &descriptorSetAllocInfo, &mHandle));
     }
 
     DescriptorSet::~DescriptorSet()
     {
-        vkFreeDescriptorSets(mDescriptorPool->GetRelatedDevice().GetHandle(), mDescriptorPool->GetHandle(), 1, &mHandle);
+        vkFreeDescriptorSets(mDescriptorPool->GetDevice().GetHandle(), mDescriptorPool->GetHandle(), 1, &mHandle);
     }
 
     const VkDescriptorSet &DescriptorSet::GetHandle() const
@@ -219,7 +219,7 @@ namespace mulberry::rhi::vk
             writeDescriptorSets.emplace_back(setWrite);
         }
 
-        vkUpdateDescriptorSets(mDescriptorPool->GetRelatedDevice().GetHandle(), writeDescriptorSets.size(), writeDescriptorSets.data(), 0, nullptr);
+        vkUpdateDescriptorSets(mDescriptorPool->GetDevice().GetHandle(), writeDescriptorSets.size(), writeDescriptorSets.data(), 0, nullptr);
 
         mBufferInfoCache.clear();
         mImageInfoCache.clear();

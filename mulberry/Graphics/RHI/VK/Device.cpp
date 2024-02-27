@@ -1,7 +1,6 @@
 #include "Device.h"
 #include <iostream>
-#include "Context.h"
-
+#include "GraphicsContext.h"
 #include "Command.h"
 #include "Utils.h"
 #include "Logger.h"
