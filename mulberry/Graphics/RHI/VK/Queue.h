@@ -5,7 +5,7 @@
 
 namespace mulberry::rhi::vk
 {
-	class Queue : public Object
+	class Queue : public Base
 	{
 	public:
 		Queue(uint32_t familyIndex);
@@ -17,24 +17,28 @@ namespace mulberry::rhi::vk
 		VkQueue mHandle;
 	};
 
-	class RasterQueue : public Queue
+	class GraphicsQueue : public Queue
 	{
 	public:
-		RasterQueue(uint32_t familyIndex);
-		~RasterQueue() override;
-
+		GraphicsQueue(uint32_t familyIndex);
+		~GraphicsQueue() override;
+	private:
+		friend class GraphicsCommandBuffer;
+		friend class ComputeCommandBuffer;
+		friend class TransferCommandBuffer;
 		void Submit(const VkSubmitInfo &submitInfo, const Fence *fence = nullptr) const;
 	};
 
-	using ComputeQueue = RasterQueue;
-	using TransferQueue = RasterQueue;
+	using ComputeQueue = GraphicsQueue;
+	using TransferQueue = GraphicsQueue;
 
 	class PresentQueue : public Queue
 	{
 	public:
 		PresentQueue(uint32_t familyIndex);
 		~PresentQueue() override;
-
+	private:
+		friend class SwapChain;
 		VkResult Present(const VkPresentInfoKHR &info) const;
 	};
 }

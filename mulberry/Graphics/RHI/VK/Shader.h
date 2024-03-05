@@ -3,11 +3,11 @@
 #include <memory>
 #include <string_view>
 #include <vector>
-#include "Object.h"
+#include "Base.h"
 #include "../Enum.h"
 namespace mulberry::rhi::vk
 {
-	class Shader:public Object
+	class Shader:public Base
 	{
 	public:
 		Shader(ShaderStage type, std::string_view content);
@@ -23,7 +23,7 @@ namespace mulberry::rhi::vk
 		VkPipelineShaderStageCreateInfo mStageCreateInfo;
 	};
 
-	class RasterShaderGroup
+	class GraphicsShaderGroup
 	{
 	public:
 		void SetVertexShader(Shader *shader);

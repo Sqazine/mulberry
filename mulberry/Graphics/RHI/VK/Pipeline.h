@@ -1,15 +1,16 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#include "Object.h"
+#include "Base.h"
 #include "Shader.h"
 #include "Math/Vec2.h"
 #include "Format.h"
 #include "Enum.h"
+#include "RenderPass.h"
 #include "Descriptor.h"
 
 namespace mulberry::rhi::vk
 {
-    class PipelineLayout : public Object
+    class PipelineLayout : public Base
     {
     public:
         PipelineLayout();
@@ -27,7 +28,7 @@ namespace mulberry::rhi::vk
 
         VkPipelineLayout mHandle;
     };
-    class Pipeline : public Object
+    class Pipeline : public Base
     {
     public:
         Pipeline();
@@ -39,70 +40,63 @@ namespace mulberry::rhi::vk
     protected:
         virtual void Build() = 0;
 
+        bool mIsDirty;
+
         PipelineLayout *mLayout;
         VkPipeline mHandle;
     };
 
-    class RasterPipeline : public Pipeline
+    class GraphicsPipeline : public Pipeline
     {
     public:
-        RasterPipeline();
-        ~RasterPipeline() override;
+        GraphicsPipeline();
+        ~GraphicsPipeline() override;
 
-        RasterPipeline &SetVertexShader(Shader *shader);
-        RasterPipeline &SetTessellationControlShader(Shader *shader);
-        RasterPipeline &SetTessellationEvaluationShader(Shader *shader);
-        RasterPipeline &SetGeometryShader(Shader *shader);
-        RasterPipeline &SetFragmentShader(Shader *shader);
+        GraphicsPipeline &SetVertexShader(Shader *shader);
+        GraphicsPipeline &SetTessellationControlShader(Shader *shader);
+        GraphicsPipeline &SetTessellationEvaluationShader(Shader *shader);
+        GraphicsPipeline &SetGeometryShader(Shader *shader);
+        GraphicsPipeline &SetFragmentShader(Shader *shader);
 
-        RasterPipeline &AddVertexInputBinding(uint32_t binding, uint32_t stride);
-        RasterPipeline &AddVertexInputAttribute(uint32_t binding, uint32_t location, uint32_t offset, Format format);
+        GraphicsPipeline &AddVertexInputBinding(uint32_t binding, uint32_t stride);
+        GraphicsPipeline &AddVertexInputAttribute(uint32_t binding, uint32_t location, uint32_t offset, Format format);
 
-        RasterPipeline &SetPrimitiveTopology(PrimitiveTopology topology);
-        RasterPipeline &SetPrimitiveRestartEnable(bool isOpen);
+        GraphicsPipeline &SetPrimitiveTopology(PrimitiveTopology topology);
+        GraphicsPipeline &SetPrimitiveRestartEnable(bool isOpen);
 
-        RasterPipeline &AddViewport(const Vec2 &startPos, const Vec2 &extent);
-        RasterPipeline &AddScissor(const Vec2 &offset, const Vec2 &extent);
+        GraphicsPipeline &SetCullMode(CullMode cullMode);
+        GraphicsPipeline &SetPolygonMode(PolygonMode mode);
+        GraphicsPipeline &SetFrontFace(FrontFace frontFace);
+        GraphicsPipeline &SetLineWidth(float lw);
 
-        RasterPipeline &SetCullMode(CullMode cullMode);
-        RasterPipeline &SetPolygonMode(PolygonMode mode);
-        RasterPipeline &SetFrontFace(FrontFace frontFace);
-        RasterPipeline &SetLineWidth(float lw);
+        GraphicsPipeline &SetRasterDiscardEnable(bool v);
 
-        RasterPipeline &SetRasterDiscardEnable(bool v);
+        GraphicsPipeline &SetDepthBiasEnable(bool enable);
+        GraphicsPipeline &SetDepthClampEnable(bool enable);
 
-        RasterPipeline &SetDepthBiasEnable(bool enable);
-        RasterPipeline &SetDepthClampEnable(bool enable);
+        GraphicsPipeline &SetDepthBiasClamp(float v);
+        GraphicsPipeline &SetDepthBiasConstantFactor(float v);
+        GraphicsPipeline &SetDepthBiasSlopeFactor(float v);
 
-        RasterPipeline &SetDepthBiasClamp(float v);
-        RasterPipeline &SetDepthBiasConstantFactor(float v);
-        RasterPipeline &SetDepthBiasSlopeFactor(float v);
+        GraphicsPipeline &SetSampleCount(SampleCount msaa);
+        GraphicsPipeline &SetAlphaToCoverageEnable(bool enable);
+        GraphicsPipeline &SetAlphaToOneEnable(bool enable);
+        GraphicsPipeline &SetMinSampleShading(float v);
 
-        RasterPipeline &SetSampleCount(SampleCount msaa);
-        RasterPipeline &SetAlphaToCoverageEnable(bool enable);
-        RasterPipeline &SetAlphaToOneEnableEnable(bool enable);
-        RasterPipeline &SetMinSampleShading(float v);
-
-        RasterPipeline &SetPipelineLayout(PipelineLayout *layout);
-
-        const VkViewport &GetViewport(uint32_t i);
+        GraphicsPipeline &SetPipelineLayout(PipelineLayout *layout);
 
         VkPipelineDepthStencilStateCreateInfo pDepthStencilState{VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO};
         VkPipelineColorBlendStateCreateInfo pColorBlendState{VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO};
 
-        VkRenderPass renderPass;
+    private:
+        friend class GraphicsPass;
+        GraphicsPipeline &SetRenderPass(class RenderPass *renderPass);
 
     private:
         void Build() override;
 
         std::vector<VkVertexInputBindingDescription> mInputBindingCache{};
         std::vector<VkVertexInputAttributeDescription> mInputAttributeCache{};
-
-        PrimitiveTopology mPrimitiveTopology{PrimitiveTopology::POINT_LIST};
-        bool mIsPrimitiveRestartEnable{false};
-
-        std::vector<VkViewport> mViewportCache{};
-        std::vector<VkRect2D> mScissorCache{};
 
         CullMode mCullMode{CullMode::NONE};
         PolygonMode mPolygonMode{PolygonMode::FILL};
@@ -115,12 +109,13 @@ namespace mulberry::rhi::vk
         float mDepthBiasConstantFactor{0.0};
         float mDepthBiasSlopeFactor{0.0};
 
-        SampleCount mSampleCount{SampleCount::X1};
-        bool mIsAlphaToCoverageEnable{false};
-        bool mIsAlphaToOneEnableEnable{false};
-        float mMinSampleShading{0};
+        VkPipelineMultisampleStateCreateInfo mMultiSampleStateInfo{VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO};
+        VkPipelineInputAssemblyStateCreateInfo mInputAssemblyStateInfo{VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO};
+        VkPipelineRasterizationStateCreateInfo mRasterizationStateInfo{VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO};
 
-        RasterShaderGroup mShaderGroup;
+        class RenderPass *mRenderPass{nullptr};
+
+        GraphicsShaderGroup mShaderGroup;
     };
 
     class ComputePipeline : public Pipeline

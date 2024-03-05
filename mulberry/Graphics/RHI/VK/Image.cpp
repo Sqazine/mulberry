@@ -49,8 +49,8 @@ namespace mulberry::rhi::vk
 	Image::Image(const Vec2 &extent, VkImage rawImage, Format format)
 		: mHandle(rawImage), mFormat(format), mIsSwapChainImage(true)
 	{
-		mImageInfo.extent.width = extent.x;
-		mImageInfo.extent.height = extent.y;
+		mImageInfo.extent.width = static_cast<uint32_t>(extent.x);
+		mImageInfo.extent.height = static_cast<uint32_t>(extent.y);
 		CreateView();
 	}
 
@@ -136,8 +136,7 @@ namespace mulberry::rhi::vk
 
 									vkCmdCopyImageToBuffer(cmd->GetHandle(), mHandle, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, buffer->GetHandle(), 1, &copyRegion);
 
-									cmd->TransitionImageNewLayout(this, oldLayout);
-								});
+									cmd->TransitionImageNewLayout(this, oldLayout); });
 	}
 
 	void *Image::MapBuffer(Buffer *buffer)
@@ -168,15 +167,14 @@ namespace mulberry::rhi::vk
 
 		VK_CHECK(vkCreateImageView(mDevice.GetHandle(), &info, nullptr, &mView));
 	}
-	void GpuImage::UploadDataFrom(uint64_t bufferSize, CpuBuffer* stagingBuffer, ImageLayout oldLayout, ImageLayout newLayout)
+	void GpuImage::UploadDataFrom(uint64_t bufferSize, CpuBuffer *stagingBuffer, ImageLayout oldLayout, ImageLayout newLayout)
 	{
 		auto cmd = mDevice.GetTransferCommandPool()->CreatePrimaryCommandBuffer();
 
 		cmd->ExecuteImmediately([&]()
-			{
+								{
 				cmd->ImageBarrier(mHandle, GetFormat(), oldLayout, ImageLayout::TRANSFER_DST_OPTIMAL);
 				cmd->CopyImageFromBuffer(this, stagingBuffer);
-				cmd->ImageBarrier(mHandle, GetFormat(), ImageLayout::TRANSFER_DST_OPTIMAL, newLayout);
-			});
+				cmd->ImageBarrier(mHandle, GetFormat(), ImageLayout::TRANSFER_DST_OPTIMAL, newLayout); });
 	}
 }

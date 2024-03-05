@@ -1,19 +1,18 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#include "RenderPass.h"
 #include "Texture.h"
+#include "RenderPass.h"
 
 namespace mulberry::rhi::vk
 {
-	class FrameBuffer : public Object
+	class FrameBuffer : public Base
 	{
 	public:
-		FrameBuffer(uint32_t width, uint32_t height, const RenderPass *renderPass, Texture *attachments);
+		FrameBuffer(RenderPass* renderPass,Texture *attachment);
 		~FrameBuffer();
 
 		const VkFramebuffer &GetHandle() const;
-
-		const Vec2& GetExtent() const;
+		const Vec2 &GetExtent() const;
 	private:
 		Vec2 mExtent;
 		VkFramebuffer mHandle;

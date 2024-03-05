@@ -2,11 +2,11 @@
 
 namespace mulberry::rhi::vk
 {
-    class Object
+    class Base
     {
     public:
-        Object();
-        ~Object();
+        Base();
+        ~Base();
 
         class Device& GetDevice();
     protected:

@@ -2,15 +2,10 @@
 #include "Component.h"
 #include "Math/Mat4.h"
 #include "Vec2.h"
-#include "Color.h"
 #include "TransformComponent.h"
+#include "Graphics/Camera.h"
 namespace mulberry
 {
-    struct Camera
-    {
-        Color clearColor;
-        Vec2 extent;
-    };
     class CameraComponent : public Component
     {
     public:
@@ -25,13 +20,14 @@ namespace mulberry
         void SetClearColor(const Color &color);
         const Color &GetClearColor() const;
 
-        void SetExtent(const Vec2& extent);
-        const Vec2 &GetExtent() const;
+        void SetViewport(const Viewport& viewport);
+        const Viewport &GetViewport() const;
+
+        Vec2 GetExtent() const;
 
     private:
-        struct Camera mCamera;
+        Camera mCamera;
         Transform mPreTransform;
-        Mat4 mProjMat;
-        Mat4 mViewMat;
+        
     };
 }

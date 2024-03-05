@@ -22,12 +22,12 @@ namespace mulberry::rhi::vk
 		const VkDevice &GetHandle() const;
 		const PhysicalDeviceSpec &GetPhysicalDeviceSpec() const;
 
-		const RasterQueue *GetRasterQueue();
+		const GraphicsQueue *GetGraphicsQueue();
 		const ComputeQueue *GetComputeQueue();
 		const TransferQueue *GetTransferQueue();
 		const PresentQueue *GetPresentQueue();
 
-		class RasterCommandPool *GetRasterCommandPool();
+		class GraphicsCommandPool *GetGraphicsCommandPool();
 		class ComputeCommandPool *GetComputeCommandPool();
 		class TransferCommandPool *GetTransferCommandPool();
 
@@ -36,17 +36,16 @@ namespace mulberry::rhi::vk
 		void WaitIdle() const;
 
 	private:
-		friend class Context;
 
 		const PhysicalDeviceSpec &mPhysicalDeviceSpec;
 		VkDevice mHandle;
 
-		std::unique_ptr<RasterQueue> mRasterQueue;
+		std::unique_ptr<GraphicsQueue> mGraphicsQueue;
 		std::unique_ptr<ComputeQueue> mComputeQueue;
 		std::unique_ptr<TransferQueue> mTransferQueue;
 		std::unique_ptr<PresentQueue> mPresentQueue;
 
-		std::unique_ptr<RasterCommandPool> mRasterCommandPool;
+		std::unique_ptr<GraphicsCommandPool> mGraphicsCommandPool;
 		std::unique_ptr<ComputeCommandPool> mComputeCommandPool;
 		std::unique_ptr<TransferCommandPool> mTransferCommandPool;
 	};

@@ -49,12 +49,12 @@ namespace mulberry::rhi::vk
 	{
 		WaitIdle();
 	
-		mRasterQueue.reset(nullptr);
+		mGraphicsQueue.reset(nullptr);
 		mPresentQueue.reset(nullptr);
 		mComputeQueue.reset(nullptr);
 		mTransferQueue.reset(nullptr);
 		mComputeCommandPool.reset(nullptr);
-		mRasterCommandPool.reset(nullptr);
+		mGraphicsCommandPool.reset(nullptr);
 		mTransferCommandPool.reset(nullptr);
 		vkDestroyDevice(mHandle, nullptr);
 	}
@@ -74,11 +74,11 @@ namespace mulberry::rhi::vk
 		return mPhysicalDeviceSpec;
 	}
 
-	const RasterQueue *Device::GetRasterQueue()
+	const GraphicsQueue *Device::GetGraphicsQueue()
 	{
-		if (mRasterQueue == nullptr)
-			mRasterQueue = std::make_unique<RasterQueue>(mPhysicalDeviceSpec.queueFamilyIndices.graphicsFamilyIdx.value());
-		return mRasterQueue.get();
+		if (mGraphicsQueue == nullptr)
+			mGraphicsQueue = std::make_unique<GraphicsQueue>(mPhysicalDeviceSpec.queueFamilyIndices.graphicsFamilyIdx.value());
+		return mGraphicsQueue.get();
 	}
 
 	const ComputeQueue *Device::GetComputeQueue()
@@ -102,11 +102,11 @@ namespace mulberry::rhi::vk
 		return mPresentQueue.get();
 	}
 
-	RasterCommandPool *Device::GetRasterCommandPool()
+	GraphicsCommandPool *Device::GetGraphicsCommandPool()
 	{
-		if (mRasterCommandPool == nullptr)
-			mRasterCommandPool = std::make_unique<RasterCommandPool>();
-		return mRasterCommandPool.get();
+		if (mGraphicsCommandPool == nullptr)
+			mGraphicsCommandPool = std::make_unique<GraphicsCommandPool>();
+		return mGraphicsCommandPool.get();
 	}
 
 	ComputeCommandPool *Device::GetComputeCommandPool()

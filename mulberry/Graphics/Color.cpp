@@ -104,10 +104,9 @@ namespace mulberry
         return *this;
     }
 
-    
-        Color Color::ToSRGB() const
-        {
-            return Color(math::Pow(r,2.2),math::Pow(g,2.2),math::Pow(b,2.2),math::Pow(a,2.2));
-        }
+    Color Color::ToSRGB() const
+    {
+        return Color(math::Pow(r, 2.2), math::Pow(g, 2.2), math::Pow(b, 2.2), math::Pow(a, 2.2));
+    }
 
 }

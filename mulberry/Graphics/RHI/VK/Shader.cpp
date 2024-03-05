@@ -52,7 +52,7 @@ namespace mulberry::rhi::vk
 		return mType;
 	}
 
-	std::vector<VkPipelineShaderStageCreateInfo> RasterShaderGroup::GetShaderStages()
+	std::vector<VkPipelineShaderStageCreateInfo> GraphicsShaderGroup::GetShaderStages()
 	{
 		if (!mVertShader)
 			MULBERRY_CORE_ERROR("Vertex shader is necessary in rasterization");
@@ -82,32 +82,32 @@ namespace mulberry::rhi::vk
 		return result;
 	}
 
-	void RasterShaderGroup::SetVertexShader(Shader *shader)
+	void GraphicsShaderGroup::SetVertexShader(Shader *shader)
 	{
 		mVertShader.reset(shader);
 	}
-	void RasterShaderGroup::SetTessellationControlShader(Shader *shader)
+	void GraphicsShaderGroup::SetTessellationControlShader(Shader *shader)
 	{
 		mTesslCtrlShader.reset(shader);
 	}
-	void RasterShaderGroup::SetTessellationEvaluationShader(Shader *shader)
+	void GraphicsShaderGroup::SetTessellationEvaluationShader(Shader *shader)
 	{
 		mTesslEvalShader.reset(shader);
 	}
-	void RasterShaderGroup::SetGeometryShader(Shader *shader)
+	void GraphicsShaderGroup::SetGeometryShader(Shader *shader)
 	{
 		mGeomShader.reset(shader);
 	}
-	void RasterShaderGroup::SetFragmentShader(Shader *shader)
+	void GraphicsShaderGroup::SetFragmentShader(Shader *shader)
 	{
 		mFragShader.reset(shader);
 	}
 
-	uint32_t RasterShaderGroup::GetAttribute(std::string_view name) const
+	uint32_t GraphicsShaderGroup::GetAttribute(std::string_view name) const
 	{
 		return 0;
 	}
-	uint32_t RasterShaderGroup::GetUniform(std::string_view name) const
+	uint32_t GraphicsShaderGroup::GetUniform(std::string_view name) const
 	{
 		return 0;
 	}

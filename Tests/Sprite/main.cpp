@@ -39,7 +39,7 @@ int32_t main(int32_t argc, char **argv)
 	if (cameraComp)
 	{
 		cameraComp->SetClearColor(mulberry::Color::LightYellow);
-		cameraComp->SetExtent(mulberry::App::GetInstance().GetWindow()->GetSize());
+		cameraComp->SetViewport(mulberry::App::GetInstance().GetWindow()->GetViewport());
 	}
 
 	mulberry::SpriteComponent* spriteComponent = rootEntity->CreateComponent<mulberry::SpriteComponent>();

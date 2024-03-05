@@ -50,7 +50,7 @@ namespace mulberry
 		void Render();
 		void RenderGizmo();
 		void PostUpdate();
-		void CleanUp();
+		void Destroy();
 
 		AppState mState;
 
@@ -63,6 +63,6 @@ namespace mulberry
 		std::vector<std::unique_ptr<Scene>> mScenes;
 		int32_t mSceneIdx;
 
-		SceneRenderer mSceneRenderer;
+		std::unique_ptr<SceneRenderer> mSceneRenderer;
 	};
 }

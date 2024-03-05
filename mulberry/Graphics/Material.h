@@ -6,16 +6,26 @@
 #include "Graphics/RHI/Pipeline.h"
 namespace mulberry
 {
-    class RasterMaterial
+    class GraphicsMaterial
     {
     public:
-        RasterMaterial() {}
-        virtual ~RasterMaterial() {}
+        GraphicsMaterial() : mGraphicsPipeline(std::make_unique<rhi::GraphicsPipeline>()) {}
+        virtual ~GraphicsMaterial() {}
 
         virtual void SetDefaultUniformValue() const {}
 
+        rhi::GraphicsPipeline *GetGraphicsPipeline()
+        {
+            return mGraphicsPipeline.get();
+        }
+
+        const rhi::GraphicsPipeline *GetGraphicsPipeline() const
+        {
+            return mGraphicsPipeline.get();
+        }
+
     protected:
-        std::unique_ptr<rhi::RasterPipeline> mRasterPipeline;
+        std::unique_ptr<rhi::GraphicsPipeline> mGraphicsPipeline;
     };
 
     class ComputeMaterial
@@ -30,7 +40,7 @@ namespace mulberry
         std::unique_ptr<rhi::ComputePipeline> mComputePipeline;
     };
 
-    class SpriteMaterial : public RasterMaterial
+    class SpriteMaterial : public GraphicsMaterial
     {
     public:
         SpriteMaterial();
@@ -53,7 +63,7 @@ namespace mulberry
         Vec2 mOffset;
     };
 
-    class GizmoMaterial : public RasterMaterial
+    class GizmoMaterial : public GraphicsMaterial
     {
     public:
         GizmoMaterial();

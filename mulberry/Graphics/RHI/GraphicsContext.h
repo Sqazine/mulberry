@@ -1,27 +1,28 @@
 #pragma once
 #include <memory>
 #include <mutex>
+#include "Base.h"
 #include "Vec2.h"
 #include "GraphicsConfig.h"
-#include "Graphics/RHI/VK/GRaphicsContext.h"
+#include "Graphics/RHI/VK/GraphicsContext.h"
 namespace mulberry::rhi
 {
-	class GraphicsContext
+	class GraphicsContext : GRAPHICS_RHI_IMPL_DECL(GraphicsContext)
 	{
 	public:
 		GraphicsContext();
 		~GraphicsContext();
 
 		void Init();
-
-		void SetClearColor(const struct Color &clearColor);
-		void IsClearColorBuffer(bool isClear);
+		void Destroy();
 
 		void BeginFrame();
+
+		class GraphicsPass *GetDefaultDrawPass();
+		
 		void EndFrame();
 
-		vk::GraphicsContext* GetVKGraphicsContextImpl() const;
 	private:
-		std::unique_ptr<vk::GraphicsContext> mVKContextImpl;
+		std::unique_ptr<class GraphicsPass> mDefaultGraphicsPass;
 	};
 }

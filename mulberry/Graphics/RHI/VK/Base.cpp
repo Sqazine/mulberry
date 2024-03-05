@@ -1,4 +1,4 @@
-#include "Object.h"
+#include "Base.h"
 #include "App.h"
 #include "Device.h"
 #include "GraphicsContext.h"
@@ -6,16 +6,16 @@
 
 namespace mulberry::rhi::vk
 {
-    Object::Object()
+    Base::Base()
         : mDevice(*VK_DEVICE)
     {
     }
 
-    Object::~Object()
+    Base::~Base()
     {
     }
 
-    Device &Object::GetDevice()
+    Device &Base::GetDevice()
     {
         return mDevice;
     }

@@ -1,14 +1,14 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include <vector>
-#include "Object.h"
+#include "Base.h"
 #include "Utils.h"
 #include "Vec2.h"
 #include "Enum.h"
 
 namespace mulberry::rhi::vk
 {
-	class Buffer : public Object
+	class Buffer : public Base
 	{
 	public:
 		Buffer(uint64_t size, BufferUsage usage, MemoryProperty property);

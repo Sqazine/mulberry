@@ -2,11 +2,12 @@
 #include "GraphicsContext.h"
 #include "Utils.h"
 #include "Logger.h"
+#include "App.h"
 
 namespace mulberry::rhi::vk
 {
-	FrameBuffer::FrameBuffer(uint32_t width, uint32_t height, const RenderPass *renderPass,Texture * attachments)
-		:mExtent(width,height), mHandle(VK_NULL_HANDLE)
+	FrameBuffer::FrameBuffer(RenderPass* renderPass,Texture *attachment)
+		: mExtent(attachment->GetImage()->GetExtent()), mHandle(VK_NULL_HANDLE)
 	{
 		VkFramebufferCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -14,18 +15,17 @@ namespace mulberry::rhi::vk
 		createInfo.flags = 0;
 		createInfo.renderPass = renderPass->GetHandle();
 		createInfo.attachmentCount = 1;
-		createInfo.pAttachments = &attachments->GetImage()->GetView();
-		createInfo.width = width;
-		createInfo.height = height;
+		createInfo.pAttachments = &attachment->GetImage()->GetView();
+		createInfo.width = mExtent.x;
+		createInfo.height = mExtent.y;
 		createInfo.layers = 1;
 
 		VK_CHECK(vkCreateFramebuffer(mDevice.GetHandle(), &createInfo, nullptr, &mHandle));
 	}
 
-
 	FrameBuffer::~FrameBuffer()
 	{
-		vkDestroyFramebuffer(mDevice.GetHandle(), mHandle, nullptr);
+		vkDestroyFramebuffer(VK_DEVICE->GetHandle(),mHandle,nullptr);
 	}
 
 	const VkFramebuffer &FrameBuffer::GetHandle() const
@@ -33,7 +33,7 @@ namespace mulberry::rhi::vk
 		return mHandle;
 	}
 
-	const Vec2& FrameBuffer::GetExtent() const
+	const Vec2 &FrameBuffer::GetExtent() const
 	{
 		return mExtent;
 	}

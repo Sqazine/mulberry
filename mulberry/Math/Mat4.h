@@ -1,5 +1,5 @@
 #pragma once
-
+#include <array>
 namespace mulberry
 {
     class Vec2;
@@ -12,7 +12,7 @@ namespace mulberry
             {
                 float e00, e10, e20, e30, e01, e11, e21, e31, e02, e12, e22, e32, e03, e13, e23, e33;
             };
-            float elements[16];
+           std::array<float,16> elements;
         };
 
         Mat4();
@@ -32,6 +32,7 @@ namespace mulberry
         Mat4 &operator-=(const Mat4 &right);
         Mat4 &operator*=(const Mat4 &right);
         Mat4 &operator*=(float value);
+        Mat4 &operator=(const Mat4 &right);
 
         static Mat4 Translate(const Vec2 &position);
         static Mat4 Rotate(float radian);

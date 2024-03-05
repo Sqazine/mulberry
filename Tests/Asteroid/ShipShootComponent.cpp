@@ -87,7 +87,7 @@ void ShipShootComponent::FlushLaserEntity(LaserCache &cache)
     auto spriteExtent = mLaserTexture->GetExtent();
     auto extent = mCameraComponent->GetExtent();
 
-    mulberry::Vec2 edge = mulberry::Vec2((extent.x + spriteExtent.x) / 2.0, (extent.y + spriteExtent.y) / 2.0);
+    mulberry::Vec2 edge = mulberry::Vec2((extent.x + spriteExtent.x) / 2.0f, (extent.y + spriteExtent.y) / 2.0f);
 
     auto transformComp = cache.laserEntity->GetComponent<mulberry::TransformComponent>();
 

@@ -3,7 +3,7 @@
 #include <functional>
 #include <vector>
 #include <cstdint>
-#include "Object.h"
+#include "Base.h"
 #include "Descriptor.h"
 #include "Pipeline.h"
 #include "SyncObject.h"
@@ -14,7 +14,7 @@ namespace mulberry::rhi::vk
 {
 
 	template <typename T>
-	class CommandPool : public Object
+	class CommandPool : public Base
 	{
 	public:
 		CommandPool(uint32_t queueFamilyIndex)
@@ -73,11 +73,11 @@ namespace mulberry::rhi::vk
 		~name##CommandPool();                                               \
 	};
 
-	COMMAND_POOL_DECL(Raster)
+	COMMAND_POOL_DECL(Graphics)
 	COMMAND_POOL_DECL(Compute)
 	COMMAND_POOL_DECL(Transfer)
 
-	class CommandBuffer : public Object
+	class CommandBuffer : public Base
 	{
 	public:
 		CommandBuffer(VkCommandPool cmdPool, VkCommandBufferLevel level);
@@ -116,11 +116,11 @@ namespace mulberry::rhi::vk
 		VkCommandBuffer mHandle;
 	};
 
-	class RasterCommandBuffer : public CommandBuffer
+	class GraphicsCommandBuffer : public CommandBuffer
 	{
 	public:
-		RasterCommandBuffer(VkCommandBufferLevel level);
-		~RasterCommandBuffer() override;
+		GraphicsCommandBuffer(VkCommandBufferLevel level);
+		~GraphicsCommandBuffer() override;
 
 		void BindPipeline(Pipeline *pipeline) const override;
 		void BindDescriptorSets(class PipelineLayout *layout, uint32_t firstSet, const std::vector<const DescriptorSet *> &descriptorSets, const std::vector<uint32_t> &dynamicOffsets = {}) override;

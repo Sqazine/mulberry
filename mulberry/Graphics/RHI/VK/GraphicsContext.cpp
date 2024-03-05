@@ -3,8 +3,9 @@
 #include "Device.h"
 #include "SwapChain.h"
 #include "Command.h"
-#include "RasterPass.h"
+#include "Pass.h"
 #include "App.h"
+#include "Graphics/RHI/Pass.h"
 namespace mulberry::rhi::vk
 {
 	GraphicsContext::GraphicsContext()
@@ -25,8 +26,13 @@ namespace mulberry::rhi::vk
 #endif
 		mDevice.reset(mAdapter->CreateDevice());
 		mSwapChain = std::make_unique<SwapChain>();
+	}
 
-		mDefaultRasterPass = std::make_unique<RasterPass>(mSwapChain->GetTextures());
+	void GraphicsContext::Destroy()
+	{
+		mSwapChain.reset(nullptr);
+		mDevice.reset(nullptr);
+		mAdapter.reset(nullptr);
 	}
 
 	Adapter *GraphicsContext::GetAdapter() const
@@ -44,50 +50,33 @@ namespace mulberry::rhi::vk
 		return mSwapChain.get();
 	}
 
-	void GraphicsContext::SetClearColor(const Color &clearColor)
-	{
-		mDefaultRasterPass->SetClearColor(clearColor);
-	}
-
-	void GraphicsContext::IsClearColorBuffer(bool isClear)
-	{
-		mDefaultRasterPass->IsClearColorBuffer(isClear);
-	}
-
 	void GraphicsContext::BeginFrame()
 	{
 		if (App::GetInstance().GetWindow()->IsResize())
 		{
 			mSwapChain->ReBuild();
-			mDefaultRasterPass->ReBuild(mSwapChain->GetTextures());
 			mCurFrameIdx = 0;
 		}
 
-		mSwapChain->AcquireNextImage(mDefaultRasterPass->GetWaitSemaphore());
+		auto vkDefaultDrawPassImpl = App::GetInstance().GetGraphicsContext()->GetDefaultDrawPass()->GetVkImpl();
 
-		mDefaultRasterPass->Begin();
+		mSwapChain->AcquireNextImage(vkDefaultDrawPassImpl->GetWaitSemaphore());
 	}
 
 	void GraphicsContext::EndFrame()
 	{
-		mDefaultRasterPass->End();
+		auto vkDefaultDrawPassImpl = App::GetInstance().GetGraphicsContext()->GetDefaultDrawPass()->GetVkImpl();
 
-		auto result = mSwapChain->Present(mDefaultRasterPass->GetSignalSemaphore());
+		auto result = mSwapChain->Present(vkDefaultDrawPassImpl->GetSignalSemaphore());
 		mDevice->GetPresentQueue()->WaitIdle();
-		
+
 		mCurFrameIdx = (mCurFrameIdx + 1) % ((int32_t)mSwapChain->GetTextures().size());
 
 		if (result != VK_SUCCESS)
 		{
 			mSwapChain->ReBuild();
-			mDefaultRasterPass->ReBuild(mSwapChain->GetTextures());
 			mCurFrameIdx = 0;
 		}
-	}
-
-	const RasterPass *GraphicsContext::GetDefaultRasterPass() const
-	{
-		return mDefaultRasterPass.get();
 	}
 
 	size_t GraphicsContext::GetCurFrameIdx() const

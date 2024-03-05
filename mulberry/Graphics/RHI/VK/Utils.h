@@ -7,8 +7,8 @@
 #include "Enum.h"
 #include "Format.h"
 #include "RHI/Enum.h"
-#include "Graphics/Viewport.h"
-namespace mulberry::rhi
+#include "Graphics/RHI/Viewport.h"
+namespace mulberry::rhi::vk
 {
 	inline const char *GetErrorCode(const VkResult result)
 	{
@@ -66,7 +66,7 @@ namespace mulberry::rhi
 #define VK_CHECK(x) (x);
 #endif
 
-#define VK_CONTEXT (App::GetInstance().GetGraphicsContext()->GetVKGraphicsContextImpl())
+#define VK_CONTEXT (App::GetInstance().GetGraphicsContext()->GetVkImpl())
 #define VK_DEVICE (VK_CONTEXT->GetDevice())
 
 #define RESOLVE_VK_INSTANCE_PFN(instance, funcName)                                                 \
@@ -89,10 +89,7 @@ namespace mulberry::rhi
 	member = value;        \
 	mIsDirty = true;       \
 	return *this;
-}
 
-namespace mulberry::rhi::vk
-{
 	struct SwapChainDetails
 	{
 		std::vector<VkSurfaceFormatKHR> surfaceFormats;
@@ -112,7 +109,7 @@ namespace mulberry::rhi::vk
 	VkSamplerMipmapMode ToVkMipMapMode(rhi::MipMapMode mipmapMode);
 	VkBorderColor ToVkBorderColor(rhi::BorderColor borderColor);
 	VkShaderStageFlagBits ToVkShaderStage(rhi::ShaderStage shaderStage);
-	VkViewport ToVkViewPort(const mulberry::Viewport &viewport);
+	std::pair<VkViewport, VkRect2D> ToVkViewPort(const mulberry::Viewport &viewport);
 	VkPrimitiveTopology ToVkPrimitiveTopology(rhi::PrimitiveTopology primTopo);
 	VkPolygonMode ToVkPolygonMode(rhi::PolygonMode polyMode);
 }

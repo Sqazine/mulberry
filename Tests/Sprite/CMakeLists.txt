@@ -1,6 +1,6 @@
 file(GLOB SRC "*.h" "*.cpp")
 set(EXE_NAME Sprite)
 add_executable(${EXE_NAME} ${SRC})
-target_include_directories(${EXE_NAME} PUBLIC ${LIB_MULBERRY_INC_DIR})
-target_link_libraries(${EXE_NAME} PRIVATE mulberry spdlog::spdlog)
+target_include_directories(${EXE_NAME} PRIVATE ${LIB_MULBERRY_INC_DIR})
+target_link_libraries(${EXE_NAME} PRIVATE mulberry)
 target_compile_definitions(${EXE_NAME} PRIVATE ${CURRENT_PLATFORM})

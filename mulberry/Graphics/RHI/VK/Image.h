@@ -2,12 +2,12 @@
 #include <vulkan/vulkan.h>
 #include "Device.h"
 #include "Buffer.h"
-#include "Object.h"
+#include "Base.h"
 #include "../Enum.h"
 #include "../Format.h"
 namespace mulberry::rhi::vk
 {
-	class Image : public Object
+	class Image : public Base
 	{
 	public:
 		Image(

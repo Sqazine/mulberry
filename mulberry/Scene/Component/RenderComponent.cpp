@@ -17,11 +17,11 @@ namespace mulberry
 		RequiredComponent<TransformComponent>();
 	}
 
-	void RenderComponent::SetMaterial(RasterMaterial *mat)
+	void RenderComponent::SetMaterial(GraphicsMaterial *mat)
 	{
 		material.reset(mat);
 	}
-	const RasterMaterial *RenderComponent::GetMaterial() const
+	const GraphicsMaterial *RenderComponent::GetMaterial() const
 	{
 		return material.get();
 	}

@@ -6,8 +6,9 @@ namespace mulberry
     CameraComponent::CameraComponent(int32_t updateOrder)
         : Component(updateOrder)
     {
-        mViewMat = Mat4::LookAt(Vec2::ZERO, 0.0f);
+        mCamera.viewMat = Mat4::LookAt(Vec2::ZERO, 0.0f);
     }
+
     CameraComponent::~CameraComponent()
     {
     }
@@ -19,18 +20,18 @@ namespace mulberry
 
     const Mat4 &CameraComponent::GetViewMat()
     {
-        //only update viewmat while transform was updated
+        // only update viewmat while transform was updated
         auto t = GetOwner()->GetComponent<TransformComponent>()->GetTransform();
         if (mPreTransform != t)
         {
             mPreTransform = t;
-            mViewMat = Mat4::LookAt(mPreTransform.position, mPreTransform.rotation);
+            mCamera.viewMat = Mat4::LookAt(mPreTransform.position, mPreTransform.rotation);
         }
-        return mViewMat;
+        return mCamera.viewMat;
     }
     const Mat4 &CameraComponent::GetProjMat() const
     {
-        return mProjMat;
+        return mCamera.projMat;
     }
 
     void CameraComponent::SetClearColor(const Color &color)
@@ -43,15 +44,20 @@ namespace mulberry
         return mCamera.clearColor;
     }
 
-    void CameraComponent::SetExtent(const Vec2 &extent)
+    void CameraComponent::SetViewport(const Viewport &viewport)
     {
-        mCamera.extent = extent;
-        float halfWidth = mCamera.extent.x / 2.0f;
-        float halfHeight = mCamera.extent.y / 2.0f;
-        mProjMat = Mat4::Ortho(-halfWidth, halfWidth, halfHeight, -halfHeight, 0.1f, 1000.0f);
+        mCamera.viewport=viewport;
+        float halfWidth = mCamera.viewport.width / 2.0f;
+        float halfHeight = mCamera.viewport.height / 2.0f;
+        mCamera.projMat = Mat4::Ortho(-halfWidth, halfWidth, halfHeight, -halfHeight, 0.1f, 1000.0f);
     }
-    const Vec2 &CameraComponent::GetExtent() const
+    const Viewport &CameraComponent::GetViewport() const
     {
-        return mCamera.extent;
+        return mCamera.viewport;
+    }
+
+    Vec2 CameraComponent::GetExtent() const
+    {
+        return Vec2(mCamera.viewport.width, mCamera.viewport.height);
     }
 }

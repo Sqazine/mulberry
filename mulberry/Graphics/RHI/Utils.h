@@ -16,11 +16,11 @@
     } while (false);
 #endif
 
-#define GRAPHICS_RHI_IMPL_SWITCHER(impl)       \
+#define GRAPHICS_RHI_IMPL_SWITCHER(vkImpl)     \
     switch (AppConfig::graphicsConfig.backend) \
     {                                          \
     case GraphicsBackend::VK:                  \
-        impl;                                \
+        vkImpl;                                \
         break;                                 \
     default:                                   \
         NOT_IMPLEMENTATE();                    \

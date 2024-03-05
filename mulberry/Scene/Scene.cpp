@@ -8,6 +8,7 @@ namespace mulberry
     }
     Scene::~Scene()
     {
+        Destroy();
     }
 
     Entity *Scene::CreateEntity(std::string_view name)
@@ -66,7 +67,7 @@ namespace mulberry
     void Scene::RenderGizmo()
     {
     }
-    void Scene::CleanUp()
+    void Scene::Destroy()
     {
     }
 }

@@ -146,7 +146,6 @@ namespace mulberry::rhi
         GREATER_OR_EQUAL,
         ALWAYS,
     };
-    using DepthTest = CompareOp;
 
     enum class AttachmentLoad
     {

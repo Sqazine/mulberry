@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include "Object.h"
+#include <vulkan/vulkan.h>
+#include "Base.h"
 #include "Command.h"
 #include "FrameBuffer.h"
 #include "Color.h"
@@ -11,35 +12,35 @@
 #include "Texture.h"
 namespace mulberry::rhi::vk
 {
-    class RasterPass:public Object
+    class GraphicsPass : public Base
     {
     public:
-        RasterPass(std::vector<Texture *> &textureLists);
-        virtual ~RasterPass();
+        GraphicsPass();
+        virtual ~GraphicsPass();
+
+        virtual void Begin();
 
         void SetClearColor(const Color &clearColor);
         void IsClearColorBuffer(bool isClear);
 
-        virtual void Begin();
-        virtual void End();
-    protected:
-        friend class Context;
+        void SetViewport(const Viewport &viewport);
+        void SetPipeline(GraphicsPipeline *pipeline);
 
+        virtual void End();
+
+    protected:
         Semaphore *GetWaitSemaphore() const;
         Semaphore *GetSignalSemaphore() const;
-        RasterCommandBuffer *GetCommandBuffer() const;
+        GraphicsCommandBuffer *GetCommandBuffer() const;
 
-        uint32_t GetCurFrameIdx() const;
+        size_t GetCurFrameIdx() const;
 
     private:
+        Fence *GetFence() const;
+
         friend class GraphicsContext;
 
-        void ReBuild(std::vector<Texture *> &textureLists);
-
-        std::unique_ptr<RenderPass> mRenderPass;
-        std::vector<std::unique_ptr<FrameBuffer>> mFrameBuffers;
-
-        std::vector<std::unique_ptr<RasterCommandBuffer>> mRasterCommandBuffers;
+        std::vector<std::unique_ptr<GraphicsCommandBuffer>> mGraphicsCommandBuffers;
 
         std::vector<std::unique_ptr<Semaphore>> mWaitSemaphores;
         std::vector<std::unique_ptr<Semaphore>> mSignalSemaphores;

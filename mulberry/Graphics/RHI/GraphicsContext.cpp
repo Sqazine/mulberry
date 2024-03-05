@@ -7,40 +7,38 @@ namespace mulberry::rhi
 {
 	GraphicsContext::GraphicsContext()
 	{
-		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl = std::make_unique<vk::GraphicsContext>())
 	}
 
 	GraphicsContext::~GraphicsContext()
 	{
-		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl.reset(nullptr));
 	}
 
 	void GraphicsContext::Init()
 	{
-		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->Init());
+		GRAPHICS_RHI_IMPL_SWITCHER(GetVkImpl()->Init());
+		mDefaultGraphicsPass = std::make_unique<GraphicsPass>();
 	}
 
-	void GraphicsContext::SetClearColor(const Color &clearColor)
+	void GraphicsContext::Destroy()
 	{
-		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->SetClearColor(clearColor));
+		mDefaultGraphicsPass.reset(nullptr);
+		GRAPHICS_RHI_IMPL_SWITCHER(GetVkImpl()->Destroy());
 	}
-	
-	void GraphicsContext::IsClearColorBuffer(bool isClear)
+
+	GraphicsPass *GraphicsContext::GetDefaultDrawPass()
 	{
-		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->IsClearColorBuffer(isClear));
+		return mDefaultGraphicsPass.get();
 	}
 
 	void GraphicsContext::BeginFrame()
 	{
-		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->BeginFrame())
-	}
-	void GraphicsContext::EndFrame()
-	{
-		GRAPHICS_RHI_IMPL_SWITCHER(mVKContextImpl->EndFrame())
+		GRAPHICS_RHI_IMPL_SWITCHER(GetVkImpl()->BeginFrame())
+		mDefaultGraphicsPass->Begin();
 	}
 
-	vk::GraphicsContext *GraphicsContext::GetVKGraphicsContextImpl() const
+	void GraphicsContext::EndFrame()
 	{
-		return mVKContextImpl.get();
+		mDefaultGraphicsPass->End();
+		GRAPHICS_RHI_IMPL_SWITCHER(GetVkImpl()->EndFrame());
 	}
 }

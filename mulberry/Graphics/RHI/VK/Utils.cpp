@@ -2,7 +2,6 @@
 #include <glslang/Public/ShaderLang.h>
 #include <glslang/SPIRV/GlslangToSpv.h>
 #include "Logger.h"
-#include "Platform/IO.h"
 
 namespace mulberry::rhi::vk
 {
@@ -183,7 +182,7 @@ namespace mulberry::rhi::vk
 		int32_t inKeyIdx = 0;
 		int32_t uniformKeyIdx = 0;
 
-		for (int32_t idx = 0; idx < result.size(); ++idx)
+		for (size_t idx = 0; idx < result.size(); ++idx)
 		{
 			char c = result[idx];
 
@@ -388,16 +387,22 @@ namespace mulberry::rhi::vk
 		return (VkShaderStageFlagBits)result;
 	}
 
-	VkViewport ToVkViewPort(const mulberry::Viewport &viewport)
+	std::pair<VkViewport, VkRect2D> ToVkViewPort(const mulberry::Viewport &viewport)
 	{
-		VkViewport result;
-		result.x = viewport.x;
-		result.y = viewport.y;
-		result.width = viewport.width;
-		result.height = viewport.height;
-		result.minDepth = 0.0f;
-		result.maxDepth = 1.0f;
-		return result;
+		VkViewport vkViewport;
+		vkViewport.x = viewport.x;
+		vkViewport.y = viewport.y;
+		vkViewport.width = viewport.width;
+		vkViewport.height = viewport.height;
+		vkViewport.minDepth = 0.0f;
+		vkViewport.maxDepth = 1.0f;
+
+		VkRect2D vkScissor;
+		vkScissor.extent.width = static_cast<uint32_t>(viewport.scissor.extent.x);
+		vkScissor.extent.height = static_cast<uint32_t>(viewport.scissor.extent.y);
+		vkScissor.offset.x = static_cast<int32_t>(viewport.scissor.offset.x);
+		vkScissor.offset.y = static_cast<int32_t>(viewport.scissor.offset.y);
+		return {vkViewport, vkScissor};
 	}
 
 	VkPrimitiveTopology ToVkPrimitiveTopology(rhi::PrimitiveTopology primTopo)

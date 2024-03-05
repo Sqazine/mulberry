@@ -2,7 +2,7 @@
 #include <vector>
 #include <cstdint>
 #include <memory>
-#include <SDL.h>
+#include "Base.h"
 #include "Color.h"
 #include "Math/Vec2.h"
 #include "Core/AssetManager.h"
@@ -12,7 +12,7 @@
 
 namespace mulberry::rhi
 {
-    struct Texture
+    struct Texture : GRAPHICS_RHI_IMPL_DECL(Texture)
     {
     public:
         Texture();
@@ -48,10 +48,5 @@ namespace mulberry::rhi
         float GetMaxMipMapLevel() const;
 
         Vec2 GetExtent() const;
-
-    private:
-        friend class RasterShaderGroup;
-        friend class RasterPass;
-        std::unique_ptr<vk::Texture> mVKTextureImpl;
     };
 }

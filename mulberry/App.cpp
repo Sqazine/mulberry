@@ -1,7 +1,7 @@
 #include "App.h"
+#include "Logger.h"
 #include "SceneRenderer.h"
 #include "GraphicsContext.h"
-#include "Logger.h"
 #include "AppConfig.h"
 
 #if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
@@ -24,7 +24,7 @@ namespace mulberry
 			RenderGizmo();
 			PostUpdate();
 		}
-		CleanUp();
+		Destroy();
 	}
 
 	Scene *App::CreateScene(std::string_view name)
@@ -112,12 +112,12 @@ namespace mulberry
 		mGraphicsContext->Init();
 
 		mSceneIdx = 0;
-		mSceneRenderer.Init();
+		mSceneRenderer = std::make_unique<SceneRenderer>();
 	}
 
 	void App::Update()
 	{
-		if(!AppConfig::graphicsConfig.useVSync)
+		if (!AppConfig::graphicsConfig.useVSync)
 			mTimer->Update(AppConfig::graphicsConfig.frameRate);
 		else
 			mTimer->Update();
@@ -148,17 +148,20 @@ namespace mulberry
 
 	void App::Render()
 	{
-		mSceneRenderer.Render(mScenes[mSceneIdx].get());
+		mSceneRenderer->Render(mScenes[mSceneIdx].get());
 	}
 
 	void App::RenderGizmo()
 	{
 	}
 
-	void App::CleanUp()
+	void App::Destroy()
 	{
-		for (const auto &scene : mScenes)
-			scene->CleanUp();
+		for (auto &scene : mScenes)
+			scene.reset(nullptr);
+
+		mSceneRenderer.reset(nullptr);
+		mGraphicsContext->Destroy();
 	}
 
 	void App::PreUpdate()

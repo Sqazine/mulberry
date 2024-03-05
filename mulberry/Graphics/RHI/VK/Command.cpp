@@ -10,11 +10,11 @@
 
 namespace mulberry::rhi::vk
 {
-	#define COMMAND_POOL_DEF(name, queueIdx)                              \
-    name##CommandPool::name##CommandPool() : CommandPool<name##CommandBuffer>(queueIdx) {} \
-    name##CommandPool::~name##CommandPool() {}
+#define COMMAND_POOL_DEF(name, queueIdx)                                                   \
+	name##CommandPool::name##CommandPool() : CommandPool<name##CommandBuffer>(queueIdx) {} \
+	name##CommandPool::~name##CommandPool() {}
 
-	COMMAND_POOL_DEF(Raster, VK_CONTEXT->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.graphicsFamilyIdx.value())
+	COMMAND_POOL_DEF(Graphics, VK_CONTEXT->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.graphicsFamilyIdx.value())
 	COMMAND_POOL_DEF(Compute, VK_CONTEXT->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.computeFamilyIdx.value())
 	COMMAND_POOL_DEF(Transfer, VK_CONTEXT->GetDevice()->GetPhysicalDeviceSpec().queueFamilyIndices.transferFamilyIdx.value())
 
@@ -165,7 +165,7 @@ namespace mulberry::rhi::vk
 		vkCmdPipelineBarrier(mHandle, PIPELINE_STAGE_CAST(srcStage), PIPELINE_STAGE_CAST(dstStage), dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
 	}
 
-	void CommandBuffer::CopyImage(Image* dstImage,Image* srcImage, const std::vector<VkImageCopy> &copyRegions)
+	void CommandBuffer::CopyImage(Image *dstImage, Image *srcImage, const std::vector<VkImageCopy> &copyRegions)
 	{
 		vkCmdCopyImage(mHandle, srcImage->GetHandle(), IMAGE_LAYOUT_CAST(srcImage->GetImageLayout()), dstImage->GetHandle(), IMAGE_LAYOUT_CAST(dstImage->GetImageLayout()), copyRegions.size(), copyRegions.data());
 	}
@@ -220,20 +220,20 @@ namespace mulberry::rhi::vk
 		auto oldLayout = barrier.oldLayout;
 	}
 
-	RasterCommandBuffer::RasterCommandBuffer(VkCommandBufferLevel level)
-		:CommandBuffer(VK_CONTEXT->GetDevice()->GetRasterCommandPool()->GetHandle(), level)
+	GraphicsCommandBuffer::GraphicsCommandBuffer(VkCommandBufferLevel level)
+		: CommandBuffer(VK_CONTEXT->GetDevice()->GetGraphicsCommandPool()->GetHandle(), level)
 	{
 	}
-	RasterCommandBuffer::~RasterCommandBuffer()
+	GraphicsCommandBuffer::~GraphicsCommandBuffer()
 	{
 	}
 
-	void RasterCommandBuffer::BindPipeline(Pipeline *pipeline) const
+	void GraphicsCommandBuffer::BindPipeline(Pipeline *pipeline) const
 	{
 		vkCmdBindPipeline(mHandle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetHandle());
 	}
 
-	void RasterCommandBuffer::BindDescriptorSets(PipelineLayout *layout, uint32_t firstSet, const std::vector<const DescriptorSet *> &descriptorSets, const std::vector<uint32_t>& dynamicOffsets)
+	void GraphicsCommandBuffer::BindDescriptorSets(PipelineLayout *layout, uint32_t firstSet, const std::vector<const DescriptorSet *> &descriptorSets, const std::vector<uint32_t> &dynamicOffsets)
 	{
 		std::vector<VkDescriptorSet> rawDescSets(descriptorSets.size());
 		for (int32_t i = 0; i < rawDescSets.size(); ++i)
@@ -242,19 +242,19 @@ namespace mulberry::rhi::vk
 		vkCmdBindDescriptorSets(mHandle, VK_PIPELINE_BIND_POINT_GRAPHICS, layout->GetHandle(), 0, rawDescSets.size(), rawDescSets.data(), dynamicOffsets.size(), dynamicOffsets.data());
 	}
 
-	void RasterCommandBuffer::BindVertexBuffers(uint32_t firstBinding, uint32_t bindingCount, const std::vector<VertexBuffer *> &pBuffers, const std::vector<uint64_t> &pOffsets)
+	void GraphicsCommandBuffer::BindVertexBuffers(uint32_t firstBinding, uint32_t bindingCount, const std::vector<VertexBuffer *> &pBuffers, const std::vector<uint64_t> &pOffsets)
 	{
 		for (uint32_t i = 0; i < bindingCount; ++i)
 			vkCmdBindVertexBuffers(mHandle, firstBinding + i, 1, &pBuffers[i]->GetHandle(), &pOffsets[i]);
 	}
 
-	void RasterCommandBuffer::BindVertexBuffers(uint32_t firstBinding, uint32_t bindingCount, const std::vector<VertexBuffer*> &pBuffers)
+	void GraphicsCommandBuffer::BindVertexBuffers(uint32_t firstBinding, uint32_t bindingCount, const std::vector<VertexBuffer *> &pBuffers)
 	{
 		std::vector<uint64_t> offsets(pBuffers.size(), 0);
 		BindVertexBuffers(firstBinding, bindingCount, pBuffers, offsets);
 	}
 
-	void RasterCommandBuffer::BeginRenderPass(VkRenderPass renderPass, VkFramebuffer frameBuffer, VkRect2D renderArea, const std::vector<VkClearValue> &clearValues, VkSubpassContents subpassContents)
+	void GraphicsCommandBuffer::BeginRenderPass(VkRenderPass renderPass, VkFramebuffer frameBuffer, VkRect2D renderArea, const std::vector<VkClearValue> &clearValues, VkSubpassContents subpassContents)
 	{
 		VkRenderPassBeginInfo renderPassBeginInfo;
 		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -268,46 +268,50 @@ namespace mulberry::rhi::vk
 		vkCmdBeginRenderPass(mHandle, &renderPassBeginInfo, subpassContents);
 	}
 
-	void RasterCommandBuffer::EndRenderPass()
+	void GraphicsCommandBuffer::EndRenderPass()
 	{
 		vkCmdEndRenderPass(mHandle);
 	}
 
-	void RasterCommandBuffer::SetViewport(const VkViewport &viewport)
+	void GraphicsCommandBuffer::SetViewport(const VkViewport &viewport)
 	{
 		vkCmdSetViewport(mHandle, 0, 1, &viewport);
 	}
 
-	void RasterCommandBuffer::SetScissor(const VkRect2D &scissor)
+	void GraphicsCommandBuffer::SetScissor(const VkRect2D &scissor)
 	{
 		vkCmdSetScissor(mHandle, 0, 1, &scissor);
 	}
 
-	void RasterCommandBuffer::SetLineWidth(float lineWidth)
+	void GraphicsCommandBuffer::SetLineWidth(float lineWidth)
 	{
 		vkCmdSetLineWidth(mHandle, lineWidth);
 	}
 
-	void RasterCommandBuffer::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
+	void GraphicsCommandBuffer::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
 	{
 		vkCmdDraw(mHandle, vertexCount, instanceCount, firstVertex, firstInstance);
 	}
 
-	void RasterCommandBuffer::DrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance)
+	void GraphicsCommandBuffer::DrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance)
 	{
 		vkCmdDrawIndexed(mHandle, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 	}
 
-	void RasterCommandBuffer::Submit(const std::vector<PipelineStage> &waitStages, const std::vector<Semaphore *> waitSemaphores, const std::vector<Semaphore *> signalSemaphores, Fence *fence) const
+	void GraphicsCommandBuffer::Submit(const std::vector<PipelineStage> &waitStages, const std::vector<Semaphore *> waitSemaphores, const std::vector<Semaphore *> signalSemaphores, Fence *fence) const
 	{
 		std::vector<VkSemaphore> rawSignal(signalSemaphores.size());
 		std::vector<VkSemaphore> rawWait(waitSemaphores.size());
+		std::vector<VkPipelineStageFlags> rawWaitStages(waitStages.size());
 
 		for (size_t i = 0; i < rawSignal.size(); ++i)
 			rawSignal[i] = signalSemaphores[i]->GetHandle();
 
 		for (size_t i = 0; i < rawWait.size(); ++i)
 			rawWait[i] = waitSemaphores[i]->GetHandle();
+
+		for (size_t i = 0; i < rawWaitStages.size(); ++i)
+			rawWaitStages[i] = PIPELINE_STAGE_CAST(waitStages[i]);
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -318,22 +322,23 @@ namespace mulberry::rhi::vk
 		submitInfo.pWaitSemaphores = rawWait.data();
 		submitInfo.signalSemaphoreCount = rawSignal.size();
 		submitInfo.pSignalSemaphores = rawSignal.data();
+		submitInfo.pWaitDstStageMask = rawWaitStages.data();
 
 		if (fence == nullptr)
 		{
 			auto tmpfence = std::make_unique<Fence>();
-			mDevice.GetRasterQueue()->Submit(submitInfo, tmpfence.get());
+			mDevice.GetGraphicsQueue()->Submit(submitInfo, tmpfence.get());
 			tmpfence->Wait();
 			tmpfence.reset(nullptr);
 		}
 		else
 		{
-			mDevice.GetRasterQueue()->Submit(submitInfo, fence);
+			mDevice.GetGraphicsQueue()->Submit(submitInfo, fence);
 			if (fence->GetStatus() == FenceStatus::UNSIGNALED)
 				fence->Wait();
 		}
 	}
-	
+
 	ComputeCommandBuffer::ComputeCommandBuffer(VkCommandBufferLevel level)
 		: CommandBuffer(VK_CONTEXT->GetDevice()->GetComputeCommandPool()->GetHandle(), level)
 	{
@@ -347,7 +352,7 @@ namespace mulberry::rhi::vk
 		vkCmdBindPipeline(mHandle, VK_PIPELINE_BIND_POINT_COMPUTE, pipeline->GetHandle());
 	}
 
-	void ComputeCommandBuffer::BindDescriptorSets(PipelineLayout *layout, uint32_t firstSet, const std::vector<const DescriptorSet *> &descriptorSets, const std::vector<uint32_t>& dynamicOffsets)
+	void ComputeCommandBuffer::BindDescriptorSets(PipelineLayout *layout, uint32_t firstSet, const std::vector<const DescriptorSet *> &descriptorSets, const std::vector<uint32_t> &dynamicOffsets)
 	{
 		std::vector<VkDescriptorSet> rawDescSets(descriptorSets.size());
 		for (int32_t i = 0; i < rawDescSets.size(); ++i)
@@ -383,7 +388,8 @@ namespace mulberry::rhi::vk
 
 		if (fence == nullptr)
 		{
-			auto tmpfence = std::make_unique<Fence>();;
+			auto tmpfence = std::make_unique<Fence>();
+			;
 			mDevice.GetComputeQueue()->Submit(submitInfo, tmpfence.get());
 			tmpfence->Wait();
 			tmpfence.reset(nullptr);
@@ -409,7 +415,7 @@ namespace mulberry::rhi::vk
 	{
 		vkCmdBindPipeline(mHandle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetHandle());
 	}
-	void TransferCommandBuffer::BindDescriptorSets(PipelineLayout *layout, uint32_t firstSet, const std::vector<const DescriptorSet *> &descriptorSets, const std::vector<uint32_t>& dynamicOffsets)
+	void TransferCommandBuffer::BindDescriptorSets(PipelineLayout *layout, uint32_t firstSet, const std::vector<const DescriptorSet *> &descriptorSets, const std::vector<uint32_t> &dynamicOffsets)
 	{
 		std::vector<VkDescriptorSet> rawDescSets(descriptorSets.size());
 		for (int32_t i = 0; i < rawDescSets.size(); ++i)

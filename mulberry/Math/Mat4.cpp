@@ -118,6 +118,12 @@ namespace mulberry
 		return *this;
 	}
 
+	Mat4 &Mat4::operator=(const Mat4 &right)
+	{
+		this->elements = right.elements;
+		return *this;
+	}
+
 	Mat4 Mat4::Translate(const Vec2 &position)
 	{
 		Mat4 tmpMat;
@@ -190,6 +196,6 @@ namespace mulberry
 		transPart.elements[13] = -position.y;
 		transPart.elements[14] = -10;
 
-		return transPart*rotPart;
+		return transPart * rotPart;
 	}
 }

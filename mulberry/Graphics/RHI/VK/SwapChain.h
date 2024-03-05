@@ -1,12 +1,13 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include <vector>
+#include <memory>
 #include "Utils.h"
 #include "SyncObject.h"
 #include "Math/Vec2.h"
 namespace mulberry::rhi::vk
 {
-	class SwapChain:public Object
+	class SwapChain:public Base
 	{
 	public:
 		SwapChain();
@@ -14,10 +15,13 @@ namespace mulberry::rhi::vk
 
 		Vec2 GetExtent() const;
 
-		std::vector<class Texture*>& GetTextures();
+		std::vector<class Texture *> &GetTextures();
 		const VkSurfaceFormatKHR GetSurfaceFormat() const;
 
 		const VkSwapchainKHR &GetHandle() const;
+
+		class FrameBuffer *GetCurrentDefaultFrameBuffer() const;
+		class RenderPass* GetDefaultRenderPass() const;
 
 		void ReBuild();
 
@@ -39,7 +43,10 @@ namespace mulberry::rhi::vk
 
 		VkSwapchainKHR mHandle;
 
-		std::vector<class Texture*> mSwapChainTextures;
+		std::vector<class Texture *> mSwapChainTextures;
+
+		std::unique_ptr<class RenderPass> mDefaultRenderPass;
+		std::vector<std::unique_ptr<class FrameBuffer>> mDefaultFrameBuffers;
 
 		VkSurfaceFormatKHR mSwapChainSurfaceFormat;
 		VkExtent2D mSwapChainImageExtent;

@@ -48,7 +48,6 @@ find_library(vulkan_1
 target_link_libraries(mulberry PRIVATE  SDL2-static
                                         SDL2main 
                                         stb
-                                        spdlog::spdlog
                                         spdlog::spdlog_header_only 
                                         SDL2_ttf 
                                         OSDependent 

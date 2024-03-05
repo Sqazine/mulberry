@@ -1,6 +1,6 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#include "Object.h"
+#include "Base.h"
 namespace mulberry::rhi::vk
 {
     constexpr uint64_t FENCE_WAIT_TIME_OUT = UINT64_MAX;
@@ -11,7 +11,7 @@ namespace mulberry::rhi::vk
         UNSIGNALED,
     };
 
-    class Fence :public Object
+    class Fence :public Base
     {
     public:
         Fence(FenceStatus status=FenceStatus::UNSIGNALED);
@@ -24,12 +24,11 @@ namespace mulberry::rhi::vk
 
         FenceStatus GetStatus() const;
     private:
-
         VkFence mHandle;
         FenceStatus mStatus;
     };
 
-    class Semaphore :public Object
+    class Semaphore :public Base
     {
     public:
         Semaphore();

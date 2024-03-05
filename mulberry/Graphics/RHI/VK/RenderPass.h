@@ -1,13 +1,13 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include "Device.h"
-#include "../Format.h"
-#include "../Enum.h"
-#include "Object.h"
+#include "Format.h"
+#include "Enum.h"
+#include "Base.h"
 
 namespace mulberry::rhi::vk
 {
-    class RenderPass:public Object
+    class RenderPass:public Base
     {
     public:
         RenderPass(Format colorformat);

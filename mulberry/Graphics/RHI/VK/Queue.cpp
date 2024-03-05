@@ -24,16 +24,16 @@ namespace mulberry::rhi::vk
 		return mHandle;
 	}
 
-	RasterQueue::RasterQueue(uint32_t familyIndex)
+	GraphicsQueue::GraphicsQueue(uint32_t familyIndex)
 		: Queue(familyIndex)
 	{
 	}
 
-	RasterQueue::~RasterQueue()
+	GraphicsQueue::~GraphicsQueue()
 	{
 	}
 
-	void RasterQueue::Submit(const VkSubmitInfo &submitInfo, const Fence *fence) const
+	void GraphicsQueue::Submit(const VkSubmitInfo &submitInfo, const Fence *fence) const
 	{
 		if (fence)
 			VK_CHECK(vkQueueSubmit(mHandle, 1, &submitInfo, fence->GetHandle()))

@@ -1,5 +1,6 @@
 #pragma once
 #include <vulkan/vulkan.h>
+#include <memory>
 #include "Core/AssetManager.h"
 #include "Color.h"
 #include "RHI/Format.h"

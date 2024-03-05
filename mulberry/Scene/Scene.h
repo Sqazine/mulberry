@@ -28,7 +28,7 @@ namespace mulberry
 		virtual void Update();
 		virtual void Render();
 		virtual void RenderGizmo();
-		virtual void CleanUp();
+		virtual void Destroy();
 
         friend class SceneRenderer;
         std::vector<std::unique_ptr<Entity>> mEntities;

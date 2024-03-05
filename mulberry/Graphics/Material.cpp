@@ -44,8 +44,10 @@ namespace mulberry
     SpriteMaterial::SpriteMaterial()
         : mTiling(1.0), mOffset(0.0)
     {
-        auto vertShader = rhi::Shader(rhi::ShaderStage::VERTEX, spriteVertShader);
-        auto fragShader = rhi::Shader(rhi::ShaderStage::FRAGMENT, spriteFragShader);
+        GetGraphicsPipeline()->SetVertexShader(new rhi::Shader(rhi::ShaderStage::VERTEX, spriteVertShader))
+                              .SetFragmentShader(new rhi::Shader(rhi::ShaderStage::FRAGMENT, spriteFragShader))
+                              .SetCullMode(rhi::CullMode::BACK)
+                              .SetPrimitiveTopology(rhi::PrimitiveTopology::TRIANGLE_LIST);
     }
 
     SpriteMaterial::~SpriteMaterial()

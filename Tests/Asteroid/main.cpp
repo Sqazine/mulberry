@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     if (cameraComp)
     {
         cameraComp->SetClearColor(mulberry::Color::LightYellow);
-        cameraComp->SetExtent(mulberry::App::GetInstance().GetWindow()->GetSize());
+        cameraComp->SetViewport(mulberry::App::GetInstance().GetWindow()->GetViewport());
     }
 
     mulberry::App::GetInstance().Run();

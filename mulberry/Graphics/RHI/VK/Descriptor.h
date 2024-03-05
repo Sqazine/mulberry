@@ -3,12 +3,12 @@
 #include <unordered_map>
 #include <vector>
 #include "Buffer.h"
-#include "Object.h"
+#include "Base.h"
 #include "../Enum.h"
 
 namespace mulberry::rhi::vk
 {
-    class DescriptorSet : public Object
+    class DescriptorSet : public Base
     {
     public:
         DescriptorSet(class DescriptorPool *descPool, class DescriptorSetLayout *descLayout);
@@ -59,7 +59,7 @@ namespace mulberry::rhi::vk
         }
     };
 
-    class DescriptorSetLayout : public Object
+    class DescriptorSetLayout : public Base
     {
     public:
         DescriptorSetLayout();
@@ -82,7 +82,7 @@ namespace mulberry::rhi::vk
         VkDescriptorSetLayout mHandle;
     };
 
-    class DescriptorPool : public Object
+    class DescriptorPool : public Base
     {
     public:
         DescriptorPool();

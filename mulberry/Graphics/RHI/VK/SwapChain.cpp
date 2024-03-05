@@ -5,6 +5,8 @@
 #include "Utils.h"
 #include "Logger.h"
 #include "Texture.h"
+#include "RenderPass.h"
+#include "FrameBuffer.h"
 #include "App.h"
 #include "AppConfig.h"
 #include "GraphicsContext.h"
@@ -68,6 +70,16 @@ namespace mulberry::rhi::vk
 		return mDevice.GetPresentQueue()->Present(presentInfo);
 	}
 
+	FrameBuffer *SwapChain::GetCurrentDefaultFrameBuffer() const
+	{
+		return mDefaultFrameBuffers[VK_CONTEXT->GetCurFrameIdx()].get();
+	}
+
+	RenderPass *SwapChain::GetDefaultRenderPass() const
+	{
+		return mDefaultRenderPass.get();
+	}
+
 	void SwapChain::Build()
 	{
 		SwapChainDetails swapChainDetail = QuerySwapChainDetails();
@@ -119,9 +131,15 @@ namespace mulberry::rhi::vk
 		std::vector<VkImage> rawImages(count);
 		vkGetSwapchainImagesKHR(mDevice.GetHandle(), mHandle, &count, rawImages.data());
 
+		mDefaultRenderPass=std::make_unique<RenderPass>(mSwapChainSurfaceFormat.format);
+
 		mSwapChainTextures.resize(count);
 		for (size_t i = 0; i < rawImages.size(); ++i)
 			mSwapChainTextures[i] = new Texture(GetExtent(), rawImages[i], mSwapChainSurfaceFormat.format);
+
+		mDefaultFrameBuffers.resize(count);
+		for (int32_t i = 0; i < mDefaultFrameBuffers.size(); ++i)
+			mDefaultFrameBuffers[i] = std::make_unique<FrameBuffer>(GetDefaultRenderPass(),mSwapChainTextures[i]);
 	}
 
 	const VkSwapchainKHR &SwapChain::GetHandle() const

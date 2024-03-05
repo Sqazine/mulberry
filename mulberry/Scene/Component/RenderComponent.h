@@ -16,8 +16,8 @@ namespace mulberry
 
 		friend class SceneRenderer;
 
-		void SetMaterial(RasterMaterial *mat);
-		const RasterMaterial *GetMaterial() const;
-		std::unique_ptr<RasterMaterial> material;
+		void SetMaterial(GraphicsMaterial *mat);
+		const GraphicsMaterial *GetMaterial() const;
+		std::unique_ptr<GraphicsMaterial> material;
 	};
 }

@@ -4,11 +4,11 @@
 #include <vulkan/vulkan.h>
 #include "RHI/Enum.h"
 #include "Enum.h"
-#include "Object.h"
+#include "Base.h"
 
 namespace mulberry::rhi::vk
 {
-    class Sampler:public Object
+    class Sampler : public Base
     {
     public:
         Sampler();
