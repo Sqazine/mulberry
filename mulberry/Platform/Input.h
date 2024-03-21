@@ -383,16 +383,15 @@ namespace mulberry
         Input() {}
         virtual ~Input() {}
 
-        const Keyboard* GetKeyboard() const
+        const Keyboard *GetKeyboard() const
         {
             return mKeyboard.get();
         }
 
-        const Mouse* GetMouse() const
+        const Mouse *GetMouse() const
         {
             return mMouse.get();
         }
-
     protected:
         friend class App;
         virtual void Init() = 0;

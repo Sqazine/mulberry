@@ -8,8 +8,13 @@ namespace mulberry::rhi::vk
         Base();
         ~Base();
 
-        class Device& GetDevice();
+        class Device &GetDevice();
+
     protected:
+        virtual void Build() {}
+
+        bool mIsDirty;
+
         class Device &mDevice;
     };
 }

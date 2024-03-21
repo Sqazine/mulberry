@@ -27,17 +27,17 @@ namespace mulberry::rhi::vk
 
 	std::vector<Texture *> &SwapChain::GetTextures()
 	{
-		return mSwapChainTextures;
+		return mBackTextures;
 	}
 
 	const VkSurfaceFormatKHR SwapChain::GetSurfaceFormat() const
 	{
-		return mSwapChainSurfaceFormat;
+		return mSurfaceFormat;
 	}
 
 	Vec2 SwapChain::GetExtent() const
 	{
-		return Vec2(mSwapChainImageExtent.width, mSwapChainImageExtent.height);
+		return Vec2(mExtent.width, mExtent.height);
 	}
 
 	void SwapChain::AcquireNextImage(const Semaphore *semaphore, const Fence *fence)
@@ -83,9 +83,9 @@ namespace mulberry::rhi::vk
 	void SwapChain::Build()
 	{
 		SwapChainDetails swapChainDetail = QuerySwapChainDetails();
-		mSwapChainSurfaceFormat = ChooseSwapChainSurfaceFormat(swapChainDetail.surfaceFormats);
-		mSwapChainPresentMode = ChooseSwapChainPresentMode(swapChainDetail.presentModes);
-		mSwapChainImageExtent = ChooseSwapChainExtent(swapChainDetail.surfaceCapabilities);
+		mSurfaceFormat = ChooseSwapChainSurfaceFormat(swapChainDetail.surfaceFormats);
+		mPresentMode = ChooseSwapChainPresentMode(swapChainDetail.presentModes);
+		mExtent = ChooseSwapChainExtent(swapChainDetail.surfaceCapabilities);
 
 		uint32_t imageCount = swapChainDetail.surfaceCapabilities.minImageCount + 1;
 		if (swapChainDetail.surfaceCapabilities.maxImageCount > 0 && imageCount > swapChainDetail.surfaceCapabilities.maxImageCount)
@@ -97,17 +97,16 @@ namespace mulberry::rhi::vk
 		createInfo.flags = 0;
 		createInfo.surface = VK_CONTEXT->GetAdapter()->GetSurface();
 		createInfo.minImageCount = imageCount;
-		createInfo.imageFormat = mSwapChainSurfaceFormat.format;
-		createInfo.imageColorSpace = mSwapChainSurfaceFormat.colorSpace;
-		createInfo.imageExtent = mSwapChainImageExtent;
+		createInfo.imageFormat = mSurfaceFormat.format;
+		createInfo.imageColorSpace = mSurfaceFormat.colorSpace;
+		createInfo.imageExtent = mExtent;
 		createInfo.imageArrayLayers = 1;
 		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
 		QueueFamilyIndices indices = mDevice.GetPhysicalDeviceSpec().queueFamilyIndices;
-		uint32_t queueFamilyIndices[] = {indices.graphicsFamilyIdx.value(), indices.presentFamilyIdx.value()};
-
 		if (indices.graphicsFamilyIdx.value() != indices.presentFamilyIdx.value())
 		{
+			uint32_t queueFamilyIndices[] = {indices.graphicsFamilyIdx.value(), indices.presentFamilyIdx.value()};
 			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 			createInfo.queueFamilyIndexCount = 2;
 			createInfo.pQueueFamilyIndices = queueFamilyIndices;
@@ -121,7 +120,7 @@ namespace mulberry::rhi::vk
 
 		createInfo.preTransform = swapChainDetail.surfaceCapabilities.currentTransform;
 		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-		createInfo.presentMode = mSwapChainPresentMode;
+		createInfo.presentMode = mPresentMode;
 		createInfo.oldSwapchain = mHandle == VK_NULL_HANDLE ? mHandle : VK_NULL_HANDLE;
 
 		VK_CHECK(vkCreateSwapchainKHR(mDevice.GetHandle(), &createInfo, nullptr, &mHandle));
@@ -131,15 +130,20 @@ namespace mulberry::rhi::vk
 		std::vector<VkImage> rawImages(count);
 		vkGetSwapchainImagesKHR(mDevice.GetHandle(), mHandle, &count, rawImages.data());
 
-		mDefaultRenderPass=std::make_unique<RenderPass>(mSwapChainSurfaceFormat.format);
+		mDefaultRenderPass=std::make_unique<RenderPass>(mSurfaceFormat.format);
 
-		mSwapChainTextures.resize(count);
+		mBackTextures.resize(count);
 		for (size_t i = 0; i < rawImages.size(); ++i)
-			mSwapChainTextures[i] = new Texture(GetExtent(), rawImages[i], mSwapChainSurfaceFormat.format);
+			mBackTextures[i] = new Texture(GetExtent(), rawImages[i], mSurfaceFormat.format);
 
 		mDefaultFrameBuffers.resize(count);
 		for (int32_t i = 0; i < mDefaultFrameBuffers.size(); ++i)
-			mDefaultFrameBuffers[i] = std::make_unique<FrameBuffer>(GetDefaultRenderPass(),mSwapChainTextures[i]);
+		{
+			mDefaultFrameBuffers[i] = std::make_unique<FrameBuffer>();
+			mDefaultFrameBuffers[i]->AttachRenderPass(GetDefaultRenderPass())
+			.AttachTexture(mBackTextures[i]);
+
+		}
 	}
 
 	const VkSwapchainKHR &SwapChain::GetHandle() const
@@ -147,7 +151,7 @@ namespace mulberry::rhi::vk
 		return mHandle;
 	}
 
-	void SwapChain::ReBuild()
+	void SwapChain::SyncToWindowSize()
 	{
 		VK_CONTEXT->GetDevice()->WaitIdle();
 
@@ -199,13 +203,13 @@ namespace mulberry::rhi::vk
 
 	void SwapChain::DeleteImageViews()
 	{
-		for (size_t i = 0; i < mSwapChainTextures.size(); ++i)
+		for (size_t i = 0; i < mBackTextures.size(); ++i)
 		{
-			delete mSwapChainTextures[i];
-			mSwapChainTextures[i] = nullptr;
+			delete mBackTextures[i];
+			mBackTextures[i] = nullptr;
 		}
 
-		std::vector<Texture *>().swap(mSwapChainTextures);
+		std::vector<Texture *>().swap(mBackTextures);
 	}
 
 	SwapChainDetails SwapChain::QuerySwapChainDetails()

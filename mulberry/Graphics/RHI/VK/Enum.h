@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <vulkan/vulkan.h>
 #include <type_traits>
+#include "Utils/Utils.h"
 #include "RHI/Enum.h"
 
 namespace mulberry::rhi::vk

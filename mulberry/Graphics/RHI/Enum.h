@@ -1,18 +1,9 @@
 #pragma once
 #include <cstdint>
 #include <type_traits>
+#include "Utils/Utils.h"
 namespace mulberry::rhi
 {
-#define ENUM_CLASS_OP(CastName, EnumName, RawEnum)                   \
-    inline EnumName operator|(EnumName lhs, EnumName rhs)            \
-    {                                                                \
-        return static_cast<EnumName>(CastName(lhs) | CastName(rhs)); \
-    }                                                                \
-    inline EnumName operator&(EnumName lhs, EnumName rhs)            \
-    {                                                                \
-        return static_cast<EnumName>(CastName(lhs) & CastName(rhs)); \
-    }
-
     enum class ShaderStage : uint64_t
     {
         VERTEX = 1,

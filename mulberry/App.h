@@ -19,7 +19,8 @@ namespace mulberry
 		PROCESS_INPUT,
 		UPDATE,
 		DRAW,
-		EXIT
+		EXIT,
+		PAUSE,
 	};
 
 	class App : public Singleton<App>

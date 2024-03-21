@@ -117,38 +117,48 @@ namespace mulberry
 
 	void App::Update()
 	{
+		if (AppConfig::runOnlyWindowFocus && GetWindow()->HasEvent(Window::Event::MIN))
+			mState = AppState::PAUSE;
+		else if (GetWindow()->HasEvent(Window::Event::ENTER | Window::Event::EXPOSE))
+			mState = AppState::UPDATE;
+
 		if (!AppConfig::graphicsConfig.useVSync)
 			mTimer->Update(AppConfig::graphicsConfig.frameRate);
 		else
 			mTimer->Update();
-#ifdef SHOW_FPS_ON_WINDOW_TITLE
-		static bool isFirst = true;
-		static std::string name;
-		if (isFirst)
+
+		if (mState != AppState::PAUSE)
 		{
-			name = mWindow->GetTitle();
-			isFirst = false;
-		}
-		static float avgDuration = mTimer->GetDeltaTime();
-		constexpr float alpha = 0.01f;
-		avgDuration = avgDuration * (1 - alpha) + mTimer->GetDeltaTime() * alpha;
-		auto fps = std::to_string(1.0f / avgDuration);
-		mWindow->SetTitle(name + " FPS = " + fps);
+#ifdef SHOW_FPS_ON_WINDOW_TITLE
+			static bool isFirst = true;
+			static std::string name;
+			if (isFirst)
+			{
+				name = mWindow->GetTitle();
+				isFirst = false;
+			}
+			static float avgDuration = mTimer->GetDeltaTime();
+			constexpr float alpha = 0.01f;
+			avgDuration = avgDuration * (1 - alpha) + mTimer->GetDeltaTime() * alpha;
+			auto fps = std::to_string(1.0f / avgDuration);
+			mWindow->SetTitle(name + " FPS = " + fps);
 #endif
 
-		for (const auto &entity : mScenes[mSceneIdx]->GetAllEntities())
-		{
-			for (const auto &comp : entity->GetAllComponents())
+			for (const auto &entity : mScenes[mSceneIdx]->GetAllEntities())
 			{
-				comp->Update();
-				comp->LateUpdate();
+				for (const auto &comp : entity->GetAllComponents())
+				{
+					comp->Update();
+					comp->LateUpdate();
+				}
 			}
 		}
 	}
 
 	void App::Render()
 	{
-		mSceneRenderer->Render(mScenes[mSceneIdx].get());
+		if (mState != AppState::PAUSE)
+			mSceneRenderer->Render(mScenes[mSceneIdx].get());
 	}
 
 	void App::RenderGizmo()
@@ -167,12 +177,14 @@ namespace mulberry
 	void App::PreUpdate()
 	{
 		mInput->PreUpdate();
-		mWindow->PreUpdate();
 	}
 
 	void App::PostUpdate()
 	{
-		mWindow->PostUpdate();
+		if (mWindow->HasEvent(Window::Event::CLOSE))
+			Quit();
+
+		mWindow->ClearEvent();
 		mInput->PostUpdate();
 	}
 }

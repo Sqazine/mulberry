@@ -11,6 +11,20 @@ namespace mulberry
     class Window
     {
     public:
+        enum Event : uint32_t
+        {
+            NONE = 0,
+            MIN = 1,
+            MAX = 2,
+            RESTORE = 4,
+            CLOSE = 8,
+            RESIZE = 16,
+            MOVE = 32,
+            ENTER = 64,
+            LEAVE = 128,
+            EXPOSE = 256,
+        };
+
         Window() = default;
         virtual ~Window() = default;
 
@@ -25,18 +39,35 @@ namespace mulberry
         virtual void Show() = 0;
         virtual void Hide() = 0;
 
-        virtual bool IsWindowCloseButtonClick() const = 0;
-        virtual bool IsWindowMaxButtonClick() const = 0;
-        virtual bool IsWindowMinButtonClick() const = 0;
+        virtual std::vector<const char *> GetVulkanRequiredExtensions() = 0;
+        virtual VkSurfaceKHR CreateSurface(VkInstance instance) = 0;
 
-        virtual bool IsResize() const = 0;
+        virtual void SetEvent(Event event)
+        {
+            mEvent = Event((uint32_t)mEvent | (uint32_t)event);
+        }
 
-		virtual std::vector<const char*> GetVulkanRequiredExtensions() = 0;
-		virtual VkSurfaceKHR CreateSurface(VkInstance instance) = 0;
+        virtual Event GetEvent() const
+        {
+            return mEvent;
+        }
+
+        virtual bool HasEvent(Event event)
+        {
+            return (mEvent & event) == event;
+        }
+
+        virtual bool HasEvent(uint32_t event)
+        {
+            return (mEvent & (Event)event) != Event::NONE;
+        }
+
+        virtual void ClearEvent()
+        {
+            mEvent = Event::NONE;
+        }
+
     protected:
-        friend class App;
-        virtual void PreUpdate() = 0;
-        virtual void PostUpdate() = 0;
-
+        Event mEvent{Event::NONE};
     };
 }

@@ -47,7 +47,7 @@ namespace mulberry
         uint32_t mPreButtons;
     };
 
-    class SDL2Controller:public Controller
+    class SDL2Controller : public Controller
     {
     public:
         SDL2Controller();
@@ -89,6 +89,5 @@ namespace mulberry
         void PostUpdate() override;
     private:
         void ProcessEvent();
-
     };
 }

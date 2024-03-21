@@ -48,7 +48,7 @@ find_library(vulkan_1
 target_link_libraries(mulberry PRIVATE  SDL2-static
                                         SDL2main 
                                         stb
-                                        spdlog::spdlog_header_only 
+                                        spdlog::spdlog 
                                         SDL2_ttf 
                                         OSDependent 
                                         glslang 
@@ -63,3 +63,12 @@ target_link_libraries(mulberry PRIVATE  SDL2-static
                                         
 target_compile_definitions(mulberry PRIVATE SHOW_FPS_ON_WINDOW_TITLE)
 target_compile_definitions(mulberry PRIVATE ${CURRENT_PLATFORM})
+
+if(MSVC)
+    target_compile_definitions(mulberry PRIVATE _CRT_SECURE_NO_WARNINGS)
+    target_compile_definitions(mulberry PRIVATE _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+    target_compile_definitions(mulberry PRIVATE NOMINMAX)
+    target_compile_options(mulberry PRIVATE "/W4")
+    target_compile_options(mulberry PRIVATE "/wd4251;")
+    target_compile_options(mulberry PRIVATE "/wd4201;")
+endif()

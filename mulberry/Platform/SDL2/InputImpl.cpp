@@ -1,6 +1,9 @@
 #include "InputImpl.h"
 #include <memory>
+#include <iostream>
+#include "App.h"
 #include "Platform/Input.h"
+#include "Platform/Window.h"
 namespace mulberry
 {
     SDL2Keyboard::SDL2Keyboard()
@@ -172,7 +175,7 @@ namespace mulberry
         ((SDL2Mouse *)mMouse.get())->mPreButtons = ((SDL2Mouse *)mMouse.get())->mCurButtons;
         ((SDL2Mouse *)mMouse.get())->mPrePos = ((SDL2Mouse *)mMouse.get())->mCurPos;
         ((SDL2Mouse *)mMouse.get())->mMouseScrollWheel = Vec2::ZERO;
-        
+
         ProcessEvent();
     }
 
@@ -184,19 +187,56 @@ namespace mulberry
         else
             ((SDL2Mouse *)mMouse.get())->mCurButtons = SDL_GetRelativeMouseState((int32_t *)(&p.x), (int32_t *)(&p.y));
         ((SDL2Mouse *)mMouse.get())->mCurPos = p;
-
     }
 
     void SDL2InputImpl::ProcessEvent()
     {
         SDL_Event event;
-        SDL_PollEvent(&event);
-        switch (event.type)
+        while (SDL_PollEvent(&event))
         {
-        case SDL_MOUSEWHEEL:
-            ((SDL2Mouse *)mMouse.get())->mMouseScrollWheel = Vec2(event.wheel.x, static_cast<float>(event.wheel.y));
-            break;
+            switch (event.type)
+            {
+            case SDL_MOUSEWHEEL:
+                ((SDL2Mouse *)mMouse.get())->mMouseScrollWheel = Vec2(event.wheel.x, static_cast<float>(event.wheel.y));
+                break;
+            case SDL_QUIT:
+                App::GetInstance().GetWindow()->SetEvent(Window::Event::CLOSE);
+                break;
+            case SDL_WINDOWEVENT:
+            {
+                switch (event.window.event)
+                {
+                case SDL_WINDOWEVENT_MINIMIZED:
+                    App::GetInstance().GetWindow()->SetEvent(Window::Event::MIN);
+                    break;
+                case SDL_WINDOWEVENT_MAXIMIZED:
+                    App::GetInstance().GetWindow()->SetEvent(Window::Event::MAX);
+                    break;
+                case SDL_WINDOWEVENT_CLOSE:
+                    App::GetInstance().GetWindow()->SetEvent(Window::Event::CLOSE);
+                    break;
+                case SDL_WINDOWEVENT_RESIZED:
+                    App::GetInstance().GetWindow()->SetEvent(Window::Event::RESIZE);
+                    break;
+                case SDL_WINDOWEVENT_RESTORED:
+                    App::GetInstance().GetWindow()->SetEvent(Window::Event::RESTORE);
+                    break;
+                case SDL_WINDOWEVENT_MOVED:
+                    App::GetInstance().GetWindow()->SetEvent(Window::Event::MOVE);
+                    break;
+                case SDL_WINDOWEVENT_ENTER:
+                    App::GetInstance().GetWindow()->SetEvent(Window::Event::ENTER);
+                    break;
+                case SDL_WINDOWEVENT_LEAVE:
+                    App::GetInstance().GetWindow()->SetEvent(Window::Event::LEAVE);
+                    break;
+                default:
+                    break;
+                }
+            }
+            default:
+                break;
+            }
         }
     }
-
 }

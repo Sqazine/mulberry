@@ -16,13 +16,13 @@ namespace mulberry::rhi::vk
 
         mWaitSemaphores.resize(size);
         mSignalSemaphores.resize(size);
-        mInFlightFences.resize(size);
+        mFences.resize(size);
 
         for (size_t i = 0; i < size; ++i)
         {
             mWaitSemaphores[i] = std::make_unique<Semaphore>();
             mSignalSemaphores[i] = std::make_unique<Semaphore>();
-            mInFlightFences[i] = std::make_unique<Fence>(FenceStatus::SIGNALED);
+            mFences[i] = std::make_unique<Fence>(FenceStatus::SIGNALED);
         }
     }
 
@@ -35,8 +35,7 @@ namespace mulberry::rhi::vk
         auto frameBuffer = VK_CONTEXT->GetSwapChain()->GetCurrentDefaultFrameBuffer();
         auto renderPass = VK_CONTEXT->GetSwapChain()->GetDefaultRenderPass();
 
-        mInFlightFences[GetCurFrameIdx()]->Wait();
-        mInFlightFences[GetCurFrameIdx()]->Reset();
+        mFences[GetCurFrameIdx()]->Reset();
 
         GetCommandBuffer()->Reset();
 
@@ -107,6 +106,6 @@ namespace mulberry::rhi::vk
 
     Fence *GraphicsPass::GetFence() const
     {
-        return mInFlightFences[GetCurFrameIdx()].get();
+        return mFences[GetCurFrameIdx()].get();
     }
 }

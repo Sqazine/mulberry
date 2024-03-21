@@ -45,9 +45,6 @@ void ShipMoveComponent::Move()
 
     mCameraComponent = GetOwner()->GetOwner()->GetEntity("Camera")->GetComponent<mulberry::CameraComponent>();
 
-    if (mulberry::App::GetInstance().GetWindow()->IsWindowCloseButtonClick())
-        mulberry::App::GetInstance().Quit();
-
     mulberry::Vec2 offset;
     mulberry::Vec2 newPos;
 

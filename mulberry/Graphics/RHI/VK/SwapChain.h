@@ -7,7 +7,7 @@
 #include "Math/Vec2.h"
 namespace mulberry::rhi::vk
 {
-	class SwapChain:public Base
+	class SwapChain : public Base
 	{
 	public:
 		SwapChain();
@@ -21,17 +21,16 @@ namespace mulberry::rhi::vk
 		const VkSwapchainKHR &GetHandle() const;
 
 		class FrameBuffer *GetCurrentDefaultFrameBuffer() const;
-		class RenderPass* GetDefaultRenderPass() const;
-
-		void ReBuild();
+		class RenderPass *GetDefaultRenderPass() const;
 
 		void AcquireNextImage(const Semaphore *semaphore = nullptr, const Fence *fence = nullptr);
 		uint32_t GetNextImageIdx() const;
 
 		VkResult Present(const Semaphore *waitSemaphore);
 
+		void SyncToWindowSize();
 	private:
-		void Build();
+		void Build() override;
 
 		SwapChainDetails QuerySwapChainDetails();
 
@@ -43,14 +42,14 @@ namespace mulberry::rhi::vk
 
 		VkSwapchainKHR mHandle;
 
-		std::vector<class Texture *> mSwapChainTextures;
+		std::vector<class Texture *> mBackTextures;
 
 		std::unique_ptr<class RenderPass> mDefaultRenderPass;
 		std::vector<std::unique_ptr<class FrameBuffer>> mDefaultFrameBuffers;
 
-		VkSurfaceFormatKHR mSwapChainSurfaceFormat;
-		VkExtent2D mSwapChainImageExtent;
-		VkPresentModeKHR mSwapChainPresentMode;
+		VkSurfaceFormatKHR mSurfaceFormat;
+		VkExtent2D mExtent;
+		VkPresentModeKHR mPresentMode;
 
 		uint32_t mNextImageIdx;
 	};

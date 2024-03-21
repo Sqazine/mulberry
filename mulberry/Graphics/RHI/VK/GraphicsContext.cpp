@@ -52,13 +52,15 @@ namespace mulberry::rhi::vk
 
 	void GraphicsContext::BeginFrame()
 	{
-		if (App::GetInstance().GetWindow()->IsResize())
+		if (App::GetInstance().GetWindow()->HasEvent(Window::Event::MAX|Window::Event::MIN|Window::Event::RESIZE))
 		{
-			mSwapChain->ReBuild();
+			mSwapChain->SyncToWindowSize();
 			mCurFrameIdx = 0;
 		}
 
 		auto vkDefaultDrawPassImpl = App::GetInstance().GetGraphicsContext()->GetDefaultDrawPass()->GetVkImpl();
+		
+		vkDefaultDrawPassImpl->GetFence()->Wait();
 
 		mSwapChain->AcquireNextImage(vkDefaultDrawPassImpl->GetWaitSemaphore());
 	}
@@ -68,13 +70,12 @@ namespace mulberry::rhi::vk
 		auto vkDefaultDrawPassImpl = App::GetInstance().GetGraphicsContext()->GetDefaultDrawPass()->GetVkImpl();
 
 		auto result = mSwapChain->Present(vkDefaultDrawPassImpl->GetSignalSemaphore());
-		mDevice->GetPresentQueue()->WaitIdle();
 
 		mCurFrameIdx = (mCurFrameIdx + 1) % ((int32_t)mSwapChain->GetTextures().size());
 
 		if (result != VK_SUCCESS)
 		{
-			mSwapChain->ReBuild();
+			mSwapChain->SyncToWindowSize();
 			mCurFrameIdx = 0;
 		}
 	}

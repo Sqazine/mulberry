@@ -18,6 +18,8 @@ namespace mulberry::rhi::vk
         GraphicsPass();
         virtual ~GraphicsPass();
 
+        Fence *GetFence() const;
+        
         virtual void Begin();
 
         void SetClearColor(const Color &clearColor);
@@ -36,7 +38,6 @@ namespace mulberry::rhi::vk
         size_t GetCurFrameIdx() const;
 
     private:
-        Fence *GetFence() const;
 
         friend class GraphicsContext;
 
@@ -44,7 +45,7 @@ namespace mulberry::rhi::vk
 
         std::vector<std::unique_ptr<Semaphore>> mWaitSemaphores;
         std::vector<std::unique_ptr<Semaphore>> mSignalSemaphores;
-        std::vector<std::unique_ptr<Fence>> mInFlightFences;
+        std::vector<std::unique_ptr<Fence>> mFences;
 
         Color mClearColor;
         bool mIsClearColorBuffer;

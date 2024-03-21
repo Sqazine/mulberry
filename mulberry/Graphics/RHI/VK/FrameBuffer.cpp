@@ -6,35 +6,54 @@
 
 namespace mulberry::rhi::vk
 {
-	FrameBuffer::FrameBuffer(RenderPass* renderPass,Texture *attachment)
-		: mExtent(attachment->GetImage()->GetExtent()), mHandle(VK_NULL_HANDLE)
+	FrameBuffer::FrameBuffer()
+		: mHandle(VK_NULL_HANDLE), mInfo({})
 	{
-		VkFramebufferCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		createInfo.pNext = nullptr;
-		createInfo.flags = 0;
-		createInfo.renderPass = renderPass->GetHandle();
-		createInfo.attachmentCount = 1;
-		createInfo.pAttachments = &attachment->GetImage()->GetView();
-		createInfo.width = mExtent.x;
-		createInfo.height = mExtent.y;
-		createInfo.layers = 1;
-
-		VK_CHECK(vkCreateFramebuffer(mDevice.GetHandle(), &createInfo, nullptr, &mHandle));
+		mInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+		mInfo.pNext = nullptr;
+		mInfo.flags = 0;
+		mInfo.layers = 1;
 	}
 
 	FrameBuffer::~FrameBuffer()
 	{
-		vkDestroyFramebuffer(VK_DEVICE->GetHandle(),mHandle,nullptr);
+		if (mHandle)
+			vkDestroyFramebuffer(VK_DEVICE->GetHandle(), mHandle, nullptr);
 	}
 
-	const VkFramebuffer &FrameBuffer::GetHandle() const
+	FrameBuffer &FrameBuffer::AttachRenderPass(RenderPass *renderPass)
 	{
+		mInfo.renderPass = renderPass->GetHandle();
+		return *this;
+	}
+	FrameBuffer &FrameBuffer::AttachTexture(Texture *attachment)
+	{
+		auto extent = attachment->GetImage()->GetExtent();
+		mInfo.attachmentCount = 1;
+		mInfo.pAttachments = &attachment->GetImage()->GetView();
+		mInfo.width = (uint32_t)extent.x;
+		mInfo.height = (uint32_t)extent.y;
+
+		return *this;
+	}
+
+	const VkFramebuffer &FrameBuffer::GetHandle()
+	{
+		if (mIsDirty)
+		{
+			Build();
+			mIsDirty = false;
+		}
 		return mHandle;
 	}
 
-	const Vec2 &FrameBuffer::GetExtent() const
+	Vec2 FrameBuffer::GetExtent() const
 	{
-		return mExtent;
+		return {(float)mInfo.width, (float)mInfo.height};
+	}
+
+	void FrameBuffer::Build()
+	{
+		VK_CHECK(vkCreateFramebuffer(mDevice.GetHandle(), &mInfo, nullptr, &mHandle));
 	}
 }

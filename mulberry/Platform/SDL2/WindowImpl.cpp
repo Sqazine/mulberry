@@ -4,11 +4,7 @@
 namespace mulberry
 {
     SDL2WindowImpl::SDL2WindowImpl()
-        : mHandle(nullptr), mIsShown(false),
-          mIsWindowCloseButtonClick(false),
-          mIsWindowMaxButtonClick(false),
-          mIsWindowMinButtonClick(false),
-          mTitle("mulberry")
+        : mHandle(nullptr), mIsShown(false), mTitle("mulberry")
     {
         auto flag = SDL_Init(SDL_INIT_EVERYTHING);
         if (flag < 0)
@@ -42,7 +38,7 @@ namespace mulberry
 
         mHandle = SDL_CreateWindow(mTitle.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, actualWidth, actualHeight, windowFlag);
 
-        mViewport = Viewport(0, 0,(uint32_t)actualWidth, (uint32_t)actualHeight);
+        mViewport = Viewport(0, 0, (uint32_t)actualWidth, (uint32_t)actualHeight);
     }
 
     SDL2WindowImpl::~SDL2WindowImpl()
@@ -73,7 +69,7 @@ namespace mulberry
         mViewport = Viewport(0, 0, w, h);
         SDL_SetWindowSize(mHandle, w, h);
         SDL_SetWindowPosition(mHandle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-        mIsWindowResize = true;
+        SetEvent(Event::RESIZE);
     }
 
     Vec2 SDL2WindowImpl::GetSize()
@@ -95,13 +91,19 @@ namespace mulberry
 
     void SDL2WindowImpl::Show()
     {
-        SDL_ShowWindow(mHandle);
-        mIsShown = true;
+        if (!mIsShown)
+        {
+            SDL_ShowWindow(mHandle);
+            mIsShown = true;
+        }
     }
     void SDL2WindowImpl::Hide()
     {
-        SDL_HideWindow(mHandle);
-        mIsShown = false;
+        if (mIsShown)
+        {
+            SDL_HideWindow(mHandle);
+            mIsShown = false;
+        }
     }
 
     std::vector<const char *> SDL2WindowImpl::GetVulkanRequiredExtensions()
@@ -120,66 +122,5 @@ namespace mulberry
         if (flag == SDL_FALSE)
             MULBERRY_CORE_ERROR("Failed to create vulkan surface from window.");
         return result;
-    }
-
-    void SDL2WindowImpl::PreUpdate()
-    {
-        SDL_Event event;
-        SDL_PollEvent(&event);
-        switch (event.type)
-        {
-        case SDL_QUIT:
-            mIsWindowCloseButtonClick = true;
-            break;
-        case SDL_WINDOWEVENT:
-        {
-            switch (event.window.event)
-            {
-            case SDL_WINDOWEVENT_MINIMIZED:
-                mIsWindowMinButtonClick = true;
-                break;
-            case SDL_WINDOWEVENT_MAXIMIZED:
-                mIsWindowMaxButtonClick = true;
-                break;
-            case SDL_WINDOWEVENT_CLOSE:
-                mIsWindowCloseButtonClick = true;
-                break;
-            case SDL_WINDOWEVENT_RESIZED:
-                mIsWindowResize = true;
-            default:
-                break;
-            }
-        }
-        default:
-            break;
-        }
-    }
-
-    void SDL2WindowImpl::PostUpdate()
-    {
-        mIsWindowCloseButtonClick = false;
-        mIsWindowMaxButtonClick = false;
-        mIsWindowMinButtonClick = false;
-        mIsWindowResize = false;
-    }
-
-    bool SDL2WindowImpl::IsWindowCloseButtonClick() const
-    {
-        return mIsWindowCloseButtonClick;
-    }
-
-    bool SDL2WindowImpl::IsWindowMaxButtonClick() const
-    {
-        return mIsWindowMaxButtonClick;
-    }
-
-    bool SDL2WindowImpl::IsWindowMinButtonClick() const
-    {
-        return mIsWindowMinButtonClick;
-    }
-
-    bool SDL2WindowImpl::IsResize() const
-    {
-        return mIsWindowResize;
     }
 }

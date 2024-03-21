@@ -1,18 +1,5 @@
 #include "mulberry.h"
 
-class AppQuitComponent : public mulberry::Component
-{
-public:
-    AppQuitComponent() = default;
-    ~AppQuitComponent() = default;
-
-    void Update() override
-    {
-        if (mulberry::App::GetInstance().GetWindow()->IsWindowCloseButtonClick())
-            mulberry::App::GetInstance().Quit();
-    }
-};
-
 int32_t main(int32_t argc, char **argv)
 {
     mulberry::App::GetInstance().SetGraphicsBackend(mulberry::GraphicsBackend::VK);
@@ -32,8 +19,6 @@ int32_t main(int32_t argc, char **argv)
         .SetBorderColor(mulberry::rhi::BorderColor::FLOAT_TRANSPARENT_BLACK);
 
     mulberry::Entity *rootEntity = scene->CreateEntity("Sprite");
-
-    rootEntity->CreateComponent<AppQuitComponent>();
 
 	auto cameraComp = rootEntity->CreateComponent<mulberry::CameraComponent>();
 	if (cameraComp)

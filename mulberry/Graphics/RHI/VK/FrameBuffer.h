@@ -8,13 +8,18 @@ namespace mulberry::rhi::vk
 	class FrameBuffer : public Base
 	{
 	public:
-		FrameBuffer(RenderPass* renderPass,Texture *attachment);
+		FrameBuffer();
 		~FrameBuffer();
 
-		const VkFramebuffer &GetHandle() const;
-		const Vec2 &GetExtent() const;
+		FrameBuffer& AttachRenderPass(RenderPass* renderPass);
+		FrameBuffer& AttachTexture(Texture* attachment);
+
+		const VkFramebuffer &GetHandle();
+		Vec2 GetExtent() const;
 	private:
-		Vec2 mExtent;
+		void Build() override;
+
+		VkFramebufferCreateInfo mInfo;
 		VkFramebuffer mHandle;
 	};
 }

@@ -7,7 +7,7 @@
 namespace mulberry::rhi::vk
 {
     Base::Base()
-        : mDevice(*VK_DEVICE)
+        : mDevice(*VK_DEVICE), mIsDirty(true)
     {
     }
 
