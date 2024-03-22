@@ -16,29 +16,17 @@ namespace mulberry::rhi
 	void GraphicsContext::Init()
 	{
 		GRAPHICS_RHI_IMPL_SWITCHER(GetVkImpl()->Init());
-		mDefaultGraphicsPass = std::make_unique<GraphicsPass>();
+		mSwapChainPass = std::make_unique<SwapChainPass>();
 	}
 
 	void GraphicsContext::Destroy()
 	{
-		mDefaultGraphicsPass.reset(nullptr);
+		mSwapChainPass.reset(nullptr);
 		GRAPHICS_RHI_IMPL_SWITCHER(GetVkImpl()->Destroy());
 	}
 
-	GraphicsPass *GraphicsContext::GetDefaultDrawPass()
+	SwapChainPass *GraphicsContext::GetSwapChainPass()
 	{
-		return mDefaultGraphicsPass.get();
-	}
-
-	void GraphicsContext::BeginFrame()
-	{
-		GRAPHICS_RHI_IMPL_SWITCHER(GetVkImpl()->BeginFrame())
-		mDefaultGraphicsPass->Begin();
-	}
-
-	void GraphicsContext::EndFrame()
-	{
-		mDefaultGraphicsPass->End();
-		GRAPHICS_RHI_IMPL_SWITCHER(GetVkImpl()->EndFrame());
+		return mSwapChainPass.get();
 	}
 }

@@ -16,13 +16,9 @@ namespace mulberry::rhi
 		void Init();
 		void Destroy();
 
-		void BeginFrame();
-
-		class GraphicsPass *GetDefaultDrawPass();
-		
-		void EndFrame();
+		class SwapChainPass *GetSwapChainPass();
 
 	private:
-		std::unique_ptr<class GraphicsPass> mDefaultGraphicsPass;
+		std::unique_ptr<class SwapChainPass> mSwapChainPass;
 	};
 }

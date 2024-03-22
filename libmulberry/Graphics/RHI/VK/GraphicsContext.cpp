@@ -9,7 +9,6 @@
 namespace mulberry::rhi::vk
 {
 	GraphicsContext::GraphicsContext()
-		: mCurFrameIdx(0)
 	{
 	}
 	GraphicsContext::~GraphicsContext()
@@ -25,12 +24,10 @@ namespace mulberry::rhi::vk
 		mAdapter->PrintPhysicalDeviceSpecs();
 #endif
 		mDevice.reset(mAdapter->CreateDevice());
-		mSwapChain = std::make_unique<SwapChain>();
-	}
+		}
 
 	void GraphicsContext::Destroy()
 	{
-		mSwapChain.reset(nullptr);
 		mDevice.reset(nullptr);
 		mAdapter.reset(nullptr);
 	}
@@ -43,45 +40,5 @@ namespace mulberry::rhi::vk
 	Device *GraphicsContext::GetDevice() const
 	{
 		return mDevice.get();
-	}
-
-	SwapChain *GraphicsContext::GetSwapChain() const
-	{
-		return mSwapChain.get();
-	}
-
-	void GraphicsContext::BeginFrame()
-	{
-		if (App::GetInstance().GetWindow()->HasEvent(Window::Event::MAX|Window::Event::MIN|Window::Event::RESIZE))
-		{
-			mSwapChain->SyncToWindowSize();
-			mCurFrameIdx = 0;
-		}
-
-		auto vkDefaultDrawPassImpl = App::GetInstance().GetGraphicsContext()->GetDefaultDrawPass()->GetVkImpl();
-		
-		vkDefaultDrawPassImpl->GetFence()->Wait();
-
-		mSwapChain->AcquireNextImage(vkDefaultDrawPassImpl->GetWaitSemaphore());
-	}
-
-	void GraphicsContext::EndFrame()
-	{
-		auto vkDefaultDrawPassImpl = App::GetInstance().GetGraphicsContext()->GetDefaultDrawPass()->GetVkImpl();
-
-		auto result = mSwapChain->Present(vkDefaultDrawPassImpl->GetSignalSemaphore());
-
-		mCurFrameIdx = (mCurFrameIdx + 1) % ((int32_t)mSwapChain->GetTextures().size());
-
-		if (result != VK_SUCCESS)
-		{
-			mSwapChain->SyncToWindowSize();
-			mCurFrameIdx = 0;
-		}
-	}
-
-	size_t GraphicsContext::GetCurFrameIdx() const
-	{
-		return mCurFrameIdx;
 	}
 }

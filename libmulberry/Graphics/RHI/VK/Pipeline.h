@@ -85,13 +85,10 @@ namespace mulberry::rhi::vk
 
         GraphicsPipeline &SetPipelineLayout(PipelineLayout *layout);
 
-        VkPipelineDepthStencilStateCreateInfo pDepthStencilState{VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO};
-        VkPipelineColorBlendStateCreateInfo pColorBlendState{VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO};
-
-    private:
-        friend class GraphicsPass;
         GraphicsPipeline &SetRenderPass(class RenderPass *renderPass);
 
+        VkPipelineDepthStencilStateCreateInfo pDepthStencilState{VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO};
+        VkPipelineColorBlendStateCreateInfo pColorBlendState{VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO};
     private:
         void Build() override;
 

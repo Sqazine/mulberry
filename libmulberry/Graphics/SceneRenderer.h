@@ -19,8 +19,8 @@ namespace mulberry
 		void Render(const Scene *scene);
 
 	private:
-		void RenderSprite(rhi::GraphicsPass* pass, const Entity *entity, CameraComponent *camera);
-		void RenderAuxiliary(const Entity *entity, CameraComponent *camera,const PrimitiveGeometry& primitive);
+		void RenderSprite(rhi::SwapChainPass *pass, const Entity *entity, CameraComponent *camera);
+		void RenderAuxiliary(rhi::SwapChainPass *pass, const Entity *entity, CameraComponent *camera, const PrimitiveGeometry &primitive);
 
 		std::unique_ptr<class GizmoMaterial> mGizmoMaterial;
 

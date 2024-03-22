@@ -12,11 +12,11 @@
 #include "Texture.h"
 namespace mulberry::rhi::vk
 {
-    class GraphicsPass : public Base
+    class SwapChainPass : public Base
     {
     public:
-        GraphicsPass();
-        virtual ~GraphicsPass();
+        SwapChainPass();
+        virtual ~SwapChainPass();
 
         Fence *GetFence() const;
         
@@ -41,6 +41,8 @@ namespace mulberry::rhi::vk
 
         friend class GraphicsContext;
 
+        std::unique_ptr<class SwapChain> mSwapChain;
+
         std::vector<std::unique_ptr<GraphicsCommandBuffer>> mGraphicsCommandBuffers;
 
         std::vector<std::unique_ptr<Semaphore>> mWaitSemaphores;
@@ -49,5 +51,8 @@ namespace mulberry::rhi::vk
 
         Color mClearColor;
         bool mIsClearColorBuffer;
+
+        size_t mCurFrameIdx = 0;
+
     };
 }

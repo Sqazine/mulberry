@@ -20,7 +20,7 @@ namespace mulberry::rhi::vk
 
 		const VkSwapchainKHR &GetHandle() const;
 
-		class FrameBuffer *GetCurrentDefaultFrameBuffer() const;
+		class FrameBuffer *GetDefaultFrameBuffer(uint32_t i) const;
 		class RenderPass *GetDefaultRenderPass() const;
 
 		void AcquireNextImage(const Semaphore *semaphore = nullptr, const Fence *fence = nullptr);

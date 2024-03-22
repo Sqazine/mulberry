@@ -20,7 +20,7 @@ namespace mulberry
     {
     }
 
-    void SceneRenderer::RenderSprite(rhi::GraphicsPass* pass, const Entity *entity, CameraComponent *camera)
+    void SceneRenderer::RenderSprite(rhi::SwapChainPass *pass, const Entity *entity, CameraComponent *camera)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<SpriteComponent>();
@@ -56,7 +56,7 @@ namespace mulberry
           material->GetShaderGroup()->SetActive(false);*/
     }
 
-    void SceneRenderer::RenderAuxiliary(const Entity *entity, CameraComponent *camera, const PrimitiveGeometry &primitive)
+    void SceneRenderer::RenderAuxiliary(rhi::SwapChainPass *pass, const Entity *entity, CameraComponent *camera, const PrimitiveGeometry &primitive)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<RenderComponent>();
@@ -108,22 +108,24 @@ namespace mulberry
         }
         for (auto camera : cameraComponents)
         {
-            App::GetInstance().GetGraphicsContext()->GetDefaultDrawPass()->SetClearColor(camera->GetClearColor());
-            App::GetInstance().GetGraphicsContext()->GetDefaultDrawPass()->IsClearColorBuffer(true);
+            auto swapChainPass = App::GetInstance().GetGraphicsContext()->GetSwapChainPass();
 
-            App::GetInstance().GetGraphicsContext()->BeginFrame();
+            swapChainPass->SetClearColor(camera->GetClearColor());
+            swapChainPass->IsClearColorBuffer(true);
 
-            App::GetInstance().GetGraphicsContext()->GetDefaultDrawPass()->SetViewport(camera->GetViewport());
+            swapChainPass->Begin();
+
+            swapChainPass->SetViewport(camera->GetViewport());
 
             for (const auto &entity : entitiesWithSpriteComp)
             {
-                RenderSprite(App::GetInstance().GetGraphicsContext()->GetDefaultDrawPass(),entity, camera);
-                RenderAuxiliary(entity, camera, *mLinePrimitive);
-                RenderAuxiliary(entity, camera, *mCirclePrimitive);
-                RenderAuxiliary(entity, camera, *mQuadPrimitive);
+                RenderSprite(swapChainPass, entity, camera);
+                RenderAuxiliary(swapChainPass, entity, camera, *mLinePrimitive);
+                RenderAuxiliary(swapChainPass, entity, camera, *mCirclePrimitive);
+                RenderAuxiliary(swapChainPass, entity, camera, *mQuadPrimitive);
             }
 
-            App::GetInstance().GetGraphicsContext()->EndFrame();
+            swapChainPass->End();
         }
     }
 }

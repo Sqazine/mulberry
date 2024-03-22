@@ -8,9 +8,10 @@
 #include <array>
 namespace mulberry::rhi::vk
 {
-    GraphicsPass::GraphicsPass()
+    SwapChainPass::SwapChainPass()
+        : mSwapChain(std::make_unique<SwapChain>()), mCurFrameIdx(0)
     {
-        size_t size = VK_CONTEXT->GetSwapChain()->GetTextures().size();
+        size_t size = mSwapChain->GetTextures().size();
 
         mGraphicsCommandBuffers = mDevice.GetGraphicsCommandPool()->CreatePrimaryCommandBuffers(size);
 
@@ -26,14 +27,24 @@ namespace mulberry::rhi::vk
         }
     }
 
-    GraphicsPass::~GraphicsPass()
+    SwapChainPass::~SwapChainPass()
     {
     }
 
-    void GraphicsPass::Begin()
+    void SwapChainPass::Begin()
     {
-        auto frameBuffer = VK_CONTEXT->GetSwapChain()->GetCurrentDefaultFrameBuffer();
-        auto renderPass = VK_CONTEXT->GetSwapChain()->GetDefaultRenderPass();
+        if (App::GetInstance().GetWindow()->HasEvent(Window::Event::MAX | Window::Event::MIN | Window::Event::RESIZE))
+        {
+            mSwapChain->SyncToWindowSize();
+            mCurFrameIdx = 0;
+        }
+
+        GetFence()->Wait();
+
+        mSwapChain->AcquireNextImage(GetWaitSemaphore());
+
+        auto frameBuffer = mSwapChain->GetDefaultFrameBuffer(GetCurFrameIdx());
+        auto renderPass = mSwapChain->GetDefaultRenderPass();
 
         mFences[GetCurFrameIdx()]->Reset();
 
@@ -52,59 +63,70 @@ namespace mulberry::rhi::vk
         GetCommandBuffer()->BeginRenderPass(renderPass->GetHandle(), frameBuffer->GetHandle(), renderArea, clearValues, VK_SUBPASS_CONTENTS_INLINE);
     }
 
-    void GraphicsPass::SetClearColor(const Color &clearColor)
+    void SwapChainPass::SetClearColor(const Color &clearColor)
     {
         mClearColor = clearColor;
     }
 
-    void GraphicsPass::IsClearColorBuffer(bool isClear)
+    void SwapChainPass::IsClearColorBuffer(bool isClear)
     {
         mIsClearColorBuffer = isClear;
     }
 
-    void GraphicsPass::SetViewport(const Viewport &viewport)
+    void SwapChainPass::SetViewport(const Viewport &viewport)
     {
         auto [v, s] = ToVkViewPort(viewport);
         GetCommandBuffer()->SetViewport(v);
         GetCommandBuffer()->SetScissor(s);
     }
 
-    void GraphicsPass::SetPipeline(GraphicsPipeline *pipeline)
+    void SwapChainPass::SetPipeline(GraphicsPipeline *pipeline)
     {
-        auto renderPass = VK_CONTEXT->GetSwapChain()->GetDefaultRenderPass();
+        auto renderPass = mSwapChain->GetDefaultRenderPass();
         pipeline->SetRenderPass(renderPass);
         GetCommandBuffer()->BindPipeline(pipeline);
     }
 
-    Semaphore *GraphicsPass::GetWaitSemaphore() const
+    Semaphore *SwapChainPass::GetWaitSemaphore() const
     {
         return mWaitSemaphores[GetCurFrameIdx()].get();
     }
-    Semaphore *GraphicsPass::GetSignalSemaphore() const
+    
+    Semaphore *SwapChainPass::GetSignalSemaphore() const
     {
         return mSignalSemaphores[GetCurFrameIdx()].get();
     }
 
-    void GraphicsPass::End()
+    void SwapChainPass::End()
     {
         GetCommandBuffer()->EndRenderPass();
 
         GetCommandBuffer()->End();
 
         GetCommandBuffer()->Submit({PipelineStage::COLOR_ATTACHMENT_OUTPUT}, {GetWaitSemaphore()}, {GetSignalSemaphore()}, {GetFence()});
+
+        auto result = mSwapChain->Present(GetSignalSemaphore());
+
+        mCurFrameIdx = (mCurFrameIdx + 1) % ((int32_t)mSwapChain->GetTextures().size());
+
+        if (result != VK_SUCCESS)
+        {
+            mSwapChain->SyncToWindowSize();
+            mCurFrameIdx = 0;
+        }
     }
 
-    GraphicsCommandBuffer *GraphicsPass::GetCommandBuffer() const
+    GraphicsCommandBuffer *SwapChainPass::GetCommandBuffer() const
     {
         return mGraphicsCommandBuffers[GetCurFrameIdx()].get();
     }
 
-    size_t GraphicsPass::GetCurFrameIdx() const
+    size_t SwapChainPass::GetCurFrameIdx() const
     {
-        return VK_CONTEXT->GetCurFrameIdx();
+        return mCurFrameIdx;
     }
 
-    Fence *GraphicsPass::GetFence() const
+    Fence *SwapChainPass::GetFence() const
     {
         return mFences[GetCurFrameIdx()].get();
     }

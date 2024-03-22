@@ -8,11 +8,11 @@
 #include "Graphics/RHI/VK/Pass.h"
 namespace mulberry::rhi
 {
-    class GraphicsPass : GRAPHICS_RHI_IMPL_DECL(GraphicsPass)
+    class SwapChainPass : GRAPHICS_RHI_IMPL_DECL(SwapChainPass)
     {
     public:
-        GraphicsPass();
-        ~GraphicsPass();
+        SwapChainPass();
+        ~SwapChainPass();
 
         void SetClearColor(const Color &clearColor);
         void IsClearColorBuffer(bool isClear);
