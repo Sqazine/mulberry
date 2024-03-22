@@ -1,3 +1,8 @@
+set(LIB_NAME libmulberry)
+if(CURRENT_PLATFORM STREQUAL "Linux")
+    set(LIB_NAME mulberry)
+endif()
+
 file(GLOB ROOT "*.h" "*.cpp")
 file(GLOB CORE "Core/*.h" "Core/*.cpp")
 file(GLOB MATH "Math/*.h" "Math/*.cpp")
@@ -20,8 +25,8 @@ source_group("Graphics" FILES ${GRAPHICS})
 source_group("Graphics/RHI" FILES ${RHI})
 source_group("Graphics/RHI/VK" FILES ${VK})
 
-add_library(mulberry STATIC ${ROOT} ${CORE} ${MATH} ${PLATFORM} ${PLATFORM_SDL2_WRAPPER} ${SCENE} ${COMPONENT} ${GRAPHICS} ${RHI} ${VK})
-target_include_directories(mulberry PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} 
+add_library(${LIB_NAME} STATIC ${ROOT} ${CORE} ${MATH} ${PLATFORM} ${PLATFORM_SDL2_WRAPPER} ${SCENE} ${COMPONENT} ${GRAPHICS} ${RHI} ${VK})
+target_include_directories(${LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} 
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Core
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Math
                                           ${CMAKE_CURRENT_SOURCE_DIR}/Platform
@@ -45,7 +50,7 @@ find_library(vulkan_1
              PATHS ${VULKAN_ROOT}/Lib)
                              
 
-target_link_libraries(mulberry PRIVATE  SDL2-static
+target_link_libraries(${LIB_NAME} PRIVATE  SDL2-static
                                         SDL2main 
                                         stb
                                         spdlog::spdlog 
@@ -61,14 +66,14 @@ target_link_libraries(mulberry PRIVATE  SDL2-static
                                         HLSL 
                                         ${vulkan_1})
                                         
-target_compile_definitions(mulberry PRIVATE SHOW_FPS_ON_WINDOW_TITLE)
-target_compile_definitions(mulberry PRIVATE ${CURRENT_PLATFORM})
+target_compile_definitions(${LIB_NAME} PRIVATE SHOW_FPS_ON_WINDOW_TITLE)
+target_compile_definitions(${LIB_NAME} PRIVATE ${CURRENT_PLATFORM})
 
 if(MSVC)
-    target_compile_definitions(mulberry PRIVATE _CRT_SECURE_NO_WARNINGS)
-    target_compile_definitions(mulberry PRIVATE _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
-    target_compile_definitions(mulberry PRIVATE NOMINMAX)
-    target_compile_options(mulberry PRIVATE "/W4")
-    target_compile_options(mulberry PRIVATE "/wd4251;")
-    target_compile_options(mulberry PRIVATE "/wd4201;")
+    target_compile_definitions(${LIB_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
+    target_compile_definitions(${LIB_NAME} PRIVATE _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+    target_compile_definitions(${LIB_NAME} PRIVATE NOMINMAX)
+    target_compile_options(${LIB_NAME} PRIVATE "/W4")
+    target_compile_options(${LIB_NAME} PRIVATE "/wd4251;")
+    target_compile_options(${LIB_NAME} PRIVATE "/wd4201;")
 endif()

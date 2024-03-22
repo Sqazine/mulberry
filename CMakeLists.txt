@@ -85,5 +85,5 @@ if(WIN32)
     set_property(TARGET install-headers  PROPERTY FOLDER 3rd/glslang)
 endif()
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/mulberry)
+add_subdirectory(${CMAKE_SOURCE_DIR}/libmulberry)
 add_subdirectory(${CMAKE_SOURCE_DIR}/tests)
