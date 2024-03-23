@@ -70,16 +70,6 @@ namespace mulberry::rhi::vk
 		return mDevice.GetPresentQueue()->Present(presentInfo);
 	}
 
-	FrameBuffer *SwapChain::GetDefaultFrameBuffer(uint32_t i) const
-	{
-		return mDefaultFrameBuffers[i].get();
-	}
-
-	RenderPass *SwapChain::GetDefaultRenderPass() const
-	{
-		return mDefaultRenderPass.get();
-	}
-
 	void SwapChain::Build()
 	{
 		SwapChainDetails swapChainDetail = QuerySwapChainDetails();
@@ -87,7 +77,7 @@ namespace mulberry::rhi::vk
 		mPresentMode = ChooseSwapChainPresentMode(swapChainDetail.presentModes);
 		mExtent = ChooseSwapChainExtent(swapChainDetail.surfaceCapabilities);
 
-		uint32_t imageCount = swapChainDetail.surfaceCapabilities.minImageCount + 1;
+		uint32_t imageCount = swapChainDetail.surfaceCapabilities.minImageCount;
 		if (swapChainDetail.surfaceCapabilities.maxImageCount > 0 && imageCount > swapChainDetail.surfaceCapabilities.maxImageCount)
 			imageCount = swapChainDetail.surfaceCapabilities.maxImageCount;
 
@@ -130,18 +120,9 @@ namespace mulberry::rhi::vk
 		std::vector<VkImage> rawImages(count);
 		vkGetSwapchainImagesKHR(mDevice.GetHandle(), mHandle, &count, rawImages.data());
 
-		mDefaultRenderPass = std::make_unique<RenderPass>(mSurfaceFormat.format);
-
 		mBackTextures.resize(count);
 		for (size_t i = 0; i < rawImages.size(); ++i)
 			mBackTextures[i] = new Texture(GetExtent(), rawImages[i], mSurfaceFormat.format);
-
-		mDefaultFrameBuffers.resize(count);
-		for (int32_t i = 0; i < mDefaultFrameBuffers.size(); ++i)
-		{
-			mDefaultFrameBuffers[i] = std::make_unique<FrameBuffer>();
-			mDefaultFrameBuffers[i]->AttachRenderPass(GetDefaultRenderPass()).AttachTexture(mBackTextures[i]);
-		}
 	}
 
 	const VkSwapchainKHR &SwapChain::GetHandle() const

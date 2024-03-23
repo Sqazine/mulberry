@@ -20,9 +20,6 @@ namespace mulberry::rhi::vk
 
 		const VkSwapchainKHR &GetHandle() const;
 
-		class FrameBuffer *GetDefaultFrameBuffer(uint32_t i) const;
-		class RenderPass *GetDefaultRenderPass() const;
-
 		void AcquireNextImage(const Semaphore *semaphore = nullptr, const Fence *fence = nullptr);
 		uint32_t GetNextImageIdx() const;
 
@@ -43,9 +40,6 @@ namespace mulberry::rhi::vk
 		VkSwapchainKHR mHandle;
 
 		std::vector<class Texture *> mBackTextures;
-
-		std::unique_ptr<class RenderPass> mDefaultRenderPass;
-		std::vector<std::unique_ptr<class FrameBuffer>> mDefaultFrameBuffers;
 
 		VkSurfaceFormatKHR mSurfaceFormat;
 		VkExtent2D mExtent;

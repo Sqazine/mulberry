@@ -8,8 +8,73 @@
 #include <array>
 namespace mulberry::rhi::vk
 {
+    Pass::Pass()
+        : mCurFrameIdx(0)
+    {
+    }
+
+    Pass::~Pass()
+    {
+    }
+
+    void Pass::Begin()
+    {
+    }
+
+    void Pass::SetClearColor(const Color &clearColor)
+    {
+        mClearColor = clearColor;
+    }
+
+    void Pass::IsClearColorBuffer(bool isClear)
+    {
+        mIsClearColorBuffer = isClear;
+    }
+
+    void Pass::SetViewport(const Viewport &viewport)
+    {
+        auto [v, s] = ToVkViewPort(viewport);
+        GetCommandBuffer()->SetViewport(v);
+        GetCommandBuffer()->SetScissor(s);
+    }
+
+    void Pass::SetPipeline(GraphicsPipeline *pipeline)
+    {
+        pipeline->SetRenderPass(mRenderPass.get());
+        GetCommandBuffer()->BindPipeline(pipeline);
+    }
+
+    void Pass::End()
+    {
+    }
+
+    Semaphore *Pass::GetWaitSemaphore() const
+    {
+        return mWaitSemaphores[GetCurFrameIdx()].get();
+    }
+
+    Semaphore *Pass::GetSignalSemaphore() const
+    {
+        return mSignalSemaphores[GetCurFrameIdx()].get();
+    }
+
+    Fence *Pass::GetFence() const
+    {
+        return mFences[GetCurFrameIdx()].get();
+    }
+
+    GraphicsCommandBuffer *Pass::GetCommandBuffer() const
+    {
+        return mGraphicsCommandBuffers[GetCurFrameIdx()].get();
+    }
+
+    size_t Pass::GetCurFrameIdx() const
+    {
+        return mCurFrameIdx;
+    }
+
     SwapChainPass::SwapChainPass()
-        : mSwapChain(std::make_unique<SwapChain>()), mCurFrameIdx(0)
+        : mSwapChain(std::make_unique<SwapChain>())
     {
         size_t size = mSwapChain->GetTextures().size();
 
@@ -25,6 +90,15 @@ namespace mulberry::rhi::vk
             mSignalSemaphores[i] = std::make_unique<Semaphore>();
             mFences[i] = std::make_unique<Fence>(FenceStatus::SIGNALED);
         }
+
+        mRenderPass = std::make_unique<RenderPass>(mSwapChain->GetSurfaceFormat().format);
+
+        mFrameBuffers.resize(size);
+        for (int32_t i = 0; i < mFrameBuffers.size(); ++i)
+        {
+            mFrameBuffers[i] = std::make_unique<FrameBuffer>();
+            mFrameBuffers[i]->AttachRenderPass(mRenderPass.get()).AttachTexture(mSwapChain->GetTextures()[i]);
+        }
     }
 
     SwapChainPass::~SwapChainPass()
@@ -36,6 +110,12 @@ namespace mulberry::rhi::vk
         if (App::GetInstance().GetWindow()->HasEvent(Window::Event::MAX | Window::Event::MIN | Window::Event::RESIZE))
         {
             mSwapChain->SyncToWindowSize();
+            mFrameBuffers.resize(mSwapChain->GetTextures().size());
+            for (int32_t i = 0; i < mFrameBuffers.size(); ++i)
+            {
+                mFrameBuffers[i] = std::make_unique<FrameBuffer>();
+                mFrameBuffers[i]->AttachRenderPass(mRenderPass.get()).AttachTexture(mSwapChain->GetTextures()[i]);
+            }
             mCurFrameIdx = 0;
         }
 
@@ -43,8 +123,7 @@ namespace mulberry::rhi::vk
 
         mSwapChain->AcquireNextImage(GetWaitSemaphore());
 
-        auto frameBuffer = mSwapChain->GetDefaultFrameBuffer(GetCurFrameIdx());
-        auto renderPass = mSwapChain->GetDefaultRenderPass();
+        auto frameBuffer = mFrameBuffers[GetCurFrameIdx()].get();
 
         mFences[GetCurFrameIdx()]->Reset();
 
@@ -60,41 +139,7 @@ namespace mulberry::rhi::vk
         renderArea.extent.width = (uint32_t)frameBuffer->GetExtent().x;
         renderArea.extent.height = (uint32_t)frameBuffer->GetExtent().y;
 
-        GetCommandBuffer()->BeginRenderPass(renderPass->GetHandle(), frameBuffer->GetHandle(), renderArea, clearValues, VK_SUBPASS_CONTENTS_INLINE);
-    }
-
-    void SwapChainPass::SetClearColor(const Color &clearColor)
-    {
-        mClearColor = clearColor;
-    }
-
-    void SwapChainPass::IsClearColorBuffer(bool isClear)
-    {
-        mIsClearColorBuffer = isClear;
-    }
-
-    void SwapChainPass::SetViewport(const Viewport &viewport)
-    {
-        auto [v, s] = ToVkViewPort(viewport);
-        GetCommandBuffer()->SetViewport(v);
-        GetCommandBuffer()->SetScissor(s);
-    }
-
-    void SwapChainPass::SetPipeline(GraphicsPipeline *pipeline)
-    {
-        auto renderPass = mSwapChain->GetDefaultRenderPass();
-        pipeline->SetRenderPass(renderPass);
-        GetCommandBuffer()->BindPipeline(pipeline);
-    }
-
-    Semaphore *SwapChainPass::GetWaitSemaphore() const
-    {
-        return mWaitSemaphores[GetCurFrameIdx()].get();
-    }
-    
-    Semaphore *SwapChainPass::GetSignalSemaphore() const
-    {
-        return mSignalSemaphores[GetCurFrameIdx()].get();
+        GetCommandBuffer()->BeginRenderPass(mRenderPass->GetHandle(), frameBuffer->GetHandle(), renderArea, clearValues, VK_SUBPASS_CONTENTS_INLINE);
     }
 
     void SwapChainPass::End()
@@ -112,22 +157,13 @@ namespace mulberry::rhi::vk
         if (result != VK_SUCCESS)
         {
             mSwapChain->SyncToWindowSize();
+            mFrameBuffers.resize(mSwapChain->GetTextures().size());
+            for (int32_t i = 0; i < mFrameBuffers.size(); ++i)
+            {
+                mFrameBuffers[i] = std::make_unique<FrameBuffer>();
+                mFrameBuffers[i]->AttachRenderPass(mRenderPass.get()).AttachTexture(mSwapChain->GetTextures()[i]);
+            }
             mCurFrameIdx = 0;
         }
-    }
-
-    GraphicsCommandBuffer *SwapChainPass::GetCommandBuffer() const
-    {
-        return mGraphicsCommandBuffers[GetCurFrameIdx()].get();
-    }
-
-    size_t SwapChainPass::GetCurFrameIdx() const
-    {
-        return mCurFrameIdx;
-    }
-
-    Fence *SwapChainPass::GetFence() const
-    {
-        return mFences[GetCurFrameIdx()].get();
     }
 }

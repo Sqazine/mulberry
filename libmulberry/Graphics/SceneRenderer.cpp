@@ -27,10 +27,11 @@ namespace mulberry
         const SpriteMaterial *material = (SpriteMaterial *)spriteComp->GetMaterial();
 
         // map to sprite size
+        auto spriteExtent = material->GetSprite()->GetExtent();
         Mat4 mat = transComp->GetModelMat();
-        //  mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
+        mat *= Mat4::Scale(Vec2(spriteExtent.x / 2.0f, spriteExtent.y / 2.0f));
 
-        // pass->SetPipeline(*spriteComp->GetMaterial()->GetGraphicsPipeline());
+        pass->SetPipeline(*spriteComp->GetMaterial()->GetGraphicsPipeline());
 
         /*  material->GetShaderGroup()->SetActive(true);
           material->GetShaderGroup()->SetDefaultUniformValue("modelMat", mat);
@@ -64,31 +65,32 @@ namespace mulberry
         const SpriteMaterial *material = (SpriteMaterial *)spriteComp->GetMaterial();
 
         // map to sprite size
-        /* Mat4 mat = transComp->GetModelMat();
-         mat *= Mat4::Scale(Vec2(material->GetSprite()->GetCreateInfo().data.width / 2, material->GetSprite()->GetCreateInfo().data.height / 2));
+        auto spriteExtent = material->GetSprite()->GetExtent();
+        Mat4 mat = transComp->GetModelMat();
+        mat *= Mat4::Scale(Vec2(spriteExtent.x / 2.0f, spriteExtent.y / 2.0f));
 
-         mGizmoMaterial->GetShaderGroup()->SetActive(true);
+        /*mGizmoMaterial->GetShaderGroup()->SetActive(true);
 
-         mGizmoMaterial->GetShaderGroup()->SetDefaultUniformValue("modelMat", mat);
-         mGizmoMaterial->GetShaderGroup()->SetDefaultUniformValue("viewMat", camera->GetViewMat());
-         mGizmoMaterial->GetShaderGroup()->SetDefaultUniformValue("projMat", camera->GetProjMat());
+        mGizmoMaterial->GetShaderGroup()->SetDefaultUniformValue("modelMat", mat);
+        mGizmoMaterial->GetShaderGroup()->SetDefaultUniformValue("viewMat", camera->GetViewMat());
+        mGizmoMaterial->GetShaderGroup()->SetDefaultUniformValue("projMat", camera->GetProjMat());
 
-         mGizmoMaterial->SetDefaultUniformValue();
+        mGizmoMaterial->SetDefaultUniformValue();
 
-         mGizmoMaterial->GetShaderGroup()->SetVertexArray(primitive.GetVertexArray());
+        mGizmoMaterial->GetShaderGroup()->SetVertexArray(primitive.GetVertexArray());
 
-         mGizmoMaterial->GetShaderGroup()->SetVertexBuffer("inPosition", primitive.GetPositionBuffer());
+        mGizmoMaterial->GetShaderGroup()->SetVertexBuffer("inPosition", primitive.GetPositionBuffer());
 
-         mAuxiliaryGraphicsPipeline->Render(primitive);
-         mPointGraphicsPipeline->Render(primitive);
+        mAuxiliaryGraphicsPipeline->Render(primitive);
+        mPointGraphicsPipeline->Render(primitive);
 
-         mGizmoMaterial->GetShaderGroup()->ResetVertexBuffer("inPosition");
+        mGizmoMaterial->GetShaderGroup()->ResetVertexBuffer("inPosition");
 
-         mGizmoMaterial->ResetUniformValue();
+        mGizmoMaterial->ResetUniformValue();
 
-         mGizmoMaterial->GetShaderGroup()->ResetVertexArray();
+        mGizmoMaterial->GetShaderGroup()->ResetVertexArray();
 
-         mGizmoMaterial->GetShaderGroup()->SetActive(false);*/
+        mGizmoMaterial->GetShaderGroup()->SetActive(false);*/
     }
 
     void SceneRenderer::Render(const Scene *scene)
