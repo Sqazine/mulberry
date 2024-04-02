@@ -8,7 +8,7 @@
 #include "RenderPass.h"
 #include "Descriptor.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     class PipelineLayout : public Base
     {

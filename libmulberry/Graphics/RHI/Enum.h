@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <type_traits>
 #include "Utils/Utils.h"
-namespace mulberry::rhi
+namespace mulberry
 {
     enum class ShaderStage : uint64_t
     {

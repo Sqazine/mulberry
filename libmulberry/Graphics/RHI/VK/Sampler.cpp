@@ -4,7 +4,7 @@
 #include "Logger.h"
 #include "Utils.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     Sampler::Sampler()
         : mHandle(VK_NULL_HANDLE)
@@ -24,23 +24,23 @@ namespace mulberry::rhi::vk
         return mHandle;
     }
 
-    Sampler &Sampler::SetMagFilter(rhi::FilterMode filter)
+    Sampler &Sampler::SetMagFilter(FilterMode filter)
     {
         SET(mMagFilter, filter);
     }
-    Sampler &Sampler::SetMinFilter(rhi::FilterMode filter)
+    Sampler &Sampler::SetMinFilter(FilterMode filter)
     {
         SET(mMinFilter, filter);
     }
-    Sampler &Sampler::SetWrapU(rhi::WrapMode address)
+    Sampler &Sampler::SetWrapU(WrapMode address)
     {
         SET(mWrapU, address);
     }
-    Sampler &Sampler::SetWrapV(rhi::WrapMode address)
+    Sampler &Sampler::SetWrapV(WrapMode address)
     {
         SET(mWrapV, address);
     }
-    Sampler &Sampler::SetWrapW(rhi::WrapMode address)
+    Sampler &Sampler::SetWrapW(WrapMode address)
     {
         SET(mWrapW, address);
     }
@@ -69,23 +69,23 @@ namespace mulberry::rhi::vk
         SET(mMaxMipMapLevel, level);
     }
 
-    const rhi::FilterMode &Sampler::GetMagFilter() const
+    const FilterMode &Sampler::GetMagFilter() const
     {
         return mMagFilter;
     }
-    const rhi::FilterMode &Sampler::GetMinFilter() const
+    const FilterMode &Sampler::GetMinFilter() const
     {
         return mMinFilter;
     }
-    const rhi::WrapMode &Sampler::GetWrapModeU() const
+    const WrapMode &Sampler::GetWrapModeU() const
     {
         return mWrapU;
     }
-    const rhi::WrapMode &Sampler::GetWrapModeV() const
+    const WrapMode &Sampler::GetWrapModeV() const
     {
         return mWrapV;
     }
-    const rhi::WrapMode &Sampler::GetWrapModeW() const
+    const WrapMode &Sampler::GetWrapModeW() const
     {
         return mWrapW;
     }

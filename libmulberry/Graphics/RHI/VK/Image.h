@@ -5,7 +5,7 @@
 #include "Base.h"
 #include "../Enum.h"
 #include "../Format.h"
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
 	class Image : public Base
 	{

@@ -3,7 +3,7 @@
 #include "Texture.h"
 #include "Logger.h"
 
-namespace mulberry::rhi
+namespace mulberry
 {
     Texture::Texture()
     {

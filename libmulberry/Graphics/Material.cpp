@@ -44,22 +44,22 @@ namespace mulberry
     SpriteMaterial::SpriteMaterial()
         : mTiling(1.0), mOffset(0.0)
     {
-        GetGraphicsPipeline()->SetVertexShader(new rhi::Shader(rhi::ShaderStage::VERTEX, spriteVertShader))
-                              .SetFragmentShader(new rhi::Shader(rhi::ShaderStage::FRAGMENT, spriteFragShader))
-                              .SetCullMode(rhi::CullMode::BACK)
-                              .SetPrimitiveTopology(rhi::PrimitiveTopology::TRIANGLE_LIST);
+        GetGraphicsPipeline()->SetVertexShader(new Shader(ShaderStage::VERTEX, spriteVertShader))
+                              .SetFragmentShader(new Shader(ShaderStage::FRAGMENT, spriteFragShader))
+                              .SetCullMode(CullMode::BACK)
+                              .SetPrimitiveTopology(PrimitiveTopology::TRIANGLE_LIST);
     }
 
     SpriteMaterial::~SpriteMaterial()
     {
     }
 
-    void SpriteMaterial::SetSprite(rhi::Texture *sprite)
+    void SpriteMaterial::SetSprite(Texture *sprite)
     {
         this->mSprite = sprite;
     }
 
-    const rhi::Texture *SpriteMaterial::GetSprite() const
+    const Texture *SpriteMaterial::GetSprite() const
     {
         return mSprite;
     }
@@ -93,8 +93,8 @@ namespace mulberry
 
     GizmoMaterial::GizmoMaterial()
     {
-        auto vertShader = rhi::Shader(rhi::ShaderStage::VERTEX, gizmoVertShader);
-        auto fragShader = rhi::Shader(rhi::ShaderStage::FRAGMENT, gizmoFragShader);
+        auto vertShader = Shader(ShaderStage::VERTEX, gizmoVertShader);
+        auto fragShader = Shader(ShaderStage::FRAGMENT, gizmoFragShader);
         /*  shaderProgram = std::make_unique<ShaderGroup>();
           shaderProgram->AttachShader(vertShader);
           shaderProgram->AttachShader(fragShader);*/

@@ -1,7 +1,7 @@
 #include "Shader.h"
 #include "App.h"
 #include "VK/Shader.h"
-namespace mulberry::rhi
+namespace mulberry
 {
     Shader::Shader(ShaderStage type, std::string_view content)
         : Base(type, content)

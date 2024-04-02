@@ -7,7 +7,7 @@
 #include "Buffer.h"
 #include "Texture.h"
 
-namespace mulberry::rhi
+namespace mulberry
 {
     class Shader : GRAPHICS_RHI_IMPL_DECL(Shader)
     {

@@ -7,7 +7,7 @@
 #include "Image.h"
 #include "Sampler.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     class Texture
     {

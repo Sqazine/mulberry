@@ -20,18 +20,18 @@ namespace mulberry
     {
     }
 
-    void SceneRenderer::RenderSprite(rhi::SwapChainPass *pass, const Entity *entity, CameraComponent *camera)
+    void SceneRenderer::RenderSprite(SwapChainPass *pass, const Entity *entity, CameraComponent *camera)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<SpriteComponent>();
         const SpriteMaterial *material = (SpriteMaterial *)spriteComp->GetMaterial();
 
         // map to sprite size
-        auto spriteExtent = material->GetSprite()->GetExtent();
-        Mat4 mat = transComp->GetModelMat();
-        mat *= Mat4::Scale(Vec2(spriteExtent.x / 2.0f, spriteExtent.y / 2.0f));
+        // auto spriteExtent = material->GetSprite()->GetExtent();
+        // Mat4 mat = transComp->GetModelMat();
+        // mat *= Mat4::Scale(Vec2(spriteExtent.x / 2.0f, spriteExtent.y / 2.0f));
 
-        pass->SetPipeline(*spriteComp->GetMaterial()->GetGraphicsPipeline());
+        //pass->SetPipeline(*spriteComp->GetMaterial()->GetGraphicsPipeline());
 
         /*  material->GetShaderGroup()->SetActive(true);
           material->GetShaderGroup()->SetDefaultUniformValue("modelMat", mat);
@@ -57,7 +57,7 @@ namespace mulberry
           material->GetShaderGroup()->SetActive(false);*/
     }
 
-    void SceneRenderer::RenderAuxiliary(rhi::SwapChainPass *pass, const Entity *entity, CameraComponent *camera, const PrimitiveGeometry &primitive)
+    void SceneRenderer::RenderAuxiliary(SwapChainPass *pass, const Entity *entity, CameraComponent *camera, const PrimitiveGeometry &primitive)
     {
         auto transComp = entity->GetComponent<TransformComponent>();
         auto spriteComp = entity->GetComponent<RenderComponent>();
@@ -65,9 +65,9 @@ namespace mulberry
         const SpriteMaterial *material = (SpriteMaterial *)spriteComp->GetMaterial();
 
         // map to sprite size
-        auto spriteExtent = material->GetSprite()->GetExtent();
-        Mat4 mat = transComp->GetModelMat();
-        mat *= Mat4::Scale(Vec2(spriteExtent.x / 2.0f, spriteExtent.y / 2.0f));
+        // auto spriteExtent = material->GetSprite()->GetExtent();
+        // Mat4 mat = transComp->GetModelMat();
+        // mat *= Mat4::Scale(Vec2(spriteExtent.x / 2.0f, spriteExtent.y / 2.0f));
 
         /*mGizmoMaterial->GetShaderGroup()->SetActive(true);
 

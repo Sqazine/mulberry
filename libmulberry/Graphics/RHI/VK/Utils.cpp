@@ -3,7 +3,7 @@
 #include <glslang/SPIRV/GlslangToSpv.h>
 #include "Logger.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
 	static TBuiltInResource InitResources() noexcept
 	{
@@ -250,73 +250,73 @@ namespace mulberry::rhi::vk
 		return content;
 	}
 
-	VkSampleCountFlagBits ToVkSampleCount(mulberry::rhi::SampleCount count)
+	VkSampleCountFlagBits ToVkSampleCount(mulberry::SampleCount count)
 	{
 		switch (count)
 		{
-		case mulberry::rhi::SampleCount::X1:
+		case mulberry::SampleCount::X1:
 			return VK_SAMPLE_COUNT_1_BIT;
-		case mulberry::rhi::SampleCount::X2:
+		case mulberry::SampleCount::X2:
 			return VK_SAMPLE_COUNT_2_BIT;
-		case mulberry::rhi::SampleCount::X4:
+		case mulberry::SampleCount::X4:
 			return VK_SAMPLE_COUNT_4_BIT;
-		case mulberry::rhi::SampleCount::X8:
+		case mulberry::SampleCount::X8:
 			return VK_SAMPLE_COUNT_8_BIT;
-		case mulberry::rhi::SampleCount::X16:
+		case mulberry::SampleCount::X16:
 			return VK_SAMPLE_COUNT_16_BIT;
-		case mulberry::rhi::SampleCount::X32:
+		case mulberry::SampleCount::X32:
 			return VK_SAMPLE_COUNT_32_BIT;
-		case mulberry::rhi::SampleCount::X64:
+		case mulberry::SampleCount::X64:
 			return VK_SAMPLE_COUNT_64_BIT;
 		default:
 			return VK_SAMPLE_COUNT_1_BIT;
 		}
 	}
 
-	VkFrontFace ToVkFrontFace(mulberry::rhi::FrontFace frontFace)
+	VkFrontFace ToVkFrontFace(mulberry::FrontFace frontFace)
 	{
 		switch (frontFace)
 		{
-		case mulberry::rhi::FrontFace::CW:
+		case mulberry::FrontFace::CW:
 			return VK_FRONT_FACE_CLOCKWISE;
-		case mulberry::rhi::FrontFace::CCW:
+		case mulberry::FrontFace::CCW:
 			return VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		default:
 			return VK_FRONT_FACE_CLOCKWISE;
 		}
 	}
 
-	VkCullModeFlagBits ToVkCullMode(mulberry::rhi::CullMode cullMode)
+	VkCullModeFlagBits ToVkCullMode(mulberry::CullMode cullMode)
 	{
 		switch (cullMode)
 		{
-		case mulberry::rhi::CullMode::NONE:
+		case mulberry::CullMode::NONE:
 			return VK_CULL_MODE_NONE;
-		case mulberry::rhi::CullMode::FRONT:
+		case mulberry::CullMode::FRONT:
 			return VK_CULL_MODE_FRONT_BIT;
-		case mulberry::rhi::CullMode::BACK:
+		case mulberry::CullMode::BACK:
 			return VK_CULL_MODE_BACK_BIT;
-		case mulberry::rhi::CullMode::BOTH:
+		case mulberry::CullMode::BOTH:
 			return VK_CULL_MODE_FRONT_AND_BACK;
 		default:
 			return VK_CULL_MODE_NONE;
 		}
 	}
 
-	VkFilter ToVkFilterMode(rhi::FilterMode filterMode)
+	VkFilter ToVkFilterMode(FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
-		case mulberry::rhi::FilterMode::NEAREST:
+		case mulberry::FilterMode::NEAREST:
 			return VK_FILTER_NEAREST;
-		case mulberry::rhi::FilterMode::LINEAR:
+		case mulberry::FilterMode::LINEAR:
 			return VK_FILTER_LINEAR;
 		default:
 			return VK_FILTER_NEAREST;
 		}
 	}
 
-	VkSamplerAddressMode ToVkWrapMode(rhi::WrapMode wrapMode)
+	VkSamplerAddressMode ToVkWrapMode(WrapMode wrapMode)
 	{
 		switch (wrapMode)
 		{
@@ -333,7 +333,7 @@ namespace mulberry::rhi::vk
 		}
 	}
 
-	VkSamplerMipmapMode ToVkMipMapMode(rhi::MipMapMode mipmapMode)
+	VkSamplerMipmapMode ToVkMipMapMode(MipMapMode mipmapMode)
 	{
 		switch (mipmapMode)
 		{
@@ -346,7 +346,7 @@ namespace mulberry::rhi::vk
 		}
 	}
 
-	VkBorderColor ToVkBorderColor(rhi::BorderColor borderColor)
+	VkBorderColor ToVkBorderColor(BorderColor borderColor)
 	{
 		switch (borderColor)
 		{
@@ -367,22 +367,22 @@ namespace mulberry::rhi::vk
 		}
 	}
 
-	VkShaderStageFlagBits ToVkShaderStage(rhi::ShaderStage shaderStage)
+	VkShaderStageFlagBits ToVkShaderStage(ShaderStage shaderStage)
 	{
 		VkShaderStageFlags result = 0;
-		if ((shaderStage & rhi::ShaderStage::VERTEX) == ShaderStage::VERTEX)
+		if ((shaderStage & ShaderStage::VERTEX) == ShaderStage::VERTEX)
 			result |= VK_SHADER_STAGE_VERTEX_BIT;
-		if ((shaderStage & rhi::ShaderStage::FRAGMENT) == ShaderStage::FRAGMENT)
+		if ((shaderStage & ShaderStage::FRAGMENT) == ShaderStage::FRAGMENT)
 			result |= VK_SHADER_STAGE_FRAGMENT_BIT;
-		if ((shaderStage & rhi::ShaderStage::GEOMETRY) == ShaderStage::GEOMETRY)
+		if ((shaderStage & ShaderStage::GEOMETRY) == ShaderStage::GEOMETRY)
 			result |= VK_SHADER_STAGE_GEOMETRY_BIT;
-		if ((shaderStage & rhi::ShaderStage::TESSELLATION_CONTROL) == ShaderStage::TESSELLATION_CONTROL)
+		if ((shaderStage & ShaderStage::TESSELLATION_CONTROL) == ShaderStage::TESSELLATION_CONTROL)
 			result |= VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-		if ((shaderStage & rhi::ShaderStage::TESSELLATION_EVALUATION) == ShaderStage::TESSELLATION_EVALUATION)
+		if ((shaderStage & ShaderStage::TESSELLATION_EVALUATION) == ShaderStage::TESSELLATION_EVALUATION)
 			result |= VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
-		if ((shaderStage & rhi::ShaderStage::ALL_GRAPHICS) == ShaderStage::ALL_GRAPHICS)
+		if ((shaderStage & ShaderStage::ALL_GRAPHICS) == ShaderStage::ALL_GRAPHICS)
 			result |= VK_SHADER_STAGE_ALL_GRAPHICS;
-		if ((shaderStage & rhi::ShaderStage::ALL) == ShaderStage::ALL)
+		if ((shaderStage & ShaderStage::ALL) == ShaderStage::ALL)
 			result |= VK_SHADER_STAGE_ALL;
 		return (VkShaderStageFlagBits)result;
 	}
@@ -405,7 +405,7 @@ namespace mulberry::rhi::vk
 		return {vkViewport, vkScissor};
 	}
 
-	VkPrimitiveTopology ToVkPrimitiveTopology(rhi::PrimitiveTopology primTopo)
+	VkPrimitiveTopology ToVkPrimitiveTopology(PrimitiveTopology primTopo)
 	{
 		switch (primTopo)
 		{
@@ -434,7 +434,7 @@ namespace mulberry::rhi::vk
 		}
 	}
 
-	VkPolygonMode ToVkPolygonMode(rhi::PolygonMode polyMode)
+	VkPolygonMode ToVkPolygonMode(PolygonMode polyMode)
 	{
 		switch (polyMode)
 		{
@@ -449,4 +449,287 @@ namespace mulberry::rhi::vk
 		}
 	}
 
+	VkFormat ToVkFormat(Format format)
+	{
+#define CASE(x)               \
+	case Format::x:           \
+		return VK_FORMAT_##x; \
+		break;
+
+		switch (format.GetHandle())
+		{
+			CASE(UNDEFINED);
+			CASE(R4G4_UNORM_PACK8);
+			CASE(R4G4B4A4_UNORM_PACK16);
+			CASE(B4G4R4A4_UNORM_PACK16);
+			CASE(R5G6B5_UNORM_PACK16);
+			CASE(B5G6R5_UNORM_PACK16);
+			CASE(R5G5B5A1_UNORM_PACK16);
+			CASE(B5G5R5A1_UNORM_PACK16);
+			CASE(A1R5G5B5_UNORM_PACK16);
+			CASE(R8_UNORM);
+			CASE(R8_SNORM);
+			CASE(R8_USCALED);
+			CASE(R8_SSCALED);
+			CASE(R8_UINT);
+			CASE(R8_SINT);
+			CASE(R8_SRGB);
+
+			CASE(R8G8_UNORM);
+			CASE(R8G8_SNORM);
+			CASE(R8G8_USCALED);
+			CASE(R8G8_SSCALED);
+			CASE(R8G8_UINT);
+			CASE(R8G8_SINT);
+			CASE(R8G8_SRGB);
+
+			CASE(R8G8B8_UNORM);
+			CASE(R8G8B8_SNORM);
+			CASE(R8G8B8_USCALED);
+			CASE(R8G8B8_SSCALED);
+			CASE(R8G8B8_UINT);
+			CASE(R8G8B8_SINT);
+			CASE(R8G8B8_SRGB);
+
+			CASE(B8G8R8_UNORM);
+			CASE(B8G8R8_SNORM);
+			CASE(B8G8R8_USCALED);
+			CASE(B8G8R8_SSCALED);
+			CASE(B8G8R8_UINT);
+			CASE(B8G8R8_SINT);
+			CASE(B8G8R8_SRGB);
+
+			CASE(R8G8B8A8_UNORM);
+			CASE(R8G8B8A8_SNORM);
+			CASE(R8G8B8A8_USCALED);
+			CASE(R8G8B8A8_SSCALED);
+			CASE(R8G8B8A8_UINT);
+			CASE(R8G8B8A8_SINT);
+			CASE(R8G8B8A8_SRGB);
+
+			CASE(B8G8R8A8_UNORM);
+			CASE(B8G8R8A8_SNORM);
+			CASE(B8G8R8A8_USCALED);
+			CASE(B8G8R8A8_SSCALED);
+			CASE(B8G8R8A8_UINT);
+			CASE(B8G8R8A8_SINT);
+			CASE(B8G8R8A8_SRGB);
+
+			CASE(A8B8G8R8_UNORM_PACK32);
+			CASE(A8B8G8R8_SNORM_PACK32);
+			CASE(A8B8G8R8_USCALED_PACK32);
+			CASE(A8B8G8R8_SSCALED_PACK32);
+			CASE(A8B8G8R8_UINT_PACK32);
+			CASE(A8B8G8R8_SINT_PACK32);
+			CASE(A8B8G8R8_SRGB_PACK32);
+
+			CASE(A2R10G10B10_UNORM_PACK32);
+			CASE(A2R10G10B10_SNORM_PACK32);
+			CASE(A2R10G10B10_USCALED_PACK32);
+			CASE(A2R10G10B10_SSCALED_PACK32);
+			CASE(A2R10G10B10_UINT_PACK32);
+			CASE(A2R10G10B10_SINT_PACK32);
+
+			CASE(A2B10G10R10_UNORM_PACK32);
+			CASE(A2B10G10R10_SNORM_PACK32);
+			CASE(A2B10G10R10_USCALED_PACK32);
+			CASE(A2B10G10R10_SSCALED_PACK32);
+			CASE(A2B10G10R10_UINT_PACK32);
+			CASE(A2B10G10R10_SINT_PACK32);
+
+			CASE(R16_UNORM);
+			CASE(R16_SNORM);
+			CASE(R16_USCALED);
+			CASE(R16_SSCALED);
+			CASE(R16_UINT);
+			CASE(R16_SINT);
+			CASE(R16_SFLOAT);
+
+			CASE(R16G16_UNORM);
+			CASE(R16G16_SNORM);
+			CASE(R16G16_USCALED);
+			CASE(R16G16_SSCALED);
+			CASE(R16G16_UINT);
+			CASE(R16G16_SINT);
+			CASE(R16G16_SFLOAT);
+
+			CASE(R16G16B16_UNORM);
+			CASE(R16G16B16_SNORM);
+			CASE(R16G16B16_USCALED);
+			CASE(R16G16B16_SSCALED);
+			CASE(R16G16B16_UINT);
+			CASE(R16G16B16_SINT);
+			CASE(R16G16B16_SFLOAT);
+
+			CASE(R16G16B16A16_UNORM);
+			CASE(R16G16B16A16_SNORM);
+			CASE(R16G16B16A16_USCALED);
+			CASE(R16G16B16A16_SSCALED);
+			CASE(R16G16B16A16_UINT);
+			CASE(R16G16B16A16_SINT);
+			CASE(R16G16B16A16_SFLOAT);
+
+			CASE(R32_UINT);
+			CASE(R32_SINT);
+			CASE(R32_SFLOAT);
+
+			CASE(R32G32_UINT);
+			CASE(R32G32_SINT);
+			CASE(R32G32_SFLOAT);
+
+			CASE(R32G32B32_UINT);
+			CASE(R32G32B32_SINT);
+			CASE(R32G32B32_SFLOAT);
+
+			CASE(R32G32B32A32_UINT);
+			CASE(R32G32B32A32_SINT);
+			CASE(R32G32B32A32_SFLOAT);
+
+			CASE(R64_UINT);
+			CASE(R64_SINT);
+			CASE(R64_SFLOAT);
+
+			CASE(R64G64_UINT);
+			CASE(R64G64_SINT);
+			CASE(R64G64_SFLOAT);
+
+			CASE(R64G64B64_UINT);
+			CASE(R64G64B64_SINT);
+			CASE(R64G64B64_SFLOAT);
+
+			CASE(R64G64B64A64_UINT);
+			CASE(R64G64B64A64_SINT);
+			CASE(R64G64B64A64_SFLOAT);
+
+			CASE(B10G11R11_UFLOAT_PACK32);
+			CASE(E5B9G9R9_UFLOAT_PACK32);
+
+			CASE(D16_UNORM);
+			CASE(X8_D24_UNORM_PACK32);
+			CASE(D32_SFLOAT);
+			CASE(S8_UINT);
+			CASE(D16_UNORM_S8_UINT);
+			CASE(D24_UNORM_S8_UINT);
+			CASE(D32_SFLOAT_S8_UINT);
+			CASE(BC1_RGB_UNORM_BLOCK);
+			CASE(BC1_RGB_SRGB_BLOCK);
+			CASE(BC1_RGBA_UNORM_BLOCK);
+			CASE(BC1_RGBA_SRGB_BLOCK);
+			CASE(BC2_UNORM_BLOCK);
+			CASE(BC2_SRGB_BLOCK);
+			CASE(BC3_UNORM_BLOCK);
+			CASE(BC3_SRGB_BLOCK);
+			CASE(BC4_UNORM_BLOCK);
+			CASE(BC4_SNORM_BLOCK);
+			CASE(BC5_UNORM_BLOCK);
+			CASE(BC5_SNORM_BLOCK);
+
+			CASE(BC6H_UFLOAT_BLOCK);
+			CASE(BC6H_SFLOAT_BLOCK);
+			CASE(BC7_UNORM_BLOCK);
+			CASE(BC7_SRGB_BLOCK);
+			CASE(ETC2_R8G8B8_UNORM_BLOCK);
+			CASE(ETC2_R8G8B8_SRGB_BLOCK);
+			CASE(ETC2_R8G8B8A1_UNORM_BLOCK);
+			CASE(ETC2_R8G8B8A1_SRGB_BLOCK);
+			CASE(ETC2_R8G8B8A8_UNORM_BLOCK);
+			CASE(ETC2_R8G8B8A8_SRGB_BLOCK);
+			CASE(EAC_R11_UNORM_BLOCK);
+			CASE(EAC_R11_SNORM_BLOCK);
+			CASE(EAC_R11G11_UNORM_BLOCK);
+			CASE(EAC_R11G11_SNORM_BLOCK);
+			CASE(ASTC_4x4_UNORM_BLOCK);
+			CASE(ASTC_4x4_SRGB_BLOCK);
+			CASE(ASTC_5x4_UNORM_BLOCK);
+			CASE(ASTC_5x4_SRGB_BLOCK);
+			CASE(ASTC_5x5_UNORM_BLOCK);
+			CASE(ASTC_5x5_SRGB_BLOCK);
+			CASE(ASTC_6x5_UNORM_BLOCK);
+			CASE(ASTC_6x5_SRGB_BLOCK);
+			CASE(ASTC_6x6_UNORM_BLOCK);
+			CASE(ASTC_6x6_SRGB_BLOCK);
+			CASE(ASTC_8x5_UNORM_BLOCK);
+			CASE(ASTC_8x5_SRGB_BLOCK);
+			CASE(ASTC_8x6_UNORM_BLOCK);
+			CASE(ASTC_8x6_SRGB_BLOCK);
+			CASE(ASTC_8x8_UNORM_BLOCK);
+			CASE(ASTC_8x8_SRGB_BLOCK);
+			CASE(ASTC_10x5_UNORM_BLOCK);
+			CASE(ASTC_10x5_SRGB_BLOCK);
+			CASE(ASTC_10x6_UNORM_BLOCK);
+			CASE(ASTC_10x6_SRGB_BLOCK);
+			CASE(ASTC_10x8_UNORM_BLOCK);
+			CASE(ASTC_10x8_SRGB_BLOCK);
+			CASE(ASTC_10x10_UNORM_BLOCK);
+			CASE(ASTC_10x10_SRGB_BLOCK);
+			CASE(ASTC_12x10_UNORM_BLOCK);
+			CASE(ASTC_12x10_SRGB_BLOCK);
+			CASE(ASTC_12x12_UNORM_BLOCK);
+			CASE(ASTC_12x12_SRGB_BLOCK);
+			CASE(G8B8G8R8_422_UNORM);
+			CASE(B8G8R8G8_422_UNORM);
+			CASE(G8_B8_R8_3PLANE_420_UNORM);
+			CASE(G8_B8R8_2PLANE_420_UNORM);
+			CASE(G8_B8_R8_3PLANE_422_UNORM);
+			CASE(G8_B8R8_2PLANE_422_UNORM);
+			CASE(G8_B8_R8_3PLANE_444_UNORM);
+			CASE(R10X6_UNORM_PACK16);
+			CASE(R10X6G10X6_UNORM_2PACK16);
+			CASE(R10X6G10X6B10X6A10X6_UNORM_4PACK16);
+			CASE(G10X6B10X6G10X6R10X6_422_UNORM_4PACK16);
+			CASE(B10X6G10X6R10X6G10X6_422_UNORM_4PACK16);
+			CASE(G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16);
+			CASE(G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16);
+			CASE(G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16);
+			CASE(G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16);
+			CASE(G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16);
+			CASE(R12X4_UNORM_PACK16);
+			CASE(R12X4G12X4_UNORM_2PACK16);
+			CASE(R12X4G12X4B12X4A12X4_UNORM_4PACK16);
+			CASE(G12X4B12X4G12X4R12X4_422_UNORM_4PACK16);
+			CASE(B12X4G12X4R12X4G12X4_422_UNORM_4PACK16);
+			CASE(G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16);
+			CASE(G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16);
+			CASE(G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16);
+			CASE(G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16);
+			CASE(G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16);
+			CASE(G16B16G16R16_422_UNORM);
+			CASE(B16G16R16G16_422_UNORM);
+			CASE(G16_B16_R16_3PLANE_420_UNORM);
+			CASE(G16_B16R16_2PLANE_420_UNORM);
+			CASE(G16_B16_R16_3PLANE_422_UNORM);
+			CASE(G16_B16R16_2PLANE_422_UNORM);
+			CASE(G16_B16_R16_3PLANE_444_UNORM);
+			CASE(G8_B8R8_2PLANE_444_UNORM);
+			CASE(G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16);
+			CASE(G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16);
+			CASE(G16_B16R16_2PLANE_444_UNORM);
+			CASE(A4R4G4B4_UNORM_PACK16);
+			CASE(A4B4G4R4_UNORM_PACK16);
+			CASE(ASTC_4x4_SFLOAT_BLOCK);
+			CASE(ASTC_5x4_SFLOAT_BLOCK);
+			CASE(ASTC_5x5_SFLOAT_BLOCK);
+			CASE(ASTC_6x5_SFLOAT_BLOCK);
+			CASE(ASTC_6x6_SFLOAT_BLOCK);
+			CASE(ASTC_8x5_SFLOAT_BLOCK);
+			CASE(ASTC_8x6_SFLOAT_BLOCK);
+			CASE(ASTC_8x8_SFLOAT_BLOCK);
+			CASE(ASTC_10x5_SFLOAT_BLOCK);
+			CASE(ASTC_10x6_SFLOAT_BLOCK);
+			CASE(ASTC_10x8_SFLOAT_BLOCK);
+			CASE(ASTC_10x10_SFLOAT_BLOCK);
+			CASE(ASTC_12x10_SFLOAT_BLOCK);
+			CASE(ASTC_12x12_SFLOAT_BLOCK);
+			CASE(PVRTC1_2BPP_UNORM_BLOCK_IMG);
+			CASE(PVRTC1_4BPP_UNORM_BLOCK_IMG);
+			CASE(PVRTC2_2BPP_UNORM_BLOCK_IMG);
+			CASE(PVRTC2_4BPP_UNORM_BLOCK_IMG);
+			CASE(PVRTC1_2BPP_SRGB_BLOCK_IMG);
+			CASE(PVRTC1_4BPP_SRGB_BLOCK_IMG);
+			CASE(PVRTC2_2BPP_SRGB_BLOCK_IMG);
+			CASE(PVRTC2_4BPP_SRGB_BLOCK_IMG);
+		default:
+			return VK_FORMAT_UNDEFINED;
+		}
+	}
 }

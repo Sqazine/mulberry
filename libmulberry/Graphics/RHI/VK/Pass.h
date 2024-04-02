@@ -10,7 +10,7 @@
 #include "Enum.h"
 #include "Format.h"
 #include "Texture.h"
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     class Pass : public Base
     {

@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include "AppConfig.h"
 #include "RHI/VK/Buffer.h"
-namespace mulberry::rhi
+namespace mulberry
 {
     class VertexBuffer : GRAPHICS_RHI_IMPL_DECL(VertexBuffer)
     {

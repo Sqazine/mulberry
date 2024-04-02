@@ -8,7 +8,7 @@
 #include "Format.h"
 #include "RHI/Enum.h"
 #include "Graphics/RHI/Viewport.h"
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
 	inline const char *GetErrorCode(const VkResult result)
 	{
@@ -101,15 +101,17 @@ namespace mulberry::rhi::vk
 
 	std::string ToShaderSourceCode(std::string_view src);
 
-	VkSampleCountFlagBits ToVkSampleCount(rhi::SampleCount count);
-	VkFrontFace ToVkFrontFace(rhi::FrontFace frontFace);
-	VkCullModeFlagBits ToVkCullMode(rhi::CullMode cullMode);
-	VkFilter ToVkFilterMode(rhi::FilterMode filterMode);
-	VkSamplerAddressMode ToVkWrapMode(rhi::WrapMode wrapMode);
-	VkSamplerMipmapMode ToVkMipMapMode(rhi::MipMapMode mipmapMode);
-	VkBorderColor ToVkBorderColor(rhi::BorderColor borderColor);
-	VkShaderStageFlagBits ToVkShaderStage(rhi::ShaderStage shaderStage);
+	VkSampleCountFlagBits ToVkSampleCount(SampleCount count);
+	VkFrontFace ToVkFrontFace(FrontFace frontFace);
+	VkCullModeFlagBits ToVkCullMode(CullMode cullMode);
+	VkFilter ToVkFilterMode(FilterMode filterMode);
+	VkSamplerAddressMode ToVkWrapMode(WrapMode wrapMode);
+	VkSamplerMipmapMode ToVkMipMapMode(MipMapMode mipmapMode);
+	VkBorderColor ToVkBorderColor(BorderColor borderColor);
+	VkShaderStageFlagBits ToVkShaderStage(ShaderStage shaderStage);
 	std::pair<VkViewport, VkRect2D> ToVkViewPort(const mulberry::Viewport &viewport);
-	VkPrimitiveTopology ToVkPrimitiveTopology(rhi::PrimitiveTopology primTopo);
-	VkPolygonMode ToVkPolygonMode(rhi::PolygonMode polyMode);
+	VkPrimitiveTopology ToVkPrimitiveTopology(PrimitiveTopology primTopo);
+	VkPolygonMode ToVkPolygonMode(PolygonMode polyMode);
+
+	VkFormat ToVkFormat(Format format);
 }

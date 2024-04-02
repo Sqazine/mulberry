@@ -89,7 +89,7 @@ namespace mulberry
 		return mTimer.get();
 	}
 
-	rhi::GraphicsContext *App::GetGraphicsContext() const
+	GraphicsContext *App::GetGraphicsContext() const
 	{
 		return mGraphicsContext.get();
 	}
@@ -108,7 +108,7 @@ namespace mulberry
 		mInput->Init();
 		mTimer->Init();
 
-		mGraphicsContext = std::make_unique<rhi::GraphicsContext>();
+		mGraphicsContext = std::make_unique<GraphicsContext>();
 		mGraphicsContext->Init();
 
 		mSceneIdx = 0;

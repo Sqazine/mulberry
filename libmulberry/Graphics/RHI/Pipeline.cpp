@@ -1,7 +1,7 @@
 #include "Pipeline.h"
 #include "App.h"
 #include "Graphics/RHI/VK/Pipeline.h"
-namespace mulberry::rhi
+namespace mulberry
 {
     GraphicsPipeline::GraphicsPipeline()
     {

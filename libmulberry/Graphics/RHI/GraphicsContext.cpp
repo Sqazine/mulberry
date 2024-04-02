@@ -3,7 +3,7 @@
 #include "Utils.h"
 #include "Graphics/RHI/VK/GraphicsContext.h"
 #include "Color.h"
-namespace mulberry::rhi
+namespace mulberry
 {
 	GraphicsContext::GraphicsContext()
 	{

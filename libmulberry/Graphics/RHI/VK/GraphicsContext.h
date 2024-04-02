@@ -7,7 +7,7 @@
 #include "Color.h"
 #include "Pass.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
 	class GraphicsContext
 	{

@@ -5,7 +5,7 @@
 #include "Utils.h"
 #include "Device.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
 	Shader::Shader(ShaderStage type, std::string_view content)
 		: mType(type)

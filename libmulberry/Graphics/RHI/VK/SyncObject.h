@@ -1,7 +1,7 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include "Base.h"
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     constexpr uint64_t FENCE_WAIT_TIME_OUT = UINT64_MAX;
 

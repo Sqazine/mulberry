@@ -10,7 +10,7 @@
 #include "App.h"
 #include "AppConfig.h"
 #include "GraphicsContext.h"
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
 	SwapChain::SwapChain()
 		: mHandle(VK_NULL_HANDLE), mNextImageIdx(0)

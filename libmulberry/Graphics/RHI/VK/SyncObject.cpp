@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include "Device.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     Fence::Fence(FenceStatus status)
         : mHandle(VK_NULL_HANDLE), mStatus(status)

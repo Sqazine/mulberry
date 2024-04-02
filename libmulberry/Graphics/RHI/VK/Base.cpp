@@ -4,7 +4,7 @@
 #include "GraphicsContext.h"
 #include "Utils.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     Base::Base()
         : mDevice(*VK_DEVICE), mIsDirty(true)

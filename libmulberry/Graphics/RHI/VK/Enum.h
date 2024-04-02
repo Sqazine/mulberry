@@ -5,7 +5,7 @@
 #include "Utils/Utils.h"
 #include "RHI/Enum.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     enum class BufferUsage : uint64_t
     {

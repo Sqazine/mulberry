@@ -3,7 +3,7 @@
 #include "Utils.h"
 #include "GraphicsContext.h"
 #include "Command.h"
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
 	Image::Image(
 		uint32_t width,

@@ -14,6 +14,6 @@ namespace mulberry
         bool useVSync = false;
         float frameRate = 0;
         bool useDoubleBuffer = false;
-        rhi::SampleCount msaaSample = rhi::SampleCount::X2;
+        SampleCount msaaSample = SampleCount::X2;
     };
 }

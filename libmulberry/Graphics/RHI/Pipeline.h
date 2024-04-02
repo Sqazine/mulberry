@@ -4,7 +4,7 @@
 #include "Color.h"
 #include "Graphics/PrimitiveGeometry.h"
 #include "Shader.h"
-namespace mulberry::rhi
+namespace mulberry
 {
     class GraphicsPipeline : GRAPHICS_RHI_IMPL_DECL(GraphicsPipeline)
     {

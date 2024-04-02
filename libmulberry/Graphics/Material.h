@@ -9,23 +9,23 @@ namespace mulberry
     class GraphicsMaterial
     {
     public:
-        GraphicsMaterial() : mGraphicsPipeline(std::make_unique<rhi::GraphicsPipeline>()) {}
+        GraphicsMaterial() : mGraphicsPipeline(std::make_unique<GraphicsPipeline>()) {}
         virtual ~GraphicsMaterial() {}
 
         virtual void SetDefaultUniformValue() const {}
 
-        rhi::GraphicsPipeline *GetGraphicsPipeline()
+        GraphicsPipeline *GetGraphicsPipeline()
         {
             return mGraphicsPipeline.get();
         }
 
-        const rhi::GraphicsPipeline *GetGraphicsPipeline() const
+        const GraphicsPipeline *GetGraphicsPipeline() const
         {
             return mGraphicsPipeline.get();
         }
 
     protected:
-        std::unique_ptr<rhi::GraphicsPipeline> mGraphicsPipeline;
+        std::unique_ptr<GraphicsPipeline> mGraphicsPipeline;
     };
 
     class ComputeMaterial
@@ -37,7 +37,7 @@ namespace mulberry
         virtual void SetDefaultUniformValue() const {}
 
     protected:
-        std::unique_ptr<rhi::ComputePipeline> mComputePipeline;
+        std::unique_ptr<ComputePipeline> mComputePipeline;
     };
 
     class SpriteMaterial : public GraphicsMaterial
@@ -46,8 +46,8 @@ namespace mulberry
         SpriteMaterial();
         ~SpriteMaterial() override;
 
-        void SetSprite(rhi::Texture *sprite);
-        const rhi::Texture *GetSprite() const;
+        void SetSprite(Texture *sprite);
+        const Texture *GetSprite() const;
 
         void SetTiling(const Vec2 &t);
         const Vec2 &GetTiling() const;
@@ -58,7 +58,7 @@ namespace mulberry
         void SetDefaultUniformValue() const override;
 
     private:
-        rhi::Texture *mSprite;
+        Texture *mSprite;
         Vec2 mTiling;
         Vec2 mOffset;
     };

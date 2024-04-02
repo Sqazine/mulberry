@@ -6,7 +6,7 @@
 #include "Pass.h"
 #include "App.h"
 #include "Graphics/RHI/Pass.h"
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
 	GraphicsContext::GraphicsContext()
 	{

@@ -6,7 +6,7 @@
 #include "Texture.h"
 #include "Pipeline.h"
 #include "Graphics/RHI/VK/Pass.h"
-namespace mulberry::rhi
+namespace mulberry
 {
     class SwapChainPass : GRAPHICS_RHI_IMPL_DECL(SwapChainPass)
     {

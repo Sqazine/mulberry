@@ -5,7 +5,7 @@
 #include <optional>
 #include <memory>
 #include "Core/NonCopyable.h"
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
 	struct QueueFamilyIndices
 	{

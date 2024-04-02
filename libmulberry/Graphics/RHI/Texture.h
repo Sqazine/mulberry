@@ -10,7 +10,7 @@
 #include "Enum.h"
 #include "VK/Texture.h"
 
-namespace mulberry::rhi
+namespace mulberry
 {
     struct Texture : GRAPHICS_RHI_IMPL_DECL(Texture)
     {

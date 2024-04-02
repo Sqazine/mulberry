@@ -6,7 +6,7 @@
 #include "App.h"
 #include "GRaphicsContext.h"
 #include <array>
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     Pass::Pass()
         : mCurFrameIdx(0)

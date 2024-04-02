@@ -2,7 +2,7 @@
 #include "Device.h"
 #include "Logger.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     PipelineLayout::PipelineLayout()
         : mHandle(VK_NULL_HANDLE)

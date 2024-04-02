@@ -30,10 +30,10 @@ namespace mulberry
     PrimitiveGeometry::PrimitiveGeometry(const std::vector<Vec2> &pos, const std::vector<Vec2> &texcoord, const std::vector<uint32_t> &indices)
         : mPosition(pos), mTexcoord(texcoord), mIndices(indices)
     {
-        mPositionBuffer = std::make_unique<rhi::VertexBuffer>(mPosition);
-        mTexcoordBuffer = std::make_unique<rhi::VertexBuffer>(mTexcoord);
+        mPositionBuffer = std::make_unique<VertexBuffer>(mPosition);
+        mTexcoordBuffer = std::make_unique<VertexBuffer>(mTexcoord);
 
-        mIndexBuffer = std::make_unique<rhi::IndexBuffer>(mIndices);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
 
     PrimitiveGeometry::PrimitiveGeometry(const PrimitiveGeometry &other)
@@ -49,9 +49,9 @@ namespace mulberry
         mTexcoord = other.mTexcoord;
         mIndices = other.mIndices;
 
-        mPositionBuffer = std::make_unique<rhi::VertexBuffer>();
-        mTexcoordBuffer = std::make_unique<rhi::VertexBuffer>();
-        mIndexBuffer = std::make_unique<rhi::IndexBuffer>();
+        mPositionBuffer = std::make_unique<VertexBuffer>();
+        mTexcoordBuffer = std::make_unique<VertexBuffer>();
+        mIndexBuffer = std::make_unique<IndexBuffer>();
 
         UpdateBuffers();
         return *this;
@@ -76,15 +76,15 @@ namespace mulberry
         return mIndices;
     }
 
-    const rhi::VertexBuffer *PrimitiveGeometry::GetPositionBuffer() const
+    const VertexBuffer *PrimitiveGeometry::GetPositionBuffer() const
     {
         return mPositionBuffer.get();
     }
-    const rhi::VertexBuffer *PrimitiveGeometry::GetTexcoordBuffer() const
+    const VertexBuffer *PrimitiveGeometry::GetTexcoordBuffer() const
     {
         return mTexcoordBuffer.get();
     }
-    const rhi::IndexBuffer *PrimitiveGeometry::GetIndexBuffer() const
+    const IndexBuffer *PrimitiveGeometry::GetIndexBuffer() const
     {
         return mIndexBuffer.get();
     }
@@ -115,14 +115,14 @@ namespace mulberry
                 Vec2(1.0f, 0.0f),
                 Vec2(1.0f, 1.0f)};
 
-        mPositionBuffer = std::make_unique<rhi::VertexBuffer>(mPosition);
-        mTexcoordBuffer = std::make_unique<rhi::VertexBuffer>(mTexcoord);
+        mPositionBuffer = std::make_unique<VertexBuffer>(mPosition);
+        mTexcoordBuffer = std::make_unique<VertexBuffer>(mTexcoord);
 
         mIndices =
             {
                 0, 1, 2,
                 0, 2, 3};
-        mIndexBuffer = std::make_unique<rhi::IndexBuffer>(mIndices);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
 
     void PrimitiveGeometry::CreateQuad()
@@ -137,7 +137,7 @@ namespace mulberry
                 Vec2(0.0f, 1.0f),
             };
 
-        mPositionBuffer = std::make_unique<rhi::VertexBuffer>(mPosition);
+        mPositionBuffer = std::make_unique<VertexBuffer>(mPosition);
 
         mIndices =
             {
@@ -146,7 +146,7 @@ namespace mulberry
                 2, 3,
                 3, 0,
                 4, 5};
-        mIndexBuffer = std::make_unique<rhi::IndexBuffer>(mIndices);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
 
     void PrimitiveGeometry::CreateCircle()
@@ -164,20 +164,20 @@ namespace mulberry
             mIndices.emplace_back(i + 1);
         }
 
-        mPositionBuffer = std::make_unique<rhi::VertexBuffer>(mPosition);
-        mIndexBuffer = std::make_unique<rhi::IndexBuffer>(mIndices);
+        mPositionBuffer = std::make_unique<VertexBuffer>(mPosition);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
 
     void PrimitiveGeometry::CreateLine()
     {
         mPosition = {Vec2(-1.0f, 0.0f), Vec2(1.0f, 0.0f)};
-        mPositionBuffer = std::make_unique<rhi::VertexBuffer>(mPosition);
+        mPositionBuffer = std::make_unique<VertexBuffer>(mPosition);
 
         mIndices = {
             0,
             1,
         };
-        mIndexBuffer = std::make_unique<rhi::IndexBuffer>(mIndices);
+        mIndexBuffer = std::make_unique<IndexBuffer>(mIndices);
     }
 
     void PrimitiveGeometry::CreatePoint()
@@ -185,8 +185,8 @@ namespace mulberry
         mPosition = {Vec2(0.0f, 0.0f)};
         mTexcoord = {Vec2(0.0f, 0.0f)};
 
-        mPositionBuffer = std::make_unique<rhi::VertexBuffer>(mPosition);
-        mTexcoordBuffer = std::make_unique<rhi::VertexBuffer>(mTexcoord);
+        mPositionBuffer = std::make_unique<VertexBuffer>(mPosition);
+        mTexcoordBuffer = std::make_unique<VertexBuffer>(mTexcoord);
 
         mIndexBuffer = nullptr;
     }

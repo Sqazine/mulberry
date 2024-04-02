@@ -6,7 +6,7 @@
 #include "Base.h"
 #include "../Enum.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     class DescriptorSet : public Base
     {

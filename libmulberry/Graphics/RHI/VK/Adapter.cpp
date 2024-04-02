@@ -162,7 +162,7 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT
 	if (func != nullptr)
 		func(instance, debugMessenger, pAllocator);
 }
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
 	Adapter::Adapter()
 	{

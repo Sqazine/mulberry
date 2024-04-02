@@ -1,7 +1,7 @@
 #include "Texture.h"
 #include "Logger.h"
 #include "Texture.h"
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     Texture::Texture()
         : mSampler(std::make_unique<Sampler>())

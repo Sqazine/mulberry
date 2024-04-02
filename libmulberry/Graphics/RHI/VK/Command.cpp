@@ -8,7 +8,7 @@
 #include "GraphicsContext.h"
 #include "Pipeline.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
 #define COMMAND_POOL_DEF(name, queueIdx)                                                   \
 	name##CommandPool::name##CommandPool() : CommandPool<name##CommandBuffer>(queueIdx) {} \

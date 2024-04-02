@@ -1,6 +1,6 @@
 #include "Pass.h"
 #include "App.h"
-namespace mulberry::rhi
+namespace mulberry
 {
 	SwapChainPass::SwapChainPass()
 	{

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
     class Base
     {

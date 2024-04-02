@@ -4,7 +4,7 @@
 #include "Logger.h"
 #include "App.h"
 
-namespace mulberry::rhi::vk
+namespace mulberry::vk
 {
 	FrameBuffer::FrameBuffer()
 		: mHandle(VK_NULL_HANDLE), mInfo({})

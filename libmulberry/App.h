@@ -43,7 +43,7 @@ namespace mulberry
 		Input *GetInput() const;
 		Timer *GetTimer() const;
 
-		rhi::GraphicsContext *GetGraphicsContext() const;
+		GraphicsContext *GetGraphicsContext() const;
 
 	private:
 		void PreUpdate();
@@ -59,7 +59,7 @@ namespace mulberry
 		std::unique_ptr<Input> mInput;
 		std::unique_ptr<Timer> mTimer;
 
-		std::unique_ptr<rhi::GraphicsContext> mGraphicsContext;
+		std::unique_ptr<GraphicsContext> mGraphicsContext;
 
 		std::vector<std::unique_ptr<Scene>> mScenes;
 		int32_t mSceneIdx;

@@ -28,9 +28,9 @@ namespace mulberry
 		const std::vector<Vec2> &GetTexcoord() const;
 		const std::vector<uint32_t> &GetIndex() const;
 
-		const rhi::VertexBuffer *GetPositionBuffer() const;
-		const rhi::VertexBuffer *GetTexcoordBuffer() const;
-		const rhi::IndexBuffer *GetIndexBuffer() const;
+		const VertexBuffer *GetPositionBuffer() const;
+		const VertexBuffer *GetTexcoordBuffer() const;
+		const IndexBuffer *GetIndexBuffer() const;
 
 	protected:
 		void UpdateBuffers();
@@ -45,8 +45,8 @@ namespace mulberry
 
 		std::vector<uint32_t> mIndices;
 
-		std::unique_ptr<rhi::VertexBuffer> mPositionBuffer;
-		std::unique_ptr<rhi::VertexBuffer> mTexcoordBuffer;
-		std::unique_ptr<rhi::IndexBuffer> mIndexBuffer;
+		std::unique_ptr<VertexBuffer> mPositionBuffer;
+		std::unique_ptr<VertexBuffer> mTexcoordBuffer;
+		std::unique_ptr<IndexBuffer> mIndexBuffer;
 	};
 }
