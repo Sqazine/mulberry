@@ -3,6 +3,8 @@
 #include "Utils.h"
 #include "Logger.h"
 #include "App.h"
+#include "Image.h"
+#include "Graphics/RHI/Attachment.h"
 
 namespace mulberry::vk
 {
@@ -13,6 +15,8 @@ namespace mulberry::vk
 		mInfo.pNext = nullptr;
 		mInfo.flags = 0;
 		mInfo.layers = 1;
+
+		mIsDirty = true;
 	}
 
 	FrameBuffer::~FrameBuffer()
@@ -23,37 +27,63 @@ namespace mulberry::vk
 
 	FrameBuffer &FrameBuffer::AttachRenderPass(RenderPass *renderPass)
 	{
-		mInfo.renderPass = renderPass->GetHandle();
-		return *this;
+		SET(mInfo.renderPass, renderPass->GetHandle());
 	}
-	FrameBuffer &FrameBuffer::AttachTexture(Texture *attachment)
-	{
-		auto extent = attachment->GetImage()->GetExtent();
-		mInfo.attachmentCount = 1;
-		mInfo.pAttachments = &attachment->GetImage()->GetView();
-		mInfo.width = (uint32_t)extent.x;
-		mInfo.height = (uint32_t)extent.y;
 
+	FrameBuffer &FrameBuffer::BindColorAttachment(uint32_t index, ColorAttachment *attach)
+	{
+		mAttachments[index] = attach;
+		mIsDirty = true;
 		return *this;
 	}
 
 	const VkFramebuffer &FrameBuffer::GetHandle()
 	{
-		if (mIsDirty)
-		{
+		if (mIsDirty || mHandle == VK_NULL_HANDLE)
 			Build();
-			mIsDirty = false;
-		}
 		return mHandle;
 	}
 
-	Vec2 FrameBuffer::GetExtent() const
+	Vec2 FrameBuffer::GetExtent()
 	{
+		if (mIsDirty || mHandle == VK_NULL_HANDLE)
+			Build();
 		return {(float)mInfo.width, (float)mInfo.height};
+	}
+
+		ColorAttachment* FrameBuffer::GetColorAttachment(uint32_t idx) const
+		{
+			auto iter=mAttachments.find(idx);
+			return iter->second;
+		}
+
+	const std::unordered_map<uint32_t, ColorAttachment*>& FrameBuffer::GetColorAttachments() const
+	{
+		return mAttachments;
 	}
 
 	void FrameBuffer::Build()
 	{
+		uint32_t maxWidth=0;
+		uint32_t maxHeight=0;
+		std::vector<VkImageView> rawViews;
+		for (auto [k, v] : mAttachments)
+		{
+			auto extent = v->texture->GetVkImpl()->GetImage()->GetExtent();
+			if (maxWidth < extent.x)
+				maxWidth = extent.x;
+			if (maxHeight < extent.y)
+				maxHeight = extent.y;
+			rawViews.emplace_back(v->texture->GetVkImpl()->GetImage()->GetView());
+		}
+
+		mInfo.attachmentCount = rawViews.size();
+		mInfo.pAttachments = rawViews.data();
+		mInfo.width = maxWidth;
+		mInfo.height = maxHeight;
+
 		VK_CHECK(vkCreateFramebuffer(mDevice.GetHandle(), &mInfo, nullptr, &mHandle));
+
+		mIsDirty = false;
 	}
 }

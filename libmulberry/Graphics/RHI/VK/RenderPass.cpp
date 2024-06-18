@@ -12,7 +12,7 @@ namespace mulberry::vk
 
 		VkAttachmentDescription colorAttachment{};
 		colorAttachment.flags = 0;
-		colorAttachment.format = colorformat.ToVkHandle();
+		colorAttachment.format = ToVkFormat(colorformat);
 		colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 		colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 		colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;

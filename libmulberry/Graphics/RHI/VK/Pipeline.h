@@ -1,10 +1,9 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#include "Base.h"
+#include "Defs.h"
 #include "Shader.h"
 #include "Math/Vec2.h"
 #include "Format.h"
-#include "Enum.h"
 #include "RenderPass.h"
 #include "Descriptor.h"
 

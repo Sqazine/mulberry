@@ -16,7 +16,6 @@ namespace mulberry::vk
 		~GraphicsContext();
 
 		void Init();
-		void Destroy();
 
 		class Adapter *GetAdapter() const;
 		class Device *GetDevice() const;

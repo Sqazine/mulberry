@@ -115,7 +115,7 @@ namespace mulberry
         return result;
     }
 
-    VkSurfaceKHR SDL2WindowImpl::CreateSurface(VkInstance instance)
+    VkSurfaceKHR SDL2WindowImpl::CreateVulkanSurface(VkInstance instance)
     {
         VkSurfaceKHR result = VK_NULL_HANDLE;
         SDL_bool flag = SDL_Vulkan_CreateSurface(mHandle, instance, &result);

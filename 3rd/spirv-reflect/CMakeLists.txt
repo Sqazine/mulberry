@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10)
 project(spirv-reflect)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)

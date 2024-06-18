@@ -1,6 +1,6 @@
 #include "Texture.h"
 #include "Logger.h"
-#include "Texture.h"
+#include "Graphics/RHI/VK/Image.h"
 namespace mulberry::vk
 {
     Texture::Texture()
@@ -15,11 +15,13 @@ namespace mulberry::vk
 
     Texture::~Texture()
     {
+        mSampler.reset(nullptr);
+        mImage.reset(nullptr);
     }
 
     void Texture::SetImageData(const ImageData &data)
     {
-        // mImage->
+        mImage=std::make_unique<Image>(data.width,data.height,data.format,ImageTiling::LINEAR,ImageUsage::SAMPLED|ImageUsage::TRANSFER_DST,MemoryProperty::DEVICE_LOCAL);
     }
 
     Image *Texture::GetImage()

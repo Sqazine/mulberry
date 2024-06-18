@@ -1,9 +1,10 @@
 #pragma once
 #include <memory>
-#include "Base.h"
+#include "Defs.h"
 #include "Utils.h"
 #include "AppConfig.h"
-#include "RHI/VK/Buffer.h"
+#include "Graphics/GraphicsConfig.h"
+#include "Graphics/RHI/VK/Buffer.h"
 namespace mulberry
 {
     class VertexBuffer : GRAPHICS_RHI_IMPL_DECL(VertexBuffer)
@@ -20,9 +21,9 @@ namespace mulberry
             GRAPHICS_RHI_IMPL_SWITCHER(GetVkImpl()->Fill(input));
         }
 
-        uint64_t Size()
+        uint64_t GetSize()
         {
-            GRAPHICS_RHI_IMPL_SWITCHER(return GetVkImpl()->Size());
+            GRAPHICS_RHI_IMPL_SWITCHER(return GetVkImpl()->GetSize());
         }
     };
 
@@ -40,9 +41,9 @@ namespace mulberry
             GRAPHICS_RHI_IMPL_SWITCHER(GetVkImpl()->Fill(input));
         }
 
-        uint32_t Size()
+        uint32_t GetSize()
         {
-            GRAPHICS_RHI_IMPL_SWITCHER(return GetVkImpl()->Size());
+            GRAPHICS_RHI_IMPL_SWITCHER(return GetVkImpl()->GetSize());
         }
     };
 }

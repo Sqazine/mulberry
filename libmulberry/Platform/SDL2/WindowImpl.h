@@ -27,7 +27,7 @@ namespace mulberry
 		void Hide() override;
 
 		std::vector<const char *> GetVulkanRequiredExtensions() override;
-		VkSurfaceKHR CreateSurface(VkInstance instance) override;
+		VkSurfaceKHR CreateVulkanSurface(VkInstance instance) override;
 
 	private:
 		SDL_Window *mHandle;

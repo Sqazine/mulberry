@@ -23,10 +23,7 @@ namespace mulberry
         {
             TTF_Font *font = TTF_OpenFont(fileName.c_str(), size);
             if (!font)
-            {
                 MULBERRY_CORE_ERROR("failed to load font {} in size {}", fileName, size);
-                return false;
-            }
             mFontData.emplace(size, font);
         }
         return true;

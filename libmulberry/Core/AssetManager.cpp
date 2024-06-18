@@ -23,10 +23,19 @@ namespace mulberry
         auto iter = mImageDatas.find(filePath);
         if (iter != mImageDatas.end())
             return iter->second;
+
+        int32_t channel;
+
         ImageData tmp;
         stbi_set_flip_vertically_on_load(true);
-        uint8_t *data = stbi_load(filePath.c_str(), (int32_t *)&tmp.width, (int32_t *)&tmp.height, (int32_t*)&tmp.channel, STBI_default);
+        uint8_t *data = stbi_load(filePath.c_str(), (int32_t *)&tmp.width, (int32_t *)&tmp.height, &channel, STBI_default);
         tmp.pixels = std::vector<uint8_t>(data, data + (tmp.width * tmp.height * 4));
+
+        if (channel == 4)
+            tmp.format = Format::R8G8B8A8_UNORM;
+        else if (channel == 3)
+            tmp.format = Format::R8G8B8_UNORM;
+
         mImageDatas[filePath] = tmp;
         return mImageDatas[filePath];
     }
@@ -39,10 +48,7 @@ namespace mulberry
 
         std::ifstream file(path.data(), std::ios::binary);
         if (!file.is_open())
-        {
             MULBERRY_CORE_ERROR("failed to load text:{}\n");
-            exit(1);
-        }
         std::stringstream sstream;
         sstream << file.rdbuf();
         std::string content = sstream.str();

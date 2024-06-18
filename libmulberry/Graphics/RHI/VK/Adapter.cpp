@@ -215,7 +215,7 @@ namespace mulberry::vk
 		VK_CHECK(CreateDebugUtilsMessengerEXT(mInstanceHandle, &debugCreateInfo, nullptr, &mDebugMessengerHandle))
 #endif
 
-		mSurface = App::GetInstance().GetWindow()->CreateSurface(mInstanceHandle);
+		mSurface = App::GetInstance().GetWindow()->CreateVulkanSurface(mInstanceHandle);
 
 		EnumPhysicalDeviceSpecs();
 	}

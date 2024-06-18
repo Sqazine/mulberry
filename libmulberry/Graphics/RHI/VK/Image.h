@@ -1,10 +1,9 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#include "Device.h"
-#include "Buffer.h"
-#include "Base.h"
-#include "../Enum.h"
-#include "../Format.h"
+#include "Graphics/RHI/VK/Defs.h"
+#include "Graphics/RHI/VK/Device.h"
+#include "Graphics/RHI/Defs.h"
+#include "Graphics/RHI/Format.h"
 namespace mulberry::vk
 {
 	class Image : public Base
@@ -18,7 +17,7 @@ namespace mulberry::vk
 			ImageUsage usage,
 			MemoryProperty properties);
 
-		Image(const Vec2& extent, VkImage rawImage, Format format);
+		Image(const Vec2 &extent, VkImage rawImage, Format format);
 		virtual ~Image();
 
 		const VkImage &GetHandle() const;
@@ -35,6 +34,7 @@ namespace mulberry::vk
 		std::vector<T> GetRawData();
 
 		Vec2 GetExtent() const;
+
 	protected:
 		friend class CommandBuffer;
 		ImageLayout mLayout;
@@ -50,8 +50,8 @@ namespace mulberry::vk
 	private:
 		void CreateView();
 
-		void CopyToBuffer(Buffer *buffer);
-		void *MapBuffer(Buffer *buffer);
+		void CopyToBuffer( class Buffer *buffer);
+		void *MapBuffer(class Buffer *buffer);
 	};
 
 	template <typename T>
@@ -83,9 +83,9 @@ namespace mulberry::vk
 	class GpuImage : public Image
 	{
 	public:
-		GpuImage(class Device& device, uint32_t width, uint32_t height, Format format, ImageTiling tiling, ImageUsage usage);
+		GpuImage(class Device &device, uint32_t width, uint32_t height, Format format, ImageTiling tiling, ImageUsage usage);
 		~GpuImage() override;
 
-		void UploadDataFrom(uint64_t bufferSize, CpuBuffer* stagingBuffer, ImageLayout oldLayout, ImageLayout newLayout);
+		void UploadDataFrom(uint64_t bufferSize, class CpuBuffer *stagingBuffer, ImageLayout oldLayout, ImageLayout newLayout);
 	};
 }

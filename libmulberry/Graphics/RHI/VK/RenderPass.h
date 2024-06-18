@@ -1,9 +1,8 @@
 #pragma once
 #include <vulkan/vulkan.h>
+#include "Defs.h"
 #include "Device.h"
 #include "Format.h"
-#include "Enum.h"
-#include "Base.h"
 
 namespace mulberry::vk
 {

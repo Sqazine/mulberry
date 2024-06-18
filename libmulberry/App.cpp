@@ -171,7 +171,6 @@ namespace mulberry
 			scene.reset(nullptr);
 
 		mSceneRenderer.reset(nullptr);
-		mGraphicsContext->Destroy();
 	}
 
 	void App::PreUpdate()

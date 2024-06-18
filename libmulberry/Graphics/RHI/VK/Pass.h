@@ -2,12 +2,11 @@
 #include <vector>
 #include <memory>
 #include <vulkan/vulkan.h>
-#include "Base.h"
+#include "Defs.h"
 #include "Command.h"
 #include "FrameBuffer.h"
 #include "Color.h"
 #include "Math/Vec2.h"
-#include "Enum.h"
 #include "Format.h"
 #include "Texture.h"
 namespace mulberry::vk
@@ -19,9 +18,6 @@ namespace mulberry::vk
         virtual ~Pass();
 
         virtual void Begin();
-
-        void SetClearColor(const Color &clearColor);
-        void IsClearColorBuffer(bool isClear);
 
         void SetViewport(const Viewport &viewport);
         void SetPipeline(GraphicsPipeline *pipeline);
@@ -35,6 +31,7 @@ namespace mulberry::vk
         Fence *GetFence() const;
 
         GraphicsCommandBuffer *GetCommandBuffer() const;
+        FrameBuffer* GetFrameBuffer() const;
 
         size_t GetCurFrameIdx() const;
 
@@ -46,9 +43,6 @@ namespace mulberry::vk
         std::vector<std::unique_ptr<Semaphore>> mWaitSemaphores;
         std::vector<std::unique_ptr<Semaphore>> mSignalSemaphores;
         std::vector<std::unique_ptr<Fence>> mFences;
-
-        Color mClearColor;
-        bool mIsClearColorBuffer;
 
         size_t mCurFrameIdx = 0;
     };
@@ -62,7 +56,9 @@ namespace mulberry::vk
 
         void End() override;
 
+        ColorAttachment* GetColorAttachment() const;
     private:
+        void SyncToWindowSize();
         friend class GraphicsContext;
 
         std::unique_ptr<class SwapChain> mSwapChain;

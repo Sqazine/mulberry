@@ -136,7 +136,7 @@ namespace mulberry::vk
         vertexInputAttribDecs.binding = binding;
         vertexInputAttribDecs.location = location;
         vertexInputAttribDecs.offset = offset;
-        vertexInputAttribDecs.format = format.ToVkHandle();
+        vertexInputAttribDecs.format = ToVkFormat(format);
 
         mInputAttributeCache.emplace_back(vertexInputAttribDecs);
         return *this;

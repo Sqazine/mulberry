@@ -17,6 +17,5 @@ namespace mulberry
 	protected:
 		Singleton() = default;
 		~Singleton() = default;
-
 	};
 }

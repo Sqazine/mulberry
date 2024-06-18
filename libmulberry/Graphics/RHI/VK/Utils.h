@@ -4,10 +4,11 @@
 #include <iostream>
 #include <cassert>
 #include "Queue.h"
-#include "Enum.h"
-#include "Format.h"
-#include "RHI/Enum.h"
+#include "Defs.h"
+#include "Graphics/RHI/Defs.h"
+#include "Graphics/RHI/Format.h"
 #include "Graphics/RHI/Viewport.h"
+#include "Graphics/RHI/Attachment.h"
 namespace mulberry::vk
 {
 	inline const char *GetErrorCode(const VkResult result)
@@ -99,6 +100,8 @@ namespace mulberry::vk
 
 	std::vector<uint32_t> GlslToSpv(const VkShaderStageFlagBits shaderStage, std::string_view shaderSrc);
 
+	Format ToFormat(VkFormat format);
+
 	std::string ToShaderSourceCode(std::string_view src);
 
 	VkSampleCountFlagBits ToVkSampleCount(SampleCount count);
@@ -114,4 +117,9 @@ namespace mulberry::vk
 	VkPolygonMode ToVkPolygonMode(PolygonMode polyMode);
 
 	VkFormat ToVkFormat(Format format);
+
+	VkAttachmentLoadOp ToLoadOp(AttachmentLoad op);
+	VkAttachmentStoreOp ToStoreOp(AttachmentStore op);
+
+	VkAttachmentDescription ToVkAttachmentDescription(const ColorAttachment &colorAttachment);
 }

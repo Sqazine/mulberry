@@ -3,6 +3,7 @@
 #include "Utils.h"
 #include "GraphicsContext.h"
 #include "Command.h"
+#include "Buffer.h"
 namespace mulberry::vk
 {
 	Image::Image(
@@ -23,7 +24,7 @@ namespace mulberry::vk
 		mImageInfo.extent.depth = 1;
 		mImageInfo.mipLevels = 1;
 		mImageInfo.arrayLayers = 1;
-		mImageInfo.format = mFormat.ToVkHandle();
+		mImageInfo.format = ToVkFormat(mFormat);
 		mImageInfo.tiling = IMAGE_TILING_CAST(tiling);
 		mImageInfo.initialLayout = IMAGE_LAYOUT_CAST(mLayout);
 		mImageInfo.usage = IMAGE_USAGE_CAST(usage);
@@ -125,9 +126,9 @@ namespace mulberry::vk
 
 									ImageAspect aspect = ImageAspect::NONE;
 
-									if (mFormat.HasDepth())
+									if (HasDepth(mFormat))
 										aspect = ImageAspect::DEPTH;
-									else if (mFormat.HasStencil())
+									else if (HasStencil(mFormat))
 										aspect = ImageAspect::STENCIL;
 									else
 										aspect = ImageAspect::COLOR;
@@ -153,7 +154,7 @@ namespace mulberry::vk
 		info.pNext = nullptr;
 		info.flags = 0;
 		info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-		info.format = mFormat.ToVkHandle();
+		info.format = ToVkFormat(mFormat);
 		info.image = mHandle;
 		info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
 		info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;

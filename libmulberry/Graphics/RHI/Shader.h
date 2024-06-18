@@ -2,7 +2,7 @@
 #include <string_view>
 #include <memory>
 #include <vector>
-#include "Base.h"
+#include "Defs.h"
 #include "GraphicsContext.h"
 #include "Buffer.h"
 #include "Texture.h"

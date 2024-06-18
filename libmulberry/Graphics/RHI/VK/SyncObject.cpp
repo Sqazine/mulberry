@@ -16,7 +16,7 @@ namespace mulberry::vk
 
         VK_CHECK(vkCreateFence(mDevice.GetHandle(), &info, nullptr, &mHandle));
     }
-    
+
     Fence::~Fence()
     {
         Wait();

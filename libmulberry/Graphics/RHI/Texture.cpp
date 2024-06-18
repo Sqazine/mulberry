@@ -2,7 +2,7 @@
 #include "App.h"
 #include "Texture.h"
 #include "Logger.h"
-
+#include "Graphics/RHI/VK/Image.h"
 namespace mulberry
 {
     Texture::Texture()

@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
-#include "Base.h"
+#include "Defs.h"
 #include "Color.h"
 #include "Texture.h"
 #include "Pipeline.h"
@@ -14,14 +14,13 @@ namespace mulberry
         SwapChainPass();
         ~SwapChainPass();
 
-        void SetClearColor(const Color &clearColor);
-        void IsClearColorBuffer(bool isClear);
-
         void SetViewport(const Viewport &viewport);
 
         void SetPipeline(const GraphicsPipeline &pipeline);
 
         void Begin();
         void End();
+
+        ColorAttachment* GetColorAttachment() const;
     };
 }

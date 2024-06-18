@@ -59,7 +59,7 @@ namespace mulberry::vk
 	}
 
 	CpuBuffer::CpuBuffer(uint64_t size, BufferUsage usage)
-		: Buffer(size, usage, MemoryProperty::HOST_VISIBLE|MemoryProperty::HOST_COHERENT)
+		: Buffer(size, usage, MemoryProperty::HOST_VISIBLE | MemoryProperty::HOST_COHERENT)
 	{
 	}
 
@@ -70,11 +70,6 @@ namespace mulberry::vk
 		std::memset(mappedMemory, 0, size);
 		std::memcpy(mappedMemory, data, size);
 		vkUnmapMemory(mDevice.GetHandle(), mBufferMemory);
-	}
-
-	void CpuBuffer::CopyFrom(CommandBuffer *commandBuffer, VkBufferCopy bufferCopy, const CpuBuffer &buffer)
-	{
-		vkCmdCopyBuffer(commandBuffer->GetHandle(), buffer.mBuffer, mBuffer, 1, &bufferCopy);
 	}
 
 	GpuBuffer::GpuBuffer(uint64_t size, BufferUsage usage)
@@ -91,13 +86,34 @@ namespace mulberry::vk
 	{
 		auto cmd = mDevice.GetTransferCommandPool()->CreatePrimaryCommandBuffer();
 
-		cmd->ExecuteImmediately([&]() {
+		cmd->ExecuteImmediately([&]()
+								{
 			VkBufferCopy copyRegion{};
 			copyRegion.srcOffset = 0;
 			copyRegion.dstOffset = 0;
 			copyRegion.size = bufferSize;
 
-			cmd->CopyBuffer(*this,stagingBuffer, copyRegion);
-			});
+			cmd->CopyBuffer(*this,stagingBuffer, copyRegion); });
+	}
+
+	IndexBuffer::IndexBuffer()
+		: GpuBuffer(0, BufferUsage::TRANSFER_DST | BufferUsage::INDEX)
+	{
+	}
+
+	VkIndexType IndexBuffer::GetDataType() const
+	{
+		return mDataType;
+	}
+
+	VkIndexType IndexBuffer::DataStr2VkIndexType(std::string_view dataStr) const
+	{
+		if (dataStr.compare("uint32_t") == 0 || dataStr.compare("unsigned int") == 0)
+			return VK_INDEX_TYPE_UINT32;
+		else if (dataStr.compare("uint8_t") == 0 || dataStr.compare("unsigned char") == 0)
+			return VK_INDEX_TYPE_UINT8_EXT;
+		else if (dataStr.compare("uint16_t") == 0 || dataStr.compare("unsigned short") == 0)
+			return VK_INDEX_TYPE_UINT16;
+		return VK_INDEX_TYPE_UINT32;
 	}
 }

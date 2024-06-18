@@ -4,12 +4,11 @@
 #include <memory>
 #include <optional>
 #include "NonCopyable.h"
+#include "Graphics/RHI/Defs.h"
 #include "Utils.h"
 #include "Queue.h"
 #include "Adapter.h"
 #include "Command.h"
-
-#include "../Enum.h"
 
 namespace mulberry::vk
 {
@@ -36,7 +35,6 @@ namespace mulberry::vk
 		void WaitIdle() const;
 
 	private:
-
 		const PhysicalDeviceSpec &mPhysicalDeviceSpec;
 		VkDevice mHandle;
 

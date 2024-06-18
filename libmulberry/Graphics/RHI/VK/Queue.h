@@ -23,9 +23,7 @@ namespace mulberry::vk
 		GraphicsQueue(uint32_t familyIndex);
 		~GraphicsQueue() override;
 	private:
-		friend class GraphicsCommandBuffer;
-		friend class ComputeCommandBuffer;
-		friend class TransferCommandBuffer;
+		friend class CommandBuffer;
 		void Submit(const VkSubmitInfo &submitInfo, const Fence *fence = nullptr) const;
 	};
 

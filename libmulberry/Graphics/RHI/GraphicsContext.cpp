@@ -19,12 +19,6 @@ namespace mulberry
 		mSwapChainPass = std::make_unique<SwapChainPass>();
 	}
 
-	void GraphicsContext::Destroy()
-	{
-		mSwapChainPass.reset(nullptr);
-		GRAPHICS_RHI_IMPL_SWITCHER(GetVkImpl()->Destroy());
-	}
-
 	SwapChainPass *GraphicsContext::GetSwapChainPass()
 	{
 		return mSwapChainPass.get();

@@ -2,6 +2,7 @@
 #include "Device.h"
 #include "Logger.h"
 #include "Texture.h"
+#include "Buffer.h"
 namespace mulberry::vk
 {
     DescriptorSetLayout::DescriptorSetLayout()
@@ -9,27 +10,19 @@ namespace mulberry::vk
     {
     }
 
-    DescriptorSetLayout::DescriptorSetLayout(const std::vector<DescriptorBinding> &setLayoutBindings)
-        : mHandle(VK_NULL_HANDLE)
-    {
-        for (const auto &binding : setLayoutBindings)
-            mBindings.emplace_back(binding);
-    }
-
     DescriptorSetLayout::~DescriptorSetLayout()
     {
         vkDestroyDescriptorSetLayout(mDevice.GetHandle(), mHandle, nullptr);
     }
 
-    DescriptorSetLayout &DescriptorSetLayout::AddLayoutBinding(const DescriptorBinding &binding)
-    {
-        mBindings.emplace_back(binding);
-        return *this;
-    }
-
     DescriptorSetLayout &DescriptorSetLayout::AddLayoutBinding(uint32_t binding, uint32_t count, DescriptorType type, ShaderStage shaderStage)
     {
-        mBindings.emplace_back(binding, count, type, shaderStage);
+        VkDescriptorSetLayoutBinding layoutBinding{};
+        layoutBinding.binding=binding;
+        layoutBinding.descriptorCount=count;
+        layoutBinding.descriptorType=DESCRIPTOR_TYPE_CAST(type);
+        layoutBinding.stageFlags=ToVkShaderStage(shaderStage);
+        mBindings.emplace_back(layoutBinding);
         return *this;
     }
 
@@ -40,12 +33,7 @@ namespace mulberry::vk
         return mHandle;
     }
 
-    VkDescriptorSetLayoutBinding DescriptorSetLayout::GetVkLayoutBinding(uint32_t i)
-    {
-        return mBindings[i].ToVkDescriptorBinding();
-    }
-
-    const DescriptorBinding &DescriptorSetLayout::GetLayoutBinding(uint32_t i) const
+    const VkDescriptorSetLayoutBinding &DescriptorSetLayout::GetLayoutBinding(uint32_t i)
     {
         return mBindings[i];
     }
@@ -57,17 +45,12 @@ namespace mulberry::vk
 
     void DescriptorSetLayout::Build()
     {
-        std::vector<VkDescriptorSetLayoutBinding> rawDescLayouts(mBindings.size());
-
-        for (int32_t i = 0; i < mBindings.size(); ++i)
-            rawDescLayouts[i] = mBindings[i].ToVkDescriptorBinding();
-
         VkDescriptorSetLayoutCreateInfo descriptorSetLayoutInfo{};
         descriptorSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
         descriptorSetLayoutInfo.pNext = nullptr;
         descriptorSetLayoutInfo.flags = 0;
-        descriptorSetLayoutInfo.bindingCount = rawDescLayouts.size();
-        descriptorSetLayoutInfo.pBindings = rawDescLayouts.data();
+        descriptorSetLayoutInfo.bindingCount = mBindings.size();
+        descriptorSetLayoutInfo.pBindings = mBindings.data();
 
         VK_CHECK(vkCreateDescriptorSetLayout(mDevice.GetHandle(), &descriptorSetLayoutInfo, nullptr, &mHandle));
     }
@@ -128,24 +111,12 @@ namespace mulberry::vk
         return *this;
     }
 
-    DescriptorSet &DescriptorSet::WriteAccelerationStructure(uint32_t binding, const VkAccelerationStructureKHR &as)
-    {
-        VkWriteDescriptorSetAccelerationStructureKHR structureInfo = {};
-        structureInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR;
-        structureInfo.pNext = nullptr;
-        structureInfo.accelerationStructureCount = 1;
-        structureInfo.pAccelerationStructures = &as;
-
-        mASInfoCache[binding] = structureInfo;
-        return *this;
-    }
-
     void DescriptorSet::Update()
     {
         std::vector<VkWriteDescriptorSet> writeDescriptorSets;
         for (const auto &bufferInfoCache : mBufferInfoCache)
         {
-            auto layoutBinding = mDescriptorLayout->GetVkLayoutBinding(bufferInfoCache.first);
+            auto layoutBinding = mDescriptorLayout->GetLayoutBinding(bufferInfoCache.first);
 
             VkWriteDescriptorSet setWrite{};
             setWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -164,7 +135,7 @@ namespace mulberry::vk
 
         for (const auto &imageInfoCache : mImageInfoCache)
         {
-            auto layoutBinding = mDescriptorLayout->GetVkLayoutBinding(imageInfoCache.first);
+            auto layoutBinding = mDescriptorLayout->GetLayoutBinding(imageInfoCache.first);
 
             VkWriteDescriptorSet setWrite{};
             setWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -183,7 +154,7 @@ namespace mulberry::vk
 
         for (const auto &imagesInfoCache : mImagesInfoCache)
         {
-            auto layoutBinding = mDescriptorLayout->GetVkLayoutBinding(imagesInfoCache.first);
+            auto layoutBinding = mDescriptorLayout->GetLayoutBinding(imagesInfoCache.first);
 
             VkWriteDescriptorSet setWrite{};
             setWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -200,31 +171,11 @@ namespace mulberry::vk
             writeDescriptorSets.emplace_back(setWrite);
         }
 
-        for (const auto &asInfo : mASInfoCache)
-        {
-            auto layoutBinding = mDescriptorLayout->GetVkLayoutBinding(asInfo.first);
-
-            VkWriteDescriptorSet setWrite{};
-            setWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            setWrite.pNext = &asInfo.second;
-            setWrite.dstSet = mHandle;
-            setWrite.dstBinding = asInfo.first;
-            setWrite.dstArrayElement = 0;
-            setWrite.descriptorCount = 1;
-            setWrite.descriptorType = layoutBinding.descriptorType;
-            setWrite.pBufferInfo = nullptr;
-            setWrite.pImageInfo = nullptr;
-            setWrite.pTexelBufferView = nullptr;
-
-            writeDescriptorSets.emplace_back(setWrite);
-        }
-
         vkUpdateDescriptorSets(mDescriptorPool->GetDevice().GetHandle(), writeDescriptorSets.size(), writeDescriptorSets.data(), 0, nullptr);
 
         mBufferInfoCache.clear();
         mImageInfoCache.clear();
         mImagesInfoCache.clear();
-        mASInfoCache.clear();
     }
 
     DescriptorPool::DescriptorPool()
@@ -298,13 +249,6 @@ namespace mulberry::vk
     {
     }
 
-    DescriptorTable &DescriptorTable::AddLayoutBinding(const DescriptorBinding &binding)
-    {
-        mDescriptorPool->AddPoolDesc(binding.type, binding.count);
-        mDescriptorLayout->AddLayoutBinding(binding);
-        return *this;
-    }
-
     DescriptorTable &DescriptorTable::AddLayoutBinding(uint32_t binding, uint32_t count, DescriptorType type, ShaderStage shaderStage)
     {
         mDescriptorPool->AddPoolDesc(type, count);
@@ -330,15 +274,5 @@ namespace mulberry::vk
     DescriptorPool *DescriptorTable::GetPool()
     {
         return mDescriptorPool.get();
-    }
-
-    DescriptorBinding DescriptorTable::GetLayoutBinding(uint32_t i)
-    {
-        return mDescriptorLayout->GetLayoutBinding(i);
-    }
-
-    uint32_t DescriptorTable::GetBindingCount() const
-    {
-        return mDescriptorLayout->GetBindingCount();
     }
 }

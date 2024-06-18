@@ -15,7 +15,7 @@ namespace mulberry::vk
 
 		Vec2 GetExtent() const;
 
-		std::vector<class Texture *> &GetTextures();
+		std::vector<class ColorAttachment *> &GetColorAttachments();
 		const VkSurfaceFormatKHR GetSurfaceFormat() const;
 
 		const VkSwapchainKHR &GetHandle() const;
@@ -35,11 +35,11 @@ namespace mulberry::vk
 		VkPresentModeKHR ChooseSwapChainPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
 		VkExtent2D ChooseSwapChainExtent(const VkSurfaceCapabilitiesKHR &capabilities);
 
-		void DeleteImageViews();
+		void DeleteBackAttachments();
 
 		VkSwapchainKHR mHandle;
 
-		std::vector<class Texture *> mBackTextures;
+		std::vector<class ColorAttachment*> mBackAttachments;
 
 		VkSurfaceFormatKHR mSurfaceFormat;
 		VkExtent2D mExtent;

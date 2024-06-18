@@ -24,12 +24,6 @@ namespace mulberry::vk
 		mAdapter->PrintPhysicalDeviceSpecs();
 #endif
 		mDevice.reset(mAdapter->CreateDevice());
-		}
-
-	void GraphicsContext::Destroy()
-	{
-		mDevice.reset(nullptr);
-		mAdapter.reset(nullptr);
 	}
 
 	Adapter *GraphicsContext::GetAdapter() const

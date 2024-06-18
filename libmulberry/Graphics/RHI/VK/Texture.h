@@ -1,10 +1,10 @@
 #pragma once
-#include <vulkan/vulkan.h>
 #include <memory>
+#include <vulkan/vulkan.h>
+#include "Math/Vec2.h"
 #include "Core/AssetManager.h"
 #include "Color.h"
-#include "RHI/Format.h"
-#include "Image.h"
+#include "Graphics/RHI/Format.h"
 #include "Sampler.h"
 
 namespace mulberry::vk
@@ -13,18 +13,18 @@ namespace mulberry::vk
     {
     public:
         Texture();
+        Texture(const Vec2 &extent, VkImage rawImage, Format format);
         ~Texture();
 
-        void SetImageData(const ImageData& data);
+        void SetImageData(const ImageData &data);
 
-        Image *GetImage() ;
-        Sampler* GetSampler();
+        class Image *GetImage();
+        Sampler *GetSampler();
 
         VkDescriptorImageInfo ToVkDescriptorImageInfo() const;
+
     private:
-        friend class SwapChain;
-        Texture(const Vec2& extent, VkImage rawImage, Format format);
-        std::unique_ptr<Image> mImage;
+        std::unique_ptr<class Image> mImage;
         std::unique_ptr<Sampler> mSampler;
     };
 }

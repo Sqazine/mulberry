@@ -1,6 +1,6 @@
 #include "SwapChain.h"
-#include <SDL.h>
 #include <algorithm>
+#include "Core/Tools.h"
 #include "Device.h"
 #include "Utils.h"
 #include "Logger.h"
@@ -20,14 +20,14 @@ namespace mulberry::vk
 
 	SwapChain::~SwapChain()
 	{
-		DeleteImageViews();
+		DeleteBackAttachments();
 
 		vkDestroySwapchainKHR(mDevice.GetHandle(), mHandle, nullptr);
 	}
 
-	std::vector<Texture *> &SwapChain::GetTextures()
+	std::vector<ColorAttachment *> &SwapChain::GetColorAttachments()
 	{
-		return mBackTextures;
+		return mBackAttachments;
 	}
 
 	const VkSurfaceFormatKHR SwapChain::GetSurfaceFormat() const
@@ -120,9 +120,17 @@ namespace mulberry::vk
 		std::vector<VkImage> rawImages(count);
 		vkGetSwapchainImagesKHR(mDevice.GetHandle(), mHandle, &count, rawImages.data());
 
-		mBackTextures.resize(count);
+		mBackAttachments.resize(count);
 		for (size_t i = 0; i < rawImages.size(); ++i)
-			mBackTextures[i] = new Texture(GetExtent(), rawImages[i], mSurfaceFormat.format);
+		{
+			mBackAttachments[i]=new ColorAttachment();
+			mBackAttachments[i]->texture=new mulberry::Texture();
+			auto vkTexture=std::make_unique<Texture>(GetExtent(), rawImages[i], ToFormat(mSurfaceFormat.format));
+			mBackAttachments[i]->texture->GetUniVkImpl()=std::move(vkTexture);
+			mBackAttachments[i]->clearColor=Color::Black;
+			mBackAttachments[i]->loadOp=AttachmentLoad::CLEAR;
+			mBackAttachments[i]->storeOp=AttachmentStore::DONT_CARE;
+		}
 	}
 
 	const VkSwapchainKHR &SwapChain::GetHandle() const
@@ -134,7 +142,7 @@ namespace mulberry::vk
 	{
 		VK_CONTEXT->GetDevice()->WaitIdle();
 
-		DeleteImageViews();
+		DeleteBackAttachments();
 		vkDestroySwapchainKHR(mDevice.GetHandle(), mHandle, nullptr);
 		Build();
 	}
@@ -180,15 +188,12 @@ namespace mulberry::vk
 		}
 	}
 
-	void SwapChain::DeleteImageViews()
+	void SwapChain::DeleteBackAttachments()
 	{
-		for (size_t i = 0; i < mBackTextures.size(); ++i)
-		{
-			delete mBackTextures[i];
-			mBackTextures[i] = nullptr;
-		}
+		for (size_t i = 0; i < mBackAttachments.size(); ++i)
+			SAFE_DELETE(mBackAttachments[i]);
 
-		std::vector<Texture *>().swap(mBackTextures);
+		std::vector<ColorAttachment *>().swap(mBackAttachments);
 	}
 
 	SwapChainDetails SwapChain::QuerySwapChainDetails()

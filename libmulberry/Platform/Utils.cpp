@@ -9,10 +9,8 @@ namespace mulberry::IO
     {
         std::ifstream file(path.data(), std::ios::in);
         if (!file.is_open())
-        {
             MULBERRY_CORE_ERROR("failed to load text:{}\n");
-            exit(1);
-        }
+
         std::stringstream sstream;
         sstream << file.rdbuf();
         std::string content = sstream.str();
@@ -25,10 +23,7 @@ namespace mulberry::IO
     {
         std::ofstream file(path.data(), std::ios::out | std::ios::trunc);
         if (!file.is_open())
-        {
             MULBERRY_CORE_ERROR("failed to write text:{}\n");
-            exit(1);
-        }
 
         file.write(data.data(), sizeof(char) * data.size());
         file.close();
@@ -38,10 +33,7 @@ namespace mulberry::IO
     {
         std::ofstream file(path.data(), std::ios::out | std::ios::app);
         if (!file.is_open())
-        {
             MULBERRY_CORE_ERROR("failed to write text:{}\n");
-            exit(1);
-        }
 
         file.write(data.data(), sizeof(char) * data.size());
         file.close();

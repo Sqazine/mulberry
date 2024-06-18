@@ -119,7 +119,7 @@ namespace mulberry::vk
 		{
 			barrier.subresourceRange.aspectMask = IMAGE_ASPECT_CAST(ImageAspect::DEPTH);
 
-			if (format.HasStencil())
+			if (HasStencil(format))
 				barrier.subresourceRange.aspectMask |= IMAGE_ASPECT_CAST(ImageAspect::STENCIL);
 		}
 		else
@@ -220,26 +220,72 @@ namespace mulberry::vk
 		auto oldLayout = barrier.oldLayout;
 	}
 
-	GraphicsCommandBuffer::GraphicsCommandBuffer(VkCommandBufferLevel level)
-		: CommandBuffer(VK_CONTEXT->GetDevice()->GetGraphicsCommandPool()->GetHandle(), level)
+	void CommandBuffer::BindPipeline(Pipeline *pipeline) const
 	{
+		vkCmdBindPipeline(mHandle, mBindPoint, pipeline->GetHandle());
 	}
-	GraphicsCommandBuffer::~GraphicsCommandBuffer()
-	{
-	}
-
-	void GraphicsCommandBuffer::BindPipeline(Pipeline *pipeline) const
-	{
-		vkCmdBindPipeline(mHandle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetHandle());
-	}
-
-	void GraphicsCommandBuffer::BindDescriptorSets(PipelineLayout *layout, uint32_t firstSet, const std::vector<const DescriptorSet *> &descriptorSets, const std::vector<uint32_t> &dynamicOffsets)
+	void CommandBuffer::BindDescriptorSets(PipelineLayout *layout, uint32_t firstSet, const std::vector<const DescriptorSet *> &descriptorSets, const std::vector<uint32_t> &dynamicOffsets)
 	{
 		std::vector<VkDescriptorSet> rawDescSets(descriptorSets.size());
 		for (int32_t i = 0; i < rawDescSets.size(); ++i)
 			rawDescSets[i] = descriptorSets[i]->GetHandle();
+		vkCmdBindDescriptorSets(mHandle, mBindPoint, layout->GetHandle(), 0, rawDescSets.size(), rawDescSets.data(), dynamicOffsets.size(), dynamicOffsets.data());
+	}
 
-		vkCmdBindDescriptorSets(mHandle, VK_PIPELINE_BIND_POINT_GRAPHICS, layout->GetHandle(), 0, rawDescSets.size(), rawDescSets.data(), dynamicOffsets.size(), dynamicOffsets.data());
+	void CommandBuffer::Submit(const std::vector<PipelineStage> &waitStages, const std::vector<Semaphore *>& waitSemaphores, const std::vector<Semaphore *>& signalSemaphores, Fence *fence) const
+	{
+		std::vector<VkSemaphore> rawSignal(signalSemaphores.size());
+		std::vector<VkSemaphore> rawWait(waitSemaphores.size());
+		std::vector<VkPipelineStageFlags> rawWaitStages(waitStages.size());
+
+		for (size_t i = 0; i < rawSignal.size(); ++i)
+			rawSignal[i] = signalSemaphores[i]->GetHandle();
+
+		for (size_t i = 0; i < rawWait.size(); ++i)
+			rawWait[i] = waitSemaphores[i]->GetHandle();
+
+		for (size_t i = 0; i < rawWaitStages.size(); ++i)
+			rawWaitStages[i] = PIPELINE_STAGE_CAST(waitStages[i]);
+
+		VkSubmitInfo submitInfo{};
+		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+		submitInfo.pNext = nullptr;
+		submitInfo.commandBufferCount = 1;
+		submitInfo.pCommandBuffers = &mHandle;
+		submitInfo.waitSemaphoreCount = rawWait.size();
+		submitInfo.pWaitSemaphores = rawWait.data();
+		submitInfo.signalSemaphoreCount = rawSignal.size();
+		submitInfo.pSignalSemaphores = rawSignal.data();
+		submitInfo.pWaitDstStageMask = rawWaitStages.data();
+
+		if (fence == nullptr)
+		{
+			auto tmpfence = std::make_unique<Fence>();
+			if (mBindPoint == VK_PIPELINE_BIND_POINT_GRAPHICS)
+				mDevice.GetGraphicsQueue()->Submit(submitInfo, tmpfence.get());
+			else if (mBindPoint == VK_PIPELINE_BIND_POINT_COMPUTE)
+				mDevice.GetComputeQueue()->Submit(submitInfo, tmpfence.get());
+			tmpfence->Wait();
+			tmpfence.reset(nullptr);
+		}
+		else
+		{
+			if (mBindPoint == VK_PIPELINE_BIND_POINT_GRAPHICS)
+				mDevice.GetGraphicsQueue()->Submit(submitInfo, fence);
+			else if (mBindPoint == VK_PIPELINE_BIND_POINT_COMPUTE)
+				mDevice.GetComputeQueue()->Submit(submitInfo, fence);
+			if (fence->GetStatus() == FenceStatus::UNSIGNALED)
+				fence->Wait();
+		}
+	}
+
+	GraphicsCommandBuffer::GraphicsCommandBuffer(VkCommandBufferLevel level)
+		: CommandBuffer(VK_CONTEXT->GetDevice()->GetGraphicsCommandPool()->GetHandle(), level)
+	{
+		mBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	}
+	GraphicsCommandBuffer::~GraphicsCommandBuffer()
+	{
 	}
 
 	void GraphicsCommandBuffer::BindVertexBuffers(uint32_t firstBinding, uint32_t bindingCount, const std::vector<VertexBuffer *> &pBuffers, const std::vector<uint64_t> &pOffsets)
@@ -298,66 +344,13 @@ namespace mulberry::vk
 		vkCmdDrawIndexed(mHandle, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 	}
 
-	void GraphicsCommandBuffer::Submit(const std::vector<PipelineStage> &waitStages, const std::vector<Semaphore *> waitSemaphores, const std::vector<Semaphore *> signalSemaphores, Fence *fence) const
-	{
-		std::vector<VkSemaphore> rawSignal(signalSemaphores.size());
-		std::vector<VkSemaphore> rawWait(waitSemaphores.size());
-		std::vector<VkPipelineStageFlags> rawWaitStages(waitStages.size());
-
-		for (size_t i = 0; i < rawSignal.size(); ++i)
-			rawSignal[i] = signalSemaphores[i]->GetHandle();
-
-		for (size_t i = 0; i < rawWait.size(); ++i)
-			rawWait[i] = waitSemaphores[i]->GetHandle();
-
-		for (size_t i = 0; i < rawWaitStages.size(); ++i)
-			rawWaitStages[i] = PIPELINE_STAGE_CAST(waitStages[i]);
-
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		submitInfo.pNext = nullptr;
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &mHandle;
-		submitInfo.waitSemaphoreCount = rawWait.size();
-		submitInfo.pWaitSemaphores = rawWait.data();
-		submitInfo.signalSemaphoreCount = rawSignal.size();
-		submitInfo.pSignalSemaphores = rawSignal.data();
-		submitInfo.pWaitDstStageMask = rawWaitStages.data();
-
-		if (fence == nullptr)
-		{
-			auto tmpfence = std::make_unique<Fence>();
-			mDevice.GetGraphicsQueue()->Submit(submitInfo, tmpfence.get());
-			tmpfence->Wait();
-			tmpfence.reset(nullptr);
-		}
-		else
-		{
-			mDevice.GetGraphicsQueue()->Submit(submitInfo, fence);
-			if (fence->GetStatus() == FenceStatus::UNSIGNALED)
-				fence->Wait();
-		}
-	}
-
 	ComputeCommandBuffer::ComputeCommandBuffer(VkCommandBufferLevel level)
 		: CommandBuffer(VK_CONTEXT->GetDevice()->GetComputeCommandPool()->GetHandle(), level)
 	{
+		mBindPoint = VK_PIPELINE_BIND_POINT_COMPUTE;
 	}
 	ComputeCommandBuffer::~ComputeCommandBuffer()
 	{
-	}
-
-	void ComputeCommandBuffer::BindPipeline(Pipeline *pipeline) const
-	{
-		vkCmdBindPipeline(mHandle, VK_PIPELINE_BIND_POINT_COMPUTE, pipeline->GetHandle());
-	}
-
-	void ComputeCommandBuffer::BindDescriptorSets(PipelineLayout *layout, uint32_t firstSet, const std::vector<const DescriptorSet *> &descriptorSets, const std::vector<uint32_t> &dynamicOffsets)
-	{
-		std::vector<VkDescriptorSet> rawDescSets(descriptorSets.size());
-		for (int32_t i = 0; i < rawDescSets.size(); ++i)
-			rawDescSets[i] = descriptorSets[i]->GetHandle();
-		vkCmdBindDescriptorSets(mHandle, VK_PIPELINE_BIND_POINT_COMPUTE, layout->GetHandle(), 0, rawDescSets.size(), rawDescSets.data(), dynamicOffsets.size(), dynamicOffsets.data());
 	}
 
 	void ComputeCommandBuffer::Dispatch(uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ)
@@ -365,82 +358,13 @@ namespace mulberry::vk
 		vkCmdDispatch(mHandle, groupCountX, groupCountY, groupCountZ);
 	}
 
-	void ComputeCommandBuffer::Submit(const std::vector<PipelineStage> &waitStages, const std::vector<Semaphore *> waitSemaphores, const std::vector<Semaphore *> signalSemaphores, Fence *fence) const
-	{
-		std::vector<VkSemaphore> rawSignal(signalSemaphores.size());
-		std::vector<VkSemaphore> rawWait(waitSemaphores.size());
-
-		for (size_t i = 0; i < rawSignal.size(); ++i)
-			rawSignal[i] = signalSemaphores[i]->GetHandle();
-
-		for (size_t i = 0; i < rawWait.size(); ++i)
-			rawWait[i] = waitSemaphores[i]->GetHandle();
-
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		submitInfo.pNext = nullptr;
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &mHandle;
-		submitInfo.waitSemaphoreCount = rawWait.size();
-		submitInfo.pWaitSemaphores = rawWait.data();
-		submitInfo.signalSemaphoreCount = rawSignal.size();
-		submitInfo.pSignalSemaphores = rawSignal.data();
-
-		if (fence == nullptr)
-		{
-			auto tmpfence = std::make_unique<Fence>();
-			;
-			mDevice.GetComputeQueue()->Submit(submitInfo, tmpfence.get());
-			tmpfence->Wait();
-			tmpfence.reset(nullptr);
-		}
-		else
-		{
-			mDevice.GetComputeQueue()->Submit(submitInfo, fence);
-			if (fence->GetStatus() == FenceStatus::UNSIGNALED)
-				fence->Wait();
-		}
-	}
-
 	TransferCommandBuffer::TransferCommandBuffer(VkCommandBufferLevel level)
 		: CommandBuffer(VK_CONTEXT->GetDevice()->GetTransferCommandPool()->GetHandle(), level)
 	{
+		mBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 	}
 
 	TransferCommandBuffer::~TransferCommandBuffer()
 	{
-	}
-
-	void TransferCommandBuffer::BindPipeline(Pipeline *pipeline) const
-	{
-		vkCmdBindPipeline(mHandle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetHandle());
-	}
-	void TransferCommandBuffer::BindDescriptorSets(PipelineLayout *layout, uint32_t firstSet, const std::vector<const DescriptorSet *> &descriptorSets, const std::vector<uint32_t> &dynamicOffsets)
-	{
-		std::vector<VkDescriptorSet> rawDescSets(descriptorSets.size());
-		for (int32_t i = 0; i < rawDescSets.size(); ++i)
-			rawDescSets[i] = descriptorSets[i]->GetHandle();
-		vkCmdBindDescriptorSets(mHandle, VK_PIPELINE_BIND_POINT_GRAPHICS, layout->GetHandle(), 0, rawDescSets.size(), rawDescSets.data(), dynamicOffsets.size(), dynamicOffsets.data());
-	}
-
-	void TransferCommandBuffer::Submit(const std::vector<PipelineStage> &waitStages, const std::vector<Semaphore *> waitSemaphores, const std::vector<Semaphore *> signalSemaphores, Fence *fence) const
-	{
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &mHandle;
-
-		if (fence == nullptr)
-		{
-			auto tmpfence = std::make_unique<Fence>();
-			mDevice.GetComputeQueue()->Submit(submitInfo, tmpfence.get());
-			tmpfence->Wait();
-			tmpfence.reset(nullptr);
-		}
-		else
-		{
-			mDevice.GetComputeQueue()->Submit(submitInfo, fence);
-			fence->Wait();
-		}
 	}
 }

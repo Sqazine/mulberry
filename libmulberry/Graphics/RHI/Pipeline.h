@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include "Base.h"
+#include "Defs.h"
 #include "Color.h"
 #include "Graphics/PrimitiveGeometry.h"
 #include "Shader.h"

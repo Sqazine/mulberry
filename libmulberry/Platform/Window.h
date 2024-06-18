@@ -40,7 +40,7 @@ namespace mulberry
         virtual void Hide() = 0;
 
         virtual std::vector<const char *> GetVulkanRequiredExtensions() = 0;
-        virtual VkSurfaceKHR CreateSurface(VkInstance instance) = 0;
+        virtual VkSurfaceKHR CreateVulkanSurface(VkInstance instance) = 0;
 
         virtual void SetEvent(Event event)
         {

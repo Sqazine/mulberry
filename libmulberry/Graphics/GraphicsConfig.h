@@ -1,5 +1,5 @@
 #pragma once
-#include "RHI/Enum.h"
+#include "RHI/Defs.h"
 namespace mulberry
 {
     enum class GraphicsBackend

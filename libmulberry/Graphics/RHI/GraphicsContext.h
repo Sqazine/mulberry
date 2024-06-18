@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <mutex>
-#include "Base.h"
+#include "Defs.h"
 #include "Vec2.h"
 #include "GraphicsConfig.h"
 #include "Graphics/RHI/VK/GraphicsContext.h"
@@ -14,7 +14,6 @@ namespace mulberry
 		~GraphicsContext();
 
 		void Init();
-		void Destroy();
 
 		class SwapChainPass *GetSwapChainPass();
 

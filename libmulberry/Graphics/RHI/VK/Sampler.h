@@ -2,9 +2,8 @@
 #include <cstdint>
 #include <type_traits>
 #include <vulkan/vulkan.h>
-#include "RHI/Enum.h"
-#include "Enum.h"
-#include "Base.h"
+#include "Graphics/RHI/Defs.h"
+#include "Defs.h"
 
 namespace mulberry::vk
 {

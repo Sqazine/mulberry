@@ -3,8 +3,8 @@
 #include <memory>
 #include <string_view>
 #include <vector>
-#include "Base.h"
-#include "../Enum.h"
+#include "Defs.h"
+#include "Graphics/RHI/Defs.h"
 namespace mulberry::vk
 {
 	class Shader:public Base

@@ -3,7 +3,7 @@
 #include "App.h"
 #include "Material.h"
 #include "Graphics/RHI/Pass.h"
-#include "Graphics/RHI/Enum.h"
+#include "Graphics/RHI/Defs.h"
 namespace mulberry
 {
     SceneRenderer::SceneRenderer()
@@ -27,11 +27,11 @@ namespace mulberry
         const SpriteMaterial *material = (SpriteMaterial *)spriteComp->GetMaterial();
 
         // map to sprite size
-        // auto spriteExtent = material->GetSprite()->GetExtent();
-        // Mat4 mat = transComp->GetModelMat();
-        // mat *= Mat4::Scale(Vec2(spriteExtent.x / 2.0f, spriteExtent.y / 2.0f));
+        auto spriteExtent = material->GetSprite()->GetExtent();
+        Mat4 mat = transComp->GetModelMat();
+        mat *= Mat4::Scale(Vec2(spriteExtent.x / 2.0f, spriteExtent.y / 2.0f));
 
-        //pass->SetPipeline(*spriteComp->GetMaterial()->GetGraphicsPipeline());
+        // pass->SetPipeline(*spriteComp->GetMaterial()->GetGraphicsPipeline());
 
         /*  material->GetShaderGroup()->SetActive(true);
           material->GetShaderGroup()->SetDefaultUniformValue("modelMat", mat);
@@ -65,9 +65,9 @@ namespace mulberry
         const SpriteMaterial *material = (SpriteMaterial *)spriteComp->GetMaterial();
 
         // map to sprite size
-        // auto spriteExtent = material->GetSprite()->GetExtent();
-        // Mat4 mat = transComp->GetModelMat();
-        // mat *= Mat4::Scale(Vec2(spriteExtent.x / 2.0f, spriteExtent.y / 2.0f));
+        auto spriteExtent = material->GetSprite()->GetExtent();
+        Mat4 mat = transComp->GetModelMat();
+        mat *= Mat4::Scale(Vec2(spriteExtent.x / 2.0f, spriteExtent.y / 2.0f));
 
         /*mGizmoMaterial->GetShaderGroup()->SetActive(true);
 
@@ -112,8 +112,8 @@ namespace mulberry
         {
             auto swapChainPass = App::GetInstance().GetGraphicsContext()->GetSwapChainPass();
 
-            swapChainPass->SetClearColor(camera->GetClearColor());
-            swapChainPass->IsClearColorBuffer(true);
+            auto colorAttachment=swapChainPass->GetColorAttachment();
+            colorAttachment->clearColor=camera->GetClearColor();
 
             swapChainPass->Begin();
 
