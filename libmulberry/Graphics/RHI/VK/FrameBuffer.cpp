@@ -39,15 +39,13 @@ namespace mulberry::vk
 
 	const VkFramebuffer &FrameBuffer::GetHandle()
 	{
-		if (mIsDirty || mHandle == VK_NULL_HANDLE)
-			Build();
+		Build();
 		return mHandle;
 	}
 
 	Vec2 FrameBuffer::GetExtent()
 	{
-		if (mIsDirty || mHandle == VK_NULL_HANDLE)
-			Build();
+		Build();
 		return {(float)mInfo.width, (float)mInfo.height};
 	}
 
@@ -64,17 +62,21 @@ namespace mulberry::vk
 
 	void FrameBuffer::Build()
 	{
+		if (!mIsDirty && mHandle != VK_NULL_HANDLE)
+			return;
+
 		uint32_t maxWidth=0;
 		uint32_t maxHeight=0;
 		std::vector<VkImageView> rawViews;
 		for (auto [k, v] : mAttachments)
 		{
-			auto extent = v->texture->GetVkImpl()->GetImage()->GetExtent();
+			auto vkTextureImpl = dynamic_cast<vk::Texture*>(v->texture);
+			auto extent = vkTextureImpl->GetImage()->GetExtent();
 			if (maxWidth < extent.x)
 				maxWidth = extent.x;
 			if (maxHeight < extent.y)
 				maxHeight = extent.y;
-			rawViews.emplace_back(v->texture->GetVkImpl()->GetImage()->GetView());
+			rawViews.emplace_back(vkTextureImpl->GetImage()->GetView());
 		}
 
 		mInfo.attachmentCount = rawViews.size();

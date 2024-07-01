@@ -119,13 +119,13 @@ namespace mulberry
 
             swapChainPass->SetViewport(camera->GetViewport());
 
-            for (const auto &entity : entitiesWithSpriteComp)
-            {
-                RenderSprite(swapChainPass, entity, camera);
-                RenderAuxiliary(swapChainPass, entity, camera, *mLinePrimitive);
-                RenderAuxiliary(swapChainPass, entity, camera, *mCirclePrimitive);
-                RenderAuxiliary(swapChainPass, entity, camera, *mQuadPrimitive);
-            }
+            // for (const auto &entity : entitiesWithSpriteComp)
+            // {
+            //     RenderSprite(swapChainPass, entity, camera);
+            //     RenderAuxiliary(swapChainPass, entity, camera, *mLinePrimitive);
+            //     RenderAuxiliary(swapChainPass, entity, camera, *mCirclePrimitive);
+            //     RenderAuxiliary(swapChainPass, entity, camera, *mQuadPrimitive);
+            // }
 
             swapChainPass->End();
         }

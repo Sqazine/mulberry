@@ -96,7 +96,6 @@ namespace mulberry
 
 	void App::Init()
 	{
-
 #if defined(PLATFORM_WINDOWS) || defined(PLATFORM_LINUX)
 		mInput = std::make_unique<SDL2InputImpl>();
 		mTimer = std::make_unique<SDL2TimerImpl>();
@@ -117,7 +116,7 @@ namespace mulberry
 
 	void App::Update()
 	{
-		if (AppConfig::runOnlyWindowFocus && GetWindow()->HasEvent(Window::Event::MIN))
+		if (AppConfig::refreshOnlyWindowIsActive && GetWindow()->HasEvent(Window::Event::MIN))
 			mState = AppState::PAUSE;
 		else if (GetWindow()->HasEvent(Window::Event::ENTER | Window::Event::EXPOSE))
 			mState = AppState::UPDATE;
@@ -129,21 +128,6 @@ namespace mulberry
 
 		if (mState != AppState::PAUSE)
 		{
-#ifdef SHOW_FPS_ON_WINDOW_TITLE
-			static bool isFirst = true;
-			static std::string name;
-			if (isFirst)
-			{
-				name = mWindow->GetTitle();
-				isFirst = false;
-			}
-			static float avgDuration = mTimer->GetDeltaTime();
-			constexpr float alpha = 0.01f;
-			avgDuration = avgDuration * (1 - alpha) + mTimer->GetDeltaTime() * alpha;
-			auto fps = std::to_string(1.0f / avgDuration);
-			mWindow->SetTitle(name + " FPS = " + fps);
-#endif
-
 			for (const auto &entity : mScenes[mSceneIdx]->GetAllEntities())
 			{
 				for (const auto &comp : entity->GetAllComponents())

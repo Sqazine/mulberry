@@ -66,7 +66,6 @@ target_link_libraries(${LIB_NAME} PRIVATE  SDL2-static
                                         HLSL 
                                         ${vulkan_1})
                                         
-target_compile_definitions(${LIB_NAME} PRIVATE SHOW_FPS_ON_WINDOW_TITLE)
 target_compile_definitions(${LIB_NAME} PRIVATE ${CURRENT_PLATFORM})
 
 if(MSVC)

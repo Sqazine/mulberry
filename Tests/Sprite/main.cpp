@@ -12,11 +12,11 @@ int32_t main(int32_t argc, char **argv)
 
     auto imgData = scene->GetSceneAssetManager()->LoadImageData("Assets/awesomeface.png");
 
-    auto texture = std::make_unique<mulberry::Texture>();
+    auto texture = mulberry::Texture::CreateUnique();
     texture->SetImageData(imgData)
-        .SetMagFilter(mulberry::FilterMode::LINEAR)
-        .SetMinFilter(mulberry::FilterMode::LINEAR)
-        .SetBorderColor(mulberry::BorderColor::FLOAT_TRANSPARENT_BLACK);
+           ->SetMagFilter(mulberry::FilterMode::LINEAR)
+           ->SetMinFilter(mulberry::FilterMode::LINEAR)
+           ->SetBorderColor(mulberry::BorderColor::FLOAT_TRANSPARENT_BLACK);
 
     mulberry::Entity *rootEntity = scene->CreateEntity("Sprite");
 

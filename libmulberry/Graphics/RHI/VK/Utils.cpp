@@ -3,6 +3,7 @@
 #include <glslang/SPIRV/GlslangToSpv.h>
 #include "Logger.h"
 #include "Graphics/RHI/VK/Image.h"
+#include "Graphics/RHI/VK/Texture.h"
 
 namespace mulberry::vk
 {
@@ -1042,11 +1043,13 @@ namespace mulberry::vk
 		}
 	}
 
+
 	VkAttachmentDescription ToVkAttachmentDescription(const ColorAttachment &colorAttachment)
 	{
+		auto vkImpl = dynamic_cast<vk::Texture*>(colorAttachment.texture);
 		VkAttachmentDescription result{};
 		result.flags = 0;
-		result.format = ToVkFormat(colorAttachment.texture->GetVkImpl()->GetImage()->GetFormat());
+		result.format = ToVkFormat(vkImpl->GetImage()->GetFormat());
 		result.samples = VK_SAMPLE_COUNT_1_BIT;
 		result.loadOp = ToLoadOp(colorAttachment.loadOp);
 		result.storeOp = ToStoreOp(colorAttachment.storeOp);

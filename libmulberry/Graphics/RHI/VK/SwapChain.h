@@ -5,6 +5,7 @@
 #include "Utils.h"
 #include "SyncObject.h"
 #include "Math/Vec2.h"
+#include "Graphics/RHI/Attachment.h"
 namespace mulberry::vk
 {
 	class SwapChain : public Base
@@ -15,7 +16,7 @@ namespace mulberry::vk
 
 		Vec2 GetExtent() const;
 
-		std::vector<class ColorAttachment *> &GetColorAttachments();
+		std::vector<ColorAttachment *> &GetColorAttachments();
 		const VkSurfaceFormatKHR GetSurfaceFormat() const;
 
 		const VkSwapchainKHR &GetHandle() const;
@@ -39,7 +40,7 @@ namespace mulberry::vk
 
 		VkSwapchainKHR mHandle;
 
-		std::vector<class ColorAttachment*> mBackAttachments;
+		std::vector<ColorAttachment*> mBackAttachments;
 
 		VkSurfaceFormatKHR mSurfaceFormat;
 		VkExtent2D mExtent;

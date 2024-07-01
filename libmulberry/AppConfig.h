@@ -3,5 +3,5 @@
 namespace mulberry::AppConfig
 {
     inline GraphicsConfig graphicsConfig;
-    inline bool runOnlyWindowFocus=true;;
+    inline bool refreshOnlyWindowIsActive=true;
 }

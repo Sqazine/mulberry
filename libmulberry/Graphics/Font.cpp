@@ -51,7 +51,7 @@ namespace mulberry
             SDL_Surface *surf = TTF_RenderText_Blended(font, text.c_str(), sdlColor);
             if (surf != nullptr)
             {
-                texture = std::make_unique<Texture>();
+                texture = Texture::CreateUnique();
                 //texture->CreateFromSurface(surf);
                 SDL_FreeSurface(surf);
             }

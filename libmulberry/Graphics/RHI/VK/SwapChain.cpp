@@ -124,9 +124,7 @@ namespace mulberry::vk
 		for (size_t i = 0; i < rawImages.size(); ++i)
 		{
 			mBackAttachments[i]=new ColorAttachment();
-			mBackAttachments[i]->texture=new mulberry::Texture();
-			auto vkTexture=std::make_unique<Texture>(GetExtent(), rawImages[i], ToFormat(mSurfaceFormat.format));
-			mBackAttachments[i]->texture->GetUniVkImpl()=std::move(vkTexture);
+			mBackAttachments[i]->texture = new vk::Texture(GetExtent(), rawImages[i], ToFormat(mSurfaceFormat.format));
 			mBackAttachments[i]->clearColor=Color::Black;
 			mBackAttachments[i]->loadOp=AttachmentLoad::CLEAR;
 			mBackAttachments[i]->storeOp=AttachmentStore::DONT_CARE;

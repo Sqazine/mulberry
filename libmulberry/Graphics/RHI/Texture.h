@@ -8,45 +8,45 @@
 #include "Color.h"
 #include "Format.h"
 #include "Math/Vec2.h"
-#include "Graphics/RHI/VK/Texture.h"
 
 namespace mulberry
 {
-    struct Texture : GRAPHICS_RHI_IMPL_DECL(Texture)
+    struct Texture
     {
     public:
-        Texture();
-        ~Texture();
+        virtual ~Texture() = default;
 
-        Texture &SetImageData(const ImageData &data);
-        Texture &SetMagFilter(FilterMode filter);
-        Texture &SetMinFilter(FilterMode filter);
-        Texture &SetWrapU(WrapMode address);
-        Texture &SetWrapV(WrapMode address);
-        Texture &SetWrapW(WrapMode address);
-        Texture &SetAnisotropyLevel(float level);
-        Texture &SetBorderColor(BorderColor borderColor);
-        Texture &SetMipMapMode(MipMapMode mipmapMode);
-        Texture &SetMipMapBias(float bias);
-        Texture &SetMinMipMapLevel(float level);
-        Texture &SetMaxMipMapLevel(float level);
+        static Texture* Create();
+        static std::unique_ptr<Texture> CreateUnique();
 
-        const FilterMode &GetMagFilter() const;
-        const FilterMode &GetMinFilter() const;
-        const WrapMode &GetWrapModeU() const;
-        const WrapMode &GetWrapModeV() const;
-        const WrapMode &GetWrapModeW() const;
+        virtual Texture *SetImageData(const ImageData &data) = 0;
+        virtual Texture *SetMagFilter(FilterMode filter) = 0;
+        virtual Texture *SetMinFilter(FilterMode filter) = 0;
+        virtual Texture *SetWrapU(WrapMode address) = 0;
+        virtual Texture *SetWrapV(WrapMode address) = 0;
+        virtual Texture *SetWrapW(WrapMode address) = 0;
+        virtual Texture *SetAnisotropyLevel(float level) = 0;
+        virtual Texture *SetBorderColor(BorderColor borderColor) = 0;
+        virtual Texture *SetMipMapMode(MipMapMode mipmapMode) = 0;
+        virtual Texture *SetMipMapBias(float bias) = 0;
+        virtual Texture *SetMinMipMapLevel(float level) = 0;
+        virtual Texture *SetMaxMipMapLevel(float level) = 0;
 
-        float GetMaxAnisotropyLevel() const;
+        virtual FilterMode GetMagFilter() const = 0;
+        virtual FilterMode GetMinFilter() const = 0;
+        virtual WrapMode GetWrapModeU() const = 0;
+        virtual WrapMode GetWrapModeV() const = 0;
+        virtual WrapMode GetWrapModeW() const = 0;
+        virtual float GetMaxAnisotropyLevel() const = 0;
+        virtual BorderColor GetBorderColor() const = 0;
+        virtual MipMapMode GetMipMapMode() const = 0;
+        virtual float GetMipMapBias() const = 0;
+        virtual float GetMinMipMapLevel() const = 0;
+        virtual float GetMaxMipMapLevel() const = 0;
 
-        const BorderColor &GetBorderColor() const;
+        virtual Vec2 GetExtent() const = 0;
 
-        const MipMapMode &GetMipMapMode() const;
-
-        float GetMipMapBias() const;
-        float GetMinMipMapLevel() const;
-        float GetMaxMipMapLevel() const;
-
-        Vec2 GetExtent() const;
+    protected:
+        Texture() = default;
     };
 }

@@ -59,6 +59,7 @@ namespace mulberry::vk
         ColorAttachment* GetColorAttachment() const;
     private:
         void SyncToWindowSize();
+        void BuildFrameBuffer();
         friend class GraphicsContext;
 
         std::unique_ptr<class SwapChain> mSwapChain;

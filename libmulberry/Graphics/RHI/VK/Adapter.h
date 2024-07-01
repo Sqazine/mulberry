@@ -79,6 +79,7 @@ namespace mulberry::vk
 		std::vector<const char *> mRequiredValidationLayers =
 			{
 				"VK_LAYER_KHRONOS_validation",
+				"VK_LAYER_LUNARG_monitor",
 			};
 
 		VkDebugUtilsMessengerEXT mDebugMessengerHandle;
