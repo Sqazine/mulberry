@@ -84,13 +84,6 @@ namespace mulberry::vk
 			MULBERRY_CORE_ERROR("Failed to resolve function:{}\n", #funcName);                  \
 	}
 
-#define SET(member, value) \
-	if (member == value)   \
-		return *this;      \
-	member = value;        \
-	mIsDirty = true;       \
-	return *this;
-
 	struct SwapChainDetails
 	{
 		std::vector<VkSurfaceFormatKHR> surfaceFormats;
@@ -120,6 +113,4 @@ namespace mulberry::vk
 
 	VkAttachmentLoadOp ToLoadOp(AttachmentLoad op);
 	VkAttachmentStoreOp ToStoreOp(AttachmentStore op);
-
-	VkAttachmentDescription ToVkAttachmentDescription(const ColorAttachment &colorAttachment);
 }

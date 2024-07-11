@@ -23,6 +23,7 @@ namespace mulberry
         friend Color operator*(const Color &left, float value);
         friend Color operator*(float value, const Color &right);
         friend Color operator*(const Color &left, const Color &right);
+        friend bool operator==(const Color &left, const Color &right);
 
         Color &operator+=(float value);
         Color &operator+=(const Color &right);

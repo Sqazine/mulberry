@@ -10,6 +10,7 @@
 #include "App.h"
 #include "AppConfig.h"
 #include "GraphicsContext.h"
+#include "Attachment.h"
 namespace mulberry::vk
 {
 	SwapChain::SwapChain()
@@ -25,9 +26,13 @@ namespace mulberry::vk
 		vkDestroySwapchainKHR(mDevice.GetHandle(), mHandle, nullptr);
 	}
 
-	std::vector<ColorAttachment *> &SwapChain::GetColorAttachments()
+	uint32_t SwapChain::GetAttachmentCount() const
 	{
-		return mBackAttachments;
+		return mBackAttachments.size();
+	}
+	mulberry::ColorAttachment *SwapChain::GetAttachmentByIndex(uint32_t idx) const
+	{
+		return mBackAttachments[idx].get();
 	}
 
 	const VkSurfaceFormatKHR SwapChain::GetSurfaceFormat() const
@@ -123,11 +128,11 @@ namespace mulberry::vk
 		mBackAttachments.resize(count);
 		for (size_t i = 0; i < rawImages.size(); ++i)
 		{
-			mBackAttachments[i]=new ColorAttachment();
-			mBackAttachments[i]->texture = new vk::Texture(GetExtent(), rawImages[i], ToFormat(mSurfaceFormat.format));
-			mBackAttachments[i]->clearColor=Color::Black;
-			mBackAttachments[i]->loadOp=AttachmentLoad::CLEAR;
-			mBackAttachments[i]->storeOp=AttachmentStore::DONT_CARE;
+			mBackAttachments[i] = std::make_unique<vk::ColorAttachment>();
+			mBackAttachments[i]->SetTexture(new vk::Texture(GetExtent(), rawImages[i], ToFormat(mSurfaceFormat.format)));
+			mBackAttachments[i]->SetClearColor(Color::Black);
+			mBackAttachments[i]->SetLoadOp(AttachmentLoad::CLEAR);
+			mBackAttachments[i]->SetStoreOp(AttachmentStore::DONT_CARE);
 		}
 	}
 
@@ -188,10 +193,7 @@ namespace mulberry::vk
 
 	void SwapChain::DeleteBackAttachments()
 	{
-		for (size_t i = 0; i < mBackAttachments.size(); ++i)
-			SAFE_DELETE(mBackAttachments[i]);
-
-		std::vector<ColorAttachment *>().swap(mBackAttachments);
+		mBackAttachments.clear();
 	}
 
 	SwapChainDetails SwapChain::QuerySwapChainDetails()

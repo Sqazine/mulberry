@@ -56,7 +56,7 @@ namespace mulberry::vk
 
         void End() override;
 
-        ColorAttachment* GetColorAttachment() const;
+        mulberry::ColorAttachment* GetColorAttachment() const;
     private:
         void SyncToWindowSize();
         void BuildFrameBuffer();

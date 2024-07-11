@@ -4,7 +4,8 @@
 #include "Math/MathUtils.h"
 #include "Utils.h"
 #include "App.h"
-#include "GRaphicsContext.h"
+#include "GraphicsContext.h"
+#include "Attachment.h"
 #include <array>
 namespace mulberry::vk
 {
@@ -71,7 +72,7 @@ namespace mulberry::vk
     SwapChainPass::SwapChainPass()
         : mSwapChain(std::make_unique<SwapChain>())
     {
-        size_t size = mSwapChain->GetColorAttachments().size();
+        size_t size = mSwapChain->GetAttachmentCount();
 
         mRenderPass = std::make_unique<RenderPass>(ToFormat(mSwapChain->GetSurfaceFormat().format));
 
@@ -79,7 +80,7 @@ namespace mulberry::vk
         for (int32_t i = 0; i < mFrameBuffers.size(); ++i)
         {
             mFrameBuffers[i] = std::make_unique<FrameBuffer>();
-            mFrameBuffers[i]->AttachRenderPass(mRenderPass.get()).BindColorAttachment(0, mSwapChain->GetColorAttachments()[i]);
+            mFrameBuffers[i]->AttachRenderPass(mRenderPass.get()).BindColorAttachment(0, mSwapChain->GetAttachmentByIndex(i));
         }
 
         mGraphicsCommandBuffers = mDevice.GetGraphicsCommandPool()->CreatePrimaryCommandBuffers(size);
@@ -120,10 +121,7 @@ namespace mulberry::vk
 
         std::vector<VkClearValue> clearValues(1);
         for (auto &[k, v] : frameBuffer->GetColorAttachments())
-        {
-            clearValues[0] = {{{v->clearColor.r, v->clearColor.g, v->clearColor.b, v->clearColor.a}}};
-        }
-
+            clearValues[0] = (dynamic_cast<vk::ColorAttachment *>(v))->GetVkClearValue();
         VkRect2D renderArea = {};
         renderArea.offset = {0, 0};
         renderArea.extent.width = (uint32_t)frameBuffer->GetExtent().x;
@@ -142,13 +140,13 @@ namespace mulberry::vk
 
         auto result = mSwapChain->Present(GetSignalSemaphore());
 
-        mCurFrameIdx = (mCurFrameIdx + 1) % ((int32_t)mSwapChain->GetColorAttachments().size());
+        mCurFrameIdx = (mCurFrameIdx + 1) % ((int32_t)mSwapChain->GetAttachmentCount());
 
         if (result != VK_SUCCESS)
             SyncToWindowSize();
     }
 
-    ColorAttachment *SwapChainPass::GetColorAttachment() const
+    mulberry::ColorAttachment *SwapChainPass::GetColorAttachment() const
     {
         return GetFrameBuffer()->GetColorAttachment(0);
     }
@@ -162,11 +160,11 @@ namespace mulberry::vk
 
     void SwapChainPass::BuildFrameBuffer()
     {
-        mFrameBuffers.resize(mSwapChain->GetColorAttachments().size());
+        mFrameBuffers.resize(mSwapChain->GetAttachmentCount());
         for (int32_t i = 0; i < mFrameBuffers.size(); ++i)
         {
             mFrameBuffers[i] = std::make_unique<FrameBuffer>();
-            mFrameBuffers[i]->AttachRenderPass(mRenderPass.get()).BindColorAttachment(0, mSwapChain->GetColorAttachments()[i]);
+            mFrameBuffers[i]->AttachRenderPass(mRenderPass.get()).BindColorAttachment(0, mSwapChain->GetAttachmentByIndex(i));
         }
     }
 

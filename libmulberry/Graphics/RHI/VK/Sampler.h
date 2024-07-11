@@ -48,8 +48,6 @@ namespace mulberry::vk
 
         VkSampler mHandle;
 
-        bool mIsDirty{true};
-
         FilterMode mMagFilter{FilterMode::LINEAR};
         FilterMode mMinFilter{FilterMode::LINEAR};
         WrapMode mWrapU{WrapMode::REPEAT};

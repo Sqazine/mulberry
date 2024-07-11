@@ -49,13 +49,13 @@ namespace mulberry::vk
 		return {(float)mInfo.width, (float)mInfo.height};
 	}
 
-		ColorAttachment* FrameBuffer::GetColorAttachment(uint32_t idx) const
-		{
-			auto iter=mAttachments.find(idx);
-			return iter->second;
-		}
+	ColorAttachment *FrameBuffer::GetColorAttachment(uint32_t idx) const
+	{
+		auto iter = mAttachments.find(idx);
+		return iter->second;
+	}
 
-	const std::unordered_map<uint32_t, ColorAttachment*>& FrameBuffer::GetColorAttachments() const
+	const std::unordered_map<uint32_t, ColorAttachment *> &FrameBuffer::GetColorAttachments() const
 	{
 		return mAttachments;
 	}
@@ -65,12 +65,12 @@ namespace mulberry::vk
 		if (!mIsDirty && mHandle != VK_NULL_HANDLE)
 			return;
 
-		uint32_t maxWidth=0;
-		uint32_t maxHeight=0;
+		uint32_t maxWidth = 0;
+		uint32_t maxHeight = 0;
 		std::vector<VkImageView> rawViews;
 		for (auto [k, v] : mAttachments)
 		{
-			auto vkTextureImpl = dynamic_cast<vk::Texture*>(v->texture);
+			auto vkTextureImpl = dynamic_cast<vk::Texture *>(v->GetTexture());
 			auto extent = vkTextureImpl->GetImage()->GetExtent();
 			if (maxWidth < extent.x)
 				maxWidth = extent.x;

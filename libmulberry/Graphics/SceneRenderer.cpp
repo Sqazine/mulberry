@@ -113,7 +113,7 @@ namespace mulberry
             auto swapChainPass = App::GetInstance().GetGraphicsContext()->GetSwapChainPass();
 
             auto colorAttachment=swapChainPass->GetColorAttachment();
-            colorAttachment->clearColor=camera->GetClearColor();
+            colorAttachment->SetClearColor(camera->GetClearColor());
 
             swapChainPass->Begin();
 

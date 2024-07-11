@@ -1,20 +1,58 @@
 #pragma once
-#include <vulkan/vulkan.h>
 #include "Graphics/RHI/Defs.h"
 #include "Graphics/RHI/Texture.h"
-
+#include "Graphics/RHI/Utils.h"
 namespace mulberry
 {
-	struct ColorAttachment
+	class ColorAttachment
 	{
-		ColorAttachment()=default;
-		~ColorAttachment()
+	public:
+		ColorAttachment() = default;
+		virtual ~ColorAttachment() = default;
+
+		ColorAttachment &SetClearColor(const Color &color)
 		{
-			SAFE_DELETE(texture);
+			SET(mClearColor, color);
 		}
-		Texture *texture;
-		Color clearColor;
-		AttachmentLoad loadOp;
-		AttachmentStore storeOp;
+		const Color &GetClearColor() const
+		{
+			return mClearColor;
+		}
+
+		ColorAttachment &SetLoadOp(AttachmentLoad loadOp)
+		{
+			SET(mLoadOp, loadOp);
+		}
+		const AttachmentLoad &GetLoadOp() const
+		{
+			return mLoadOp;
+		}
+
+		ColorAttachment &SetStoreOp(AttachmentStore storeOp)
+		{
+			SET(mStoreOp, storeOp);
+		}
+		const AttachmentStore &GetStoreOp() const
+		{
+			return mStoreOp;
+		}
+
+		ColorAttachment &SetTexture(Texture *texture)
+		{
+			SET_UNIQUE_PTR(mTexture,texture);
+		}
+		
+		Texture *GetTexture() const
+		{
+			return mTexture.get();
+		}
+
+	protected:
+		std::unique_ptr<Texture> mTexture;
+		Color mClearColor;
+		AttachmentLoad mLoadOp;
+		AttachmentStore mStoreOp;
+
+		bool mIsDirty{true};
 	};
 }

@@ -1042,22 +1042,4 @@ namespace mulberry::vk
 			return VK_ATTACHMENT_STORE_OP_DONT_CARE;
 		}
 	}
-
-
-	VkAttachmentDescription ToVkAttachmentDescription(const ColorAttachment &colorAttachment)
-	{
-		auto vkImpl = dynamic_cast<vk::Texture*>(colorAttachment.texture);
-		VkAttachmentDescription result{};
-		result.flags = 0;
-		result.format = ToVkFormat(vkImpl->GetImage()->GetFormat());
-		result.samples = VK_SAMPLE_COUNT_1_BIT;
-		result.loadOp = ToLoadOp(colorAttachment.loadOp);
-		result.storeOp = ToStoreOp(colorAttachment.storeOp);
-		result.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-		result.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-		result.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		result.finalLayout = VkImageLayout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL | VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
-
-		return result;
-	}
 }

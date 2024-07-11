@@ -16,7 +16,9 @@ namespace mulberry::vk
 
 		Vec2 GetExtent() const;
 
-		std::vector<ColorAttachment *> &GetColorAttachments();
+		uint32_t GetAttachmentCount() const;
+		mulberry::ColorAttachment* GetAttachmentByIndex(uint32_t idx) const;
+
 		const VkSurfaceFormatKHR GetSurfaceFormat() const;
 
 		const VkSwapchainKHR &GetHandle() const;
@@ -40,7 +42,7 @@ namespace mulberry::vk
 
 		VkSwapchainKHR mHandle;
 
-		std::vector<ColorAttachment*> mBackAttachments;
+		std::vector<std::unique_ptr<mulberry::ColorAttachment>> mBackAttachments;
 
 		VkSurfaceFormatKHR mSurfaceFormat;
 		VkExtent2D mExtent;

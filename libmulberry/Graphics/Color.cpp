@@ -64,6 +64,14 @@ namespace mulberry
         return Color(left.r * right.r, left.g * right.g, left.b * right.b, left.a * right.a);
     }
 
+    bool operator==(const Color &left, const Color &right)
+    {
+        return left.r == right.r &&
+               left.g == right.g &&
+               left.b == right.b &&
+               left.a == right.a;
+    }
+
     Color &Color::operator+=(float value)
     {
         *this = *this + value;
